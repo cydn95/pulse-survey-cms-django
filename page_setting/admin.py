@@ -30,6 +30,8 @@ class AOQuestionInline(CompactInline):
 
 class PageSettingAdmin(admin.ModelAdmin):
     #fields = ['page', 'pageType']
+    readonly_fields = []
+    
     def get_readonly_fields(self, request, obj=None):
         if obj: # editing an existing object
             return self.readonly_fields + ['page']

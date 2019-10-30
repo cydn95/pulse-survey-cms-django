@@ -9,7 +9,7 @@ from organization.models import Organization
 # Create your models here.
 class SHGroup(models.Model):
     SHGroupName = models.CharField(max_length=255)
-    SHGroupAbbrev = models.CharField(max_length=50)
+    SHGroupAbbrev = models.CharField(max_length=50, blank=True)
     project = models.ForeignKey(Project, on_delete=models.PROTECT)
 
     def __str__(self):
@@ -22,11 +22,11 @@ class SHGroupUser(models.Model):
 class SHCategory(models.Model):
     survey = models.ForeignKey(Survey, on_delete=models.PROTECT)
     shGroup = models.ForeignKey(SHGroup, on_delete=models.PROTECT)
+    SHCategoryName = models.CharField(max_length=50)
+    SHCategoryDesc = models.CharField(max_length=200, blank=True)
     mapType = models.CharField(max_length=50)
     colour = models.CharField(max_length=50)
     icon = models.CharField(max_length=100)
-    SHCategoryName = models.CharField(max_length=50)
-    SHCategoryDesc = models.CharField(max_length=200)
 
     def __str__(self):
         return self.SHCategoryName
