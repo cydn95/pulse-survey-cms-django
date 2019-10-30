@@ -18,7 +18,7 @@ class ConceptClass(models.Model):
 
 class ConceptInstance(models.Model):
     instanceName = models.CharField(max_length=100)
-    conceptClass = models.ForeignKey(ConceptClass, on_delete=models.DO_NOTHING)
+    conceptClass = models.ForeignKey(ConceptClass, on_delete=models.PROTECT)
     instanceIRI = models.TextField()
     instanceDesc = models.TextField()
 

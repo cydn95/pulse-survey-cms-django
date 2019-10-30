@@ -9,14 +9,14 @@ class Client(models.Model):
         return self.clientName
 
 class Project(models.Model):
-    client = models.ForeignKey(Client, on_delete=models.DO_NOTHING)
+    client = models.ForeignKey(Client, on_delete=models.PROTECT)
     projectName = models.CharField(max_length=200)
 
     def __str__(self):
         return self.projectName
 
 class Survey(models.Model):
-    project = models.ForeignKey(Project, on_delete=models.DO_NOTHING)
+    project = models.ForeignKey(Project, on_delete=models.PROTECT)
     surveyTitle = models.CharField(max_length=200)
 
     def __str__(self):

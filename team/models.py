@@ -3,7 +3,7 @@ from organization.models import Organization
 
 # Create your models here.
 class Team(models.Model):
-    organization = models.ForeignKey(Organization, on_delete=models.DO_NOTHING)
+    organization = models.ForeignKey(Organization, on_delete=models.PROTECT)
     name = models.CharField(max_length=200)
 
     def __str__(self):

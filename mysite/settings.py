@@ -261,6 +261,7 @@ JET_THEMES = [
 ]
 
 JET_SIDE_MENU_COMPACT = False
+JET_CHANGE_FORM_SIBLING_LINKS = False
 
 JET_SIDE_MENU_ITEMS = [ # A list of application or custom item dicts
     {'label': 'All Pages', 'items': [
@@ -273,22 +274,22 @@ JET_SIDE_MENU_ITEMS = [ # A list of application or custom item dicts
         {'name': 'auth.user'},
     ]},
     {'label': 'About Me Questions', 'items': [
-        {'name': 'aboutme.amquestionshgroup', 'label': 'StakeHolder Groups'},
-        {'name': 'aboutme.amresponsetopic', 'label': 'Topics'},
+        # {'name': 'aboutme.amquestionshgroup', 'label': 'StakeHolder Groups'},
         {'name': 'aboutme.amquestion', 'label': 'Questions'},
+        # {'name': 'aboutme.amresponsetopic', 'label': 'Topics'},
         {'name': 'aboutme.amresponse', 'label': 'Responses'},
     ]},
     {'label': 'About Other Questions', 'items': [
-        {'name': 'aboutothers.aoquestionshgroup', 'label': 'StakeHolder Groups'},
-        {'name': 'aboutothers.aoresponsetopic', 'label': 'Topics'},
+        # {'name': 'aboutothers.aoquestionshgroup', 'label': 'StakeHolder Groups'},
         {'name': 'aboutothers.aoquestion', 'label': 'Questions'},
+        # s{'name': 'aboutothers.aoresponsetopic', 'label': 'Topics'},
         {'name': 'aboutothers.aoresponse', 'label': 'Responses'},
     ]},
     {'label': 'StakeHolders', 'items': [
         {'name':'shgroup.shcategory', 'label': 'Categories'},
         {'name':'shgroup.shgroup', 'label': 'Groups'},
-        {'name':'shgroup.shgroupuser', 'label': 'Group Users'},
-        {'name':'shgroup.shmapping', 'label': 'Mappings'},
+        # {'name':'shgroup.shgroupuser', 'label': 'Group Users'},
+        # {'name':'shgroup.shmapping', 'label': 'Mappings'},
     ]},
 ]
 

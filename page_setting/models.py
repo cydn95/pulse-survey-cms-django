@@ -22,7 +22,8 @@ class PageType(Enum):
         PG_RESULT = 'Result'
 
 class PageSetting(models.Model):
-    page = models.OneToOneField(Page, related_name='pages', on_delete=models.CASCADE, primary_key=True)
+    
+    page = models.OneToOneField(Page, related_name='pages', on_delete=models.PROTECT, primary_key=True)
     pageType = EnumField(PageType, max_length=1)
 
 class ExtendedPage(models.Model):
