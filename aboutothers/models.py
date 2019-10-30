@@ -42,17 +42,17 @@ class AOResponse(models.Model):
     subjectUser = models.ForeignKey(User, on_delete=models.PROTECT, related_name="aoSubjectUser")
     survey = models.ForeignKey(Survey, on_delete=models.PROTECT)
     aoQuestion = models.ForeignKey(AOQuestion, on_delete=models.PROTECT)
-    integerValue = models.PositiveIntegerField()
-    topicValue = models.TextField()
-    commentValue = models.TextField()
-    skipValue = models.TextField()
-    topicTags = models.TextField()
-    commentTags = models.TextField()
+    integerValue = models.PositiveIntegerField(blank=True)
+    topicValue = models.TextField(blank=True)
+    commentValue = models.TextField(blank=True)
+    skipValue = models.TextField(blank=True)
+    topicTags = models.TextField(blank=True)
+    commentTags = models.TextField(blank=True)
 
 class AOResponseTopic(models.Model):
     aoResponse = models.ForeignKey(AOResponse, on_delete=models.PROTECT)
-    topic = models.CharField(max_length=100)
-    comment = models.CharField(max_length=1000)
+    topic = models.CharField(max_length=100, blank=True)
+    comment = models.CharField(max_length=1000, blank=True)
 
 class AOPage(models.Model):
     aoPageName = models.CharField(max_length=50)

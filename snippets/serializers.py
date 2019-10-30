@@ -3,8 +3,8 @@ from snippets.models import Snippet, LANGUAGE_CHOICES, STYLE_CHOICES
 from django.contrib.auth.models import User
 from page_setting.models import PageSetting, PageType
 from cms.models import Page, Title
-from aboutme.models import AMQuestion
-from aboutothers.models import AOQuestion
+from aboutme.models import AMQuestion, AMResponse, AMResponseTopic
+from aboutothers.models import AOQuestion, AOResponse, AOResponseTopic, AOPage
 from page_nav.models import PageNav
 
 class EnumField(serializers.ChoiceField):
@@ -37,9 +37,34 @@ class SnippetSerializer(serializers.HyperlinkedModelSerializer):
         model = Snippet
         fields = ['url', 'id', 'highlight', 'owner', 'title', 'code', 'linenos', 'language', 'style']
 
+class AMResponseSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = AMResponse
+        fields = '__all__'
+
+class AMResponseTopicSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = AMResponseTopic
+        fields = '__all__'
+
 class AMQuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = AMQuestion
+        fields = '__all__'
+
+class AOResponseSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = AOResponse
+        fields = '__all__'
+
+class AOResponseTopicSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = AOResponseTopic
+        fields = '__all__'
+
+class AOPageSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = AOPageSerializer
         fields = '__all__'
 
 class AOQuestionSerializer(serializers.ModelSerializer):
