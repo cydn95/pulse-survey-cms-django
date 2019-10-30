@@ -37,12 +37,12 @@ class SnippetSerializer(serializers.HyperlinkedModelSerializer):
         model = Snippet
         fields = ['url', 'id', 'highlight', 'owner', 'title', 'code', 'linenos', 'language', 'style']
 
-class AMResponseSerializer(serializers.HyperlinkedModelSerializer):
+class AMResponseSerializer(serializers.ModelSerializer):
     class Meta:
         model = AMResponse
         fields = '__all__'
 
-class AMResponseTopicSerializer(serializers.HyperlinkedModelSerializer):
+class AMResponseTopicSerializer(serializers.ModelSerializer):
     class Meta:
         model = AMResponseTopic
         fields = '__all__'
@@ -52,19 +52,19 @@ class AMQuestionSerializer(serializers.ModelSerializer):
         model = AMQuestion
         fields = '__all__'
 
-class AOResponseSerializer(serializers.HyperlinkedModelSerializer):
+class AOResponseSerializer(serializers.ModelSerializer):
     class Meta:
         model = AOResponse
         fields = '__all__'
 
-class AOResponseTopicSerializer(serializers.HyperlinkedModelSerializer):
+class AOResponseTopicSerializer(serializers.ModelSerializer):
     class Meta:
         model = AOResponseTopic
         fields = '__all__'
 
-class AOPageSerializer(serializers.HyperlinkedModelSerializer):
+class AOPageSerializer(serializers.ModelSerializer):
     class Meta:
-        model = AOPageSerializer
+        model = AOPage
         fields = '__all__'
 
 class AOQuestionSerializer(serializers.ModelSerializer):

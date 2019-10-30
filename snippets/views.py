@@ -1,5 +1,5 @@
 from snippets.models import Snippet
-from snippets.serializers import SnippetSerializer, UserSerializer, PageSettingSerializer, PageSerializer
+from snippets.serializers import SnippetSerializer, UserSerializer, PageSettingSerializer, PageSerializer, AMResponseSerializer, AMResponseTopicSerializer, AOResponseSerializer, AOResponseTopicSerializer, AOPageSerializer
 from rest_framework import generics, permissions
 from django.contrib.auth.models import User
 from snippets.permissions import IsOwnerOrReadOnly
@@ -10,6 +10,9 @@ from rest_framework import renderers
 from rest_framework import viewsets
 from page_setting.models import PageSetting
 from cms.models import Page
+from aboutme.models import AMResponse, AMResponseTopic
+from aboutothers.models import AOResponse, AOResponseTopic, AOPage
+
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
     """
     This viewset automatically provides `list` and `detail` actions.
@@ -45,5 +48,34 @@ class PageSettingViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = PageSettingSerializer
 
 class PageViewSet(viewsets.ReadOnlyModelViewSet):
+
     queryset = Page.objects.all()
     serializer_class = PageSerializer
+
+class AMResponseViewSet(viewsets.ModelViewSet):
+    queryset = AMResponse.objects.all()
+    serializer_class = AMResponseSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+class AMResponseTopicViewSet(viewsets.ModelViewSet):
+    queryset = AMResponseTopic.objects.all()
+    serializer_class = AMResponseTopicSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+
+class AOResponseViewSet(viewsets.ModelViewSet):
+    queryset = AOResponse.objects.all()
+    serializer_class = AOResponseSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+
+class AOResponseTopicViewSet(viewsets.ModelViewSet):
+    queryset = AOResponseTopic.objects.all()
+    serializer_class = AOResponseTopicSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+
+class AOPageViewSet(viewsets.ModelViewSet):
+    queryset = AOPage.objects.all()
+    serializer_class = AOPageSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
