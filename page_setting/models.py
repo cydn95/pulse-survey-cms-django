@@ -2,7 +2,7 @@ from django.db import models
 from cms.models.pagemodel import Page
 from enumfields import EnumField
 from enumfields import Enum
-
+from cms.models.fields import PageField
 class PageType(Enum):
     PG_WELCOME1 = 0
     PG_WELCOME2 = 1
@@ -23,7 +23,8 @@ class PageType(Enum):
 
 class PageSetting(models.Model):
     
-    page = models.OneToOneField(Page, related_name='pages', on_delete=models.PROTECT, primary_key=True)
+    page = models.OneToOneField(Page, limit_choices_to={'publisher_is_draft': False}, related_name='pages', on_delete=models.PROTECT, primary_key=True, unique=True)
+    #page = PageField(related_name='pages', on_delete=models.PROTECT, primary_key=True, unique=True)
     pageType = EnumField(PageType, max_length=1)
 
 class ExtendedPage(models.Model):

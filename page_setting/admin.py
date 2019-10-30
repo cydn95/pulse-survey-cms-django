@@ -17,13 +17,13 @@ except:
     pass
 admin.site.register(Page, PageAdmin)
 
-class AMQuestionInline(CompactInline):
+class AMQuestionInline(admin.StackedInline):
 # class AMQuestionInline(admin.StackedInline):
     model = AMQuestion
     extra = 0
     #max_num = 5
 
-class AOQuestionInline(CompactInline):
+class AOQuestionInline(admin.StackedInline):
     model = AOQuestion
     extra = 0
     #max_num = 5
@@ -38,7 +38,7 @@ class PageSettingAdmin(admin.ModelAdmin):
         return self.readonly_fields
 
     fieldsets = [
-        (None,      {'fields': ('page', 'pageType')}),
+        (None, {'fields': ('page', 'pageType')}),
     ]
 
     inlines = [AMQuestionInline, AOQuestionInline]
