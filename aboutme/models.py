@@ -54,3 +54,7 @@ class AMResponseTopic(models.Model):
     amResponse = models.ForeignKey(AMResponse, on_delete=models.PROTECT)
     topic = models.CharField(max_length=100, blank=True)
     comment = models.CharField(max_length=1000, blank=True)
+
+class PageAMQuestion(models.Model):
+    pageSetting = models.ForeignKey(PageSetting, on_delete=models.PROTECT)
+    amQuestion = models.ForeignKey(AMQuestion, on_delete=models.PROTECT)

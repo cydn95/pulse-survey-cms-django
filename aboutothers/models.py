@@ -60,3 +60,7 @@ class AOPage(models.Model):
 
     def __str__(self):
         return self.aoPageName
+
+class PageAOQuestion(models.Model):
+    pageSetting = models.ForeignKey(PageSetting, on_delete=models.PROTECT)
+    aoQuestion = models.ForeignKey(AOQuestion, on_delete=models.PROTECT)

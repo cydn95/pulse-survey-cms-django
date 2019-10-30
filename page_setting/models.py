@@ -3,6 +3,8 @@ from cms.models.pagemodel import Page
 from enumfields import EnumField
 from enumfields import Enum
 from cms.models.fields import PageField
+
+
 class PageType(Enum):
     PG_WELCOME1 = 0
     PG_WELCOME2 = 1
@@ -21,6 +23,7 @@ class PageType(Enum):
         PG_ABOUT_STAKEHOLDER = 'About StakeHolder'
         PG_RESULT = 'Result'
 
+
 class PageSetting(models.Model):
     
     page = models.OneToOneField(Page, limit_choices_to={'publisher_is_draft': False}, related_name='pages', on_delete=models.PROTECT, primary_key=True, unique=True)
@@ -30,3 +33,6 @@ class PageSetting(models.Model):
 class ExtendedPage(models.Model):
     page = models.OneToOneField(Page, verbose_name="Page", editable=False, related_name='extended_fields')
     my_extra_field = models.CharField(max_length=50)
+
+
+

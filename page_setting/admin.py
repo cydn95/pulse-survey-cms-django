@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import PageSetting, ExtendedPage
-from aboutme.models import AMQuestion
-from aboutothers.models import AOQuestion
+from aboutme.models import PageAMQuestion
+from aboutothers.models import PageAOQuestion
 from cms.admin.pageadmin import PageAdmin
 from cms.models.pagemodel import Page
 from jet.admin import CompactInline
@@ -19,12 +19,13 @@ admin.site.register(Page, PageAdmin)
 
 class AMQuestionInline(admin.StackedInline):
 # class AMQuestionInline(admin.StackedInline):
-    model = AMQuestion
+    model = PageAMQuestion
     extra = 0
+
     #max_num = 5
 
 class AOQuestionInline(admin.StackedInline):
-    model = AOQuestion
+    model = PageAOQuestion
     extra = 0
     #max_num = 5
 
