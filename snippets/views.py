@@ -13,10 +13,27 @@ from cms.models import Page
 from aboutme.models import AMResponse, AMResponseTopic
 from aboutothers.models import AOResponse, AOResponseTopic, AOPage
 
+from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.authtoken.models import Token
+
+class CustomAuthToken(ObtainAuthToken):
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data, context={'request': request})
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data['user']
+        token, created = Token.objects.get_or_create(user=user)
+        return Response({
+            'token': token.key,
+            'user_id': user.pk,
+            'email': user.email
+        })
+ 
+
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
     """
     This viewset automatically provides `list` and `detail` actions.
     """
+    permission_classes = [permissions.IsAuthenticated,permissions.IsAuthenticatedOrReadOnly]
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
@@ -31,8 +48,8 @@ class SnippetViewSet(viewsets.ModelViewSet):
     serializer_class = SnippetSerializer
     # permission_classes = [permissions.IsAuthenticatedOrReadOnly,
     #                       IsOwnerOrReadOnly]
-    permission_classes = [permissions.IsAuthenticated,]
-
+    permission_classes = [permissions.IsAuthenticated,permissions.IsAuthenticatedOrReadOnly]
+    
     @action(detail=True, renderer_classes=[renderers.StaticHTMLRenderer])
     def highlight(self, request, *args, **kwargs):
         snippet = self.get_object()
@@ -45,44 +62,96 @@ class PageSettingViewSet(viewsets.ReadOnlyModelViewSet):
     """
     This viewset automatically provides `list` and `detail` actions.
     """
-    permission_classes = [permissions.IsAuthenticated,]
+    permission_classes = [permissions.IsAuthenticated,permissions.IsAuthenticatedOrReadOnly]
     queryset = PageSetting.objects.all()
     serializer_class = PageSettingSerializer
 
 class PageViewSet(viewsets.ReadOnlyModelViewSet):
-    permission_classes = [permissions.IsAuthenticated,]
+    permission_classes = [permissions.IsAuthenticated,permissions.IsAuthenticatedOrReadOnly]
     queryset = Page.objects.all()
     serializer_class = PageSerializer
 
+    def create(self, request, *args, **kwargs):
+        data = request.data.get("items") if 'items' in request.data else request.data
+        many = isinstance(data, list)
+        print (data, many)
+        serializer = self.get_serializer(data=data, many=many)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
 class AMResponseViewSet(viewsets.ModelViewSet):
-    permission_classes = [permissions.IsAuthenticated,]
+    permission_classes = [permissions.IsAuthenticated,permissions.IsAuthenticatedOrReadOnly]
     queryset = AMResponse.objects.all()
     serializer_class = AMResponseSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    def create(self, request, *args, **kwargs):
+        data = request.data.get("items") if 'items' in request.data else request.data
+        many = isinstance(data, list)
+        print (data, many)
+        serializer = self.get_serializer(data=data, many=many)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 class AMResponseTopicViewSet(viewsets.ModelViewSet):
-    permission_classes = [permissions.IsAuthenticated,]
+    permission_classes = [permissions.IsAuthenticated,permissions.IsAuthenticatedOrReadOnly]
     queryset = AMResponseTopic.objects.all()
     serializer_class = AMResponseTopicSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-
+    
+    def create(self, request, *args, **kwargs):
+        data = request.data.get("items") if 'items' in request.data else request.data
+        many = isinstance(data, list)
+        print (data, many)
+        serializer = self.get_serializer(data=data, many=many)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 class AOResponseViewSet(viewsets.ModelViewSet):
-    permission_classes = [permissions.IsAuthenticated,]
+    permission_classes = [permissions.IsAuthenticated,permissions.IsAuthenticatedOrReadOnly]
     queryset = AOResponse.objects.all()
     serializer_class = AOResponseSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
+    def create(self, request, *args, **kwargs):
+        data = request.data.get("items") if 'items' in request.data else request.data
+        many = isinstance(data, list)
+        print (data, many)
+        serializer = self.get_serializer(data=data, many=many)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 class AOResponseTopicViewSet(viewsets.ModelViewSet):
-    permission_classes = [permissions.IsAuthenticated,]
+    permission_classes = [permissions.IsAuthenticated,permissions.IsAuthenticatedOrReadOnly]
     queryset = AOResponseTopic.objects.all()
     serializer_class = AOResponseTopicSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
+    def create(self, request, *args, **kwargs):
+        data = request.data.get("items") if 'items' in request.data else request.data
+        many = isinstance(data, list)
+        print (data, many)
+        serializer = self.get_serializer(data=data, many=many)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 class AOPageViewSet(viewsets.ModelViewSet):
-    permission_classes = [permissions.IsAuthenticated,]
+    permission_classes = [permissions.IsAuthenticated,permissions.IsAuthenticatedOrReadOnly]
     queryset = AOPage.objects.all()
     serializer_class = AOPageSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    def create(self, request, *args, **kwargs):
+        data = request.data.get("items") if 'items' in request.data else request.data
+        many = isinstance(data, list)
+        print (data, many)
+        serializer = self.get_serializer(data=data, many=many)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
