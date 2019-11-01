@@ -3,8 +3,8 @@ from snippets.models import Snippet, LANGUAGE_CHOICES, STYLE_CHOICES
 from django.contrib.auth.models import User
 from page_setting.models import PageSetting, PageType
 from cms.models import Page, Title
-from aboutme.models import AMQuestion, AMResponse, AMResponseTopic
-from aboutothers.models import AOQuestion, AOResponse, AOResponseTopic, AOPage
+from aboutme.models import PageAMQuestion, AMQuestion, AMResponse, AMResponseTopic
+from aboutothers.models import PageAOQuestion, AOQuestion, AOResponse, AOResponseTopic, AOPage
 from page_nav.models import PageNav
 
 class EnumField(serializers.ChoiceField):
@@ -52,6 +52,12 @@ class AMQuestionSerializer(serializers.ModelSerializer):
         model = AMQuestion
         fields = '__all__'
 
+class PageAMQuestionSerializer(serializers.ModelSerializer):
+    amQuestion = AMQuestionSerializer()
+    class Meta:
+        model = PageAMQuestion
+        fields = ['id', 'pageSetting', 'amQuestion']
+
 class AOResponseSerializer(serializers.ModelSerializer):
     class Meta:
         model = AOResponse
@@ -62,20 +68,26 @@ class AOResponseTopicSerializer(serializers.ModelSerializer):
         model = AOResponseTopic
         fields = '__all__'
 
-class AOPageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = AOPage
-        fields = '__all__'
-
 class AOQuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = AOQuestion
         fields = '__all__'
 
+class AOPageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AOPage
+        fields = '__all__'
+
+class PageAOQuestionSerializer(serializers.ModelSerializer):
+    aoQuestion = AOQuestionSerializer()
+    class Meta:
+        model = PageAOQuestion
+        fields = ['id', 'pageSetting', 'aoQuestion']
+
 class PageSettingSerializer(serializers.ModelSerializer):
     pageType = EnumField(enum=PageType)
-    ampagesetting = AMQuestionSerializer(many=True)
-    aopagesetting = AOQuestionSerializer(many=True)
+    ampagesetting = PageAMQuestionSerializer(many=True)
+    aopagesetting = PageAOQuestionSerializer(many=True)
 
     class Meta:
         model = PageSetting

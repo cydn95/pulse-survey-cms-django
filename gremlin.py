@@ -5,9 +5,27 @@ api_url_base = "https://gft6ixgrq7.execute-api.us-east-2.amazonaws.com/default/P
 headers = {
       "Content-type": "application/json"
 }
+
+###
+ ## --- node type --- ##
+ # id: node_id      format: [type]-[tb_id]
+ # label: tb_id
+ # type: tb_name    user/project/shcategory/organization/team/stakeholder
+ # text: name
+ ## --- node type --- ##
+ #
+ ## --- edge type --- ##
+ # from: from_node_id
+ # id: edge_id
+ # label: edge_type     related/included
+ # text: edge_name      ""
+ # to: to_node_id
+ # weight: line weight  default 5
+ ## --- edge type --- ##
+###
+# test
 body = json.dumps({'vertex': [{'id': 'user-111', 'label': 'user1', 'type': 'user', 'text': 'New User1'}], 'edge': [], 'addOnly': 1})
 
-#def get_chart():
 response = requests.get(api_url_base, headers=headers, data=body)
 
 if response.status_code == 200:

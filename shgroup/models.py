@@ -23,17 +23,18 @@ class ProjectUser(models.Model):
     team = models.ForeignKey(Team, on_delete=models.PROTECT)
     shGroup = models.ForeignKey(SHGroup, on_delete=models.PROTECT)
 
-class SHGroupUser(models.Model):
-    shGroup = models.ForeignKey(SHGroup, on_delete=models.PROTECT)
-    #user = models.ForeignKey(User, on_delete=models.PROTECT)
-    projectUser = models.ForeignKey(ProjectUser, on_delete=models.PROTECT)
+class MapType(models.Model):
+    name = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.name
 
 class SHCategory(models.Model):
     survey = models.ForeignKey(Survey, on_delete=models.PROTECT)
     shGroup = models.ForeignKey(SHGroup, on_delete=models.PROTECT, blank=True)
     SHCategoryName = models.CharField(max_length=50, blank=True)
     SHCategoryDesc = models.CharField(max_length=200, blank=True)
-    mapType = models.CharField(max_length=50, blank=True)
+    mapType = models.ForeignKey(MapType, on_delete=models.PROTECT)
     colour = models.CharField(max_length=50, blank=True)
     icon = models.CharField(max_length=100, blank=True)
 
@@ -41,8 +42,9 @@ class SHCategory(models.Model):
         return self.SHCategoryName
 
 class SHMapping(models.Model):
-    user = models.ForeignKey(User, on_delete=models.PROTECT, related_name="user", blank=True)
+    projectUser = models.ForeignKey(ProjectUser, on_delete=models.PROTECT, blank=True)
     subjectUser = models.ForeignKey(User, on_delete=models.PROTECT, related_name="subjectUser", blank=True)
     project = models.ForeignKey(Project, on_delete=models.PROTECT, blank=True)
     shCategory = models.ForeignKey(SHCategory, on_delete=models.PROTECT, blank=True)
     relationshipStatus = models.CharField(max_length=100, blank=True)
+

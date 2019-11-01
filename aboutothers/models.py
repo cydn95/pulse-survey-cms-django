@@ -22,7 +22,7 @@ class AOQuestion(models.Model):
     skipResponses = models.CharField(max_length=1000, blank=True)
     topicPrompt = models.CharField(max_length=255, blank=True)
     commentPrompt = models.CharField(max_length=255, blank=True)
-    PageSetting = models.ForeignKey(PageSetting, on_delete=models.SET_NULL, related_name="aopagesetting", default=None, blank=True, null=True)
+    #PageSetting = models.ForeignKey(PageSetting, on_delete=models.SET_NULL, related_name="aopagesetting", default=None, blank=True, null=True)
     shGroup = models.ManyToManyField(SHGroup, blank=True)
 
     def __str__(self):
@@ -62,5 +62,6 @@ class AOPage(models.Model):
         return self.aoPageName
 
 class PageAOQuestion(models.Model):
-    pageSetting = models.ForeignKey(PageSetting, on_delete=models.PROTECT)
+    #pageSetting = models.ForeignKey(PageSetting, on_delete=models.PROTECT)
+    pageSetting = models.ForeignKey(PageSetting, related_name="aopagesetting", on_delete=models.PROTECT, default=None, blank=True, null=True)
     aoQuestion = models.ForeignKey(AOQuestion, on_delete=models.PROTECT)
