@@ -147,7 +147,6 @@ INSTALLED_APPS = [
     'survey',
     'shgroup',
     'setting',
-    'project_user',
     'aboutme',
     'aboutothers',
     'page_nav',
@@ -291,6 +290,7 @@ JET_SIDE_MENU_ITEMS = [ # A list of application or custom item dicts
     {'label': 'StakeHolders', 'items': [
         {'name':'shgroup.shcategory', 'label': 'Categories'},
         {'name':'shgroup.shgroup', 'label': 'Groups'},
+        {'name':'shgroup.projectuser', 'label': 'Project Users'},
         # {'name':'shgroup.shgroupuser', 'label': 'Group Users'},
         # {'name':'shgroup.shmapping', 'label': 'Mappings'},
     ]},

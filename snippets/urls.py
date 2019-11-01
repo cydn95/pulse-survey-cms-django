@@ -1,7 +1,8 @@
 from django.conf.urls import include, url
 from rest_framework.routers import DefaultRouter
 from snippets import views
-from rest_framework.authtoken.views import obtain_auth_token
+#from rest_framework.authtoken.views import obtain_auth_token
+from .views import CustomAuthToken
 
 # Create a router and register our viewsets with it.
 router = DefaultRouter()
@@ -19,5 +20,5 @@ router.register(r'aopage', views.AOPageViewSet)
 urlpatterns = [
     url('', include(router.urls)),
     url('rest-auth/', include('rest_auth.urls')),
-    url('api-token-auth/', obtain_auth_token, name='api_token_auth'),
+    url('api-token-auth/', CustomAuthToken.as_view()),
 ]
