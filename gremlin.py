@@ -24,11 +24,32 @@ headers = {
  ## --- edge type --- ##
 ###
 # test
-body = json.dumps({'vertex': [{'id': 'user-111', 'label': 'user1', 'type': 'user', 'text': 'New User1'}], 'edge': [], 'addOnly': 1})
 
-response = requests.get(api_url_base, headers=headers, data=body)
+# body = json.dumps({'vertex': [{'id': 'user-111', 'label': 'user1', 'type': 'user', 'text': 'New User1'}], 'edge': [], 'addOnly': 1})
 
-if response.status_code == 200:
-    print(response.content)
-else:
-    print('[!] HTTP {0} calling [{1}]'.format(response.status_code, api_url_base))
+# response = requests.post(api_url_base, headers=headers, data=body)
+
+# if response.status_code == 200:
+#     print(response.content)
+# else:
+#     print('[!] HTTP {0} calling [{1}]'.format(response.status_code, api_url_base))
+
+def addVertex(data):
+    body = json.dumps({'vertex': data, 'edge': [], 'addOnly': 1, 'method': 'add'})
+
+    response = requests.post(api_url_base, headers=headers, data=body)
+
+    if response.status_code == 200:
+        return response.content
+    else:
+        return '[!] HTTP {0} calling [{1}]'.format(response.status_code, api_url_base)
+
+def deleteVertex(id):
+    body = json.dumps({'method': 'delete', 'deleteVertex': 1, 'vertexId': id})
+
+    response = requests.post(api_url_base, headers=headers, data=body)
+
+    if response.status_code == 200:
+        return response.content
+    else:
+        return '[!] HTTP {0} calling [{1}]'.format(response.status_code, api_url_base)

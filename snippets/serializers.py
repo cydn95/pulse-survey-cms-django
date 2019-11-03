@@ -6,6 +6,9 @@ from cms.models import Page, Title
 from aboutme.models import PageAMQuestion, AMQuestion, AMResponse, AMResponseTopic
 from aboutothers.models import PageAOQuestion, AOQuestion, AOResponse, AOResponseTopic, AOPage
 from page_nav.models import PageNav
+from team.models import Team
+from shgroup.models import SHGroup, ProjectUser
+
 
 class EnumField(serializers.ChoiceField):
     def __init__(self, enum, **kwargs):
@@ -104,4 +107,19 @@ class PageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Page
+        fields = '__all__'
+
+class TeamSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Team
+        fields = '__all__'
+
+class SHGroupSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SHGroup
+        fields = '__all__'
+
+class ProjectUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProjectUser
         fields = '__all__'

@@ -4,6 +4,7 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import User
 
 from .models import Organization
+from gremlin import deleteVertex
 
 class OrganizationInline(admin.StackedInline):
     model = Organization

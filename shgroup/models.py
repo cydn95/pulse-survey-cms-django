@@ -3,6 +3,8 @@ from survey.models import Project, Survey
 from django.contrib.auth.models import User
 from django.contrib.auth.models import Permission
 from team.models import Team
+from gremlin import addVertex
+
 # If you use a custom user model you should use:
 # from django.contrib.auth import get_user_model
 # User = get_user_model()
@@ -16,12 +18,46 @@ class SHGroup(models.Model):
     def __str__(self):
         return self.SHGroupName
 
+    def save(self, *args, **kwargs):
+        super(SHGroup, self).save(*args, **kwargs)
+        print(self.SHGroupName)
+
+        if self.id is not None:
+            data = [{
+                'id': 'stakeholder-{0}'.format(self.id),
+                'label': 'stakeholder_{0}'.format(self.id),
+                'type': 'stakeholder',
+                'text': self.SHGroupName
+            }]
+            print(data)
+            ret = addVertex(data)
+            print(ret)
+
 class ProjectUser(models.Model):
     project = models.ForeignKey(Project, on_delete=models.PROTECT)
     user = models.ForeignKey(User, on_delete=models.PROTECT)
     userPermission = models.ForeignKey(Permission, on_delete=models.PROTECT)
     team = models.ForeignKey(Team, on_delete=models.PROTECT)
     shGroup = models.ForeignKey(SHGroup, on_delete=models.PROTECT)
+
+    def __str__(self):
+        return '{0}'.format(self.project)
+
+    def save(self, *args, **kwargs):
+        super(ProjectUser, self).save(*args, **kwargs)
+        print(self.project)
+
+        print(self.user)
+        if self.id is not None:
+            data = [{
+                'id': 'user-{0}'.format(self.id),
+                'label': 'user_{0}'.format(self.id),
+                'type': 'user',
+                'text': '{0}'.format(self.user)
+            }]
+            print(data)
+            ret = addVertex(data)
+            print(ret)
 
 class MapType(models.Model):
     name = models.CharField(max_length=50)
@@ -40,6 +76,21 @@ class SHCategory(models.Model):
 
     def __str__(self):
         return self.SHCategoryName
+
+    def save(self, *args, **kwargs):
+        super(SHCategory, self).save(*args, **kwargs)
+        print(self.SHCategoryName)
+
+        if self.id is not None:
+            data = [{
+                'id': 'category-{0}'.format(self.id),
+                'label': 'category_{0}'.format(self.id),
+                'type': 'category',
+                'text': self.SHCategoryName
+            }]
+            print(data)
+            ret = addVertex(data)
+            print(ret)
 
 class SHMapping(models.Model):
     projectUser = models.ForeignKey(ProjectUser, on_delete=models.PROTECT, blank=True)

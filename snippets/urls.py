@@ -15,6 +15,9 @@ router.register(r'amresponsetopic', views.AMResponseTopicViewSet)
 router.register(r'aoresponse', views.AOResponseViewSet)
 router.register(r'aoresponsetopic', views.AOResponseTopicViewSet)
 router.register(r'aopage', views.AOPageViewSet)
+router.register(r'team', views.TeamViewSet)
+router.register(r'shgroup', views.SHGroupViewSet)
+router.register(r'projectuser', views.ProjectUserViewSet)
 
 # The API URLs are now determined automatically by the router.
 urlpatterns = [
