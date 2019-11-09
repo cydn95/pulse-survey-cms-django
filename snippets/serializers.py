@@ -8,7 +8,7 @@ from aboutothers.models import PageAOQuestion, AOQuestion, AOResponse, AORespons
 from page_nav.models import PageNav
 from team.models import Team
 from shgroup.models import SHGroup, ProjectUser
-
+from option.models import Option
 
 class EnumField(serializers.ChoiceField):
     def __init__(self, enum, **kwargs):
@@ -53,7 +53,8 @@ class AMResponseTopicSerializer(serializers.ModelSerializer):
 class AMQuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = AMQuestion
-        fields = '__all__'
+        # fields = '__all__'
+        fields = ['id', 'subdriver', 'questionText', 'questionSequence', 'sliderTextLeft', 'sliderTextRight', 'skipOptionYN', 'skipResponses', 'topicPrompt', 'commentPrompt', 'survey', 'driver', 'controlType', 'shGroup', 'option']
 
 class PageAMQuestionSerializer(serializers.ModelSerializer):
     amQuestion = AMQuestionSerializer()
@@ -117,6 +118,11 @@ class TeamSerializer(serializers.ModelSerializer):
 class SHGroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = SHGroup
+        fields = '__all__'
+
+class OptionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Option
         fields = '__all__'
 
 class ProjectUserSerializer(serializers.ModelSerializer):

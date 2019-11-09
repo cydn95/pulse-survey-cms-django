@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import AOQuestion, AOQuestionSHGroup, AOResponse, AOResponseTopic, AOPage, AOQuestionForm
+from .models import AOQuestion, AOQuestionSHGroup, AOQuestionOption, AOResponse, AOResponseTopic, AOPage, AOQuestionForm
 from django.forms import CheckboxSelectMultiple
 from django.contrib.admin.views.main import ChangeList
 
@@ -19,7 +19,7 @@ class AOQuestionList(ChangeList):
         # these need to be defined here, and not in MovieAdmin
         self.list_display = ['action_checkbox', 'driver', 'subdriver', 'questionText', 'controlType', 'sliderTextLeft', 'sliderTextRight', 'shGroup']
         self.list_display_links = ['questionText']
-        self.list_editable = ['shGroup']
+        self.list_editable = ['shGroup', 'option']
 
 class AOQuestionAdmin(admin.ModelAdmin):
     def get_changelist(self, request, **kwargs):
@@ -31,6 +31,7 @@ class AOQuestionAdmin(admin.ModelAdmin):
 # Register your models here.
 admin.site.register(AOQuestion, AOQuestionAdmin)
 admin.site.register(AOQuestionSHGroup)
+admin.site.register(AOQuestionOption)
 admin.site.register(AOResponse)
 admin.site.register(AOResponseTopic)
 admin.site.register(AOPage)

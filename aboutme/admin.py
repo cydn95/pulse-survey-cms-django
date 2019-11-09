@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import AMQuestion, AMQuestionSHGroup, AMResponse, AMResponseTopic, AMQuestionForm
+from .models import AMQuestion, AMQuestionSHGroup, AMQuestionOption, AMResponse, AMResponseTopic, AMQuestionForm
 from django.forms import CheckboxSelectMultiple
 from django.contrib.admin.views.main import ChangeList
 
@@ -19,7 +19,7 @@ class AMQuestionList(ChangeList):
         # these need to be defined here, and not in MovieAdmin
         self.list_display = ['action_checkbox', 'driver', 'subdriver', 'questionText', 'controlType', 'sliderTextLeft', 'sliderTextRight', 'shGroup']
         self.list_display_links = ['questionText']
-        self.list_editable = ['shGroup']
+        self.list_editable = ['shGroup', 'option']
 
 
 class AMQuestionAdmin(admin.ModelAdmin):
@@ -35,5 +35,6 @@ admin.site.register(AMQuestion, AMQuestionAdmin)
 # Register your models here.
 # admin.site.register(AMQuestion)
 admin.site.register(AMQuestionSHGroup)
+admin.site.register(AMQuestionOption)
 admin.site.register(AMResponse)
 admin.site.register(AMResponseTopic)

@@ -151,6 +151,7 @@ INSTALLED_APPS = [
     'aboutothers',
     'page_nav',
     'page_setting',
+    'option',
     'rest_framework',
     'rest_framework.authtoken',
     'rest_auth',

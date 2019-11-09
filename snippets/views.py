@@ -1,5 +1,5 @@
 from snippets.models import Snippet
-from snippets.serializers import ProjectUserSerializer, SHGroupSerializer, SnippetSerializer, UserSerializer, PageSettingSerializer, PageSerializer, AMResponseSerializer, AMResponseTopicSerializer, AOResponseSerializer, AOResponseTopicSerializer, AOPageSerializer, TeamSerializer
+from snippets.serializers import OptionSerializer, ProjectUserSerializer, SHGroupSerializer, SnippetSerializer, UserSerializer, PageSettingSerializer, PageSerializer, AMResponseSerializer, AMResponseTopicSerializer, AOResponseSerializer, AOResponseTopicSerializer, AOPageSerializer, TeamSerializer
 from rest_framework import generics, permissions
 from django.contrib.auth.models import User
 from snippets.permissions import IsOwnerOrReadOnly
@@ -14,6 +14,7 @@ from aboutme.models import AMResponse, AMResponseTopic
 from aboutothers.models import AOResponse, AOResponseTopic, AOPage
 from team.models import Team
 from shgroup.models import SHGroup, ProjectUser
+from option.models import Option
 from rest_framework import status
 
 from rest_framework.authtoken.views import ObtainAuthToken
@@ -182,6 +183,11 @@ class SHGroupViewSet(viewsets.ModelViewSet):
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+class OptionViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+    queryset = Option.objects.all()
+    serializer_class = OptionSerializer
 
 class ProjectUserViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
