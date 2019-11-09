@@ -68,7 +68,7 @@ STATIC_ROOT = os.path.join(DATA_DIR, 'static')
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'mysite', 'static'),
 )
-SITE_ID = 1
+SITE_ID = 2
 
 
 TEMPLATES = [
