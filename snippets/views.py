@@ -1,5 +1,5 @@
 from snippets.models import Snippet
-from snippets.serializers import OptionSerializer, ProjectUserSerializer, SHGroupSerializer, SnippetSerializer, UserSerializer, PageSettingSerializer, PageSerializer, AMResponseSerializer, AMResponseTopicSerializer, AOResponseSerializer, AOResponseTopicSerializer, AOPageSerializer, TeamSerializer
+from snippets.serializers import OrganizationSerializer, OptionSerializer, ProjectUserSerializer, SHGroupSerializer, SnippetSerializer, UserSerializer, PageSettingSerializer, PageSerializer, AMResponseSerializer, AMResponseTopicSerializer, AOResponseSerializer, AOResponseTopicSerializer, AOPageSerializer, TeamSerializer
 from rest_framework import generics, permissions
 from django.contrib.auth.models import User
 from snippets.permissions import IsOwnerOrReadOnly
@@ -16,6 +16,7 @@ from team.models import Team
 from shgroup.models import SHGroup, ProjectUser
 from option.models import Option
 from rest_framework import status
+from organization.models import Organization
 
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
@@ -32,6 +33,8 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
     This viewset automatically provides `list` and `detail` actions.
     """
     permission_classes = [permissions.IsAuthenticated,permissions.IsAuthenticatedOrReadOnly]
+    # queryset = User.objects.all()
+    # serializer_class = UserSerializer
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
