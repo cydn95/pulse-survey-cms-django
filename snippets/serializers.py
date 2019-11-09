@@ -9,6 +9,7 @@ from page_nav.models import PageNav
 from team.models import Team
 from shgroup.models import SHGroup, ProjectUser
 from option.models import Option
+from organization.models import Organization
 
 class EnumField(serializers.ChoiceField):
     def __init__(self, enum, **kwargs):
@@ -25,12 +26,23 @@ class EnumField(serializers.ChoiceField):
         except KeyError:
             self.fail('invalid_choice', input=data)
 
+
+
+
+
+class OrganizationSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Organization
+        fields = '__all__'
+
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     snippets = serializers.HyperlinkedRelatedField(many=True, view_name='snippet-detail', read_only=True)
-
+    organization = OrganizationSerializer()
     class Meta:
         model = User
-        fields = ['url', 'id', 'username', 'last_login', 'first_name', 'last_name', 'email', 'is_superuser', 'is_staff', 'is_active', 'snippets']
+        fields = ['url', 'id', 'username', 'last_login', 'first_name', 'last_name', 'email', 'is_superuser', 'is_staff', 'is_active', 'snippets', 'organization']
+
 
 class SnippetSerializer(serializers.HyperlinkedModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
