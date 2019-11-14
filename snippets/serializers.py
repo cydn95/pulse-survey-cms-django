@@ -87,7 +87,7 @@ class AOResponseTopicSerializer(serializers.ModelSerializer):
 class AOQuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = AOQuestion
-        fields = '__all__'
+        fields = ['id', 'subdriver', 'questionText', 'questionSequence', 'sliderTextLeft', 'sliderTextRight', 'skipOptionYN', 'skipResponses', 'topicPrompt', 'commentPrompt', 'survey', 'driver', 'controlType', 'shGroup', 'option']
 
 class AOPageSerializer(serializers.ModelSerializer):
     class Meta:

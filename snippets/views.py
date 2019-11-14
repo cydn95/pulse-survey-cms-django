@@ -1,5 +1,5 @@
 from snippets.models import Snippet
-from snippets.serializers import OrganizationSerializer, OptionSerializer, ProjectUserSerializer, SHGroupSerializer, SnippetSerializer, UserSerializer, PageSettingSerializer, PageSerializer, AMResponseSerializer, AMResponseTopicSerializer, AOResponseSerializer, AOResponseTopicSerializer, AOPageSerializer, TeamSerializer
+from snippets.serializers import AOQuestionSerializer, OrganizationSerializer, OptionSerializer, ProjectUserSerializer, SHGroupSerializer, SnippetSerializer, UserSerializer, PageSettingSerializer, PageSerializer, AMResponseSerializer, AMResponseTopicSerializer, AOResponseSerializer, AOResponseTopicSerializer, AOPageSerializer, TeamSerializer
 from rest_framework import generics, permissions
 from django.contrib.auth.models import User
 from snippets.permissions import IsOwnerOrReadOnly
@@ -17,9 +17,11 @@ from shgroup.models import SHGroup, ProjectUser
 from option.models import Option
 from rest_framework import status
 from organization.models import Organization
+from aboutothers.models import AOQuestion
 
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
+from rest_framework import filters
 
 class CustomAuthToken(ObtainAuthToken):
     def post(self, request, *args, **kwargs):
@@ -206,3 +208,18 @@ class ProjectUserViewSet(viewsets.ModelViewSet):
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+class AOQuestionViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+    # queryset = AOQuestion.objects.all()
+    serializer_class = AOQuestionSerializer
+    # filter_backends = [filters.SearchFilter]
+    # search_fields = ['=shGroup__id']
+
+    def get_queryset(self):
+        queryset = AOQuestion.objects.all()
+        shGroup = self.request.query_params.get('shGroup', None)
+        if shGroup is not None:
+            queryset = queryset.filter(shGroup__id=shGroup)
+        return queryset
+    
