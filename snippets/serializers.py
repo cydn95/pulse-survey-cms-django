@@ -10,6 +10,7 @@ from team.models import Team
 from shgroup.models import SHGroup, ProjectUser
 from option.models import Option
 from organization.models import Organization
+from survey.models import Driver
 
 class EnumField(serializers.ChoiceField):
     def __init__(self, enum, **kwargs):
@@ -25,10 +26,6 @@ class EnumField(serializers.ChoiceField):
             return self.enum[data]
         except KeyError:
             self.fail('invalid_choice', input=data)
-
-
-
-
 
 class OrganizationSerializer(serializers.ModelSerializer):
     
@@ -140,4 +137,9 @@ class OptionSerializer(serializers.ModelSerializer):
 class ProjectUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProjectUser
+        fields = '__all__'
+
+class DriverSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Driver
         fields = '__all__'

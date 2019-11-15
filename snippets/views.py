@@ -1,5 +1,5 @@
 from snippets.models import Snippet
-from snippets.serializers import AOQuestionSerializer, OrganizationSerializer, OptionSerializer, ProjectUserSerializer, SHGroupSerializer, SnippetSerializer, UserSerializer, PageSettingSerializer, PageSerializer, AMResponseSerializer, AMResponseTopicSerializer, AOResponseSerializer, AOResponseTopicSerializer, AOPageSerializer, TeamSerializer
+from snippets.serializers import DriverSerializer, AOQuestionSerializer, OrganizationSerializer, OptionSerializer, ProjectUserSerializer, SHGroupSerializer, SnippetSerializer, UserSerializer, PageSettingSerializer, PageSerializer, AMResponseSerializer, AMResponseTopicSerializer, AOResponseSerializer, AOResponseTopicSerializer, AOPageSerializer, TeamSerializer
 from rest_framework import generics, permissions
 from django.contrib.auth.models import User
 from snippets.permissions import IsOwnerOrReadOnly
@@ -18,6 +18,7 @@ from option.models import Option
 from rest_framework import status
 from organization.models import Organization
 from aboutothers.models import AOQuestion
+from survey.models import Driver
 
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
@@ -222,4 +223,9 @@ class AOQuestionViewSet(viewsets.ModelViewSet):
         if shGroup is not None:
             queryset = queryset.filter(shGroup__id=shGroup)
         return queryset
+    
+class DriverViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+    queryset = Driver.objects.all()
+    serializer_class = DriverSerializer
     
