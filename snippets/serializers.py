@@ -8,7 +8,7 @@ from aboutothers.models import PageAOQuestion, AOQuestion, AOResponse, AORespons
 from page_nav.models import PageNav
 from team.models import Team
 from shgroup.models import SHGroup, ProjectUser
-from option.models import Option
+from option.models import Option, SkipOption
 from organization.models import Organization
 from survey.models import Driver
 
@@ -59,11 +59,29 @@ class AMResponseTopicSerializer(serializers.ModelSerializer):
         model = AMResponseTopic
         fields = '__all__'
 
+class SHGroupSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SHGroup
+        fields = '__all__'
+
+class OptionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Option
+        fields = '__all__'
+
+class SkipOptionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SkipOption
+        fields = '__all__'
+
 class AMQuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = AMQuestion
         # fields = '__all__'
-        fields = ['id', 'subdriver', 'questionText', 'questionSequence', 'sliderTextLeft', 'sliderTextRight', 'skipOptionYN', 'skipResponses', 'topicPrompt', 'commentPrompt', 'survey', 'driver', 'controlType', 'shGroup', 'option']
+        fields = ['id', 'subdriver', 'questionText', 'questionSequence', 
+        'sliderTextLeft', 'sliderTextRight', 'skipOptionYN', 'skipResponses', 
+        'topicPrompt', 'commentPrompt', 'survey', 'driver', 'controlType', 
+        'shGroup', 'option', 'skipOption']
 
 class PageAMQuestionSerializer(serializers.ModelSerializer):
     amQuestion = AMQuestionSerializer()
@@ -82,9 +100,13 @@ class AOResponseTopicSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class AOQuestionSerializer(serializers.ModelSerializer):
+    
     class Meta:
         model = AOQuestion
-        fields = ['id', 'subdriver', 'questionText', 'questionSequence', 'sliderTextLeft', 'sliderTextRight', 'skipOptionYN', 'skipResponses', 'topicPrompt', 'commentPrompt', 'survey', 'driver', 'controlType', 'shGroup', 'option']
+        fields = ['id', 'subdriver', 'questionText', 'questionSequence', 
+        'sliderTextLeft', 'sliderTextRight', 'skipOptionYN', 'skipResponses', 
+        'topicPrompt', 'commentPrompt', 'survey', 'driver', 'controlType', 
+        'shGroup', 'option', 'skipOption']
 
 class AOPageSerializer(serializers.ModelSerializer):
     class Meta:
@@ -124,15 +146,7 @@ class TeamSerializer(serializers.ModelSerializer):
         model = Team
         fields = '__all__'
 
-class SHGroupSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = SHGroup
-        fields = '__all__'
 
-class OptionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Option
-        fields = '__all__'
 
 class ProjectUserSerializer(serializers.ModelSerializer):
     class Meta:

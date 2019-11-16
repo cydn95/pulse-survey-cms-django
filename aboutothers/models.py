@@ -2,7 +2,7 @@ from django.db import models
 from survey.models import Survey, Driver
 from setting.models import ControlType
 from shgroup.models import SHGroup
-from option.models import Option
+from option.models import Option, SkipOption
 from page_setting.models import PageSetting
 from django.contrib.auth.models import User
 from django.forms.models import ModelForm
@@ -25,14 +25,15 @@ class AOQuestion(models.Model):
     commentPrompt = models.CharField(max_length=255, blank=True)
     shGroup = models.ManyToManyField(SHGroup, blank=True)
     option = models.ManyToManyField(Option, blank=True)
+    skipOption = models.ManyToManyField(SkipOption, blank=True)
 
     def __str__(self):
         return self.questionText
 
 class AOQuestionForm(ModelForm):
-    shGroup = forms.ModelMultipleChoiceField(queryset=SHGroup.objects.all(),
-        required=False)
+    shGroup = forms.ModelMultipleChoiceField(queryset=SHGroup.objects.all(), required=False)
     option = forms.ModelMultipleChoiceField(queryset=Option.objects.all(), required=False)
+    skipOption = forms.ModelMultipleChoiceField(queryset=SkipOption.objects.all(), required=False)
 
 class AOQuestionSHGroup(models.Model):
     aoQuestion = models.ForeignKey(AOQuestion, on_delete=models.PROTECT)
@@ -42,6 +43,10 @@ class AOQuestionOption(models.Model):
     option = models.ForeignKey(Option, on_delete=models.PROTECT)
     aoQuestion = models.ForeignKey(AOQuestion, on_delete=models.PROTECT)
     
+class AOQuestionSkipOption(models.Model):
+    skipOption = models.ForeignKey(SkipOption, on_delete=models.PROTECT)
+    aoQuestion = models.ForeignKey(AOQuestion, on_delete=models.PROTECT)
+
 class AOResponse(models.Model):
     user = models.ForeignKey(User, on_delete=models.PROTECT, related_name="aoUser")
     subjectUser = models.ForeignKey(User, on_delete=models.PROTECT, related_name="aoSubjectUser")

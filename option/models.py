@@ -6,3 +6,9 @@ class Option(models.Model):
 
     def __str__(self):
         return self.optionName
+
+class SkipOption(models.Model):
+    optionName = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.optionName

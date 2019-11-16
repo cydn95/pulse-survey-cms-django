@@ -19,6 +19,7 @@ router.register(r'team', views.TeamViewSet)
 router.register(r'shgroup', views.SHGroupViewSet)
 router.register(r'projectuser', views.ProjectUserViewSet)
 router.register(r'option', views.OptionViewSet)
+router.register(r'skipOption', views.SkipOptionViewSet)
 router.register(r'aoquestion', views.AOQuestionViewSet, base_name='aoquestion')
 router.register(r'driver', views.DriverViewSet)
 
