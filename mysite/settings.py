@@ -33,33 +33,20 @@ ALLOWED_HOSTS = ['3.15.16.117', '127.0.0.1', 'localhost', '192.168.1.33']
 
 
 # Application definition
-
-
-
-
-
 ROOT_URLCONF = 'mysite.urls'
-
-
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
-
 LANGUAGE_CODE = 'en'
 
 TIME_ZONE = 'America/Los_Angeles'
 
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
-
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(DATA_DIR, 'media')
@@ -193,18 +180,6 @@ CMS_TEMPLATES = (
 CMS_PERMISSION = True
 
 CMS_PLACEHOLDER_CONF = {}
-
-# DATABASES = {
-#     'default': {
-#         'CONN_MAX_AGE': 0,
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'HOST': 'localhost',
-#         'NAME': 'project.db',
-#         'PASSWORD': '',
-#         'PORT': '',
-#         'USER': ''
-#     }
-# }
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -234,7 +209,7 @@ JET_THEMES = [
     {
         'theme': 'default', # theme folder name
         'color': '#47bac1', # color of the theme's button in user menu
-        'title': 'Default' # theme title
+        'title': 'Default'  # theme title
     },
     {
         'theme': 'green',
@@ -277,23 +252,17 @@ JET_SIDE_MENU_ITEMS = [ # A list of application or custom item dicts
         {'name': 'auth.user'},
     ]},
     {'label': 'About Me Questions', 'items': [
-        # {'name': 'aboutme.amquestionshgroup', 'label': 'StakeHolder Groups'},
         {'name': 'aboutme.amquestion', 'label': 'Questions'},
-        # {'name': 'aboutme.amresponsetopic', 'label': 'Topics'},
         {'name': 'aboutme.amresponse', 'label': 'Responses'},
     ]},
     {'label': 'About Other Questions', 'items': [
-        # {'name': 'aboutothers.aoquestionshgroup', 'label': 'StakeHolder Groups'},
         {'name': 'aboutothers.aoquestion', 'label': 'Questions'},
-        # s{'name': 'aboutothers.aoresponsetopic', 'label': 'Topics'},
         {'name': 'aboutothers.aoresponse', 'label': 'Responses'},
     ]},
     {'label': 'StakeHolders', 'items': [
         {'name':'shgroup.shcategory', 'label': 'Categories'},
         {'name':'shgroup.shgroup', 'label': 'Groups'},
         {'name':'shgroup.projectuser', 'label': 'Project Users'},
-        # {'name':'shgroup.shgroupuser', 'label': 'Group Users'},
-        # {'name':'shgroup.shmapping', 'label': 'Mappings'},
     ]},
 ]
 

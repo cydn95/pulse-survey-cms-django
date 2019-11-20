@@ -31,9 +31,6 @@ class AMQuestionAdmin(admin.ModelAdmin):
 
     
 admin.site.register(AMQuestion, AMQuestionAdmin)
-
-# Register your models here.
-# admin.site.register(AMQuestion)
 admin.site.register(AMQuestionSHGroup)
 admin.site.register(AMQuestionOption)
 admin.site.register(AMQuestionSkipOption)

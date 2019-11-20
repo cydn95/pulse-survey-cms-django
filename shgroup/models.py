@@ -5,10 +5,6 @@ from django.contrib.auth.models import Permission
 from team.models import Team
 from gremlin import addVertex
 
-# If you use a custom user model you should use:
-# from django.contrib.auth import get_user_model
-# User = get_user_model()
-
 # Create your models here.
 class SHGroup(models.Model):
     SHGroupName = models.CharField(max_length=255)

@@ -42,8 +42,6 @@ class ProjectUserAdmin(admin.ModelAdmin):
         obj.delete()
 
 admin.site.register(SHGroup, SHGroupAdmin)
-# Register your models here.
-# admin.site.register(SHGroup)
 admin.site.register(ProjectUser, ProjectUserAdmin)
 admin.site.register(SHCategory, SHCategoryAdmin)
 admin.site.register(SHMapping)

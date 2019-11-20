@@ -36,8 +36,6 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
     This viewset automatically provides `list` and `detail` actions.
     """
     permission_classes = [permissions.IsAuthenticated,permissions.IsAuthenticatedOrReadOnly]
-    # queryset = User.objects.all()
-    # serializer_class = UserSerializer
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
@@ -50,8 +48,6 @@ class SnippetViewSet(viewsets.ModelViewSet):
     """
     queryset = Snippet.objects.all()
     serializer_class = SnippetSerializer
-    # permission_classes = [permissions.IsAuthenticatedOrReadOnly,
-    #                       IsOwnerOrReadOnly]
     permission_classes = [permissions.IsAuthenticated,permissions.IsAuthenticatedOrReadOnly]
     
     @action(detail=True, renderer_classes=[renderers.StaticHTMLRenderer])
@@ -217,10 +213,7 @@ class ProjectUserViewSet(viewsets.ModelViewSet):
 
 class AOQuestionViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
-    # queryset = AOQuestion.objects.all()
     serializer_class = AOQuestionSerializer
-    # filter_backends = [filters.SearchFilter]
-    # search_fields = ['=shGroup__id']
 
     def get_queryset(self):
         queryset = AOQuestion.objects.all()
