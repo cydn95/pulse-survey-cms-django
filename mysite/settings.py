@@ -85,7 +85,6 @@ TEMPLATES = [
     },
 ]
 
-
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'cms.middleware.utils.ApphookReloadMiddleware',
@@ -248,7 +247,7 @@ JET_SIDE_MENU_ITEMS = [ # A list of application or custom item dicts
         {'name': 'page_nav.pagenav', 'label': 'Set Page Order'},
     ]},
     {'label': 'Users', 'items': [
-        {'name': 'auth.group'},
+        #{'name': 'auth.group'},
         {'name': 'auth.user'},
     ]},
     {'label': 'About Me Questions', 'items': [
@@ -266,7 +265,7 @@ JET_SIDE_MENU_ITEMS = [ # A list of application or custom item dicts
     ]},
 ]
 
-APPEND_SLASH=True
+APPEND_SLASH = True
 
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': [

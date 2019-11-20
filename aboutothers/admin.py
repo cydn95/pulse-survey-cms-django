@@ -17,7 +17,7 @@ class AOQuestionList(ChangeList):
             model_admin)
 
         # these need to be defined here, and not in MovieAdmin
-        self.list_display = ['action_checkbox', 'driver', 'subdriver', 'questionText', 'controlType', 'sliderTextLeft', 'sliderTextRight', 'shGroup']
+        self.list_display = ['action_checkbox', 'questionText', 'driver', 'subdriver', 'controlType', 'sliderTextLeft', 'sliderTextRight', 'shGroup']
         self.list_display_links = ['questionText']
         self.list_editable = ['shGroup', 'option', 'skipOption']
 
@@ -28,11 +28,16 @@ class AOQuestionAdmin(admin.ModelAdmin):
     def get_changelist_form(self, request, **kwargs):
         return AOQuestionForm
 
+class AOResponseAdmin(admin.ModelAdmin):
+    list_display = ('aoQuestion', 'user', 'subjectUser', 'survey', 'topicValue', 'commentValue', 'skipValue')
+    model = AOResponse
+    
+
 # Register your models here.
 admin.site.register(AOQuestion, AOQuestionAdmin)
 admin.site.register(AOQuestionSHGroup)
 admin.site.register(AOQuestionOption)
 admin.site.register(AOQuestionSkipOption)
-admin.site.register(AOResponse)
+admin.site.register(AOResponse, AOResponseAdmin)
 admin.site.register(AOResponseTopic)
 admin.site.register(AOPage)

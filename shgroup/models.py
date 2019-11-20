@@ -4,6 +4,9 @@ from django.contrib.auth.models import User
 from django.contrib.auth.models import Permission
 from team.models import Team
 from gremlin import addVertex
+from django.forms.models import ModelForm
+from django.forms.widgets import CheckboxSelectMultiple
+from django import forms
 
 # Create your models here.
 class SHGroup(models.Model):
@@ -32,7 +35,7 @@ class SHGroup(models.Model):
 class ProjectUser(models.Model):
     project = models.ForeignKey(Project, on_delete=models.PROTECT)
     user = models.ForeignKey(User, on_delete=models.PROTECT)
-    userPermission = models.ForeignKey(Permission, on_delete=models.PROTECT)
+    userPermission = models.ManyToManyField(Permission, blank=True)
     team = models.ForeignKey(Team, on_delete=models.PROTECT)
     shGroup = models.ForeignKey(SHGroup, on_delete=models.PROTECT)
 
@@ -54,6 +57,9 @@ class ProjectUser(models.Model):
             print(data)
             ret = addVertex(data)
             print(ret)
+
+class ProjectUserForm(ModelForm):
+    userPermission = forms.ModelMultipleChoiceField(queryset=Permission.objects.all(), required=False)
 
 class MapType(models.Model):
     name = models.CharField(max_length=50)
