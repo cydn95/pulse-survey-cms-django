@@ -18,19 +18,14 @@ except:
 admin.site.register(Page, PageAdmin)
 
 class AMQuestionInline(admin.StackedInline):
-# class AMQuestionInline(admin.StackedInline):
     model = PageAMQuestion
     extra = 0
-
-    #max_num = 5
 
 class AOQuestionInline(admin.StackedInline):
     model = PageAOQuestion
     extra = 0
-    #max_num = 5
-
+    
 class PageSettingAdmin(admin.ModelAdmin):
-    #fields = ['page', 'pageType']
     readonly_fields = []
     
     def get_readonly_fields(self, request, obj=None):

@@ -6,12 +6,6 @@ class ProjectAdmin(admin.ModelAdmin):
     model = Project
     actions = ['delete_model']
 
-    # def delete_queryset(self, request, queryset):
-    #     print('before delete')
-    #     print(queryset)
-    #     queryset.delete()
-    #     print('after_delete')
-    
     def delete_model(self, request, obj):
         
         print("before delete")
@@ -21,7 +15,6 @@ class ProjectAdmin(admin.ModelAdmin):
         obj.delete()
         print("after delete")
         
-
 # Register your models here.
 admin.site.register(Survey)
 admin.site.register(Client)

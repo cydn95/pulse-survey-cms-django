@@ -16,8 +16,9 @@ class AMQuestionList(ChangeList):
             list_per_page, list_max_show_all, list_editable, 
             model_admin)
 
-        # these need to be defined here, and not in MovieAdmin
-        self.list_display = ['action_checkbox', 'driver', 'subdriver', 'questionText', 'controlType', 'sliderTextLeft', 'sliderTextRight', 'shGroup']
+        # currently commented the action_checkbox
+        # self.list_display = ['action_checkbox', 'driver', 'subdriver', 'questionText', 'controlType', 'sliderTextLeft', 'sliderTextRight', 'shGroup']
+        self.list_display = ['action_checkbox', 'questionText', 'driver', 'subdriver', 'controlType', 'sliderTextLeft', 'sliderTextRight', 'shGroup']
         self.list_display_links = ['questionText']
         self.list_editable = ['shGroup', 'option', 'skipOption']
 
@@ -29,13 +30,13 @@ class AMQuestionAdmin(admin.ModelAdmin):
     def get_changelist_form(self, request, **kwargs):
         return AMQuestionForm
 
-    
-admin.site.register(AMQuestion, AMQuestionAdmin)
+class AMResponseAdmin(admin.ModelAdmin):
+    list_display = ('amQuestion', 'user', 'subjectUser', 'survey', 'topicValue', 'commentValue', 'skipValue')
+    model = AMResponse
 
-# Register your models here.
-# admin.site.register(AMQuestion)
+admin.site.register(AMQuestion, AMQuestionAdmin)
 admin.site.register(AMQuestionSHGroup)
 admin.site.register(AMQuestionOption)
 admin.site.register(AMQuestionSkipOption)
-admin.site.register(AMResponse)
+admin.site.register(AMResponse, AMResponseAdmin)
 admin.site.register(AMResponseTopic)
