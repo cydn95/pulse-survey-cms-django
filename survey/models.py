@@ -38,6 +38,7 @@ class Survey(models.Model):
 
 class Driver(models.Model):
     driverName = models.CharField(max_length=200)
+    iconPath = models.CharField(max_length=255, blank=True)
 
     def __str__(self):
         return self.driverName
