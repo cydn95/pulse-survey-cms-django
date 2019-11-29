@@ -143,6 +143,7 @@ INSTALLED_APPS = [
     'rest_auth',
     'corsheaders',
     'snippets.apps.SnippetsConfig',
+    'import_export',
 ]
 
 
