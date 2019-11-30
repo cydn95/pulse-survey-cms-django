@@ -22,6 +22,8 @@ router.register(r'option', views.OptionViewSet)
 router.register(r'skipOption', views.SkipOptionViewSet)
 router.register(r'aoquestion', views.AOQuestionViewSet, base_name='aoquestion')
 router.register(r'driver', views.DriverViewSet)
+router.register(r'amresponseexcel', views.AMResponseExcelViewSet)
+router.register(r'aoresponseexcel', views.AOResponseExcelViewSet)
 
 # The API URLs are now determined automatically by the router.
 urlpatterns = [
