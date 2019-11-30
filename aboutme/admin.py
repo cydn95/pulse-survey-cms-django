@@ -2,6 +2,7 @@ from django.contrib import admin
 from .models import AMQuestion, AMQuestionSHGroup, AMQuestionOption, AMQuestionSkipOption, AMResponse, AMResponseTopic, AMQuestionForm
 from django.forms import CheckboxSelectMultiple
 from django.contrib.admin.views.main import ChangeList
+from import_export.admin import ImportExportModelAdmin
 
 class AMQuestionList(ChangeList):
 
@@ -30,7 +31,8 @@ class AMQuestionAdmin(admin.ModelAdmin):
     def get_changelist_form(self, request, **kwargs):
         return AMQuestionForm
 
-class AMResponseAdmin(admin.ModelAdmin):
+# class AMResponseAdmin(admin.ModelAdmin):
+class AMResponseAdmin(ImportExportModelAdmin):
     list_display = ('amQuestion', 'user', 'subjectUser', 'survey', 'topicValue', 'commentValue', 'skipValue')
     model = AMResponse
 

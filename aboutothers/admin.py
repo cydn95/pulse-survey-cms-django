@@ -2,6 +2,7 @@ from django.contrib import admin
 from .models import AOQuestion, AOQuestionSHGroup, AOQuestionOption, AOQuestionSkipOption, AOResponse, AOResponseTopic, AOPage, AOQuestionForm
 from django.forms import CheckboxSelectMultiple
 from django.contrib.admin.views.main import ChangeList
+from import_export.admin import ImportExportModelAdmin
 
 class AOQuestionList(ChangeList):
 
@@ -28,7 +29,8 @@ class AOQuestionAdmin(admin.ModelAdmin):
     def get_changelist_form(self, request, **kwargs):
         return AOQuestionForm
 
-class AOResponseAdmin(admin.ModelAdmin):
+#class AOResponseAdmin(admin.ModelAdmin):
+class AOResponseAdmin(ImportExportModelAdmin):
     list_display = ('aoQuestion', 'user', 'subjectUser', 'survey', 'topicValue', 'commentValue', 'skipValue')
     model = AOResponse
     

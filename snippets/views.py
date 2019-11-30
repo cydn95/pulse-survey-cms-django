@@ -24,6 +24,9 @@ from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 from rest_framework import filters
 
+from drf_renderer_xlsx.mixins import XLSXFileMixin
+from drf_renderer_xlsx.renderers import XLSXRenderer
+
 class CustomAuthToken(ObtainAuthToken):
     def post(self, request, *args, **kwargs):
         response = super(CustomAuthToken, self).post(request, *args, **kwargs)
@@ -96,6 +99,13 @@ class AMResponseViewSet(viewsets.ModelViewSet):
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
+class AMResponseExcelViewSet(XLSXFileMixin, viewsets.ReadOnlyModelViewSet):
+    permission_classes = [permissions.IsAuthenticated,permissions.IsAuthenticatedOrReadOnly]
+    queryset = AMResponse.objects.all()
+    serializer_class = AMResponseSerializer
+    renderer_classes = (XLSXRenderer,)
+    filename = 'amresponse_export.xlsx'
+
 class AMResponseTopicViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated,permissions.IsAuthenticatedOrReadOnly]
     queryset = AMResponseTopic.objects.all()
@@ -126,6 +136,13 @@ class AOResponseViewSet(viewsets.ModelViewSet):
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
+class AOResponseExcelViewSet(XLSXFileMixin, viewsets.ReadOnlyModelViewSet):
+    permission_classes = [permissions.IsAuthenticated,permissions.IsAuthenticatedOrReadOnly]
+    queryset = AOResponse.objects.all()
+    serializer_class = AOResponseSerializer
+    renderer_classes = (XLSXRenderer,)
+    filename = 'aoresponse_export.xlsx'
+    
 class AOResponseTopicViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated,permissions.IsAuthenticatedOrReadOnly]
     queryset = AOResponseTopic.objects.all()
