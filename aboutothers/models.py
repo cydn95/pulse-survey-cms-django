@@ -73,5 +73,5 @@ class AOPage(models.Model):
 
 class PageAOQuestion(models.Model):
     #pageSetting = models.ForeignKey(PageSetting, on_delete=models.PROTECT)
-    pageSetting = models.ForeignKey(PageSetting, related_name="aopagesetting", on_delete=models.PROTECT, default=None, blank=True, null=True)
+    pageSetting = models.ForeignKey(PageSetting, related_name="aopagesetting", on_delete=models.SET_NULL, default=None, blank=True, null=True)
     aoQuestion = models.ForeignKey(AOQuestion, on_delete=models.PROTECT)
