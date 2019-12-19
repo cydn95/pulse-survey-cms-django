@@ -107,3 +107,6 @@ class MyMapLayoutStore(models.Model):
     projectUser = models.ForeignKey(ProjectUser, on_delete=models.PROTECT, blank=False)
     project = models.ForeignKey(Project, on_delete=models.PROTECT, blank=False)
     layout_json = JSONField(default=dict)
+
+    class Meta:
+        unique_together = ('projectUser', 'project',)
