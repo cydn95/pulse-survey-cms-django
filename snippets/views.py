@@ -1,4 +1,4 @@
-from shgroup.serializers import MyMapLayoutStoreSerializer
+from shgroup.serializers import MyMapLayoutStoreSerializer, ProjectMapLayoutStoreSerializer
 from snippets.models import Snippet
 from snippets.serializers import SkipOptionSerializer, DriverSerializer, AOQuestionSerializer, OrganizationSerializer, OptionSerializer, ProjectUserSerializer, SHGroupSerializer, SnippetSerializer, UserSerializer, PageSettingSerializer, PageSerializer, AMResponseSerializer, AMResponseTopicSerializer, AOResponseSerializer, AOResponseTopicSerializer, AOPageSerializer, TeamSerializer
 from rest_framework import generics, permissions
@@ -14,7 +14,7 @@ from cms.models import Page
 from aboutme.models import AMResponse, AMResponseTopic
 from aboutothers.models import AOResponse, AOResponseTopic, AOPage
 from team.models import Team
-from shgroup.models import SHGroup, ProjectUser, MyMapLayoutStore
+from shgroup.models import SHGroup, ProjectUser, MyMapLayoutStore, ProjectMapLayoutStore
 from option.models import Option, SkipOption
 from rest_framework import status
 from organization.models import Organization
@@ -257,3 +257,16 @@ class MyMapLayoutStoreViewSet(viewsets.ModelViewSet):
         if projectUser and project:
             return MyMapLayoutStore.objects.filter(projectUser=projectUser, project=project)
         return super(MyMapLayoutStoreViewSet, self).get_queryset()
+
+
+class ProjectMapLayoutStoreViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+    queryset = ProjectMapLayoutStore.objects.all()
+    serializer_class = ProjectMapLayoutStoreSerializer
+
+    def get_queryset(self):
+        projectUser = self.kwargs.get('projectUser', None)
+        project = self.kwargs.get('project', None)
+        if projectUser and project:
+            return ProjectMapLayoutStore.objects.filter(projectUser=projectUser, project=project)
+        return super(ProjectMapLayoutStoreViewSet, self).get_queryset()
