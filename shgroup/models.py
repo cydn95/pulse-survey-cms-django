@@ -103,7 +103,7 @@ class SHMapping(models.Model):
     relationshipStatus = models.CharField(max_length=100, blank=True)
 
 
-class MyMapLayoutStore(models.Model):
+class MyMapLayout(models.Model):
     projectUser = models.ForeignKey(ProjectUser, on_delete=models.PROTECT, blank=False)
     project = models.ForeignKey(Project, on_delete=models.PROTECT, blank=False)
     layout_json = JSONField(default=dict)
@@ -112,7 +112,7 @@ class MyMapLayoutStore(models.Model):
         unique_together = ('projectUser', 'project',)
 
 
-class ProjectMapLayoutStore(models.Model):
+class ProjectMapLayout(models.Model):
     projectUser = models.ForeignKey(ProjectUser, on_delete=models.PROTECT, blank=False)
     project = models.ForeignKey(Project, on_delete=models.PROTECT, blank=False)
     layout_json = JSONField(default=dict)

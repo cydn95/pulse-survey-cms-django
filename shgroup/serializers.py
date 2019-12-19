@@ -1,16 +1,16 @@
 from rest_framework import serializers
-from shgroup.models import MyMapLayoutStore, ProjectMapLayoutStore
+from shgroup.models import MyMapLayout, ProjectMapLayout
 
 
 class MyMapLayoutStoreSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = MyMapLayoutStore
+        model = MyMapLayout
         fields = ['id', 'projectUser', 'project', 'layout_json']
 
 
 class ProjectMapLayoutStoreSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = ProjectMapLayoutStore
+        model = ProjectMapLayout
         fields = ['id', 'projectUser', 'project', 'layout_json']

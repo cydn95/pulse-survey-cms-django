@@ -14,7 +14,7 @@ from cms.models import Page
 from aboutme.models import AMResponse, AMResponseTopic
 from aboutothers.models import AOResponse, AOResponseTopic, AOPage
 from team.models import Team
-from shgroup.models import SHGroup, ProjectUser, MyMapLayoutStore, ProjectMapLayoutStore
+from shgroup.models import SHGroup, ProjectUser, MyMapLayout, ProjectMapLayout
 from option.models import Option, SkipOption
 from rest_framework import status
 from organization.models import Organization
@@ -246,27 +246,27 @@ class DriverViewSet(viewsets.ModelViewSet):
     serializer_class = DriverSerializer
 
 
-class MyMapLayoutStoreViewSet(viewsets.ModelViewSet):
+class MyMapLayoutViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
-    queryset = MyMapLayoutStore.objects.all()
+    queryset = MyMapLayout.objects.all()
     serializer_class = MyMapLayoutStoreSerializer
 
     def get_queryset(self):
         projectUser = self.kwargs.get('projectUser', None)
         project = self.kwargs.get('project', None)
         if projectUser and project:
-            return MyMapLayoutStore.objects.filter(projectUser=projectUser, project=project)
-        return super(MyMapLayoutStoreViewSet, self).get_queryset()
+            return MyMapLayout.objects.filter(projectUser=projectUser, project=project)
+        return super(MyMapLayoutViewSet, self).get_queryset()
 
 
-class ProjectMapLayoutStoreViewSet(viewsets.ModelViewSet):
+class ProjectMapLayoutViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
-    queryset = ProjectMapLayoutStore.objects.all()
+    queryset = ProjectMapLayout.objects.all()
     serializer_class = ProjectMapLayoutStoreSerializer
 
     def get_queryset(self):
         projectUser = self.kwargs.get('projectUser', None)
         project = self.kwargs.get('project', None)
         if projectUser and project:
-            return ProjectMapLayoutStore.objects.filter(projectUser=projectUser, project=project)
-        return super(ProjectMapLayoutStoreViewSet, self).get_queryset()
+            return ProjectMapLayout.objects.filter(projectUser=projectUser, project=project)
+        return super(ProjectMapLayoutViewSet, self).get_queryset()
