@@ -1,3 +1,4 @@
+from django.contrib.postgres.fields import JSONField
 from django.db import models
 from survey.models import Project, Survey
 from django.contrib.auth.models import User
@@ -101,3 +102,20 @@ class SHMapping(models.Model):
     shCategory = models.ForeignKey(SHCategory, on_delete=models.PROTECT, blank=True)
     relationshipStatus = models.CharField(max_length=100, blank=True)
 
+
+class MyMapLayout(models.Model):
+    projectUser = models.ForeignKey(ProjectUser, on_delete=models.PROTECT, blank=False)
+    project = models.ForeignKey(Project, on_delete=models.PROTECT, blank=False)
+    layout_json = JSONField(default=dict)
+
+    class Meta:
+        unique_together = ('projectUser', 'project',)
+
+
+class ProjectMapLayout(models.Model):
+    projectUser = models.ForeignKey(ProjectUser, on_delete=models.PROTECT, blank=False)
+    project = models.ForeignKey(Project, on_delete=models.PROTECT, blank=False)
+    layout_json = JSONField(default=dict)
+
+    class Meta:
+        unique_together = ('projectUser', 'project',)

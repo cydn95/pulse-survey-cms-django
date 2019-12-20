@@ -1,3 +1,4 @@
+from shgroup.serializers import MyMapLayoutStoreSerializer, ProjectMapLayoutStoreSerializer
 from snippets.models import Snippet
 from snippets.serializers import SkipOptionSerializer, DriverSerializer, AOQuestionSerializer, OrganizationSerializer, OptionSerializer, ProjectUserSerializer, SHGroupSerializer, SnippetSerializer, UserSerializer, PageSettingSerializer, PageSerializer, AMResponseSerializer, AMResponseTopicSerializer, AOResponseSerializer, AOResponseTopicSerializer, AOPageSerializer, TeamSerializer
 from rest_framework import generics, permissions
@@ -13,7 +14,7 @@ from cms.models import Page
 from aboutme.models import AMResponse, AMResponseTopic
 from aboutothers.models import AOResponse, AOResponseTopic, AOPage
 from team.models import Team
-from shgroup.models import SHGroup, ProjectUser
+from shgroup.models import SHGroup, ProjectUser, MyMapLayout, ProjectMapLayout
 from option.models import Option, SkipOption
 from rest_framework import status
 from organization.models import Organization
@@ -243,4 +244,29 @@ class DriverViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
     queryset = Driver.objects.all()
     serializer_class = DriverSerializer
-    
+
+
+class MyMapLayoutViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+    queryset = MyMapLayout.objects.all()
+    serializer_class = MyMapLayoutStoreSerializer
+
+    def get_queryset(self):
+        projectUser = self.kwargs.get('projectUser', None)
+        project = self.kwargs.get('project', None)
+        if projectUser and project:
+            return MyMapLayout.objects.filter(projectUser=projectUser, project=project)
+        return super(MyMapLayoutViewSet, self).get_queryset()
+
+
+class ProjectMapLayoutViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+    queryset = ProjectMapLayout.objects.all()
+    serializer_class = ProjectMapLayoutStoreSerializer
+
+    def get_queryset(self):
+        projectUser = self.kwargs.get('projectUser', None)
+        project = self.kwargs.get('project', None)
+        if projectUser and project:
+            return ProjectMapLayout.objects.filter(projectUser=projectUser, project=project)
+        return super(ProjectMapLayoutViewSet, self).get_queryset()
