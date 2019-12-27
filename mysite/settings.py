@@ -144,6 +144,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'snippets.apps.SnippetsConfig',
     'import_export',
+    'django_filters'
 ]
 
 

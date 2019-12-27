@@ -250,23 +250,11 @@ class MyMapLayoutViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
     queryset = MyMapLayout.objects.all()
     serializer_class = MyMapLayoutStoreSerializer
-
-    def get_queryset(self):
-        projectUser = self.kwargs.get('projectUser', None)
-        project = self.kwargs.get('project', None)
-        if projectUser and project:
-            return MyMapLayout.objects.filter(projectUser=projectUser, project=project)
-        return super(MyMapLayoutViewSet, self).get_queryset()
+    filterset_fields = ['projectUser', 'project']
 
 
 class ProjectMapLayoutViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
     queryset = ProjectMapLayout.objects.all()
     serializer_class = ProjectMapLayoutStoreSerializer
-
-    def get_queryset(self):
-        projectUser = self.kwargs.get('projectUser', None)
-        project = self.kwargs.get('project', None)
-        if projectUser and project:
-            return ProjectMapLayout.objects.filter(projectUser=projectUser, project=project)
-        return super(ProjectMapLayoutViewSet, self).get_queryset()
+    filterset_fields = ['projectUser', 'project']
