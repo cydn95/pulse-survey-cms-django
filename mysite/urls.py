@@ -12,6 +12,8 @@ from django.views.static import serve
 from django.utils.translation import ugettext_lazy as _
 from page_nav.admin import PageNavAdmin
 from rest_framework.routers import DefaultRouter
+from rest_framework_swagger.views import get_swagger_view
+
 
 admin.autodiscover()
 
@@ -24,6 +26,14 @@ urlpatterns = [
     url('', include('snippets.urls')),
     url('api-auth/', include('rest_framework.urls')),
 ]
+
+
+# Django rest swagger documentation
+schema_view = get_swagger_view(title='Pulse CMS API')
+urlpatterns += [
+    url(r'^api-docs/$', schema_view)
+]
+
 
 urlpatterns += i18n_patterns(
     url(r'^admin/', admin.site.urls),  # NOQA
