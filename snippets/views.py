@@ -247,6 +247,15 @@ class DriverViewSet(viewsets.ModelViewSet):
 
 
 class MyMapLayoutViewSet(viewsets.ModelViewSet):
+    '''
+    List: GET all Map layouts
+    Detail: GET Map layout with an id
+    Create: POST a layout to be stored against a projectUser id and project id
+    Update: PUT a layout to be stored against a projectUser id and project id
+    Delete: DELETE a layout with a given id
+    Filter: GET a layout matching a projectUser id and project id. Filter on query params.
+    (projectUser id, project id) combinations are unique
+    '''
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
     queryset = MyMapLayout.objects.all()
     serializer_class = MyMapLayoutStoreSerializer
@@ -254,6 +263,15 @@ class MyMapLayoutViewSet(viewsets.ModelViewSet):
 
 
 class ProjectMapLayoutViewSet(viewsets.ModelViewSet):
+    '''
+    List: GET all project layouts
+    Detail: GET project layout with an id
+    Create: POST a layout to be stored against a projectUser id and project id
+    Update: PUT a layout to be stored against a projectUser id and project id
+    Delete: DELETE a layout with a given id
+    Filter: GET a layout matching a projectUser id and project id. Filter on query params.
+    (projectUser id, project id) combinations are unique
+    '''
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
     queryset = ProjectMapLayout.objects.all()
     serializer_class = ProjectMapLayoutStoreSerializer
