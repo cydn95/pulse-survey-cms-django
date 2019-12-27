@@ -41,7 +41,7 @@ class ProjectUser(models.Model):
     shGroup = models.ForeignKey(SHGroup, on_delete=models.PROTECT)
 
     def __str__(self):
-        return '{0}'.format(self.project)
+        return '{0} - {1}'.format(self.user.username, self.project)
 
     def save(self, *args, **kwargs):
         super(ProjectUser, self).save(*args, **kwargs)
