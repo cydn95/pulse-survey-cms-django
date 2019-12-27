@@ -247,26 +247,32 @@ class DriverViewSet(viewsets.ModelViewSet):
 
 
 class MyMapLayoutViewSet(viewsets.ModelViewSet):
+    '''
+    List: GET all Map layouts
+    Detail: GET Map layout with an id
+    Create: POST a layout to be stored against a projectUser id and project id
+    Update: PUT a layout to be stored against a projectUser id and project id
+    Delete: DELETE a layout with a given id
+    Filter: GET a layout matching a projectUser id and project id. Filter on query params.
+    (projectUser id, project id) combinations are unique
+    '''
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
     queryset = MyMapLayout.objects.all()
     serializer_class = MyMapLayoutStoreSerializer
-
-    def get_queryset(self):
-        projectUser = self.kwargs.get('projectUser', None)
-        project = self.kwargs.get('project', None)
-        if projectUser and project:
-            return MyMapLayout.objects.filter(projectUser=projectUser, project=project)
-        return super(MyMapLayoutViewSet, self).get_queryset()
+    filterset_fields = ['projectUser', 'project']
 
 
 class ProjectMapLayoutViewSet(viewsets.ModelViewSet):
+    '''
+    List: GET all project layouts
+    Detail: GET project layout with an id
+    Create: POST a layout to be stored against a projectUser id and project id
+    Update: PUT a layout to be stored against a projectUser id and project id
+    Delete: DELETE a layout with a given id
+    Filter: GET a layout matching a projectUser id and project id. Filter on query params.
+    (projectUser id, project id) combinations are unique
+    '''
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
     queryset = ProjectMapLayout.objects.all()
     serializer_class = ProjectMapLayoutStoreSerializer
-
-    def get_queryset(self):
-        projectUser = self.kwargs.get('projectUser', None)
-        project = self.kwargs.get('project', None)
-        if projectUser and project:
-            return ProjectMapLayout.objects.filter(projectUser=projectUser, project=project)
-        return super(ProjectMapLayoutViewSet, self).get_queryset()
+    filterset_fields = ['projectUser', 'project']

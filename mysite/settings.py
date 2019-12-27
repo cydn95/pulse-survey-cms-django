@@ -144,6 +144,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'snippets.apps.SnippetsConfig',
     'import_export',
+    'django_filters',
+    'rest_framework_swagger'
 ]
 
 
@@ -286,6 +288,7 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': None,
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema'
 }
 
 CORS_ORIGIN_ALLOW_ALL = True

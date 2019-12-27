@@ -25,9 +25,8 @@ router.register(r'driver', views.DriverViewSet)
 router.register(r'amresponseexcel', views.AMResponseExcelViewSet)
 router.register(r'aoresponseexcel', views.AOResponseExcelViewSet)
 router.register(r'mymaplayouts', views.MyMapLayoutViewSet)
-router.register(r'mymaplayouts/(?P<projectUser>\d+)/(?P<project>\d+)', views.MyMapLayoutViewSet)
 router.register(r'projectmaplayouts', views.ProjectMapLayoutViewSet)
-router.register(r'projectmaplayouts/(?P<projectUser>\d+)/(?P<project>\d+)', views.ProjectMapLayoutViewSet)
+
 
 # The API URLs are now determined automatically by the router.
 urlpatterns = [

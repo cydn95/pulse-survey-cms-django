@@ -8,6 +8,8 @@ certifi==2019.9.11
 cffi==1.12.3
 chardet==3.0.4
 clyent==1.2.1
+coreapi==2.3.3
+coreschema==0.0.4
 cssselect==1.1.0
 cssutils==1.0.2
 defusedxml==0.6.0
@@ -31,6 +33,7 @@ django-mptt==0.10.0
 django-polymorphic==2.0.3
 django-ranged-response==0.2.0
 django-rest-auth==0.9.5
+django-rest-swagger==2.2.0
 django-sekizai==1.0.0
 django-simple-captcha==0.5.12
 django-sizefield==1.0.0
@@ -55,10 +58,14 @@ et-xmlfile==1.0.1
 gunicorn==19.9.0
 html5lib==1.0.1
 idna==2.8
+itypes==1.1.0
 jdcal==1.4.1
 jet-django==0.7.6
+Jinja2==2.10.3
 lxml==4.4.1
+MarkupSafe==1.1.1
 odfpy==1.4.0
+openapi-codec==1.3.2
 openpyxl==2.4.9
 Pillow==6.2.0
 premailer==3.6.1
@@ -70,10 +77,12 @@ python-dateutil==2.8.0
 pytz==2019.3
 PyYAML==5.1.2
 requests==2.22.0
+simplejson==3.17.0
 six==1.12.0
 sqlparse==0.3.0
 tablib==0.13.0
 Unidecode==1.0.23
+uritemplate==3.0.1
 urllib3==1.25.6
 webencodings==0.5.1
 xlrd==1.2.0
