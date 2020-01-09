@@ -57,7 +57,7 @@ STATICFILES_DIRS = (
 )
 
 # 1: local 2: prod mode
-SITE_ID = 2
+SITE_ID = 1
 
 
 TEMPLATES = [

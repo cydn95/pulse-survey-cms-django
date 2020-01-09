@@ -23,8 +23,8 @@ urlpatterns = [
         {'sitemaps': {'cmspages': CMSSitemap}}),
     url(r'^jet/', include('jet.urls', 'jet')),
     url(r'^jet/dashboard/', include('jet.dashboard.urls', 'jet-dashboard')),
-    url('api/v1/', include('snippets.urls')),
-    url('api-auth/', include('rest_framework.urls')),
+    url(r'^api/v1/', include('snippets.urls')),
+    url(r'^api/v1/api-auth/', include('rest_framework.urls')),
 ]
 
 
