@@ -55,6 +55,8 @@ STATIC_ROOT = os.path.join(DATA_DIR, 'static')
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'mysite', 'static'),
 )
+
+# 1: local 2: prod mode
 SITE_ID = 2
 
 
@@ -273,7 +275,7 @@ APPEND_SLASH = True
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
-        'rest_framework.renderers.BrowsableAPIRenderer',
+        #'rest_framework.renderers.BrowsableAPIRenderer',
         'drf_renderer_xlsx.renderers.XLSXRenderer',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
