@@ -2,6 +2,7 @@ import json
 import requests
 
 api_url_base = "https://gft6ixgrq7.execute-api.us-east-2.amazonaws.com/default/PulseLambda-NeptuneLambdaFunction-QI9VKCO1VXK1"
+
 headers = {
       "Content-type": "application/json"
 }
