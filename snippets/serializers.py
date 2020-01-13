@@ -158,6 +158,13 @@ class ProjectByUserSerializer(serializers.ModelSerializer):
         model = ProjectUser
         fields = ['id', 'user', 'project']
 
+class UserByProjectSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
+    team = TeamSerializer()
+    class Meta:
+        model = ProjectUser
+        fields = ['id', 'project', 'user', 'team']
+
 class ProjectUserSerializer(serializers.ModelSerializer):
     #project = ProjectSerializer()
 

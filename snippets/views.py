@@ -1,6 +1,6 @@
 from shgroup.serializers import MyMapLayoutStoreSerializer, ProjectMapLayoutStoreSerializer
 from snippets.models import Snippet
-from snippets.serializers import ProjectByUserSerializer, SkipOptionSerializer, DriverSerializer, AOQuestionSerializer, OrganizationSerializer, OptionSerializer, ProjectUserSerializer, SHGroupSerializer, SnippetSerializer, UserSerializer, PageSettingSerializer, PageSerializer, AMResponseSerializer, AMResponseTopicSerializer, AOResponseSerializer, AOResponseTopicSerializer, AOPageSerializer, TeamSerializer
+from snippets.serializers import UserByProjectSerializer, ProjectByUserSerializer, SkipOptionSerializer, DriverSerializer, AOQuestionSerializer, OrganizationSerializer, OptionSerializer, ProjectUserSerializer, SHGroupSerializer, SnippetSerializer, UserSerializer, PageSettingSerializer, PageSerializer, AMResponseSerializer, AMResponseTopicSerializer, AOResponseSerializer, AOResponseTopicSerializer, AOPageSerializer, TeamSerializer
 from rest_framework import generics, permissions
 from django.contrib.auth.models import User
 from snippets.permissions import IsOwnerOrReadOnly
@@ -250,6 +250,18 @@ class ProjectByUserViewSet(viewsets.ModelViewSet):
         user = self.request.query_params.get('user', None)
         if user is not None:
             queryset = queryset.filter(user__id=user)
+        return queryset
+
+class UserByProjectViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+    queryset = ProjectUser.objects.all()
+    serializer_class = UserByProjectSerializer
+
+    def get_queryset(self):
+        queryset = ProjectUser.objects.all()
+        project = self.request.query_params.get('project', None)
+        if project is not None:
+            queryset = queryset.filter(project__id=project)
         return queryset
 
 class DriverViewSet(viewsets.ModelViewSet):
