@@ -1,6 +1,6 @@
 from shgroup.serializers import MyMapLayoutStoreSerializer, ProjectMapLayoutStoreSerializer
 from snippets.models import Snippet
-from snippets.serializers import SkipOptionSerializer, DriverSerializer, AOQuestionSerializer, OrganizationSerializer, OptionSerializer, ProjectUserSerializer, SHGroupSerializer, SnippetSerializer, UserSerializer, PageSettingSerializer, PageSerializer, AMResponseSerializer, AMResponseTopicSerializer, AOResponseSerializer, AOResponseTopicSerializer, AOPageSerializer, TeamSerializer
+from snippets.serializers import ProjectByUserSerializer, SkipOptionSerializer, DriverSerializer, AOQuestionSerializer, OrganizationSerializer, OptionSerializer, ProjectUserSerializer, SHGroupSerializer, SnippetSerializer, UserSerializer, PageSettingSerializer, PageSerializer, AMResponseSerializer, AMResponseTopicSerializer, AOResponseSerializer, AOResponseTopicSerializer, AOPageSerializer, TeamSerializer
 from rest_framework import generics, permissions
 from django.contrib.auth.models import User
 from snippets.permissions import IsOwnerOrReadOnly
@@ -239,7 +239,19 @@ class AOQuestionViewSet(viewsets.ModelViewSet):
         if shGroup is not None:
             queryset = queryset.filter(shGroup__id=shGroup)
         return queryset
-    
+
+class ProjectByUserViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+    queryset = ProjectUser.objects.all()
+    serializer_class = ProjectByUserSerializer
+
+    def get_queryset(self):
+        queryset = ProjectUser.objects.all()
+        user = self.request.query_params.get('user', None)
+        if user is not None:
+            queryset = queryset.filter(user__id=user)
+        return queryset
+
 class DriverViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
     queryset = Driver.objects.all()
@@ -276,3 +288,4 @@ class ProjectMapLayoutViewSet(viewsets.ModelViewSet):
     queryset = ProjectMapLayout.objects.all()
     serializer_class = ProjectMapLayoutStoreSerializer
     filterset_fields = ['projectUser', 'project']
+
