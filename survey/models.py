@@ -16,7 +16,7 @@ class Project(models.Model):
 
     def save(self, *args, **kwargs):
         super(Project, self).save(*args, **kwargs)
-        print(self.projectName)
+        #print(self.projectName)
 
         if self.id is not None:
             data = [{
@@ -25,9 +25,9 @@ class Project(models.Model):
                 'type': 'project',
                 'text': self.projectName
             }]
-            print(data)
+            #print(data)
             ret = addVertex(data)
-            print(ret)
+            #print(ret)
 
 class Survey(models.Model):
     project = models.ForeignKey(Project, on_delete=models.PROTECT)

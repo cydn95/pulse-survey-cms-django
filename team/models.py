@@ -12,7 +12,7 @@ class Team(models.Model):
 
     def save(self, *args, **kwargs):
         super(Team, self).save(*args, **kwargs)
-        print(self.name)
+        #print(self.name)
 
         if self.id is not None:
             data = [{
@@ -21,8 +21,8 @@ class Team(models.Model):
                 'type': 'team',
                 'text': self.name
             }]
-            print(data)
+            #print(data)
             ret = addVertex(data)
-            print(ret)
+            #print(ret)
 
     

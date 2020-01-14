@@ -28,7 +28,7 @@ class SHCategoryAdmin(admin.ModelAdmin):
     def delete_model(self, request, obj):
         if obj.id is not None:
             id = 'category-{0}'.format(obj.id)
-            print(id)
+            #print(id)
             deleteVertex(id)
         obj.delete()
 
@@ -43,7 +43,7 @@ class ProjectUserAdmin(admin.ModelAdmin):
     def delete_model(self, request, obj):
         if obj.id is not None:
             id = 'user-{0}'.format(obj.id)
-            print(id)
+            #print(id)
             deleteVertex(id)
         obj.delete()
 

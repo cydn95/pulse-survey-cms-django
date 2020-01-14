@@ -13,7 +13,7 @@ class Organization(models.Model):
 
     def save(self, *args, **kwargs):
         super(Organization, self).save(*args, **kwargs)
-        print(self.name)
+        #print(self.name)
 
         if self.id is not None:
             data = [{
@@ -22,6 +22,6 @@ class Organization(models.Model):
                 'type': 'organization',
                 'text': self.name
             }]
-            print(data)
+            #print(data)
             ret = addVertex(data)
-            print(ret)
+            #print(ret)

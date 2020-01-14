@@ -8,12 +8,12 @@ class ProjectAdmin(admin.ModelAdmin):
 
     def delete_model(self, request, obj):
         
-        print("before delete")
+        #print("before delete")
         if obj.id is not None:
             id = 'project-{0}'.format(obj.id)
             deleteVertex(id)
         obj.delete()
-        print("after delete")
+        #print("after delete")
         
 # Register your models here.
 admin.site.register(Survey)

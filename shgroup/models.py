@@ -20,7 +20,7 @@ class SHGroup(models.Model):
 
     def save(self, *args, **kwargs):
         super(SHGroup, self).save(*args, **kwargs)
-        print(self.SHGroupName)
+        #print(self.SHGroupName)
 
         if self.id is not None:
             data = [{
@@ -29,9 +29,9 @@ class SHGroup(models.Model):
                 'type': 'stakeholder',
                 'text': self.SHGroupName
             }]
-            print(data)
+            #print(data)
             ret = addVertex(data)
-            print(ret)
+            #print(ret)
 
 class ProjectUser(models.Model):
     project = models.ForeignKey(Project, on_delete=models.PROTECT)
@@ -45,9 +45,9 @@ class ProjectUser(models.Model):
 
     def save(self, *args, **kwargs):
         super(ProjectUser, self).save(*args, **kwargs)
-        print(self.project)
+        #print(self.project)
 
-        print(self.user)
+        #print(self.user)
         if self.id is not None:
             data = [{
                 'id': 'user-{0}'.format(self.id),
@@ -55,9 +55,9 @@ class ProjectUser(models.Model):
                 'type': 'user',
                 'text': '{0}'.format(self.user)
             }]
-            print(data)
+            #print(data)
             ret = addVertex(data)
-            print(ret)
+            #print(ret)
 
 class ProjectUserForm(ModelForm):
     userPermission = forms.ModelMultipleChoiceField(queryset=Permission.objects.all(), required=False)
@@ -82,7 +82,7 @@ class SHCategory(models.Model):
 
     def save(self, *args, **kwargs):
         super(SHCategory, self).save(*args, **kwargs)
-        print(self.SHCategoryName)
+        #print(self.SHCategoryName)
 
         if self.id is not None:
             data = [{
@@ -91,9 +91,9 @@ class SHCategory(models.Model):
                 'type': 'category',
                 'text': self.SHCategoryName
             }]
-            print(data)
+            #print(data)
             ret = addVertex(data)
-            print(ret)
+            #print(ret)
 
 class SHMapping(models.Model):
     projectUser = models.ForeignKey(ProjectUser, on_delete=models.PROTECT, blank=True)
