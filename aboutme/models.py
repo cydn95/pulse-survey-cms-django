@@ -1,5 +1,5 @@
 from django.db import models
-from survey.models import Survey, Driver
+from survey.models import Survey, Driver, Project
 from setting.models import ControlType
 from shgroup.models import SHGroup
 from option.models import Option, SkipOption
@@ -53,6 +53,7 @@ class AMResponse(models.Model):
     user = models.ForeignKey(User, on_delete=models.PROTECT, related_name="amUser")
     subjectUser = models.ForeignKey(User, on_delete=models.PROTECT, related_name="amSubjectUser")
     survey = models.ForeignKey(Survey, on_delete=models.PROTECT)
+    project = models.ForeignKey(Project, on_delete=models.PROTECT)
     amQuestion = models.ForeignKey(AMQuestion, on_delete=models.PROTECT)
     integerValue = models.PositiveIntegerField(blank=True)
     topicValue = models.TextField(blank=True)
