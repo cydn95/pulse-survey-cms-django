@@ -31,7 +31,8 @@ class AOQuestionAdmin(admin.ModelAdmin):
 
 #class AOResponseAdmin(admin.ModelAdmin):
 class AOResponseAdmin(ImportExportModelAdmin):
-    list_display = ('aoQuestion', 'user', 'subjectUser', 'survey', 'topicValue', 'commentValue', 'skipValue')
+    list_display = ['aoQuestion', 'user', 'subjectUser', 'survey', 'topicValue', 'commentValue', 'skipValue']
+    readonly_fields = ['user', 'subjectUser', 'survey', 'project', 'amQuestion', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags']
     model = AOResponse
     
 

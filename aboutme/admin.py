@@ -32,7 +32,8 @@ class AMQuestionAdmin(admin.ModelAdmin):
         return AMQuestionForm
 
 class AMResponseAdmin(ImportExportModelAdmin):
-    list_display = ('amQuestion', 'user', 'subjectUser', 'survey', 'topicValue', 'commentValue', 'skipValue')
+    list_display = ['amQuestion', 'user', 'subjectUser', 'survey', 'topicValue', 'commentValue', 'skipValue']
+    readonly_fields = ['user', 'subjectUser', 'survey', 'project', 'amQuestion', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags']
     model = AMResponse
 
 admin.site.register(AMQuestion, AMQuestionAdmin)
