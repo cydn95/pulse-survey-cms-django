@@ -8,7 +8,7 @@ class Client(models.Model):
         return self.clientName
 
 class Project(models.Model):
-    client = models.ForeignKey(Client, on_delete=models.PROTECT)
+    #client = models.ForeignKey(Client, on_delete=models.PROTECT)
     projectName = models.CharField(max_length=200)
 
     def __str__(self):

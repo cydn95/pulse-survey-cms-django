@@ -31,7 +31,6 @@ class AMQuestionAdmin(admin.ModelAdmin):
     def get_changelist_form(self, request, **kwargs):
         return AMQuestionForm
 
-# class AMResponseAdmin(admin.ModelAdmin):
 class AMResponseAdmin(ImportExportModelAdmin):
     list_display = ('amQuestion', 'user', 'subjectUser', 'survey', 'topicValue', 'commentValue', 'skipValue')
     model = AMResponse
