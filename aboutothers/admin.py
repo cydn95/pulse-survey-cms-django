@@ -32,8 +32,11 @@ class AOQuestionAdmin(admin.ModelAdmin):
 #class AOResponseAdmin(admin.ModelAdmin):
 class AOResponseAdmin(ImportExportModelAdmin):
     list_display = ['aoQuestion', 'user', 'subjectUser', 'survey', 'topicValue', 'commentValue', 'skipValue']
-    readonly_fields = ['user', 'subjectUser', 'survey', 'project', 'amQuestion', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags']
+    readonly_fields = ['user', 'subjectUser', 'survey', 'project', 'aoQuestion', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags']
     model = AOResponse
+
+    def has_add_permission(self, request):
+        return False
     
 
 # Register your models here.

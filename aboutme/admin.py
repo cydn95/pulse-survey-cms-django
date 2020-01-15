@@ -36,6 +36,9 @@ class AMResponseAdmin(ImportExportModelAdmin):
     readonly_fields = ['user', 'subjectUser', 'survey', 'project', 'amQuestion', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags']
     model = AMResponse
 
+    def has_add_permission(self, request):
+        return False
+
 admin.site.register(AMQuestion, AMQuestionAdmin)
 admin.site.register(AMQuestionSHGroup)
 admin.site.register(AMQuestionOption)
