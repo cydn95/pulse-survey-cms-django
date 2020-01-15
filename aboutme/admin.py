@@ -33,11 +33,34 @@ class AMQuestionAdmin(admin.ModelAdmin):
 
 class AMResponseAdmin(ImportExportModelAdmin):
     list_display = ['amQuestion', 'user', 'subjectUser', 'survey', 'topicValue', 'commentValue', 'skipValue']
-    readonly_fields = ['user', 'subjectUser', 'survey', 'project', 'amQuestion', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags']
+    readonly_fields = ['user', 'subjectUser', 'survey', 'project', 'amQuestion', 'controlType', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags']
     model = AMResponse
 
     def has_add_permission(self, request):
         return False
+    
+    def get_form(self, request, obj=None, **kwargs):
+        """
+        Don't allow adding new Item
+        """
+        form = super(AMResponseAdmin, self).get_form(request, obj, **kwargs)
+        # form.base_fields['survey'].widget.can_add_related = False
+        # form.base_fields['survey'].widget.can_change_related = False
+        # form.base_fields['survey'].widget.can_delete_related = False
+        # form.base_fields['user'].widget.can_add_related = False
+        # form.base_fields['user'].widget.can_change_related = False
+        # form.base_fields['user'].widget.can_delete_related = False
+        # form.base_fields['subjectUser'].widget.can_add_related = False
+        # form.base_fields['subjectUser'].widget.can_change_related = False
+        # form.base_fields['subjectUser'].widget.can_delete_related = False
+        # form.base_fields['project'].widget.can_add_related = False
+        # form.base_fields['project'].widget.can_change_related = False
+        # form.base_fields['project'].widget.can_delete_related = False
+        # form.base_fields['amQuestion'].widget.can_add_related = False
+        # form.base_fields['amQuestion'].widget.can_change_related = False
+        # form.base_fields['amQuestion'].widget.can_delete_related = False
+
+        return form
 
 admin.site.register(AMQuestion, AMQuestionAdmin)
 admin.site.register(AMQuestionSHGroup)

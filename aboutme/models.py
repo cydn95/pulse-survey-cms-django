@@ -55,6 +55,7 @@ class AMResponse(models.Model):
     survey = models.ForeignKey(Survey, on_delete=models.PROTECT)
     project = models.ForeignKey(Project, on_delete=models.PROTECT)
     amQuestion = models.ForeignKey(AMQuestion, on_delete=models.PROTECT)
+    controlType = models.CharField(max_length=30)
     integerValue = models.PositiveIntegerField(blank=True)
     topicValue = models.TextField(blank=True)
     commentValue = models.TextField(blank=True)
