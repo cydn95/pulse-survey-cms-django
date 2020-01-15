@@ -33,17 +33,46 @@ class AMQuestionAdmin(admin.ModelAdmin):
 
 class AMResponseAdmin(ImportExportModelAdmin):
     list_display = ['amQuestion', 'user', 'subjectUser', 'survey', 'topicValue', 'commentValue', 'skipValue']
-    readonly_fields = ['user', 'subjectUser', 'survey', 'project', 'amQuestion', 'controlType', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags']
+    fields = ['user', 'subjectUser', 'survey', 'project', 'amQuestion', 'controlType', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags']
+    readonly_fields = ['user', 'subjectUser', 'survey', 'project', 'amQuestion', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags']
+    
     model = AMResponse
 
     def has_add_permission(self, request):
         return False
     
     def get_form(self, request, obj=None, **kwargs):
-        """
-        Don't allow adding new Item
-        """
         form = super(AMResponseAdmin, self).get_form(request, obj, **kwargs)
+        
+        controlType = getattr(obj, 'controlType')
+        skipValue = getattr(obj, 'skipValue')
+        if controlType == 'TEXT':
+            if skipValue != '':
+                self.fields = ['user', 'subjectUser', 'survey', 'project', 'amQuestion', 'skipValue']
+            else:
+                self.fields = ['user', 'subjectUser', 'survey', 'project', 'amQuestion', 'topicValue', 'commentValue']
+        elif controlType == 'SLIDER':
+            if skipValue != '':
+                self.fields = ['user', 'subjectUser', 'survey', 'project', 'amQuestion', 'skipValue']
+            else:
+                self.fields = ['user', 'subjectUser', 'survey', 'project', 'amQuestion', 'integerValue', 'commentValue']
+        elif controlType == 'TWO_OPTIONS':
+            if skipValue != '':
+                self.fields = ['user', 'subjectUser', 'survey', 'project', 'amQuestion', 'skipValue']
+            else:
+                self.fields = ['user', 'subjectUser', 'survey', 'project', 'amQuestion', 'topicValue', 'commentValue']
+        elif controlType == 'MULTI_OPTIONS':
+            if skipValue != '':
+                self.fields = ['user', 'subjectUser', 'survey', 'project', 'amQuestion', 'skipValue']
+            else:
+                self.fields = ['user', 'subjectUser', 'survey', 'project', 'amQuestion', 'topicValue', 'commentValue']
+        elif controlType == 'SMART_TEXT':
+            if skipValue != '':
+                self.fields = ['user', 'subjectUser', 'survey', 'project', 'amQuestion', 'skipValue']
+            else:
+                self.fields = ['user', 'subjectUser', 'survey', 'project', 'amQuestion', 'topicValue', 'commentValue']
+        else:
+            self.fields = ['user', 'subjectUser', 'survey', 'project', 'amQuestion', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags']
         # form.base_fields['survey'].widget.can_add_related = False
         # form.base_fields['survey'].widget.can_change_related = False
         # form.base_fields['survey'].widget.can_delete_related = False

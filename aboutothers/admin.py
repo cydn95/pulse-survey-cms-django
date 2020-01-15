@@ -32,12 +32,48 @@ class AOQuestionAdmin(admin.ModelAdmin):
 #class AOResponseAdmin(admin.ModelAdmin):
 class AOResponseAdmin(ImportExportModelAdmin):
     list_display = ['aoQuestion', 'user', 'subjectUser', 'survey', 'topicValue', 'commentValue', 'skipValue']
-    readonly_fields = ['user', 'subjectUser', 'survey', 'project', 'aoQuestion', 'controlType', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags']
+    fileds = ['user', 'subjectUser', 'survey', 'project', 'aoQuestion', 'controlType', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags']
+    readonly_fields = ['user', 'subjectUser', 'survey', 'project', 'aoQuestion', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags']
+    
     model = AOResponse
 
     def has_add_permission(self, request):
         return False
     
+    def get_form(self, request, obj=None, **kwargs):
+        form = super(AOResponseAdmin, self).get_form(request, obj, **kwargs)
+
+        controlType = getattr(obj, 'controlType')
+        skipValue = getattr(obj, 'skipValue')
+        if controlType == 'TEXT':
+            if skipValue != '':
+                self.fields = ['user', 'subjectUser', 'survey', 'project', 'aoQuestion', 'skipValue']
+            else:
+                self.fields = ['user', 'subjectUser', 'survey', 'project', 'aoQuestion', 'topicValue', 'commentValue']
+        elif controlType == 'SLIDER':
+            if skipValue != '':
+                self.fields = ['user', 'subjectUser', 'survey', 'project', 'aoQuestion', 'skipValue']
+            else:
+                self.fields = ['user', 'subjectUser', 'survey', 'project', 'aoQuestion', 'integerValue', 'commentValue']
+        elif controlType == 'TWO_OPTIONS':
+            if skipValue != '':
+                self.fields = ['user', 'subjectUser', 'survey', 'project', 'aoQuestion', 'skipValue']
+            else:
+                self.fields = ['user', 'subjectUser', 'survey', 'project', 'aoQuestion', 'topicValue', 'commentValue']
+        elif controlType == 'MULTI_OPTIONS':
+            if skipValue != '':
+                self.fields = ['user', 'subjectUser', 'survey', 'project', 'aoQuestion', 'skipValue']
+            else:
+                self.fields = ['user', 'subjectUser', 'survey', 'project', 'aoQuestion', 'topicValue', 'commentValue']
+        elif controlType == 'SMART_TEXT':
+            if skipValue != '':
+                self.fields = ['user', 'subjectUser', 'survey', 'project', 'aoQuestion', 'skipValue']
+            else:
+                self.fields = ['user', 'subjectUser', 'survey', 'project', 'aoQuestion', 'topicValue', 'commentValue']
+        else:
+            self.fields = ['user', 'subjectUser', 'survey', 'project', 'aoQuestion', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags']
+
+        return form
 
 # Register your models here.
 admin.site.register(AOQuestion, AOQuestionAdmin)
