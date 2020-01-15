@@ -93,10 +93,65 @@ class AMResponseViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         data = request.data.get("items") if 'items' in request.data else request.data
         many = isinstance(data, list)
-        #print(data, many)
-        serializer = self.get_serializer(data=data, many=many)
+        
+        if many == True:
+            for item in data:
+                defaults = item
+                try:
+                    obj = AMResponse.objects.get(survey_id=item['survey'], project_id=item['project'], user_id=item['user'], amQuestion_id=item['amQuestion']) 
+                    
+                    obj.integerValue = defaults['integerValue']
+                    obj.topicValue = defaults['topicValue']
+                    obj.commentValue = defaults['commentValue']
+                    obj.skipValue = defaults['skipValue']
+                    obj.topicTags = defaults['topicTags']
+                    obj.commentTags = defaults['commentTags']
+
+                    obj.save()
+
+                except AMResponse.DoesNotExist:
+                    obj = AMResponse(amQuestion_id=defaults['amQuestion'], 
+                                user_id=defaults['user'], subjectUser_id=defaults['subjectUser'], 
+                                survey_id=defaults['survey'], project_id=defaults['project'], 
+                                controlType=defaults['controlType'], integerValue=defaults['integerValue'],
+                                topicValue=defaults['topicValue'], commentValue=defaults['commentValue'],
+                                skipValue=defaults['skipValue'], topicTags=defaults['topicTags'],
+                                commentTags=defaults['commentTags'])
+
+                    obj.save()
+                    
+        elif many == False:
+            defaults = data
+            try:
+                obj = AMResponse.objects.get(survey_id=defaults['survey'], project_id=defaults['project'], user_id=defaults['user'], amQuestion_id=defaults['amQuestion'])
+                
+                obj.integerValue = defaults['integerValue']
+                obj.topicValue = defaults['topicValue']
+                obj.commentValue = defaults['commentValue']
+                obj.skipValue = defaults['skipValue']
+                obj.topicTags = defaults['topicTags']
+                obj.commentTags = defaults['commentTags']
+
+                obj.save()
+            except AMResponse.DoesNotExist:
+
+                obj = AMResponse(amQuestion_id=data['amQuestion'], 
+                                user_id=data['user'], subjectUser_id=data['subjectUser'], 
+                                survey_id=data['survey'], project_id=data['project'], 
+                                controlType=data['controlType'], integerValue=data['integerValue'],
+                                topicValue=data['topicValue'], commentValue=data['commentValue'],
+                                skipValue=data['skipValue'], topicTags=data['topicTags'],
+                                commentTags=data['commentTags'])
+
+                obj.save()
+
+        
+        result = AMResponse.objects.all().values('user', 'subjectUser', 'survey', 'project', 'amQuestion', 'controlType', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags')
+        
+        list_result = [entry for entry in result]
+        print(list_result)
+        serializer = self.get_serializer(data=list_result, many=True)
         serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
