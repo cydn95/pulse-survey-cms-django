@@ -49,28 +49,73 @@ class AMResponseAdmin(ImportExportModelAdmin):
         if controlType == 'TEXT':
             if skipValue != '':
                 self.fields = ['user', 'subjectUser', 'survey', 'project', 'amQuestion', 'skipValue']
+                self.labels = {
+                    'amQuestion': 'Question',
+                    'skipValue': 'Answer'
+                }
             else:
                 self.fields = ['user', 'subjectUser', 'survey', 'project', 'amQuestion', 'topicValue', 'commentValue']
+                self.labels = {
+                    'amQuestion': 'Question',
+                    'topicValue': 'Answer',
+                    'commentValue': 'Description'
+                }
         elif controlType == 'SLIDER':
             if skipValue != '':
                 self.fields = ['user', 'subjectUser', 'survey', 'project', 'amQuestion', 'skipValue']
+                self.labels = {
+                    'amQuestion': 'Question',
+                    'skipValue': 'Answer'
+                }
             else:
                 self.fields = ['user', 'subjectUser', 'survey', 'project', 'amQuestion', 'integerValue', 'commentValue']
+                self.labels = {
+                    'amQuestion': 'Question',
+                    'integerValue': 'Answer',
+                    'commentValue': 'Description'
+                }
         elif controlType == 'TWO_OPTIONS':
             if skipValue != '':
                 self.fields = ['user', 'subjectUser', 'survey', 'project', 'amQuestion', 'skipValue']
+                self.labels = {
+                    'amQuestion': 'Question',
+                    'skipValue': 'Answer'
+                }
             else:
                 self.fields = ['user', 'subjectUser', 'survey', 'project', 'amQuestion', 'topicValue', 'commentValue']
+                self.labels = {
+                    'amQuestion': 'Question',
+                    'topicValue': 'Answer',
+                    'commentValue': 'Description'
+                }
         elif controlType == 'MULTI_OPTIONS':
             if skipValue != '':
                 self.fields = ['user', 'subjectUser', 'survey', 'project', 'amQuestion', 'skipValue']
+                self.labels = {
+                    'amQuestion': 'Question',
+                    'skipValue': 'Answer'
+                }
             else:
                 self.fields = ['user', 'subjectUser', 'survey', 'project', 'amQuestion', 'topicValue', 'commentValue']
+                self.labels = {
+                    'amQuestion': 'Question',
+                    'topicValue': 'Answer',
+                    'commentValue': 'Description'
+                }
         elif controlType == 'SMART_TEXT':
             if skipValue != '':
                 self.fields = ['user', 'subjectUser', 'survey', 'project', 'amQuestion', 'skipValue']
+                self.labels = {
+                    'amQuestion': 'Question',
+                    'skipValue': 'Answer'
+                }
             else:
                 self.fields = ['user', 'subjectUser', 'survey', 'project', 'amQuestion', 'topicValue', 'commentValue']
+                self.labels = {
+                    'amQuestion': 'Question',
+                    'topicValue': 'Answer',
+                    'commentValue': 'Description'
+                }
         else:
             self.fields = ['user', 'subjectUser', 'survey', 'project', 'amQuestion', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags']
         # form.base_fields['survey'].widget.can_add_related = False
