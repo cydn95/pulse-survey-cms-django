@@ -179,14 +179,12 @@ class DriverSerializer(serializers.ModelSerializer):
 
 
 class MyMapLayoutStoreSerializer(serializers.ModelSerializer):
-    projectUser = ProjectUserSerializer(many=True, read_only=True)
     class Meta:
         model = MyMapLayout
-        fields = ['id', 'user', 'project', 'projectUser']
+        fields = ['id', 'user', 'project', 'projectUser', 'layout_json']
 
 
 class ProjectMapLayoutStoreSerializer(serializers.ModelSerializer):
-    projectUser = ProjectUserSerializer(many=True, read_only=True)
     class Meta:
         model = ProjectMapLayout
-        fields = ['id', 'user', 'project', 'projectUser']
+        fields = ['id', 'user', 'project', 'projectUser', 'layout_json']
