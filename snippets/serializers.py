@@ -7,7 +7,7 @@ from aboutme.models import PageAMQuestion, AMQuestion, AMResponse, AMResponseTop
 from aboutothers.models import PageAOQuestion, AOQuestion, AOResponse, AOResponseTopic, AOPage
 from page_nav.models import PageNav
 from team.models import Team
-from shgroup.models import SHGroup, ProjectUser
+from shgroup.models import SHGroup, ProjectUser, MyMapLayout, ProjectMapLayout
 from option.models import Option, SkipOption
 from organization.models import Organization
 from survey.models import Driver, Project
@@ -178,3 +178,15 @@ class DriverSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class MyMapLayoutStoreSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = MyMapLayout
+        fields = '__all__'
+
+
+class ProjectMapLayoutStoreSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ProjectMapLayout
+        fields = '__all__'

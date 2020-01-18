@@ -104,18 +104,20 @@ class SHMapping(models.Model):
 
 
 class MyMapLayout(models.Model):
-    projectUser = models.ForeignKey(ProjectUser, on_delete=models.PROTECT, blank=False)
-    project = models.ForeignKey(Project, on_delete=models.PROTECT, blank=False)
-    layout_json = JSONField(default=dict)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=False)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, blank=False)
+    projectUser = models.ManyToManyField(ProjectUser, blank=True)
+    layout_json = JSONField(default=dict, blank=True)
 
     class Meta:
-        unique_together = ('projectUser', 'project',)
+        unique_together = ['user', 'project',]
 
 
 class ProjectMapLayout(models.Model):
-    projectUser = models.ForeignKey(ProjectUser, on_delete=models.PROTECT, blank=False)
-    project = models.ForeignKey(Project, on_delete=models.PROTECT, blank=False)
-    layout_json = JSONField(default=dict)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=False)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, blank=False)
+    projectUser = models.ManyToManyField(ProjectUser, blank=True)
+    layout_json = JSONField(default=dict, blank=True)
 
     class Meta:
-        unique_together = ('projectUser', 'project',)
+        unique_together = ['user', 'project',]
