@@ -57,7 +57,7 @@ STATICFILES_DIRS = (
 )
 
 # 1: local 2: prod mode
-SITE_ID = 2
+SITE_ID = 1
 
 TEMPLATES = [
     {
@@ -139,6 +139,7 @@ INSTALLED_APPS = [
     'page_nav',
     'page_setting',
     'option',
+    'landing',
     'rest_framework',
     'rest_framework.authtoken',
     'rest_auth',
