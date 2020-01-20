@@ -1,12 +1,12 @@
 from django.db import models
-from organization.models import Organization
+#from organization.models import Organization
 from gremlin import addVertex
 
 # Create your models here.
 class Team(models.Model):
-    organization = models.ForeignKey(Organization, on_delete=models.PROTECT)
+    #organization = models.ForeignKey(Organization, on_delete=models.PROTECT)
     name = models.CharField(max_length=200)
-
+    organization = models.CharField(max_length=200)
     def __str__(self):
         return self.name
 
