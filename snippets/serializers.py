@@ -7,7 +7,7 @@ from aboutme.models import PageAMQuestion, AMQuestion, AMResponse, AMResponseTop
 from aboutothers.models import PageAOQuestion, AOQuestion, AOResponse, AOResponseTopic, AOPage
 from page_nav.models import PageNav
 from team.models import Team
-from shgroup.models import SHGroup, ProjectUser, MyMapLayout, ProjectMapLayout
+from shgroup.models import SHGroup, ProjectUser, MyMapLayout, ProjectMapLayout, SHCategory
 from option.models import Option, SkipOption
 from organization.models import Organization
 from survey.models import Driver, Project
@@ -156,14 +156,20 @@ class ProjectByUserSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = ProjectUser
-        fields = ['id', 'user', 'project']
+        fields = ['id', 'user', 'project', 'shCategory']
+
+class SHCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SHCategory
+        fields = '__all__'
 
 class UserByProjectSerializer(serializers.ModelSerializer):
     user = UserSerializer()
     team = TeamSerializer()
+    shCategory = SHCategorySerializer()
     class Meta:
         model = ProjectUser
-        fields = ['id', 'project', 'user', 'team']
+        fields = ['id', 'project', 'user', 'team', 'shCategory']
 
 class ProjectUserSerializer(serializers.ModelSerializer):
     #project = ProjectSerializer()

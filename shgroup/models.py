@@ -10,6 +10,7 @@ from django.forms.widgets import CheckboxSelectMultiple
 from django import forms
 
 # Create your models here.
+
 class SHGroup(models.Model):
     SHGroupName = models.CharField(max_length=255)
     SHGroupAbbrev = models.CharField(max_length=50, blank=True)
@@ -33,41 +34,12 @@ class SHGroup(models.Model):
             ret = addVertex(data)
             #print(ret)
 
-class ProjectUser(models.Model):
-    project = models.ForeignKey(Project, on_delete=models.PROTECT)
-    user = models.ForeignKey(User, on_delete=models.PROTECT)
-    userPermission = models.ManyToManyField(Permission, blank=True)
-    team = models.ForeignKey(Team, on_delete=models.PROTECT)
-    shGroup = models.ForeignKey(SHGroup, on_delete=models.PROTECT)
-
-    def __str__(self):
-        return '{0} - {1}'.format(self.user.username, self.project)
-
-    def save(self, *args, **kwargs):
-        super(ProjectUser, self).save(*args, **kwargs)
-        #print(self.project)
-
-        #print(self.user)
-        if self.id is not None:
-            data = [{
-                'id': 'user-{0}'.format(self.id),
-                'label': 'user_{0}'.format(self.id),
-                'type': 'user',
-                'text': '{0}'.format(self.user)
-            }]
-            #print(data)
-            ret = addVertex(data)
-            #print(ret)
-
-class ProjectUserForm(ModelForm):
-    userPermission = forms.ModelMultipleChoiceField(queryset=Permission.objects.all(), required=False)
-
 class MapType(models.Model):
     name = models.CharField(max_length=50)
 
     def __str__(self):
         return self.name
-
+        
 class SHCategory(models.Model):
     survey = models.ForeignKey(Survey, on_delete=models.PROTECT)
     shGroup = models.ForeignKey(SHGroup, on_delete=models.PROTECT, blank=True)
@@ -94,6 +66,35 @@ class SHCategory(models.Model):
             #print(data)
             ret = addVertex(data)
             #print(ret)
+
+class ProjectUser(models.Model):
+    project = models.ForeignKey(Project, on_delete=models.PROTECT)
+    user = models.ForeignKey(User, on_delete=models.PROTECT)
+    userPermission = models.ManyToManyField(Permission, blank=True)
+    team = models.ForeignKey(Team, on_delete=models.PROTECT)
+    shCategory = models.ForeignKey(SHCategory, on_delete=models.PROTECT)
+
+    def __str__(self):
+        return '{0} - {1}'.format(self.user.username, self.project)
+
+    def save(self, *args, **kwargs):
+        super(ProjectUser, self).save(*args, **kwargs)
+        #print(self.project)
+
+        #print(self.user)
+        if self.id is not None:
+            data = [{
+                'id': 'user-{0}'.format(self.id),
+                'label': 'user_{0}'.format(self.id),
+                'type': 'user',
+                'text': '{0}'.format(self.user)
+            }]
+            #print(data)
+            ret = addVertex(data)
+            #print(ret)
+
+class ProjectUserForm(ModelForm):
+    userPermission = forms.ModelMultipleChoiceField(queryset=Permission.objects.all(), required=False)
 
 class SHMapping(models.Model):
     projectUser = models.ForeignKey(ProjectUser, on_delete=models.PROTECT, blank=True)
