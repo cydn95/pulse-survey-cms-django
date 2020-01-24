@@ -74,6 +74,9 @@ class ProjectUser(models.Model):
     team = models.ForeignKey(Team, on_delete=models.PROTECT)
     shCategory = models.ForeignKey(SHCategory, on_delete=models.PROTECT)
 
+    class Meta:
+        unique_together = ['project', 'user', 'team', 'shCategory']
+
     def __str__(self):
         return '{0} - {1}'.format(self.user.username, self.project)
 
