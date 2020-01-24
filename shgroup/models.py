@@ -72,10 +72,10 @@ class ProjectUser(models.Model):
     user = models.ForeignKey(User, on_delete=models.PROTECT)
     userPermission = models.ManyToManyField(Permission, blank=True)
     team = models.ForeignKey(Team, on_delete=models.PROTECT)
-    shCategory = models.ForeignKey(SHCategory, on_delete=models.PROTECT)
+    shCategory = models.ForeignKey(SHCategory, null=True, blank=True)
 
     class Meta:
-        unique_together = ['project', 'user', 'team', 'shCategory']
+        unique_together = ['project', 'user', 'team']
 
     def __str__(self):
         return '{0} - {1}'.format(self.user.username, self.project)

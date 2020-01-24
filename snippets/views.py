@@ -280,6 +280,19 @@ class ProjectUserViewSet(viewsets.ModelViewSet):
     queryset = ProjectUser.objects.all()
     serializer_class = ProjectUserSerializer
 
+    def get_queryset(self):
+        queryset = ProjectUser.objects.all()
+        shCategory = self.request.query_params.get('shCategory', None)
+        if shCategory is not None:
+            try:
+                if int(shCategory) > 0:
+                    queryset = queryset.filter(shCategory__id=shCategory)
+                elif int(shCategory) == 0:
+                    queryset = queryset.filter(shCategory__isnull=True)
+            except ValueError:
+                queryset = ProjectUser.objects.all()
+        return queryset
+
     def create(self, request, *args, **kwargs):
         data = request.data.get("items") if 'items' in request.data else request.data
         many = isinstance(data, list)
