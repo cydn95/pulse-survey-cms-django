@@ -113,8 +113,8 @@ class MyMapLayout(models.Model):
     projectUser = models.ManyToManyField(ProjectUser, blank=True)
     layout_json = JSONField(default=dict, blank=True)
 
-    class Meta:
-        unique_together = ['user', 'project',]
+    # class Meta:
+    #     unique_together = ['user', 'project',]
 
 
 class ProjectMapLayout(models.Model):
@@ -123,5 +123,5 @@ class ProjectMapLayout(models.Model):
     projectUser = models.ManyToManyField(ProjectUser, blank=True)
     layout_json = JSONField(default=dict, blank=True)
 
-    class Meta:
-        unique_together = ['user', 'project',]
+    # class Meta:
+    #     unique_together = ['user', 'project',]
