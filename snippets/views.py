@@ -357,7 +357,7 @@ class MyMapLayoutViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
     queryset = MyMapLayout.objects.all()
     serializer_class = MyMapLayoutStoreSerializer
-    filterset_fields = ['user', 'project']
+    #filterset_fields = ['user', 'project']
 
 
 class ProjectMapLayoutViewSet(viewsets.ModelViewSet):
