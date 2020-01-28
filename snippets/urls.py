@@ -3,6 +3,7 @@ from rest_framework.routers import DefaultRouter
 from snippets import views
 #from rest_framework.authtoken.views import obtain_auth_token
 from .views import CustomAuthToken
+from rest_framework.urlpatterns import format_suffix_patterns
 
 # Create a router and register our viewsets with it.
 router = DefaultRouter()
@@ -36,3 +37,7 @@ urlpatterns = [
     url('rest-auth/', include('rest_auth.urls')),
     url('api-token-auth/', CustomAuthToken.as_view()),
 ]
+
+urlpatterns += format_suffix_patterns([
+    url(r'stakeholder', views.StakeHolderUserView.as_view())
+])

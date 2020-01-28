@@ -194,3 +194,21 @@ class ProjectMapLayoutStoreSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProjectMapLayout
         fields = ['id', 'user', 'project', 'projectUser', 'layout_json']
+
+class StakeHolderUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['username', 'first_name', 'last_name', 'email']
+
+class StakeHolderSerializer(serializers.ModelSerializer):
+    user = StakeHolderUserSerializer(required=True)
+
+    class Meta:
+        model = Organization
+        fields = ['id', 'user', 'name']
+
+    def create(self, validated_data):
+        user_data = validated_data.pop('user')
+        user = StakeHolderUserSerializer.create(StakeHolderUserSerializer(), validated_data=user_data)
+        stakeHolder, created = Organization.objects.update_or_create(user=user, name=validated_data.pop('name'))
+        return stakeHolder

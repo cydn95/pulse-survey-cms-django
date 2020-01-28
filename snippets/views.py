@@ -1,5 +1,5 @@
 from snippets.models import Snippet
-from snippets.serializers import SHCategorySerializer, MyMapLayoutStoreSerializer, ProjectMapLayoutStoreSerializer, UserByProjectSerializer, ProjectByUserSerializer, SkipOptionSerializer, DriverSerializer, AOQuestionSerializer, OrganizationSerializer, OptionSerializer, ProjectUserSerializer, SHGroupSerializer, SnippetSerializer, UserSerializer, PageSettingSerializer, PageSerializer, AMResponseSerializer, AMResponseTopicSerializer, AOResponseSerializer, AOResponseTopicSerializer, AOPageSerializer, TeamSerializer
+from snippets.serializers import StakeHolderSerializer, SHCategorySerializer, MyMapLayoutStoreSerializer, ProjectMapLayoutStoreSerializer, UserByProjectSerializer, ProjectByUserSerializer, SkipOptionSerializer, DriverSerializer, AOQuestionSerializer, OrganizationSerializer, OptionSerializer, ProjectUserSerializer, SHGroupSerializer, SnippetSerializer, UserSerializer, PageSettingSerializer, PageSerializer, AMResponseSerializer, AMResponseTopicSerializer, AOResponseSerializer, AOResponseTopicSerializer, AOPageSerializer, TeamSerializer
 from rest_framework import generics, permissions
 from django.contrib.auth.models import User
 from snippets.permissions import IsOwnerOrReadOnly
@@ -19,6 +19,7 @@ from rest_framework import status
 from organization.models import Organization
 from aboutothers.models import AOQuestion
 from survey.models import Driver
+from rest_framework.views import APIView
 
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
@@ -380,3 +381,25 @@ class SHCategoryViewSet(viewsets.ModelViewSet):
     queryset = SHCategory.objects.all()
     serializer_class = SHCategorySerializer
     filterset_fields = ['mapType', 'survey']
+
+class StakeHolderUserView(APIView):
+    @classmethod
+    def get_extra_actions(cls):
+        return []
+
+    def get(self, format=None):
+        organizations = Organization.objects.all()
+        serializer = StakeHolderSerializer(organizations, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = StakeHolderSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=ValueError):
+            serializer.create(validated_data=request.data)
+            
+            print(serializer.data['user']['username'])
+
+            dt = User.objects.filter(username=serializer.data['user']['username']).values_list('pk', flat=True)
+
+            return Response(dt[0], status=status.HTTP_201_CREATED)
+        return Response(serializer.error_messages, status=status.HTTP_400_BAD_REQUEST)
