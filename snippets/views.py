@@ -397,9 +397,9 @@ class StakeHolderUserView(APIView):
         if serializer.is_valid(raise_exception=ValueError):
             serializer.create(validated_data=request.data)
             
-            
+            print(serializer.data['user']['username'])
 
-            dt = User.objects.get(username=serializer.data['user']['username'])
-            
-            return Response(dt, status=status.HTTP_201_CREATED)
+            dt = User.objects.filter(username=serializer.data['user']['username']).values_list('pk', flat=True)
+
+            return Response(dt[0], status=status.HTTP_201_CREATED)
         return Response(serializer.error_messages, status=status.HTTP_400_BAD_REQUEST)
