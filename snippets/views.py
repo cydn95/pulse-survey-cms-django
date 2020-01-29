@@ -355,6 +355,8 @@ class MyMapLayoutViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         data = request.data
+        content_type = request.content_type
+        #print(content_type)
         try:
             obj = MyMapLayout.objects.get(user_id=data['user'], project_id=data['project'])
 
@@ -365,9 +367,14 @@ class MyMapLayoutViewSet(viewsets.ModelViewSet):
             #     for item in data.getlist('projectUser'):
             #         new_obj = ProjectUser.objects.get(id=item)
             #         obj.projectUser.add(new_obj)
-            for item in data['projectUser']:
-                new_obj = ProjectUser.objects.get(id=item)
-                obj.projectUser.add(new_obj)
+            if content_type == "application/json":
+                for item in data['projectUser']:
+                    new_obj = ProjectUser.objects.get(id=item)
+                    obj.projectUser.add(new_obj)
+            else:
+                for item in data.getlist('projectUser'):
+                    new_obj = ProjectUser.objects.get(id=item)
+                    obj.projectUser.add(new_obj)
 
             obj.save()
 
@@ -383,9 +390,14 @@ class MyMapLayoutViewSet(viewsets.ModelViewSet):
             #     for item in data.getlist('projectUser'):
             #         new_obj = ProjectUser.objects.get(id=item)
             #         obj.projectUser.add(new_obj)
-            for item in data['projectUser']:
-                new_obj = ProjectUser.objects.get(id=item)
-                obj.projectUser.add(new_obj)
+            if content_type == "application/json":
+                for item in data['projectUser']:
+                    new_obj = ProjectUser.objects.get(id=item)
+                    obj.projectUser.add(new_obj)
+            else:
+                for item in data.getlist('projectUser'):
+                    new_obj = ProjectUser.objects.get(id=item)
+                    obj.projectUser.add(new_obj)
 
             obj.save()
 
@@ -437,7 +449,7 @@ class StakeHolderUserView(APIView):
         if serializer.is_valid(raise_exception=ValueError):
             serializer.create(validated_data=request.data)
             
-            print(serializer.data['user']['username'])
+            #print(serializer.data['user']['username'])
 
             dt = User.objects.filter(username=serializer.data['user']['username']).values_list('pk', flat=True)
 
