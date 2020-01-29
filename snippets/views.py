@@ -360,19 +360,30 @@ class MyMapLayoutViewSet(viewsets.ModelViewSet):
 
             obj.projectUser.clear()
             
-            for item in data.getlist('projectUser'):
+            # if type(data) != "dict":
+            #     print(1)
+            #     for item in data.getlist('projectUser'):
+            #         new_obj = ProjectUser.objects.get(id=item)
+            #         obj.projectUser.add(new_obj)
+            for item in data['projectUser']:
                 new_obj = ProjectUser.objects.get(id=item)
                 obj.projectUser.add(new_obj)
-            
+
             obj.save()
 
         except MyMapLayout.DoesNotExist:
             obj = MyMapLayout.objects.create(user_id=data['user'], project_id=data['project'])
-            print(obj.id)
+
             obj.user_id = data['user']
             obj.project_id = data['project']
             obj.layout_json = data['layout_json']
-            for item in data.getlist('projectUser'):
+
+            # if type(data) != "dict":
+            #     print(1)
+            #     for item in data.getlist('projectUser'):
+            #         new_obj = ProjectUser.objects.get(id=item)
+            #         obj.projectUser.add(new_obj)
+            for item in data['projectUser']:
                 new_obj = ProjectUser.objects.get(id=item)
                 obj.projectUser.add(new_obj)
 
@@ -384,7 +395,6 @@ class MyMapLayoutViewSet(viewsets.ModelViewSet):
         for idx in range(len(result['projectUser'])):
             list_result['projectUser'][idx] = result['projectUser'][idx].id
 
-        print(list_result)
         serializer = self.get_serializer(data=list_result)
         serializer.is_valid(raise_exception=True)
         headers = self.get_success_headers(serializer.data)
