@@ -20,6 +20,7 @@ from organization.models import Organization
 from aboutothers.models import AOQuestion
 from survey.models import Driver
 from rest_framework.views import APIView
+from django.forms.models import model_to_dict
 
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
@@ -149,7 +150,7 @@ class AMResponseViewSet(viewsets.ModelViewSet):
         result = AMResponse.objects.all().values('user', 'subjectUser', 'survey', 'project', 'amQuestion', 'controlType', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags')
         
         list_result = [entry for entry in result]
-        print(list_result)
+        
         serializer = self.get_serializer(data=list_result, many=True)
         serializer.is_valid(raise_exception=True)
         headers = self.get_success_headers(serializer.data)
@@ -346,20 +347,49 @@ class DriverViewSet(viewsets.ModelViewSet):
 
 
 class MyMapLayoutViewSet(viewsets.ModelViewSet):
-    '''
-    List: GET all Map layouts
-    Detail: GET Map layout with an id
-    Create: POST a layout to be stored against a projectUser id and project id
-    Update: PUT a layout to be stored against a projectUser id and project id
-    Delete: DELETE a layout with a given id
-    Filter: GET a layout matching a projectUser id and project id. Filter on query params.
-    (projectUser id, project id) combinations are unique
-    '''
+
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
     queryset = MyMapLayout.objects.all()
     serializer_class = MyMapLayoutStoreSerializer
     filterset_fields = ['user', 'project']
 
+    def create(self, request, *args, **kwargs):
+        data = request.data
+        try:
+            obj = MyMapLayout.objects.get(user_id=data['user'], project_id=data['project'])
+
+            obj.projectUser.clear()
+            
+            for item in data.getlist('projectUser'):
+                new_obj = ProjectUser.objects.get(id=item)
+                obj.projectUser.add(new_obj)
+            
+            obj.save()
+
+        except MyMapLayout.DoesNotExist:
+            obj = MyMapLayout.objects.create(user_id=data['user'], project_id=data['project'])
+            print(obj.id)
+            obj.user_id = data['user']
+            obj.project_id = data['project']
+            obj.layout_json = data['layout_json']
+            for item in data.getlist('projectUser'):
+                new_obj = ProjectUser.objects.get(id=item)
+                obj.projectUser.add(new_obj)
+
+            obj.save()
+
+        result = model_to_dict(MyMapLayout.objects.get(user_id=data['user'], project_id=data['project']))
+
+        list_result = result
+        for idx in range(len(result['projectUser'])):
+            list_result['projectUser'][idx] = result['projectUser'][idx].id
+
+        print(list_result)
+        serializer = self.get_serializer(data=list_result)
+        serializer.is_valid(raise_exception=True)
+        headers = self.get_success_headers(serializer.data)
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 class ProjectMapLayoutViewSet(viewsets.ModelViewSet):
     '''

@@ -189,7 +189,7 @@ class MyMapLayoutStoreSerializer(serializers.ModelSerializer):
         model = MyMapLayout
         fields = ['id', 'user', 'project', 'projectUser', 'layout_json']
 
-
+    
 class ProjectMapLayoutStoreSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProjectMapLayout
