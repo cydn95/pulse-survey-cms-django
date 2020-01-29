@@ -367,7 +367,7 @@ class MyMapLayoutViewSet(viewsets.ModelViewSet):
             #     for item in data.getlist('projectUser'):
             #         new_obj = ProjectUser.objects.get(id=item)
             #         obj.projectUser.add(new_obj)
-            if content_type == "application/json":
+            if "application/json" in content_type:
                 for item in data['projectUser']:
                     new_obj = ProjectUser.objects.get(id=item)
                     obj.projectUser.add(new_obj)
@@ -390,7 +390,7 @@ class MyMapLayoutViewSet(viewsets.ModelViewSet):
             #     for item in data.getlist('projectUser'):
             #         new_obj = ProjectUser.objects.get(id=item)
             #         obj.projectUser.add(new_obj)
-            if content_type == "application/json":
+            if "application/json" in content_type:
                 for item in data['projectUser']:
                     new_obj = ProjectUser.objects.get(id=item)
                     obj.projectUser.add(new_obj)
