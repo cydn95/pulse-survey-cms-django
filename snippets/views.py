@@ -460,11 +460,11 @@ class StakeHolderUserView(APIView):
 
             subject = 'Test Message Title'
             message = get_template('email.html').render(
-                Context({
+                {
                     'text1': 'text1',
                     'text2': 'text2',
                     'text3': 'text3'
-                })
+                }
             )
             email_from = 'dt897867@gmail.com'
             recipient_list = ['mrstevenwong815@gmail.com',]
