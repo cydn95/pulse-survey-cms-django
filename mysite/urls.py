@@ -19,8 +19,7 @@ admin.autodiscover()
 
 urlpatterns = [
     url(r'^en/admin/page_nav/pagenav/likepost', PageNavAdmin.likePost),
-    url(r'^sitemap\.xml$', sitemap,
-        {'sitemaps': {'cmspages': CMSSitemap}}),
+    url(r'^sitemap\.xml$', sitemap, {'sitemaps': {'cmspages': CMSSitemap}}),
     url(r'^jet/', include('jet.urls', 'jet')),
     url(r'^jet/dashboard/', include('jet.dashboard.urls', 'jet-dashboard')),
     url(r'^api/v1/', include('snippets.urls')),

@@ -29,6 +29,8 @@ from rest_framework import filters
 from drf_renderer_xlsx.mixins import XLSXFileMixin
 from drf_renderer_xlsx.renderers import XLSXRenderer
 
+from django.core.mail import send_mail
+
 class CustomAuthToken(ObtainAuthToken):
     def post(self, request, *args, **kwargs):
         response = super(CustomAuthToken, self).post(request, *args, **kwargs)
@@ -445,6 +447,7 @@ class StakeHolderUserView(APIView):
         return Response(serializer.data)
 
     def post(self, request):
+        
         serializer = StakeHolderSerializer(data=request.data)
         if serializer.is_valid(raise_exception=ValueError):
             serializer.create(validated_data=request.data)
@@ -452,6 +455,13 @@ class StakeHolderUserView(APIView):
             #print(serializer.data['user']['username'])
 
             dt = User.objects.filter(username=serializer.data['user']['username']).values_list('pk', flat=True)
+
+            subject = 'Test Message Title'
+            message = 'Test Message Content'
+            email_from = 'dt897867@gmail.com'
+            recipient_list = ['mrstevenwong815@gmail.com',]
+
+            send_mail(subject=subject, message=message, from_email=email_from, recipient_list=recipient_list, fail_silently=False)
 
             return Response(dt[0], status=status.HTTP_201_CREATED)
         return Response(serializer.error_messages, status=status.HTTP_400_BAD_REQUEST)
