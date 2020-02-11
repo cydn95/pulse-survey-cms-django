@@ -1,4 +1,35 @@
-Welcome {{ text1 }}!
-
-Your username is {{ text2 }} and your password is {{ text3 }}.
-
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Email</title>
+  <link rel="stylesheet" type="text/css" href="{% static "email/css/font.css" %}" />
+  <link rel="stylesheet" type="text/css" href="{% static "email/css/email.css" %}" />
+</head>
+<body>
+  <div class="logo">
+    <img src="{% static "email/img/logo-2.png" %}"/>
+  </div>
+  <div class="container">
+    <div class="container__header">
+    </div>
+    <div class="container__body">
+      <div class="container__body__content">
+        <h2 class="sub-title">You have been nominated as a stakeholder on the {{ project_name }} project.</h2>
+        <p class="sub-title-description">
+          We want to create the kind of project where everyone can freely share their thoughts, feelings and ideas. We want to this project to succeed, and to do that, we welcome your honest feedback!​
+        </p>
+        <a href="#try-it-out" class="btn-try">Try it out</a>
+        <p class="link-description">
+          The link will take you to Pulse by ProjectAI – an online tool we use to map out the landscape of team members and stakeholders.
+        </p>
+        <h2 class="sub-title people">People are the pulse of your project.</h2>
+        <img src="{% static "email/img/connect.png" %}" class="img-connect"/>
+        <p class="people-description">Pulse gathers and measures <span class="emphasize">project sentiment, engagement and confidence</span> to help us make better decisions and build a culture of clarity for everyone involved. Please use this tool to tell us what you think.  There are no wrong answers, and you can change your responses at any time!​</p>
+        <a href="#click-it-out" class="btn-click">Click here to get started</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
