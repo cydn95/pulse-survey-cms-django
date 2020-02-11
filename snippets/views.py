@@ -467,7 +467,7 @@ class StakeHolderUserView(APIView):
             email_from = 'dt897867@gmail.com'
             recipient_list = ['mrstevenwong815@gmail.com',]
 
-            send_mail(subject=subject, message=message, from_email=email_from, recipient_list=recipient_list, fail_silently=False)
+            send_mail(subject=subject, html_message=message, from_email=email_from, recipient_list=recipient_list, fail_silently=False)
 
             return Response(dt[0], status=status.HTTP_201_CREATED)
         return Response(serializer.error_messages, status=status.HTTP_400_BAD_REQUEST)
