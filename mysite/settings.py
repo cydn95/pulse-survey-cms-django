@@ -147,7 +147,8 @@ INSTALLED_APPS = [
     'snippets.apps.SnippetsConfig',
     'import_export',
     'django_filters',
-    'rest_framework_swagger'
+    'rest_framework_swagger',
+    'django_inlinecss'
 ]
 
 
