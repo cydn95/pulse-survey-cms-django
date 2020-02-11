@@ -30,6 +30,8 @@ from drf_renderer_xlsx.mixins import XLSXFileMixin
 from drf_renderer_xlsx.renderers import XLSXRenderer
 
 from django.core.mail import send_mail
+from django.template.loader import get_template
+from django.template import Context
 
 class CustomAuthToken(ObtainAuthToken):
     def post(self, request, *args, **kwargs):
@@ -457,7 +459,13 @@ class StakeHolderUserView(APIView):
             dt = User.objects.filter(username=serializer.data['user']['username']).values_list('pk', flat=True)
 
             subject = 'Test Message Title'
-            message = 'Test Message Content'
+            message = get_template('email.html').render(
+                Context({
+                    'text1': 'text1',
+                    'text2': 'text2',
+                    'text3': 'text3'
+                })
+            )
             email_from = 'dt897867@gmail.com'
             recipient_list = ['mrstevenwong815@gmail.com',]
 
