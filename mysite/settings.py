@@ -339,23 +339,23 @@ CORS_ORIGIN_WHITELIST = [
 ]
 
 # For gmail
-EMAIL_FILE_PATH = ''
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_USE_TLS = True
-EMAIL_USE_SSL = False
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'dt897867@gmail.com'
-EMAIL_HOST_PASSWORD = 'piggy19920412'
-EMAIL_PORT = 587
+# EMAIL_FILE_PATH = ''
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_USE_TLS = True
+# EMAIL_USE_SSL = False
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_HOST_USER = 'dt897867@gmail.com'
+# EMAIL_HOST_PASSWORD = 'piggy19920412'
+# EMAIL_PORT = 587
 
 # For sendgrid mail
-# SEND_GRID_API_KEY = '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'
-# EMAIL_HOST = 'smtp.sendgrid.net'
-# EMAIL_HOST_USER = 'pulseprojectai'
-# EMAIL_HOST_PASSWORD = 'RocketMan39'
-# EMAIL_PORT = 587
-# EMAIL_USE_TLS = True
-# DEFAULT_FROM_EMAIL = 'pulse@projectai.com'
-# ACCOUNT_EMAIL_SUBJECT_PREFIX = 'Contact email received from website'
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+SEND_GRID_API_KEY = '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'
+EMAIL_HOST = 'smtp.sendgrid.net'
+EMAIL_HOST_USER = 'pulseprojectai'
+EMAIL_HOST_PASSWORD = 'RocketMan39'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'pulse@projectai.com'
+ACCOUNT_EMAIL_SUBJECT_PREFIX = 'Contact email received from website'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
