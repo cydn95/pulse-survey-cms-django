@@ -31,7 +31,7 @@ from drf_renderer_xlsx.renderers import XLSXRenderer
 
 from django.core.mail import send_mail
 from django.template.loader import get_template
-from django.template import Context
+from django.conf import settings
 
 class CustomAuthToken(ObtainAuthToken):
     def post(self, request, *args, **kwargs):
@@ -464,10 +464,10 @@ class StakeHolderUserView(APIView):
                     'project_name': 'Test Project'
                 }
             )
-            email_from = 'pulse@projectai.com'
+            email_from = settings.DEFAULT_FROM_EMAIL
             recipient_list = ['mrstevenwong815@gmail.com',]
 
-            send_mail(subject=subject, message='test', html_message=message, from_email=email_from, recipient_list=recipient_list, fail_silently=False)
+            send_mail(subject=subject, message='test', html_message=message, from_email=email_from, recipient_list=recipient_list, fail_silently=True)
 
             return Response(dt[0], status=status.HTTP_201_CREATED)
         return Response(serializer.error_messages, status=status.HTTP_400_BAD_REQUEST)
