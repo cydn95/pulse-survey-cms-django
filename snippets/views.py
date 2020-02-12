@@ -464,7 +464,7 @@ class StakeHolderUserView(APIView):
                     'project_name': 'Test Project'
                 }
             )
-            email_from = 'dt897867@gmail.com'
+            email_from = 'pulse@projectai.com'
             recipient_list = ['mrstevenwong815@gmail.com',]
 
             send_mail(subject=subject, message='test', html_message=message, from_email=email_from, recipient_list=recipient_list, fail_silently=False)
