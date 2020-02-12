@@ -338,16 +338,6 @@ CORS_ORIGIN_WHITELIST = [
     'http://3.15.16.117:3001',
 ]
 
-# For gmail
-# EMAIL_FILE_PATH = ''
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_USE_TLS = True
-# EMAIL_USE_SSL = False
-# EMAIL_HOST = 'smtp-mail.outlook.com'
-# EMAIL_HOST_USER = 'dt897867@gmail.com'
-# EMAIL_HOST_PASSWORD = 'piggy19920412'
-# EMAIL_PORT = 587
-
 # For outlook mail
 SEND_GRID_API_KEY = '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'
 EMAIL_HOST = 'smtp.sendgrid.net'
