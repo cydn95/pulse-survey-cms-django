@@ -13,11 +13,11 @@ h2 {
   margin: 0px;
 }
 ​
-a {
+/* a {
   text-decoration: none;
 }
 ​
-/* .logo {
+.logo {
   display: flex;
   flex-flow: row;
   justify-content: center;
