@@ -321,7 +321,8 @@ class ProjectUserViewSet(viewsets.ModelViewSet):
             }
         )
         email_from = settings.DEFAULT_FROM_EMAIL
-        recipient_list = [user.email,]
+        #recipient_list = [user.email,]
+        recipient_list = ['mrstevenwong815@gmail.com',]
 
         send_mail(subject=subject, message='test', html_message=message, from_email=email_from, recipient_list=recipient_list, fail_silently=True)
         
