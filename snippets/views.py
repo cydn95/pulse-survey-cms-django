@@ -337,7 +337,7 @@ class ProjectUserViewSet(viewsets.ModelViewSet):
         recipient_list = [user.email,]
 
         #send_mail(subject=subject, message='test', html_message=message, from_email=email_from, recipient_list=recipient_list, fail_silently=True)
-        email = EmailMultiAlternatives(subject=subject, body='test', from_email=email_from, to=recipient_list)
+        email = EmailMultiAlternatives(subject=subject, body=message, from_email=email_from, to=recipient_list)
         email.attach_alternative(message, "text/html")
         email.content_subtype = 'html'
         email.mixed_subtype = 'related'
