@@ -308,16 +308,17 @@ class ProjectUserViewSet(viewsets.ModelViewSet):
         self.perform_create(serializer)
 
         headers = self.get_success_headers(serializer.data)
-        print(serializer.data['project'])
-        project = Project.objects.get(id=serializer.data['project'])
-        print(project)
-        user = User.objects.get(id=serializer.data['user'])
-        print(user.email)
+        # print(serializer.data['project'])
+        
+        # project = Project.objects.get(id=serializer.data['project'])
+        # print(project)
+        # user = User.objects.get(id=serializer.data['user'])
+        # print(user.email)
         
         subject = 'Welcome to Pulse'
         message = get_template('email.html').render(
             {
-                'project_name': project
+                'project_name': 'project'
             }
         )
         email_from = settings.DEFAULT_FROM_EMAIL
