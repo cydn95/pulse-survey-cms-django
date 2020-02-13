@@ -30,16 +30,14 @@ a {
 }
 .container__header {
   width: 100%;
-  background-color: #131a36;
+  background-color: #131A36;
   height: 427px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-content: center;
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
 }
 .container__header--bg {
   width: 60%;
-  margin-left: 20%;
 }
 .container__body {
   width: calc(100% - 86px);
