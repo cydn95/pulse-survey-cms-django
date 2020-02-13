@@ -1,3 +1,7 @@
+import os
+from pathlib import Path
+from email.mime.image import MIMEImage
+
 from snippets.models import Snippet
 from snippets.serializers import StakeHolderSerializer, SHCategorySerializer, MyMapLayoutStoreSerializer, ProjectMapLayoutStoreSerializer, UserByProjectSerializer, ProjectByUserSerializer, SkipOptionSerializer, DriverSerializer, AOQuestionSerializer, OrganizationSerializer, OptionSerializer, ProjectUserSerializer, SHGroupSerializer, SnippetSerializer, UserSerializer, PageSettingSerializer, PageSerializer, AMResponseSerializer, AMResponseTopicSerializer, AOResponseSerializer, AOResponseTopicSerializer, AOPageSerializer, TeamSerializer
 from rest_framework import generics, permissions
@@ -313,18 +317,36 @@ class ProjectUserViewSet(viewsets.ModelViewSet):
         project = Project.objects.get(id=serializer.data['project'])
         user = User.objects.get(id=serializer.data['user'])
         
+        image_path_logo = os.path.join(settings.STATIC_ROOT, 'email', 'img', 'logo-2.png')
+        image_name_logo = Path(image_path_logo).name
+
         subject = 'Welcome to Pulse'
         message = get_template('email.html').render(
             {
-                'project_name': project
+                'project_name': project,
+                'image_name_logo': image_name_logo
             }
         )
         email_from = settings.DEFAULT_FROM_EMAIL
         recipient_list = [user.email,]
         #recipient_list = ['mrstevenwong815@gmail.com',]
-
-        send_mail(subject=subject, message='test', html_message=message, from_email=email_from, recipient_list=recipient_list, fail_silently=True)
         
+
+        print(image_name_logo)
+
+        #send_mail(subject=subject, message='test', html_message=message, from_email=email_from, recipient_list=recipient_list, fail_silently=True)
+        email = EmailMultiAlternatives(subject=subject, body='test', from_email=email_from, to=recipient_list)
+        email.attach_alternative(message, "text/html")
+        email.content_subtype = 'html'
+        email.mixed_subtype = 'related'
+
+        with open(image_path_logo, mode='rb') as f_logo:
+            image_logo = MIMEImage(f_logo.read())
+            email.attach(image_logo)
+            image_logo.add_header('Content-ID', f"<{image_name_logo}>")
+        
+        email.send()
+
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 class AOQuestionViewSet(viewsets.ModelViewSet):
