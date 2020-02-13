@@ -311,9 +311,7 @@ class ProjectUserViewSet(viewsets.ModelViewSet):
         # print(serializer.data['project'])
         
         project = Project.objects.get(id=serializer.data['project'])
-        # print(project)
-        # user = User.objects.get(id=serializer.data['user'])
-        # print(user.email)
+        user = User.objects.get(id=serializer.data['user'])
         
         subject = 'Welcome to Pulse'
         message = get_template('email.html').render(
@@ -322,8 +320,8 @@ class ProjectUserViewSet(viewsets.ModelViewSet):
             }
         )
         email_from = settings.DEFAULT_FROM_EMAIL
-        #recipient_list = [user.email,]
-        recipient_list = ['mrstevenwong815@gmail.com',]
+        recipient_list = [user.email,]
+        #recipient_list = ['mrstevenwong815@gmail.com',]
 
         send_mail(subject=subject, message='test', html_message=message, from_email=email_from, recipient_list=recipient_list, fail_silently=True)
         
