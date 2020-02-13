@@ -16,13 +16,10 @@ a {
 }
 
 .logo {
-  display: flex;
-  flex-flow: row;
-  justify-content: center;
-  align-content: center;
+  width: 100%;
   margin-top: 37px;
   margin-bottom: 33px;
-  margin-left: auto;
+  text-align: center;
 }
 
 .container {
