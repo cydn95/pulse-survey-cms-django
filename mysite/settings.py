@@ -143,12 +143,16 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'rest_auth',
+    'allauth',
+    'allauth.account',
+    'rest_auth.registration',
     'corsheaders',
     'snippets.apps.SnippetsConfig',
     'import_export',
     'django_filters',
     'rest_framework_swagger',
-    'django_inlinecss'
+    'django_inlinecss',
+    'django_rest_passwordreset',
 ]
 
 

@@ -18,7 +18,7 @@ from option.models import Option, SkipOption
 from rest_framework import status
 from organization.models import Organization
 from aboutothers.models import AOQuestion
-from survey.models import Driver
+from survey.models import Driver, Project
 from rest_framework.views import APIView
 from django.forms.models import model_to_dict
 
@@ -29,8 +29,8 @@ from rest_framework import filters
 from drf_renderer_xlsx.mixins import XLSXFileMixin
 from drf_renderer_xlsx.renderers import XLSXRenderer
 
-from django.core.mail import send_mail
-from django.template.loader import get_template
+from django.core.mail import send_mail, EmailMultiAlternatives
+from django.template.loader import get_template, render_to_string
 from django.conf import settings
 
 class CustomAuthToken(ObtainAuthToken):
@@ -306,7 +306,25 @@ class ProjectUserViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(data=data, many=many)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
+
         headers = self.get_success_headers(serializer.data)
+        print(serializer.data['project'])
+        project = Project.objects.get(id=serializer.data['project'])
+        print(project)
+        user = User.objects.get(id=serializer.data['user'])
+        print(user.email)
+        
+        subject = 'Welcome to Pulse'
+        message = get_template('email.html').render(
+            {
+                'project_name': project
+            }
+        )
+        email_from = settings.DEFAULT_FROM_EMAIL
+        recipient_list = [user.email,]
+
+        send_mail(subject=subject, message='test', html_message=message, from_email=email_from, recipient_list=recipient_list, fail_silently=True)
+        
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 class AOQuestionViewSet(viewsets.ModelViewSet):

@@ -35,7 +35,9 @@ router.register(r'shcategory', views.SHCategoryViewSet)
 urlpatterns = [
     url('', include(router.urls)),
     url('rest-auth/', include('rest_auth.urls')),
+    url('rest-auth/registration/', include('rest_auth.registration.urls')),
     url('api-token-auth/', CustomAuthToken.as_view()),
+    # url('', include('django_rest_passwordreset.urls', namespace='password_reset')),
 ]
 
 urlpatterns += format_suffix_patterns([
