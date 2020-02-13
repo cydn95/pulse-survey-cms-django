@@ -1,11 +1,9 @@
-@import url(//fonts.googleapis.com/css?family=Poppins);
 
 body {
   margin: 0px;
   padding: 0px;
   overflow-x: hidden;
   overflow-y: auto;
-  font-family: Poppins;
   background-color: #f3f3f3;
 }
 
