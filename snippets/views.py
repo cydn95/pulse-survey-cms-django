@@ -310,7 +310,7 @@ class ProjectUserViewSet(viewsets.ModelViewSet):
         headers = self.get_success_headers(serializer.data)
         # print(serializer.data['project'])
         
-        # project = Project.objects.get(id=serializer.data['project'])
+        project = Project.objects.get(id=serializer.data['project'])
         # print(project)
         # user = User.objects.get(id=serializer.data['user'])
         # print(user.email)
@@ -318,7 +318,7 @@ class ProjectUserViewSet(viewsets.ModelViewSet):
         subject = 'Welcome to Pulse'
         message = get_template('email.html').render(
             {
-                'project_name': 'project'
+                'project_name': project
             }
         )
         email_from = settings.DEFAULT_FROM_EMAIL
@@ -478,16 +478,16 @@ class StakeHolderUserView(APIView):
 
             dt = User.objects.filter(username=serializer.data['user']['username']).values_list('pk', flat=True)
 
-            subject = 'Test Message Title'
-            message = get_template('email.html').render(
-                {
-                    'project_name': 'Test Project'
-                }
-            )
-            email_from = settings.DEFAULT_FROM_EMAIL
-            recipient_list = ['mrstevenwong815@gmail.com',]
+            # subject = 'Test Message Title'
+            # message = get_template('email.html').render(
+            #     {
+            #         'project_name': 'Test Project'
+            #     }
+            # )
+            # email_from = settings.DEFAULT_FROM_EMAIL
+            # recipient_list = ['mrstevenwong815@gmail.com',]
 
-            send_mail(subject=subject, message='test', html_message=message, from_email=email_from, recipient_list=recipient_list, fail_silently=True)
+            # send_mail(subject=subject, message='test', html_message=message, from_email=email_from, recipient_list=recipient_list, fail_silently=True)
 
             return Response(dt[0], status=status.HTTP_201_CREATED)
         return Response(serializer.error_messages, status=status.HTTP_400_BAD_REQUEST)
