@@ -319,20 +319,22 @@ class ProjectUserViewSet(viewsets.ModelViewSet):
         
         image_path_logo = os.path.join(settings.STATIC_ROOT, 'email', 'img', 'logo-2.png')
         image_name_logo = Path(image_path_logo).name
+        image_path_container = os.path.join(settings.STATIC_ROOT, 'email', 'img', 'container.png')
+        image_name_container = Path(image_path_container).name
+        image_path_connect = os.path.join(settings.STATIC_ROOT, 'email', 'img', 'connect.png')
+        image_name_connect = Path(image_path_connect).name
 
         subject = 'Welcome to Pulse'
         message = get_template('email.html').render(
             {
                 'project_name': project,
-                'image_name_logo': image_name_logo
+                'image_name_logo': image_name_logo,
+                'image_name_container': image_name_container,
+                'image_name_connect': image_name_connect
             }
         )
         email_from = settings.DEFAULT_FROM_EMAIL
         recipient_list = [user.email,]
-        #recipient_list = ['mrstevenwong815@gmail.com',]
-        
-
-        print(image_name_logo)
 
         #send_mail(subject=subject, message='test', html_message=message, from_email=email_from, recipient_list=recipient_list, fail_silently=True)
         email = EmailMultiAlternatives(subject=subject, body='test', from_email=email_from, to=recipient_list)
@@ -345,6 +347,16 @@ class ProjectUserViewSet(viewsets.ModelViewSet):
             email.attach(image_logo)
             image_logo.add_header('Content-ID', f"<{image_name_logo}>")
         
+        with open(image_path_container, mode='rb') as f_container:
+            image_container = MIMEImage(f_container.read())
+            email.attach(image_container)
+            image_container.add_header('Content-ID', f"<{image_name_container}>")
+
+        with open(image_path_connect, mode='rb') as f_connect:
+            image_connect = MIMEImage(f_connect.read())
+            email.attach(image_connect)
+            image_connect.add_header('Content-ID', f"<{image_name_connect}>")
+
         email.send()
 
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
