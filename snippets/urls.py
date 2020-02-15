@@ -4,6 +4,8 @@ from snippets import views
 #from rest_framework.authtoken.views import obtain_auth_token
 from .views import CustomAuthToken
 from rest_framework.urlpatterns import format_suffix_patterns
+from allauth.account.views import confirm_email
+from django.contrib import admin
 
 # Create a router and register our viewsets with it.
 router = DefaultRouter()
@@ -37,6 +39,8 @@ urlpatterns = [
     url('rest-auth/', include('rest_auth.urls')),
     url('rest-auth/registration/', include('rest_auth.registration.urls')),
     url('api-token-auth/', CustomAuthToken.as_view()),
+    url('account/', include('allauth.urls')),
+    url('accounts-rest/registration/account-confirm-email/(?P<key>.+)/$', confirm_email, name='account_confirm_email'),
     # url('', include('django_rest_passwordreset.urls', namespace='password_reset')),
 ]
 
