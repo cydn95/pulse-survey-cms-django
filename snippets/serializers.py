@@ -11,6 +11,7 @@ from shgroup.models import SHGroup, ProjectUser, MyMapLayout, ProjectMapLayout, 
 from option.models import Option, SkipOption
 from organization.models import Organization
 from survey.models import Driver, Project
+from rest_framework.authtoken.models import Token
 
 class EnumField(serializers.ChoiceField):
     def __init__(self, enum, **kwargs):
