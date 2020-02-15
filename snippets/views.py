@@ -316,7 +316,8 @@ class ProjectUserViewSet(viewsets.ModelViewSet):
         
         project = Project.objects.get(id=serializer.data['project'])
         user = User.objects.get(id=serializer.data['user'])
-        
+        token = Token.objects.get(user_id=serializer.data['user'])
+
         image_path_logo = os.path.join(settings.STATIC_ROOT, 'email', 'img', 'logo-2.png')
         image_name_logo = Path(image_path_logo).name
         image_path_container = os.path.join(settings.STATIC_ROOT, 'email', 'img', 'container.png')
@@ -330,7 +331,9 @@ class ProjectUserViewSet(viewsets.ModelViewSet):
                 'project_name': project,
                 'image_name_logo': image_name_logo,
                 'image_name_container': image_name_container,
-                'image_name_connect': image_name_connect
+                'image_name_connect': image_name_connect,
+                'token': token.key,
+                'email': user.email
             }
         )
         email_from = settings.DEFAULT_FROM_EMAIL
@@ -489,6 +492,40 @@ class SHCategoryViewSet(viewsets.ModelViewSet):
     queryset = SHCategory.objects.all()
     serializer_class = SHCategorySerializer
     filterset_fields = ['mapType', 'survey']
+
+class SetPasswordView(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    @classmethod
+    def get_extra_actions(cls):
+        return []
+
+    # def get(self, format=None):
+    #     organizations = Organization.objects.all()
+    #     serializer = StakeHolderSerializer(organizations, many=True)
+    #     return Response(serializer.data)
+
+    def post(self, request):
+        print(request.data['email'])
+        password = request.data['password']
+        email = request.data['email']
+        
+        try:
+            token = Token.objects.get(key=request.data['token'])
+            user = User.objects.get(id=token.user_id)
+
+            if (email == user.email):
+                user.set_password(password)
+                user.save()
+
+                return Response('success', status=status.HTTP_201_CREATED) 
+
+            return Response("Invaid Email", status=status.HTTP_400_BAD_REQUEST)
+
+        except Token.DoesNotExist:
+            token = None
+
+            return Response("Invaid Token", status=status.HTTP_400_BAD_REQUEST)
 
 class StakeHolderUserView(APIView):
     @classmethod

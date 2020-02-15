@@ -6,7 +6,7 @@ from .views import CustomAuthToken
 from rest_framework.urlpatterns import format_suffix_patterns
 from allauth.account.views import confirm_email
 from django.contrib import admin
-import django.contrib.auth
+from django.contrib.auth import views as auth_views
 
 # Create a router and register our viewsets with it.
 router = DefaultRouter()
@@ -37,18 +37,19 @@ router.register(r'shcategory', views.SHCategoryViewSet)
 # The API URLs are now determined automatically by the router.
 urlpatterns = [
     url('', include(router.urls)),
-    url('rest-auth/', include('rest_auth.urls')),
-    url('rest-auth/registration/', include('rest_auth.registration.urls')),
-    url('password_reset/', django.contrib.auth.views.PasswordResetView.as_view(), name='password_reset'),
-    url('password_reset/done/', django.contrib.auth.views.PasswordResetDoneView.as_view(), name='password_reset_done'),
-    url('reset/<uidb64>/<token>/', django.contrib.auth.views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
-    url('reset/done/', django.contrib.auth.views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
-    url('api-token-auth/', CustomAuthToken.as_view()),
-    url('account/', include('allauth.urls')),
+    url(r'^rest-auth/', include('rest_auth.urls')),
+    url(r'^rest-auth/registration/', include('rest_auth.registration.urls')),
+    url(r'^password_reset/', auth_views.password_reset, name='password_reset'),
+    url(r'^password_reset/done/', auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'),
+    url(r'^reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+    url(r'^reset/done/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
+    url(r'^api-token-auth/', CustomAuthToken.as_view()),
+    url(r'^account/', include('allauth.urls')),
     #url('accounts-rest/registration/account-confirm-email/(?P<key>.+)/$', confirm_email, name='account_confirm_email'),
     # url('', include('django_rest_passwordreset.urls', namespace='password_reset')),
 ]
 
 urlpatterns += format_suffix_patterns([
-    url(r'stakeholder', views.StakeHolderUserView.as_view())
+    url(r'stakeholder', views.StakeHolderUserView.as_view()),
+    url(r'setpassword', views.SetPasswordView.as_view())
 ])
