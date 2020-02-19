@@ -81,33 +81,3 @@ a {
   margin-top: 30px;
   width: 300px;
 }
-​
-@media only screen and (max-width: 425px) {
-  h1 {
-    font-size: 40px;
-  }
-​
-  h2 {
-    font-size: 18px;
-  }
-​
-  .container {
-    margin-top: 0px;
-    width: 100vw;
-  }
-  .container .btn-click {
-    width: 220px;
-    height: 47px;
-    line-height: 2.3;
-    border-radius: 35px;
-    padding-top: 17px;
-    font-size: 15px;
-  }
-  .container .logo {
-    margin-top: 0px;
-    width: 200px;
-  }
-  .container .sub-title-description {
-    font-size: 15px;
-  }
-}
