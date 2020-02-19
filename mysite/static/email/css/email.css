@@ -3,22 +3,23 @@ body {
   padding: 0px;
   overflow-x: hidden;
   overflow-y: auto;
+  font-family: Poppins;
   background-color: #f3f3f3;
 }
-​
+
 .background-img {
   position: fixed;
   z-index: -1;
   right: 0;
   bottom: 0;
 }
-​
+
 h1 {
   font-size: 66px;
   font-weight: bold;
   color: #a8b3c5;
 }
-​
+
 h2 {
   font-size: 22px;
   font-weight: bold;
@@ -28,11 +29,11 @@ h2 {
   letter-spacing: normal;
   color: #141c3a;
 }
-​
+
 a {
   text-decoration: none;
 }
-​
+
 .container {
   width: 70vw;
   min-height: 80vh;
@@ -81,16 +82,16 @@ a {
   margin-top: 30px;
   width: 300px;
 }
-​
+
 @media only screen and (max-width: 425px) {
   h1 {
     font-size: 40px;
   }
-​
+
   h2 {
     font-size: 18px;
   }
-​
+
   .container {
     margin-top: 0px;
     width: 100vw;
@@ -111,3 +112,5 @@ a {
     font-size: 15px;
   }
 }
+
+/*# sourceMappingURL=email2.css.map */
