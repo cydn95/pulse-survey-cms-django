@@ -1,4 +1,4 @@
-/* body {
+body {
   margin: 0px;
   padding: 0px;
   overflow-x: hidden;
@@ -6,7 +6,7 @@
   background-color: #f3f3f3;
 }
 ​
-.background-img {
+/* .background-img {
   position: fixed;
   z-index: -1;
   right: 0;
