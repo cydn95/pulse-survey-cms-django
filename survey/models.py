@@ -1,5 +1,5 @@
 from django.db import models
-from gremlin import addVertex
+#from gremlin import addVertex
 
 class Client(models.Model):
     clientName = models.CharField(max_length=200)
@@ -14,20 +14,20 @@ class Project(models.Model):
     def __str__(self):
         return self.projectName
 
-    def save(self, *args, **kwargs):
-        super(Project, self).save(*args, **kwargs)
-        #print(self.projectName)
+    # def save(self, *args, **kwargs):
+    #     super(Project, self).save(*args, **kwargs)
+    #     #print(self.projectName)
 
-        if self.id is not None:
-            data = [{
-                'id': 'project-{0}'.format(self.id),
-                'label': 'project_{0}'.format(self.id),
-                'type': 'project',
-                'text': self.projectName
-            }]
-            #print(data)
-            ret = addVertex(data)
-            #print(ret)
+    #     if self.id is not None:
+    #         data = [{
+    #             'id': 'project-{0}'.format(self.id),
+    #             'label': 'project_{0}'.format(self.id),
+    #             'type': 'project',
+    #             'text': self.projectName
+    #         }]
+    #         #print(data)
+    #         ret = addVertex(data)
+    #         #print(ret)
 
 class Survey(models.Model):
     project = models.ForeignKey(Project, on_delete=models.PROTECT)

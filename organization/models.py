@@ -1,7 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
-from gremlin import addVertex
-
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from rest_framework.authtoken.models import Token
+#from gremlin import addVertex
 
 # Create your models here.
 class Organization(models.Model):
@@ -15,13 +17,18 @@ class Organization(models.Model):
         super(Organization, self).save(*args, **kwargs)
         #print(self.name)
 
-        if self.id is not None:
-            data = [{
-                'id': 'organization-{0}'.format(self.id),
-                'label': 'organization_{0}'.format(self.id),
-                'type': 'organization',
-                'text': self.name
-            }]
-            #print(data)
-            ret = addVertex(data)
-            #print(ret)
+        # if self.id is not None:
+        #     data = [{
+        #         'id': 'organization-{0}'.format(self.id),
+        #         'label': 'organization_{0}'.format(self.id),
+        #         'type': 'organization',
+        #         'text': self.name
+        #     }]
+        #     #print(data)
+        #     ret = addVertex(data)
+        #     #print(ret)
+
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Token.objects.create(user=instance)

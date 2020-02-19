@@ -1,8 +1,9 @@
 from django.contrib import admin
 from .models import SHGroup, SHCategory, SHMapping, ProjectUser, MapType, ProjectUserForm
 from jet.admin import CompactInline
-from gremlin import deleteVertex
+#from gremlin import deleteVertex
 from django.forms import CheckboxSelectMultiple
+from django.contrib import messages
 
 class SHGroupAdmin(admin.ModelAdmin):
     fieldset = [
@@ -12,40 +13,43 @@ class SHGroupAdmin(admin.ModelAdmin):
     list_display = ('SHGroupName', 'SHGroupAbbrev', 'project')
 
     model = SHGroup
-    action = ['delete_model']
+    # action = ['delete_model']
 
-    def delete_model(self, request, obj):
-        if obj.id is not None:
-            id = 'stakeholder-{0}'.format(obj.id)
-            deleteVertex(id)
-        obj.delete()
+    # def delete_model(self, request, obj):
+    #     if obj.id is not None:
+    #         id = 'stakeholder-{0}'.format(obj.id)
+    #         deleteVertex(id)
+    #     obj.delete()
 
 class SHCategoryAdmin(admin.ModelAdmin):
     list_display = ('SHCategoryName', 'survey', 'shGroup', 'mapType', 'colour', 'icon')
     model = SHCategory
-    action = ['delete_model']
+    # action = ['delete_model']
 
-    def delete_model(self, request, obj):
-        if obj.id is not None:
-            id = 'category-{0}'.format(obj.id)
-            #print(id)
-            deleteVertex(id)
-        obj.delete()
+    # def delete_model(self, request, obj):
+    #     if obj.id is not None:
+    #         id = 'category-{0}'.format(obj.id)
+    #         #print(id)
+    #         deleteVertex(id)
+    #     obj.delete()
 
 class ProjectUserAdmin(admin.ModelAdmin):
     list_display = ('user', 'project', 'team', 'shCategory')
     model = ProjectUser
-    action = ['delete_model']
+    #action = ['delete_model']
 
     def get_changelist_form(self, request, **kwargs):
         return ProjectUserForm
 
-    def delete_model(self, request, obj):
-        if obj.id is not None:
-            id = 'user-{0}'.format(obj.id)
-            #print(id)
-            deleteVertex(id)
-        obj.delete()
+    def save_model(self, request, obj, form, change):
+        super(ProjectUserAdmin, self).save_model(request, obj, form, change)
+        messages.info(request, 'Email invitation has been sent.')
+    # def delete_model(self, request, obj):
+    #     if obj.id is not None:
+    #         id = 'user-{0}'.format(obj.id)
+    #         #print(id)
+    #         deleteVertex(id)
+    #     obj.delete()
 
 admin.site.register(SHGroup, SHGroupAdmin)
 admin.site.register(ProjectUser, ProjectUserAdmin)

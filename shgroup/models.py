@@ -1,13 +1,22 @@
+import os
+from pathlib import Path
+from email.mime.image import MIMEImage
 from django.contrib.postgres.fields import JSONField
 from django.db import models
 from survey.models import Project, Survey
 from django.contrib.auth.models import User
 from django.contrib.auth.models import Permission
 from team.models import Team
-from gremlin import addVertex
+#from gremlin import addVertex
 from django.forms.models import ModelForm
 from django.forms.widgets import CheckboxSelectMultiple
 from django import forms
+from rest_framework.authtoken.models import Token
+from survey.models import Project
+from django.core.mail import send_mail, EmailMultiAlternatives
+from django.template.loader import get_template, render_to_string
+from django.conf import settings
+from django.contrib import messages
 
 # Create your models here.
 
@@ -19,20 +28,20 @@ class SHGroup(models.Model):
     def __str__(self):
         return self.SHGroupName
 
-    def save(self, *args, **kwargs):
-        super(SHGroup, self).save(*args, **kwargs)
-        #print(self.SHGroupName)
+    # def save(self, *args, **kwargs):
+    #     super(SHGroup, self).save(*args, **kwargs)
+    #     #print(self.SHGroupName)
 
-        if self.id is not None:
-            data = [{
-                'id': 'stakeholder-{0}'.format(self.id),
-                'label': 'stakeholder_{0}'.format(self.id),
-                'type': 'stakeholder',
-                'text': self.SHGroupName
-            }]
-            #print(data)
-            ret = addVertex(data)
-            #print(ret)
+    #     if self.id is not None:
+    #         data = [{
+    #             'id': 'stakeholder-{0}'.format(self.id),
+    #             'label': 'stakeholder_{0}'.format(self.id),
+    #             'type': 'stakeholder',
+    #             'text': self.SHGroupName
+    #         }]
+    #         #print(data)
+    #         ret = addVertex(data)
+    #         #print(ret)
 
 class MapType(models.Model):
     name = models.CharField(max_length=50)
@@ -52,20 +61,20 @@ class SHCategory(models.Model):
     def __str__(self):
         return self.SHCategoryName
 
-    def save(self, *args, **kwargs):
-        super(SHCategory, self).save(*args, **kwargs)
-        #print(self.SHCategoryName)
+    # def save(self, *args, **kwargs):
+    #     super(SHCategory, self).save(*args, **kwargs)
+    #     #print(self.SHCategoryName)
 
-        if self.id is not None:
-            data = [{
-                'id': 'category-{0}'.format(self.id),
-                'label': 'category_{0}'.format(self.id),
-                'type': 'category',
-                'text': self.SHCategoryName
-            }]
-            #print(data)
-            ret = addVertex(data)
-            #print(ret)
+    #     if self.id is not None:
+    #         data = [{
+    #             'id': 'category-{0}'.format(self.id),
+    #             'label': 'category_{0}'.format(self.id),
+    #             'type': 'category',
+    #             'text': self.SHCategoryName
+    #         }]
+    #         #print(data)
+    #         ret = addVertex(data)
+    #         #print(ret)
 
 class ProjectUser(models.Model):
     project = models.ForeignKey(Project, on_delete=models.PROTECT)
@@ -82,19 +91,68 @@ class ProjectUser(models.Model):
 
     def save(self, *args, **kwargs):
         super(ProjectUser, self).save(*args, **kwargs)
-        #print(self.project)
+        # print(self.project.id)
+        # print(self.user.id)
+        # print(self.id)
 
-        #print(self.user)
-        if self.id is not None:
-            data = [{
-                'id': 'user-{0}'.format(self.id),
-                'label': 'user_{0}'.format(self.id),
-                'type': 'user',
-                'text': '{0}'.format(self.user)
-            }]
-            #print(data)
-            ret = addVertex(data)
-            #print(ret)
+        project = Project.objects.get(id=self.project.id)
+        user = User.objects.get(id=self.user.id)
+        token = Token.objects.get(user_id=self.user.id)
+
+        image_path_logo = os.path.join(settings.STATIC_ROOT, 'email', 'img', 'logo-2.png')
+        image_name_logo = Path(image_path_logo).name
+        image_path_container = os.path.join(settings.STATIC_ROOT, 'email', 'img', 'container.png')
+        image_name_container = Path(image_path_container).name
+        image_path_connect = os.path.join(settings.STATIC_ROOT, 'email', 'img', 'connect.png')
+        image_name_connect = Path(image_path_connect).name
+
+        subject = 'Welcome to Pulse'
+        message = get_template('email.html').render(
+            {
+                'project_name': project,
+                'image_name_logo': image_name_logo,
+                'image_name_container': image_name_container,
+                'image_name_connect': image_name_connect,
+                'token': token.key,
+                'email': user.email
+            }
+        )
+        email_from = settings.DEFAULT_FROM_EMAIL
+        recipient_list = [user.email,]
+
+        #send_mail(subject=subject, message='test', html_message=message, from_email=email_from, recipient_list=recipient_list, fail_silently=True)
+        email = EmailMultiAlternatives(subject=subject, body=message, from_email=email_from, to=recipient_list)
+        email.attach_alternative(message, "text/html")
+        email.content_subtype = 'html'
+        email.mixed_subtype = 'related'
+
+        with open(image_path_logo, mode='rb') as f_logo:
+            image_logo = MIMEImage(f_logo.read())
+            email.attach(image_logo)
+            image_logo.add_header('Content-ID', f"<{image_name_logo}>")
+        
+        with open(image_path_container, mode='rb') as f_container:
+            image_container = MIMEImage(f_container.read())
+            email.attach(image_container)
+            image_container.add_header('Content-ID', f"<{image_name_container}>")
+
+        with open(image_path_connect, mode='rb') as f_connect:
+            image_connect = MIMEImage(f_connect.read())
+            email.attach(image_connect)
+            image_connect.add_header('Content-ID', f"<{image_name_connect}>")
+
+        email.send()
+
+        # if self.id is not None:
+        #     data = [{
+        #         'id': 'user-{0}'.format(self.id),
+        #         'label': 'user_{0}'.format(self.id),
+        #         'type': 'user',
+        #         'text': '{0}'.format(self.user)
+        #     }]
+        #     #print(data)
+        #     ret = addVertex(data)
+        #     #print(ret)
 
 class ProjectUserForm(ModelForm):
     userPermission = forms.ModelMultipleChoiceField(queryset=Permission.objects.all(), required=False)
