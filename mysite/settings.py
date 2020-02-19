@@ -58,6 +58,7 @@ STATICFILES_DIRS = (
 
 # 1: local 2: prod mode
 SITE_ID = 2
+SITE_URL = 'http://3.15.16.117:3001'
 
 TEMPLATES = [
     {

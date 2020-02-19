@@ -114,7 +114,10 @@ class ProjectUser(models.Model):
                 'image_name_container': image_name_container,
                 'image_name_connect': image_name_connect,
                 'token': token.key,
-                'email': user.email
+                'email': user.email,
+                'first_name': user.first_name,
+                'last_name': user.last_name,
+                'site_url': settings.SITE_URL
             }
         )
         email_from = settings.DEFAULT_FROM_EMAIL
