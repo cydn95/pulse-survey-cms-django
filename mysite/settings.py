@@ -57,7 +57,7 @@ STATICFILES_DIRS = (
 )
 
 # 1: local 2: prod mode
-SITE_ID = 2
+SITE_ID = 1
 
 TEMPLATES = [
     {
@@ -145,6 +145,7 @@ INSTALLED_APPS = [
     'rest_auth',
     'allauth',
     'allauth.account',
+    'allauth.socialaccount',
     'rest_auth.registration',
     'corsheaders',
     'snippets.apps.SnippetsConfig',
