@@ -6,7 +6,7 @@ body {
   background-color: #f3f3f3;
 }
 ​
-/* .background-img {
+.background-img {
   position: fixed;
   z-index: -1;
   right: 0;
@@ -19,7 +19,7 @@ h1 {
   color: #a8b3c5;
 }
 ​
-h2 {
+/*h2 {
   font-size: 22px;
   font-weight: bold;
   font-stretch: normal;
