@@ -9,8 +9,8 @@ body {
 .background-img {
   position: fixed;
   z-index: -1;
-  right: 0px;
-  bottom: 0px;
+  right: 0;
+  bottom: 0;
 }
 ​
 h1 {
@@ -19,7 +19,7 @@ h1 {
   color: #a8b3c5;
 }
 ​
-/*h2 {
+h2 {
   font-size: 22px;
   font-weight: bold;
   font-stretch: normal;
@@ -80,4 +80,34 @@ a {
 .container .logo {
   margin-top: 30px;
   width: 300px;
-} */
+}
+​
+@media only screen and (max-width: 425px) {
+  h1 {
+    font-size: 40px;
+  }
+​
+  h2 {
+    font-size: 18px;
+  }
+​
+  .container {
+    margin-top: 0px;
+    width: 100vw;
+  }
+  .container .btn-click {
+    width: 220px;
+    height: 47px;
+    line-height: 2.3;
+    border-radius: 35px;
+    padding-top: 17px;
+    font-size: 15px;
+  }
+  .container .logo {
+    margin-top: 0px;
+    width: 200px;
+  }
+  .container .sub-title-description {
+    font-size: 15px;
+  }
+}
