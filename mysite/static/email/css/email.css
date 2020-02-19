@@ -9,8 +9,8 @@ body {
 .background-img {
   position: fixed;
   z-index: -1;
-  right: 0;
-  bottom: 0;
+  right: 0px;
+  bottom: 0px;
 }
 ​
 h1 {
