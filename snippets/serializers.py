@@ -211,6 +211,6 @@ class StakeHolderSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user_data = validated_data.pop('user')
         user = StakeHolderUserSerializer.create(StakeHolderUserSerializer(), validated_data=user_data)
-        Token.objects.create(user=user)
+        #Token.objects.create(user=user)
         stakeHolder, created = Organization.objects.update_or_create(user=user, name=validated_data.pop('name'))
         return stakeHolder
