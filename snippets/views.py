@@ -14,7 +14,7 @@ from rest_framework import renderers
 from rest_framework import viewsets
 from page_setting.models import PageSetting
 from cms.models import Page
-from aboutme.models import AMResponse, AMResponseTopic
+from aboutme.models import AMQuestion, AMResponse, AMResponseTopic
 from aboutothers.models import AOResponse, AOResponseTopic, AOPage
 from team.models import Team
 from shgroup.models import SHGroup, ProjectUser, MyMapLayout, ProjectMapLayout, SHCategory
@@ -88,14 +88,35 @@ class PageViewSet(viewsets.ReadOnlyModelViewSet):
     def list(self, request, *kwargs):
         serializer = self.get_serializer(self.get_queryset(), many=True)
         temp = serializer.data
+        drivers = Driver.objects.all().values()
+        list_drivers = [entry for entry in drivers]
+        #print(list_drivers)
 
         for i in range(len(temp)):
-            print("item")
-            print(temp[i])
-            # if temp[i]['pages'] is not None:
-            #     print(1)
+            #print("item")
+            #print(temp[i])
 
-        return Response(serializer.data)
+            if temp[i]['pages'] is not None:
+                temp[i]['pages'] = {}
+                temp[i]['pages']['driver'] = list_drivers
+
+                for j in range(len(list_drivers)):
+                    #temp[i]['pages']['driver'][j]['amquestion'] = []
+                    temp[i]['pages']['driver'][j]['aoquestion'] = []
+
+                    amquestion = AMQuestion.objects.filter(driver_id=list_drivers[j]['id']).values()
+                    list_amquestion = [entry1 for entry1 in amquestion]
+                    temp[i]['pages']['driver'][j]['amquestion'] = list_amquestion
+
+                    aoquestion = AOQuestion.objects.filter(driver_id=list_drivers[j]['id']).values()
+                    list_aoquestion = [entry2 for entry2 in aoquestion]
+                    temp[i]['pages']['driver'][j]['aoquestion'] = list_aoquestion
+            # for j in range(len(list_drivers)):
+            #     print(list_drivers[j]['id'])
+            #     temp[i]['pages']['ampage'][]['driver_id'] = list_drivers[j]['id']
+                # temp[i]['pages']['ampage'][j]['driverName'] = list_drivers[j].driverName
+
+        return Response(temp)
 
     # def list(self, request, *args, **kwargs):
     #     queryset = self.filter_queryset(self.get_queryset())
