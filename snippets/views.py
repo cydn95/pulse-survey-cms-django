@@ -90,8 +90,11 @@ class PageViewSet(viewsets.ReadOnlyModelViewSet):
         temp = serializer.data
         drivers = Driver.objects.all().values()
         list_drivers = [entry for entry in drivers]
-
-        survey_param = int(self.request.GET.get('survey'))
+        survey_param = ''
+        
+        t_survey_param = self.request.GET.get('survey')
+        if t_survey_param:
+            survey_param = int(t_survey_param)
 
         for i in range(len(temp)):
 
