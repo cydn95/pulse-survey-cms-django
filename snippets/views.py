@@ -79,20 +79,38 @@ class PageSettingViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = PageSetting.objects.all()
     serializer_class = PageSettingSerializer
 
+# working now
 class PageViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [permissions.IsAuthenticated,permissions.IsAuthenticatedOrReadOnly]
     queryset = Page.objects.all()
     serializer_class = PageSerializer
 
-    def create(self, request, *args, **kwargs):
-        data = request.data.get("items") if 'items' in request.data else request.data
-        many = isinstance(data, list)
-        #print(data, many)
-        serializer = self.get_serializer(data=data, many=many)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+    def list(self, request, *kwargs):
+        serializer = self.get_serializer(self.get_queryset(), many=True)
+        temp = serializer.data
+
+        for i in range(len(temp)):
+            print("item")
+            print(temp[i])
+            # if temp[i]['pages'] is not None:
+            #     print(1)
+
+        return Response(serializer.data)
+
+    # def list(self, request, *args, **kwargs):
+    #     queryset = self.filter_queryset(self.get_queryset())
+    #     data = request.accepted_renderer.render({'test': queryset, 'request': request})
+    #     return Response(data, content_type=f'application/json')
+
+    # def create(self, request, *args, **kwargs):
+    #     data = request.data.get("items") if 'items' in request.data else request.data
+    #     many = isinstance(data, list)
+    #     #print(data, many)
+    #     serializer = self.get_serializer(data=data, many=many)
+    #     serializer.is_valid(raise_exception=True)
+    #     self.perform_create(serializer)
+    #     headers = self.get_success_headers(serializer.data)
+    #     return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 class AMResponseViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated,permissions.IsAuthenticatedOrReadOnly]

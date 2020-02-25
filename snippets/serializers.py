@@ -10,7 +10,7 @@ from team.models import Team
 from shgroup.models import SHGroup, ProjectUser, MyMapLayout, ProjectMapLayout, SHCategory
 from option.models import Option, SkipOption
 from organization.models import Organization
-from survey.models import Driver, Project
+from survey.models import Driver, Project, Survey
 from rest_framework.authtoken.models import Token
 
 class EnumField(serializers.ChoiceField):
@@ -75,7 +75,19 @@ class SkipOptionSerializer(serializers.ModelSerializer):
         model = SkipOption
         fields = '__all__'
 
+class DriverSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Driver
+        fields = '__all__'
+
+class SurveySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Survey
+        fields = '__all__'
+
 class AMQuestionSerializer(serializers.ModelSerializer):
+    driver = DriverSerializer()
+    survey = SurveySerializer()
     class Meta:
         model = AMQuestion
         # fields = '__all__'
@@ -101,7 +113,8 @@ class AOResponseTopicSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class AOQuestionSerializer(serializers.ModelSerializer):
-    
+    driver = DriverSerializer()
+    survey = SurveySerializer()
     class Meta:
         model = AOQuestion
         fields = ['id', 'subdriver', 'questionText', 'questionSequence', 
@@ -178,12 +191,6 @@ class ProjectUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProjectUser
         fields = '__all__'
-
-class DriverSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Driver
-        fields = '__all__'
-
 
 class MyMapLayoutStoreSerializer(serializers.ModelSerializer):
     class Meta:
