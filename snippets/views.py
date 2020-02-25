@@ -90,27 +90,34 @@ class PageViewSet(viewsets.ReadOnlyModelViewSet):
         temp = serializer.data
         drivers = Driver.objects.all().values()
         list_drivers = [entry for entry in drivers]
-        #print(list_drivers)
+
+        survey_param = int(self.request.GET.get('survey'))
 
         for i in range(len(temp)):
-            #print("item")
-            #print(temp[i])
 
             if temp[i]['pages'] is not None:
                 temp[i]['pages'] = {}
                 temp[i]['pages']['driver'] = list_drivers
 
                 for j in range(len(list_drivers)):
-                    #temp[i]['pages']['driver'][j]['amquestion'] = []
-                    temp[i]['pages']['driver'][j]['aoquestion'] = []
+                    if survey_param and isinstance(survey_param, int):
+                        
+                        amquestion = AMQuestion.objects.filter(driver_id=list_drivers[j]['id'], survey_id=survey_param).values()
+                        list_amquestion = [entry1 for entry1 in amquestion]
+                        temp[i]['pages']['driver'][j]['amquestion'] = list_amquestion
 
-                    amquestion = AMQuestion.objects.filter(driver_id=list_drivers[j]['id']).values()
-                    list_amquestion = [entry1 for entry1 in amquestion]
-                    temp[i]['pages']['driver'][j]['amquestion'] = list_amquestion
+                        aoquestion = AOQuestion.objects.filter(driver_id=list_drivers[j]['id'], survey_id=survey_param).values()
+                        list_aoquestion = [entry2 for entry2 in aoquestion]
+                        temp[i]['pages']['driver'][j]['aoquestion'] = list_aoquestion
+                    else:
+                        amquestion = AMQuestion.objects.filter(driver_id=list_drivers[j]['id']).values()
+                        list_amquestion = [entry1 for entry1 in amquestion]
+                        temp[i]['pages']['driver'][j]['amquestion'] = list_amquestion
 
-                    aoquestion = AOQuestion.objects.filter(driver_id=list_drivers[j]['id']).values()
-                    list_aoquestion = [entry2 for entry2 in aoquestion]
-                    temp[i]['pages']['driver'][j]['aoquestion'] = list_aoquestion
+                        aoquestion = AOQuestion.objects.filter(driver_id=list_drivers[j]['id']).values()
+                        list_aoquestion = [entry2 for entry2 in aoquestion]
+                        temp[i]['pages']['driver'][j]['aoquestion'] = list_aoquestion
+
             # for j in range(len(list_drivers)):
             #     print(list_drivers[j]['id'])
             #     temp[i]['pages']['ampage'][]['driver_id'] = list_drivers[j]['id']
