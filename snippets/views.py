@@ -143,19 +143,31 @@ class PageViewSet(viewsets.ReadOnlyModelViewSet):
         for i in range(len(list_drivers)):
             if survey_param and isinstance(survey_param, int):
                 
-                amquestion = AMQuestion.objects.filter(driver_id=list_drivers[i]['id'], survey_id=survey_param).values()
+                amquestion = AMQuestion.objects.filter(driver_id=list_drivers[i]['id'], survey_id=survey_param).values('id', 'subdriver', 'questionText', 'questionSequence', 
+        'sliderTextLeft', 'sliderTextRight', 'skipOptionYN', 'skipResponses', 
+        'topicPrompt', 'commentPrompt', 'survey', 'driver', 'controlType', 
+        'shGroup', 'option', 'skipOption')
                 list_amquestion = [entry1 for entry1 in amquestion]
                 list_drivers[i]['amquestion'] = list_amquestion
 
-                aoquestion = AOQuestion.objects.filter(driver_id=list_drivers[i]['id'], survey_id=survey_param).values()
+                aoquestion = AOQuestion.objects.filter(driver_id=list_drivers[i]['id'], survey_id=survey_param).values('id', 'subdriver', 'questionText', 'questionSequence', 
+        'sliderTextLeft', 'sliderTextRight', 'skipOptionYN', 'skipResponses', 
+        'topicPrompt', 'commentPrompt', 'survey', 'driver', 'controlType', 
+        'shGroup', 'option', 'skipOption')
                 list_aoquestion = [entry2 for entry2 in aoquestion]
                 list_drivers[i]['aoquestion'] = list_aoquestion
             else:
-                amquestion = AMQuestion.objects.filter(driver_id=list_drivers[i]['id']).values()
+                amquestion = AMQuestion.objects.filter(driver_id=list_drivers[i]['id']).values('id', 'subdriver', 'questionText', 'questionSequence', 
+        'sliderTextLeft', 'sliderTextRight', 'skipOptionYN', 'skipResponses', 
+        'topicPrompt', 'commentPrompt', 'survey', 'driver', 'controlType', 
+        'shGroup', 'option', 'skipOption')
                 list_amquestion = [entry1 for entry1 in amquestion]
                 list_drivers[i]['amquestion'] = list_amquestion
 
-                aoquestion = AOQuestion.objects.filter(driver_id=list_drivers[i]['id']).values()
+                aoquestion = AOQuestion.objects.filter(driver_id=list_drivers[i]['id']).values('id', 'subdriver', 'questionText', 'questionSequence', 
+        'sliderTextLeft', 'sliderTextRight', 'skipOptionYN', 'skipResponses', 
+        'topicPrompt', 'commentPrompt', 'survey', 'driver', 'controlType', 
+        'shGroup', 'option', 'skipOption')
                 list_aoquestion = [entry2 for entry2 in aoquestion]
                 list_drivers[i]['aoquestion'] = list_aoquestion
 
