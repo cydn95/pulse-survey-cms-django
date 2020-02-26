@@ -3,7 +3,7 @@ from pathlib import Path
 from email.mime.image import MIMEImage
 
 from snippets.models import Snippet
-from snippets.serializers import StakeHolderSerializer, SHCategorySerializer, MyMapLayoutStoreSerializer, ProjectMapLayoutStoreSerializer, UserByProjectSerializer, ProjectByUserSerializer, SkipOptionSerializer, DriverSerializer, AOQuestionSerializer, OrganizationSerializer, OptionSerializer, ProjectUserSerializer, SHGroupSerializer, SnippetSerializer, UserSerializer, PageSettingSerializer, PageSerializer, AMResponseSerializer, AMResponseTopicSerializer, AOResponseSerializer, AOResponseTopicSerializer, AOPageSerializer, TeamSerializer
+from snippets.serializers import AMQuestionSerializer, AOQuestionSerializer, StakeHolderSerializer, SHCategorySerializer, MyMapLayoutStoreSerializer, ProjectMapLayoutStoreSerializer, UserByProjectSerializer, ProjectByUserSerializer, SkipOptionSerializer, DriverSerializer, AOQuestionSerializer, OrganizationSerializer, OptionSerializer, ProjectUserSerializer, SHGroupSerializer, SnippetSerializer, UserSerializer, PageSettingSerializer, PageSerializer, AMResponseSerializer, AMResponseTopicSerializer, AOResponseSerializer, AOResponseTopicSerializer, AOPageSerializer, TeamSerializer
 from rest_framework import generics, permissions
 from django.contrib.auth.models import User
 from snippets.permissions import IsOwnerOrReadOnly
@@ -143,33 +143,21 @@ class PageViewSet(viewsets.ReadOnlyModelViewSet):
         for i in range(len(list_drivers)):
             if survey_param and isinstance(survey_param, int):
                 
-                amquestion = AMQuestion.objects.filter(driver_id=list_drivers[i]['id'], survey_id=survey_param).values('id', 'subdriver', 'questionText', 'questionSequence', 
-        'sliderTextLeft', 'sliderTextRight', 'skipOptionYN', 'skipResponses', 
-        'topicPrompt', 'commentPrompt', 'survey', 'driver', 'controlType', 
-        'shGroup', 'option', 'skipOption')
-                list_amquestion = [entry1 for entry1 in amquestion]
-                list_drivers[i]['amquestion'] = list_amquestion
+                amquestion_queryset = AMQuestion.objects.filter(driver_id=list_drivers[i]['id'], survey_id=survey_param)
+                am_serializer = AMQuestionSerializer(amquestion_queryset, many=True)
+                list_drivers[i]['amquestion'] = am_serializer.data
 
-                aoquestion = AOQuestion.objects.filter(driver_id=list_drivers[i]['id'], survey_id=survey_param).values('id', 'subdriver', 'questionText', 'questionSequence', 
-        'sliderTextLeft', 'sliderTextRight', 'skipOptionYN', 'skipResponses', 
-        'topicPrompt', 'commentPrompt', 'survey', 'driver', 'controlType', 
-        'shGroup', 'option', 'skipOption')
-                list_aoquestion = [entry2 for entry2 in aoquestion]
-                list_drivers[i]['aoquestion'] = list_aoquestion
+                aoquestion_queryset = AOQuestion.objects.filter(driver_id=list_drivers[i]['id'], survey_id=survey_param)
+                ao_serializer = AOQuestionSerializer(aoquestion_queryset, many=True)
+                list_drivers[i]['aoquestion'] = ao_serializer.data
             else:
-                amquestion = AMQuestion.objects.filter(driver_id=list_drivers[i]['id']).values('id', 'subdriver', 'questionText', 'questionSequence', 
-        'sliderTextLeft', 'sliderTextRight', 'skipOptionYN', 'skipResponses', 
-        'topicPrompt', 'commentPrompt', 'survey', 'driver', 'controlType', 
-        'shGroup', 'option', 'skipOption')
-                list_amquestion = [entry1 for entry1 in amquestion]
-                list_drivers[i]['amquestion'] = list_amquestion
+                amquestion_queryset = AMQuestion.objects.filter(driver_id=list_drivers[i]['id'])
+                am_serializer = AMQuestionSerializer(amquestion_queryset, many=True)
+                list_drivers[i]['amquestion'] = am_serializer.data
 
-                aoquestion = AOQuestion.objects.filter(driver_id=list_drivers[i]['id']).values('id', 'subdriver', 'questionText', 'questionSequence', 
-        'sliderTextLeft', 'sliderTextRight', 'skipOptionYN', 'skipResponses', 
-        'topicPrompt', 'commentPrompt', 'survey', 'driver', 'controlType', 
-        'shGroup', 'option', 'skipOption')
-                list_aoquestion = [entry2 for entry2 in aoquestion]
-                list_drivers[i]['aoquestion'] = list_aoquestion
+                aoquestion_queryset = AOQuestion.objects.filter(driver_id=list_drivers[i]['id'])
+                ao_serializer = AOQuestionSerializer(aoquestion_queryset, many=True)
+                list_drivers[i]['aoquestion'] = ao_serializer.data
 
         return Response(list_drivers)
 
