@@ -140,7 +140,6 @@ INSTALLED_APPS = [
     'page_nav',
     'page_setting',
     'option',
-    'landing',
     'rest_framework',
     'rest_framework.authtoken',
     'rest_auth',
