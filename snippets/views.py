@@ -79,69 +79,87 @@ class PageSettingViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = PageSetting.objects.all()
     serializer_class = PageSettingSerializer
 
-# working now
+# working now v1
+# class PageViewSet(viewsets.ReadOnlyModelViewSet):
+#     permission_classes = [permissions.IsAuthenticated,permissions.IsAuthenticatedOrReadOnly]
+#     queryset = Page.objects.all()
+#     serializer_class = PageSerializer
+
+#     def list(self, request, *kwargs):
+#         serializer = self.get_serializer(self.get_queryset(), many=True)
+#         temp = serializer.data
+#         drivers = Driver.objects.all().values()
+#         list_drivers = [entry for entry in drivers]
+#         survey_param = ''
+
+#         t_survey_param = self.request.GET.get('survey')
+#         if t_survey_param:
+#             survey_param = int(t_survey_param)
+
+#         for i in range(len(temp)):
+
+#             if temp[i]['pages'] is not None:
+#                 temp[i]['pages'] = {}
+#                 temp[i]['pages']['driver'] = list_drivers
+
+#                 for j in range(len(list_drivers)):
+#                     if survey_param and isinstance(survey_param, int):
+                        
+#                         amquestion = AMQuestion.objects.filter(driver_id=list_drivers[j]['id'], survey_id=survey_param).values()
+#                         list_amquestion = [entry1 for entry1 in amquestion]
+#                         temp[i]['pages']['driver'][j]['amquestion'] = list_amquestion
+
+#                         aoquestion = AOQuestion.objects.filter(driver_id=list_drivers[j]['id'], survey_id=survey_param).values()
+#                         list_aoquestion = [entry2 for entry2 in aoquestion]
+#                         temp[i]['pages']['driver'][j]['aoquestion'] = list_aoquestion
+#                     else:
+#                         amquestion = AMQuestion.objects.filter(driver_id=list_drivers[j]['id']).values()
+#                         list_amquestion = [entry1 for entry1 in amquestion]
+#                         temp[i]['pages']['driver'][j]['amquestion'] = list_amquestion
+
+#                         aoquestion = AOQuestion.objects.filter(driver_id=list_drivers[j]['id']).values()
+#                         list_aoquestion = [entry2 for entry2 in aoquestion]
+#                         temp[i]['pages']['driver'][j]['aoquestion'] = list_aoquestion
+
+#         return Response(temp)
+
+# v2
 class PageViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [permissions.IsAuthenticated,permissions.IsAuthenticatedOrReadOnly]
-    queryset = Page.objects.all()
-    serializer_class = PageSerializer
+    queryset = Driver.objects.all()
+    serializer_class = DriverSerializer
 
     def list(self, request, *kwargs):
         serializer = self.get_serializer(self.get_queryset(), many=True)
-        temp = serializer.data
-        drivers = Driver.objects.all().values()
-        list_drivers = [entry for entry in drivers]
+        list_drivers = serializer.data
+        # drivers = Driver.objects.all().values()
+        # list_drivers = [entry for entry in drivers]
         survey_param = ''
-        
+
         t_survey_param = self.request.GET.get('survey')
         if t_survey_param:
             survey_param = int(t_survey_param)
 
-        for i in range(len(temp)):
+        for i in range(len(list_drivers)):
+            if survey_param and isinstance(survey_param, int):
+                
+                amquestion = AMQuestion.objects.filter(driver_id=list_drivers[i]['id'], survey_id=survey_param).values()
+                list_amquestion = [entry1 for entry1 in amquestion]
+                list_drivers[i]['amquestion'] = list_amquestion
 
-            if temp[i]['pages'] is not None:
-                temp[i]['pages'] = {}
-                temp[i]['pages']['driver'] = list_drivers
+                aoquestion = AOQuestion.objects.filter(driver_id=list_drivers[i]['id'], survey_id=survey_param).values()
+                list_aoquestion = [entry2 for entry2 in aoquestion]
+                list_drivers[i]['aoquestion'] = list_aoquestion
+            else:
+                amquestion = AMQuestion.objects.filter(driver_id=list_drivers[i]['id']).values()
+                list_amquestion = [entry1 for entry1 in amquestion]
+                list_drivers[i]['amquestion'] = list_amquestion
 
-                for j in range(len(list_drivers)):
-                    if survey_param and isinstance(survey_param, int):
-                        
-                        amquestion = AMQuestion.objects.filter(driver_id=list_drivers[j]['id'], survey_id=survey_param).values()
-                        list_amquestion = [entry1 for entry1 in amquestion]
-                        temp[i]['pages']['driver'][j]['amquestion'] = list_amquestion
+                aoquestion = AOQuestion.objects.filter(driver_id=list_drivers[i]['id']).values()
+                list_aoquestion = [entry2 for entry2 in aoquestion]
+                list_drivers[i]['aoquestion'] = list_aoquestion
 
-                        aoquestion = AOQuestion.objects.filter(driver_id=list_drivers[j]['id'], survey_id=survey_param).values()
-                        list_aoquestion = [entry2 for entry2 in aoquestion]
-                        temp[i]['pages']['driver'][j]['aoquestion'] = list_aoquestion
-                    else:
-                        amquestion = AMQuestion.objects.filter(driver_id=list_drivers[j]['id']).values()
-                        list_amquestion = [entry1 for entry1 in amquestion]
-                        temp[i]['pages']['driver'][j]['amquestion'] = list_amquestion
-
-                        aoquestion = AOQuestion.objects.filter(driver_id=list_drivers[j]['id']).values()
-                        list_aoquestion = [entry2 for entry2 in aoquestion]
-                        temp[i]['pages']['driver'][j]['aoquestion'] = list_aoquestion
-
-            # for j in range(len(list_drivers)):
-            #     print(list_drivers[j]['id'])
-            #     temp[i]['pages']['ampage'][]['driver_id'] = list_drivers[j]['id']
-                # temp[i]['pages']['ampage'][j]['driverName'] = list_drivers[j].driverName
-
-        return Response(temp)
-
-    # def list(self, request, *args, **kwargs):
-    #     queryset = self.filter_queryset(self.get_queryset())
-    #     data = request.accepted_renderer.render({'test': queryset, 'request': request})
-    #     return Response(data, content_type=f'application/json')
-
-    # def create(self, request, *args, **kwargs):
-    #     data = request.data.get("items") if 'items' in request.data else request.data
-    #     many = isinstance(data, list)
-    #     #print(data, many)
-    #     serializer = self.get_serializer(data=data, many=many)
-    #     serializer.is_valid(raise_exception=True)
-    #     self.perform_create(serializer)
-    #     headers = self.get_success_headers(serializer.data)
-    #     return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        return Response(list_drivers)
 
 class AMResponseViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated,permissions.IsAuthenticatedOrReadOnly]
