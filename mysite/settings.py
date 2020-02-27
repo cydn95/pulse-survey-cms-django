@@ -252,11 +252,11 @@ JET_SIDE_MENU_COMPACT = False
 JET_CHANGE_FORM_SIBLING_LINKS = False
 
 JET_SIDE_MENU_ITEMS = [ # A list of application or custom item dicts
-    {'label': 'All Pages', 'items': [
-        {'name': 'cms.page', 'label': 'Pages'},
-        {'name': 'page_setting.pagesetting', 'label': 'Set Page Contents'},
-        {'name': 'page_nav.pagenav', 'label': 'Set Page Order'},
-    ]},
+    # {'label': 'All Pages', 'items': [
+    #     {'name': 'cms.page', 'label': 'Pages'},
+    #     {'name': 'page_setting.pagesetting', 'label': 'Set Page Contents'},
+    #     {'name': 'page_nav.pagenav', 'label': 'Set Page Order'},
+    # ]},
     {'label': 'Users', 'items': [
         #{'name': 'auth.group'},
         {'name': 'auth.user'},
@@ -342,16 +342,6 @@ CORS_ORIGIN_WHITELIST = [
     'http://3.15.16.117:3000',
     'http://3.15.16.117:3001',
 ]
-
-# For gmail
-# EMAIL_FILE_PATH = ''
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_USE_TLS = True
-# EMAIL_USE_SSL = False
-# EMAIL_HOST = 'smtp.gmail.com'
-# EMAIL_HOST_USER = 'dt897867@gmail.com'
-# EMAIL_HOST_PASSWORD = 'piggy19920412'
-# EMAIL_PORT = 587
 
 # For sendgrid mail
 SEND_GRID_API_KEY = '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'

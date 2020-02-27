@@ -18,7 +18,7 @@ from rest_framework_swagger.views import get_swagger_view
 admin.autodiscover()
 
 urlpatterns = [
-    url(r'^en/admin/page_nav/pagenav/likepost', PageNavAdmin.likePost),
+    #url(r'^en/admin/page_nav/pagenav/likepost', PageNavAdmin.likePost),
     url(r'^sitemap\.xml$', sitemap, {'sitemaps': {'cmspages': CMSSitemap}}),
     url(r'^jet/', include('jet.urls', 'jet')),
     url(r'^jet/dashboard/', include('jet.dashboard.urls', 'jet-dashboard')),
