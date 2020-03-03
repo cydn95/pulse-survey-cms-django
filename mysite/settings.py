@@ -356,3 +356,17 @@ DEFAULT_FROM_EMAIL = 'pulse@projectai.com'
 ACCOUNT_EMAIL_SUBJECT_PREFIX = 'Contact email received from website'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
+AUTHENTICATION_BACKENDS = (
+    # Needed to login by username in Django admin, regardless of 'allauth'
+    "django.contrib.auth.backends.ModelBackend",
+
+    # 'allauth' specific authentication methods, such as login by e-mail
+    "allauth.account.auth_backends.AuthenticationBackend",
+)
+
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = False
+ACCOUNT_SESSION_REMEMBER = True
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_UNIQUE_EMAIL = True
