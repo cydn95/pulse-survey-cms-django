@@ -261,6 +261,7 @@ JET_SIDE_MENU_ITEMS = [ # A list of application or custom item dicts
     {'label': 'Users', 'items': [
         #{'name': 'auth.group'},
         {'name': 'auth.user'},
+        {'name': 'journey.journey', 'label': 'User Journey'},
     ]},
     {'label': 'About Me Questions', 'items': [
         {'name': 'aboutme.amquestion', 'label': 'Questions'},
