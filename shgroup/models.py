@@ -134,10 +134,10 @@ class ProjectUser(models.Model):
             email.attach(image_logo)
             image_logo.add_header('Content-ID', f"<{image_name_logo}>")
         
-        with open(image_path_container, mode='rb') as f_container:
-            image_container = MIMEImage(f_container.read())
-            email.attach(image_container)
-            image_container.add_header('Content-ID', f"<{image_name_container}>")
+        # with open(image_path_container, mode='rb') as f_container:
+        #     image_container = MIMEImage(f_container.read())
+        #     email.attach(image_container)
+        #     image_container.add_header('Content-ID', f"<{image_name_container}>")
 
         with open(image_path_connect, mode='rb') as f_connect:
             image_connect = MIMEImage(f_connect.read())
