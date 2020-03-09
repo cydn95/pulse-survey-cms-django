@@ -56,8 +56,9 @@ class SHCategory(models.Model):
     SHCategoryDesc = models.CharField(max_length=200, blank=True)
     mapType = models.ForeignKey(MapType, on_delete=models.PROTECT)
     colour = models.CharField(max_length=50, blank=True)
-    icon = models.CharField(max_length=255, blank=True)
-
+    # icon = models.CharField(max_length=255, blank=True)
+    icon = models.ImageField(upload_to='uploads/shcategory', blank=True)
+    
     def __str__(self):
         return self.SHCategoryName
 
