@@ -94,7 +94,7 @@ class JourneyAdmin(admin.ModelAdmin):
         chartConfig["animation"] = "1"
         chartConfig["baseFontColor"] = "#000000"
         chartConfig["labelFontColor"] = "#FFFFFF"
-
+        
         dataSetSource["chart"] = chartConfig
 
         # # mockup data
