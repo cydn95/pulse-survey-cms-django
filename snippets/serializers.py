@@ -9,7 +9,7 @@ from page_nav.models import PageNav
 from team.models import Team
 from shgroup.models import SHGroup, ProjectUser, MyMapLayout, ProjectMapLayout, SHCategory
 from option.models import Option, SkipOption
-from organization.models import Organization
+from organization.models import Organization, UserAvatar
 from survey.models import Driver, Project, Survey
 from rest_framework.authtoken.models import Token
 
@@ -34,12 +34,19 @@ class OrganizationSerializer(serializers.ModelSerializer):
         model = Organization
         fields = '__all__'
 
+class UserAvatarSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserAvatar
+        fields = '__all__'
+
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     snippets = serializers.HyperlinkedRelatedField(many=True, view_name='snippet-detail', read_only=True)
     organization = OrganizationSerializer()
+    avatar = UserAvatarSerializer()
+
     class Meta:
         model = User
-        fields = ['url', 'id', 'username', 'last_login', 'first_name', 'last_name', 'email', 'is_superuser', 'is_staff', 'is_active', 'snippets', 'organization']
+        fields = ['url', 'id', 'username', 'last_login', 'first_name', 'last_name', 'email', 'is_superuser', 'is_staff', 'is_active', 'snippets', 'organization', 'avatar']
 
 
 class SnippetSerializer(serializers.HyperlinkedModelSerializer):

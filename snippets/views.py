@@ -20,7 +20,7 @@ from team.models import Team
 from shgroup.models import SHGroup, ProjectUser, MyMapLayout, ProjectMapLayout, SHCategory
 from option.models import Option, SkipOption
 from rest_framework import status
-from organization.models import Organization
+from organization.models import Organization, UserAvatar
 from aboutothers.models import AOQuestion
 from survey.models import Driver, Project
 from rest_framework.views import APIView

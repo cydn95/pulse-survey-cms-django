@@ -1,37 +1,38 @@
 from django.contrib import admin
-from .models import Organization
+from .models import Organization, UserAvatar
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext, ugettext_lazy as _
 from django.contrib.auth.forms import UserChangeForm, UserCreationForm
 from .models import Organization
-#from gremlin import deleteVertex
+
+from django import forms
+from django.core.files.images import get_image_dimensions
+
+class UserAvatarInline(admin.StackedInline):
+    model = UserAvatar
+    can_delete = False
+    verbose_name_plural = 'avatar'
 
 class OrganizationInline(admin.StackedInline):
     model = Organization
     can_delete = False
     verbose_name_plural = 'organization'
 
-# class EmailRequiredMixin(object):
-#     def __init__(self, *args, **kwargs):
-#         super(EmailRequiredMixin, self).__init__(*args, **kwargs)
-#         # make user email field required
-#         self.fields['email'].required = True
+class EmailRequiredMixin(object):
+    def __init__(self, *args, **kwargs):
+        super(EmailRequiredMixin, self).__init__(*args, **kwargs)
+        # make user email field required
+        self.fields['email'].required = True
 
-class MyUserCreationForm(UserCreationForm):
-    """
-    A UserCreationForm with optional password inputs.
-    """
-    def __init__(self, *args, **kwargs):
-        super(UserCreationForm, self).__init__(*args, **kwargs)
-        self.fields['email'].required = True
+class MyUserCreationForm(EmailRequiredMixin, UserCreationForm):
+    pass
         
-class MyUserChangeForm(UserChangeForm):
-    def __init__(self, *args, **kwargs):
-        self.fields['email'].required = True
+class MyUserChangeForm(EmailRequiredMixin, UserChangeForm):
+    pass
 
 class UserAdmin(BaseUserAdmin):
-    form = MyUserCreationForm
+    form = MyUserChangeForm
     add_form = MyUserCreationForm
     BaseUserAdmin.list_display = ('email', 'first_name', 'last_name', 'is_active', 'date_joined', 'is_staff')
     BaseUserAdmin.fieldsets = (
@@ -54,7 +55,7 @@ class UserAdmin(BaseUserAdmin):
         #     'classes': ('collapse', 'collapse-closed'),
         # }),
     )
-    inlines = (OrganizationInline,)
+    inlines = (OrganizationInline, UserAvatarInline,)
 
 # Register your models here.
 admin.site.unregister(User)
