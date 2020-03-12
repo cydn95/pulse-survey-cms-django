@@ -9,9 +9,6 @@ class UserAvatar(models.Model):
     user = models.OneToOneField(User, unique=True, related_name='avatar', on_delete=models.CASCADE)
     name = models.ImageField(upload_to='uploads/user', blank=True)
 
-    def __str__(self):
-        return self.name
-
     def save(self, *args, **kwargs):
         super(UserAvatar, self).save(*args, **kwargs)
 
