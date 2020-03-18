@@ -9,7 +9,7 @@ from page_nav.models import PageNav
 from team.models import Team
 from shgroup.models import SHGroup, ProjectUser, MyMapLayout, ProjectMapLayout, SHCategory
 from option.models import Option, SkipOption
-from organization.models import Organization, UserAvatar
+from organization.models import Organization, UserAvatar, UserTeam, UserTitle
 from survey.models import Driver, Project, Survey
 from rest_framework.authtoken.models import Token
 
@@ -39,14 +39,26 @@ class UserAvatarSerializer(serializers.ModelSerializer):
         model = UserAvatar
         fields = '__all__'
 
+class UserTeamSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserTeam
+        fields = '__all__'
+
+class UserTitleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserTitle
+        fields = '__all__'
+
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     snippets = serializers.HyperlinkedRelatedField(many=True, view_name='snippet-detail', read_only=True)
     organization = OrganizationSerializer()
     avatar = UserAvatarSerializer()
+    userteam = UserTeamSerializer()
+    usertitle = UserTitleSerializer()
 
     class Meta:
         model = User
-        fields = ['url', 'id', 'username', 'last_login', 'first_name', 'last_name', 'email', 'is_superuser', 'is_staff', 'is_active', 'snippets', 'organization', 'avatar']
+        fields = ['url', 'id', 'username', 'last_login', 'first_name', 'last_name', 'email', 'is_superuser', 'is_staff', 'is_active', 'snippets', 'organization', 'avatar', 'userteam', 'usertitle']
 
 
 class SnippetSerializer(serializers.HyperlinkedModelSerializer):
@@ -190,7 +202,7 @@ class UserByProjectSerializer(serializers.ModelSerializer):
     shCategory = SHCategorySerializer()
     class Meta:
         model = ProjectUser
-        fields = ['id', 'project', 'user', 'team', 'shCategory']
+        fields = ['id', 'project', 'projectUserTitle', 'user', 'team', 'shCategory']
 
 class ProjectUserSerializer(serializers.ModelSerializer):
     #project = ProjectSerializer()

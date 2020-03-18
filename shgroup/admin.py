@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import SHGroup, SHCategory, SHMapping, ProjectUser, MapType, ProjectUserForm
+from .models import SHGroup, SHCategory, SHMapping, ProjectUser, MapType#, ProjectUserForm
 from jet.admin import CompactInline
 #from gremlin import deleteVertex
 from django.forms import CheckboxSelectMultiple
@@ -34,12 +34,12 @@ class SHCategoryAdmin(admin.ModelAdmin):
     #     obj.delete()
 
 class ProjectUserAdmin(admin.ModelAdmin):
-    list_display = ('user', 'project', 'team', 'shCategory')
+    list_display = ('user', 'projectUserTitle', 'project', 'team', 'shCategory')
     model = ProjectUser
     #action = ['delete_model']
 
-    def get_changelist_form(self, request, **kwargs):
-        return ProjectUserForm
+    # def get_changelist_form(self, request, **kwargs):
+    #     return ProjectUserForm
 
     def save_model(self, request, obj, form, change):
         super(ProjectUserAdmin, self).save_model(request, obj, form, change)

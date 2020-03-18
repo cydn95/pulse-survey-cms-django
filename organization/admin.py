@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Organization, UserAvatar, UserTitle
+from .models import Organization, UserAvatar, UserTitle, UserTeam
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext, ugettext_lazy as _
@@ -22,6 +22,11 @@ class UserTitleInline(admin.StackedInline):
     model = UserTitle
     can_delete = False
     verbose_name_plural = 'usertitle'
+
+class UserTeamInline(admin.StackedInline):
+    model = UserTeam
+    can_delete = False
+    verbose_name_plural = 'userteam'
 
 class EmailRequiredMixin(object):
     def __init__(self, *args, **kwargs):
@@ -59,7 +64,7 @@ class UserAdmin(BaseUserAdmin):
         #     'classes': ('collapse', 'collapse-closed'),
         # }),
     )
-    inlines = (OrganizationInline, UserAvatarInline, UserTitleInline)
+    inlines = (OrganizationInline, UserAvatarInline, UserTitleInline, UserTeamInline)
 
 # Register your models here.
 admin.site.unregister(User)

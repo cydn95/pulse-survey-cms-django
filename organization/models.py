@@ -19,6 +19,13 @@ class UserTitle(models.Model):
     def __str__(self):
         return self.name
     
+class UserTeam(models.Model):
+    user = models.OneToOneField(User, unique=True, related_name='userteam', on_delete=models.CASCADE)
+    name = models.CharField(max_length=50, blank=True)
+
+    def __str__(self):
+        return self.name
+        
 # Create your models here.
 class Organization(models.Model):
     user = models.OneToOneField(User, unique=True, on_delete=models.CASCADE)

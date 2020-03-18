@@ -80,7 +80,8 @@ class SHCategory(models.Model):
 class ProjectUser(models.Model):
     project = models.ForeignKey(Project, on_delete=models.PROTECT)
     user = models.ForeignKey(User, on_delete=models.PROTECT)
-    userPermission = models.ManyToManyField(Permission, blank=True)
+    projectUserTitle = models.CharField(max_length=50, blank=True)
+    #userPermission = models.ManyToManyField(Permission, blank=True)
     team = models.ForeignKey(Team, on_delete=models.PROTECT)
     shCategory = models.ForeignKey(SHCategory, null=True, blank=True)
 
@@ -158,8 +159,8 @@ class ProjectUser(models.Model):
         #     ret = addVertex(data)
         #     #print(ret)
 
-class ProjectUserForm(ModelForm):
-    userPermission = forms.ModelMultipleChoiceField(queryset=Permission.objects.all(), required=False)
+# class ProjectUserForm(ModelForm):
+#     userPermission = forms.ModelMultipleChoiceField(queryset=Permission.objects.all(), required=False)
 
 class SHMapping(models.Model):
     projectUser = models.ForeignKey(ProjectUser, on_delete=models.PROTECT, blank=True)
