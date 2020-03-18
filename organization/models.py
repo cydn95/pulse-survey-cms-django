@@ -12,10 +12,17 @@ class UserAvatar(models.Model):
     def save(self, *args, **kwargs):
         super(UserAvatar, self).save(*args, **kwargs)
 
+class UserTitle(models.Model):
+    user = models.OneToOneField(User, unique=True, related_name='usertitle', on_delete=models.CASCADE)
+    name = models.CharField(max_length=50, blank=True)
+
+    def __str__(self):
+        return self.name
+    
 # Create your models here.
 class Organization(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    name = models.CharField(max_length=200)
+    user = models.OneToOneField(User, unique=True, on_delete=models.CASCADE)
+    name = models.CharField(max_length=200, blank=True)
 
     def __str__(self):
         return self.name

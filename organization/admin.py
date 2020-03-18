@@ -1,10 +1,9 @@
 from django.contrib import admin
-from .models import Organization, UserAvatar
+from .models import Organization, UserAvatar, UserTitle
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext, ugettext_lazy as _
 from django.contrib.auth.forms import UserChangeForm, UserCreationForm
-from .models import Organization
 
 from django import forms
 from django.core.files.images import get_image_dimensions
@@ -18,6 +17,11 @@ class OrganizationInline(admin.StackedInline):
     model = Organization
     can_delete = False
     verbose_name_plural = 'organization'
+
+class UserTitleInline(admin.StackedInline):
+    model = UserTitle
+    can_delete = False
+    verbose_name_plural = 'usertitle'
 
 class EmailRequiredMixin(object):
     def __init__(self, *args, **kwargs):
@@ -55,7 +59,7 @@ class UserAdmin(BaseUserAdmin):
         #     'classes': ('collapse', 'collapse-closed'),
         # }),
     )
-    inlines = (OrganizationInline, UserAvatarInline,)
+    inlines = (OrganizationInline, UserAvatarInline, UserTitleInline)
 
 # Register your models here.
 admin.site.unregister(User)
