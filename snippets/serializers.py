@@ -197,6 +197,7 @@ class SHCategorySerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class UserByProjectSerializer(serializers.ModelSerializer):
+    project = ProjectSerializer()
     user = UserSerializer()
     team = TeamSerializer()
     shCategory = SHCategorySerializer()
