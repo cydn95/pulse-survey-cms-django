@@ -65,7 +65,7 @@ class AMResponse(models.Model):
 
 class AMResponseTopic(models.Model):
     # amResponse = models.ForeignKey(AMResponse, on_delete=models.PROTECT)
-    AMQuestion = models.ForeignKey(AMQuestion, on_delete=models.PROTECT)
+    amQuestion = models.ForeignKey(AMQuestion, on_delete=models.PROTECT)
     responseUser = models.ForeignKey(ProjectUser, on_delete=models.PROTECT)
     topicName = models.CharField(max_length=255, blank=True)
 

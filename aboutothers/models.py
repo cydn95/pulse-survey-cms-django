@@ -62,7 +62,7 @@ class AOResponse(models.Model):
     commentTags = models.TextField(blank=True)
 
 class AOResponseTopic(models.Model):
-    AOQuestion = models.ForeignKey(AOQuestion, on_delete=models.PROTECT)
+    aoQuestion = models.ForeignKey(AOQuestion, on_delete=models.PROTECT)
     responseUser = models.ForeignKey(ProjectUser, on_delete=models.PROTECT)
     topicName = models.CharField(max_length=255, blank=True)
 
