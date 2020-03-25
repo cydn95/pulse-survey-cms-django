@@ -1,7 +1,7 @@
 from django.db import models
 from survey.models import Survey, Driver, Project
 from setting.models import ControlType
-from shgroup.models import SHGroup
+from shgroup.models import SHGroup, ProjectUser
 from option.models import Option, SkipOption
 from page_setting.models import PageSetting
 from django.contrib.auth.models import User
@@ -64,9 +64,10 @@ class AMResponse(models.Model):
     commentTags = models.TextField(blank=True)
 
 class AMResponseTopic(models.Model):
-    amResponse = models.ForeignKey(AMResponse, on_delete=models.PROTECT)
-    topic = models.CharField(max_length=100, blank=True)
-    comment = models.CharField(max_length=1000, blank=True)
+    # amResponse = models.ForeignKey(AMResponse, on_delete=models.PROTECT)
+    AMQuestion = models.ForeignKey(AMQuestion, on_delete=models.PROTECT)
+    responseUser = models.ForeignKey(ProjectUser, on_delete=models.PROTECT)
+    topicName = models.CharField(max_length=255, blank=True)
 
 class PageAMQuestion(models.Model):
     pageSetting = models.ForeignKey(PageSetting, related_name="ampagesetting", on_delete=models.SET_NULL, default=None, blank=True, null=True)

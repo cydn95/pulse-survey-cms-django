@@ -1,7 +1,7 @@
 from django.db import models
 from survey.models import Survey, Driver, Project
 from setting.models import ControlType
-from shgroup.models import SHGroup
+from shgroup.models import SHGroup, ProjectUser
 from option.models import Option, SkipOption
 from page_setting.models import PageSetting
 from django.contrib.auth.models import User
@@ -62,9 +62,9 @@ class AOResponse(models.Model):
     commentTags = models.TextField(blank=True)
 
 class AOResponseTopic(models.Model):
-    aoResponse = models.ForeignKey(AOResponse, on_delete=models.PROTECT)
-    topic = models.CharField(max_length=100, blank=True)
-    comment = models.CharField(max_length=1000, blank=True)
+    AOQuestion = models.ForeignKey(AOQuestion, on_delete=models.PROTECT)
+    responseUser = models.ForeignKey(ProjectUser, on_delete=models.PROTECT)
+    topicName = models.CharField(max_length=255, blank=True)
 
 class AOPage(models.Model):
     aoPageName = models.CharField(max_length=50)
