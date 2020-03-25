@@ -43,7 +43,6 @@ class CustomAuthToken(ObtainAuthToken):
         token = Token.objects.get(key=response.data['token'])
         return Response({'token': token.key, 'id': token.user_id})
  
-
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
     """
     This viewset automatically provides `list` and `detail` actions.
