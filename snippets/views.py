@@ -464,8 +464,15 @@ class UserByProjectViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = ProjectUser.objects.all()
         project = self.request.query_params.get('project', None)
-        if project is not None:
-            queryset = queryset.filter(project__id=project)
+        user = self.request.query_params.get('user', None)
+        
+        if (project is not None ) & (user is not None):
+            queryset = queryset.filter(project__id=project, user__id=user)
+        elif project is not None:
+            queryset = queryset.filter(project__id=project)    
+        elif user is not None:
+            queryset = queryset.filter(user__id=user)
+
         return queryset
 
 class DriverViewSet(viewsets.ModelViewSet):
