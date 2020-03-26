@@ -65,7 +65,8 @@ class AOResponseTopic(models.Model):
     aoQuestion = models.ForeignKey(AOQuestion, on_delete=models.PROTECT)
     responseUser = models.ForeignKey(ProjectUser, on_delete=models.PROTECT)
     topicName = models.CharField(max_length=255, blank=True)
-
+    topicComment = models.CharField(max_length=255, blank=True)
+    
 class AOPage(models.Model):
     aoPageName = models.CharField(max_length=50)
     aoPageSequence = models.PositiveIntegerField()
