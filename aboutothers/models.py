@@ -15,7 +15,7 @@ class AOQuestion(models.Model):
     driver = models.ForeignKey(Driver, on_delete=models.PROTECT)
     subdriver = models.CharField(max_length=50, blank=True)
     questionText = models.CharField(max_length=1000)
-    controlType = models.ForeignKey(ControlType, on_delete=models.PROTECT)
+    controlType = models.ForeignKey(ControlType)
     questionSequence = models.PositiveIntegerField(default=5)
     sliderTextLeft = models.CharField(max_length=50, blank=True)
     sliderTextRight = models.CharField(max_length=50, blank=True)
