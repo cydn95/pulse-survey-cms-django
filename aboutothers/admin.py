@@ -29,6 +29,16 @@ class AOQuestionAdmin(admin.ModelAdmin):
     def get_changelist_form(self, request, **kwargs):
         return AOQuestionForm
 
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        controlType = form.base_fields['controlType']
+
+        controlType.widget.can_add_related = False
+        controlType.widget.can_change_related = False
+        controlType.widget.can_delete_related = False
+
+        return form
+
 #class AOResponseAdmin(admin.ModelAdmin):
 class AOResponseAdmin(ImportExportModelAdmin):
     list_display = ['aoQuestion', 'user', 'subjectUser', 'survey', 'topicValue', 'commentValue', 'skipValue']
@@ -61,6 +71,11 @@ class AOResponseAdmin(ImportExportModelAdmin):
             else:
                 self.fields = ['user', 'subjectUser', 'survey', 'project', 'aoQuestion', 'topicValue', 'commentValue']
         elif controlType == 'MULTI_OPTIONS':
+            if skipValue != '':
+                self.fields = ['user', 'subjectUser', 'survey', 'project', 'aoQuestion', 'skipValue']
+            else:
+                self.fields = ['user', 'subjectUser', 'survey', 'project', 'aoQuestion', 'topicValue', 'commentValue']
+        elif controlType == 'MULTI_TOPICS':
             if skipValue != '':
                 self.fields = ['user', 'subjectUser', 'survey', 'project', 'aoQuestion', 'skipValue']
             else:

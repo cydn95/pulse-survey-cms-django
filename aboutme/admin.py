@@ -30,6 +30,16 @@ class AMQuestionAdmin(admin.ModelAdmin):
 
     def get_changelist_form(self, request, **kwargs):
         return AMQuestionForm
+    
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        controlType = form.base_fields['controlType']
+
+        controlType.widget.can_add_related = False
+        controlType.widget.can_change_related = False
+        controlType.widget.can_delete_related = False
+
+        return form
 
 class AMResponseAdmin(ImportExportModelAdmin):
     list_display = ['amQuestion', 'user', 'project', 'survey', 'integerValue', 'topicValue', 'skipValue', 'commentValue']
@@ -62,6 +72,11 @@ class AMResponseAdmin(ImportExportModelAdmin):
             else:
                 self.fields = ['user', 'project', 'survey', 'amQuestion', 'topicValue', 'commentValue']
         elif controlType == 'MULTI_OPTIONS':
+            if skipValue != '':
+                self.fields = ['user', 'project', 'survey', 'amQuestion', 'skipValue']
+            else:
+                self.fields = ['user', 'project', 'survey', 'amQuestion', 'topicValue', 'commentValue']
+        elif controlType == 'MULTI_TOPICS':
             if skipValue != '':
                 self.fields = ['user', 'project', 'survey', 'amQuestion', 'skipValue']
             else:
