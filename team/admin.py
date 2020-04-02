@@ -3,17 +3,16 @@ from .models import Team
 #from gremlin import deleteVertex
 
 class TeamAdmin(admin.ModelAdmin):
-
     # Order
-    fields = ['name', 'organization']
+    fields = ['project', 'name']
     # Search
-    search_fields = ['name', 'organization']
+    search_fields = ['project', 'name']
     # Filter
-    list_filter = ['name', 'organization']
+    list_filter = ['project', 'name']
     # list
-    list_display = ['name', 'organization']
+    list_display = ['project', 'name']
     # Edit
-    list_editable = ['organization']
+    # list_editable = ['project']
 
     model = Team
     # actions = ['delete_model']
@@ -23,6 +22,16 @@ class TeamAdmin(admin.ModelAdmin):
     #         id = 'team-{0}'.format(obj.id)
     #         deleteVertex(id)
     #     obj.delete()
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, ** kwargs)
+        project = form.base_fields['project']
+
+        project.widget.can_add_related = False
+        project.widget.can_change_related = False
+        project.widget.can_delete_related = False
+
+        return form
 
 # Register your models here.
 admin.site.register(Team, TeamAdmin)

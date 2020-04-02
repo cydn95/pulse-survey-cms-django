@@ -40,6 +40,26 @@ class ProjectUserAdmin(admin.ModelAdmin):
 
     # def get_changelist_form(self, request, **kwargs):
     #     return ProjectUserForm
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        team = form.base_fields['team']
+        user = form.base_fields['user']
+        project = form.base_fields['project']
+
+        project.widget.can_add_related = False
+        project.widget.can_change_related = False
+        project.widget.can_delete_related = False
+        
+        team.widget.can_add_related = False
+        team.widget.can_change_related = False
+        team.widget.can_delete_related = False
+
+        user.widget.can_add_related = False
+        user.widget.can_change_related = False
+        user.widget.can_delete_related = False
+
+        return form
+
 
     def save_model(self, request, obj, form, change):
         super(ProjectUserAdmin, self).save_model(request, obj, form, change)
