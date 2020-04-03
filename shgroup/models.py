@@ -81,6 +81,7 @@ class ProjectUser(models.Model):
     project = models.ForeignKey(Project, on_delete=models.PROTECT)
     user = models.ForeignKey(User, on_delete=models.PROTECT)
     projectUserTitle = models.CharField(max_length=50, blank=True)
+    projectUserRoleDesc = models.CharField(max_length=500, blank=True)
     #userPermission = models.ManyToManyField(Permission, blank=True)
     team = models.ForeignKey(Team, on_delete=models.PROTECT)
     shCategory = models.ForeignKey(SHCategory, null=True, blank=True)

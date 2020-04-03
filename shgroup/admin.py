@@ -34,7 +34,7 @@ class SHCategoryAdmin(admin.ModelAdmin):
     #     obj.delete()
 
 class ProjectUserAdmin(admin.ModelAdmin):
-    list_display = ('user', 'projectUserTitle', 'project', 'team', 'shCategory')
+    list_display = ('user', 'projectUserTitle', 'project', 'team', 'shCategory', 'projectUserRoleDesc')
     model = ProjectUser
     #action = ['delete_model']
 
