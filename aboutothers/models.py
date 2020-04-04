@@ -20,7 +20,7 @@ class AOQuestion(models.Model):
     sliderTextLeft = models.CharField(max_length=50, blank=True)
     sliderTextRight = models.CharField(max_length=50, blank=True)
     skipOptionYN = models.BooleanField(default=True)
-    skipResponses = models.CharField(max_length=1000, blank=True)
+    #skipResponses = models.CharField(max_length=1000, blank=True)
     topicPrompt = models.CharField(max_length=255, blank=True)
     commentPrompt = models.CharField(max_length=255, blank=True)
     shGroup = models.ManyToManyField(SHGroup, blank=True)

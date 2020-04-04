@@ -111,7 +111,7 @@ class AMQuestionSerializer(serializers.ModelSerializer):
         model = AMQuestion
         # fields = '__all__'
         fields = ['id', 'subdriver', 'questionText', 'questionSequence', 
-        'sliderTextLeft', 'sliderTextRight', 'skipOptionYN', 'skipResponses', 
+        'sliderTextLeft', 'sliderTextRight', 'skipOptionYN',  
         'topicPrompt', 'commentPrompt', 'survey', 'driver', 'controlType', 
         'shGroup', 'option', 'skipOption']
 
@@ -137,7 +137,7 @@ class AOQuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = AOQuestion
         fields = ['id', 'subdriver', 'questionText', 'questionSequence', 
-        'sliderTextLeft', 'sliderTextRight', 'skipOptionYN', 'skipResponses', 
+        'sliderTextLeft', 'sliderTextRight', 'skipOptionYN', 
         'topicPrompt', 'commentPrompt', 'survey', 'driver', 'controlType', 
         'shGroup', 'option', 'skipOption']
 

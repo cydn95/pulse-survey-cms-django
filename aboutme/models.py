@@ -20,7 +20,7 @@ class AMQuestion(models.Model):
     sliderTextLeft = models.CharField(max_length=50, blank=True)
     sliderTextRight = models.CharField(max_length=50, blank=True)
     skipOptionYN = models.BooleanField(default=True)
-    skipResponses = models.CharField(max_length=1000, blank=True)
+    #skipResponses = models.CharField(max_length=1000, blank=True)
     topicPrompt = models.CharField(max_length=255, blank=True)
     commentPrompt = models.CharField(max_length=255, blank=True)
     shGroup = models.ManyToManyField(SHGroup, blank=True)
@@ -31,7 +31,6 @@ class AMQuestion(models.Model):
         return self.questionText
 
 class AMQuestionForm(ModelForm):
-
     # here we only need to define the field we want to be editable
     shGroup = forms.ModelMultipleChoiceField(queryset=SHGroup.objects.all(), required=False)
     option = forms.ModelMultipleChoiceField(queryset=Option.objects.all(), required=False)
