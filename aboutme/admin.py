@@ -25,6 +25,12 @@ class AMQuestionList(ChangeList):
 
 
 class AMQuestionAdmin(admin.ModelAdmin):
+
+    # Search
+    search_fields = ['questionText']
+    # Filter
+    list_filter = ['driver', 'controlType', 'shGroup']
+    
     def get_changelist(self, request, **kwargs):
         return AMQuestionList
 
@@ -42,10 +48,12 @@ class AMQuestionAdmin(admin.ModelAdmin):
         return form
 
 class AMResponseAdmin(ImportExportModelAdmin):
-    list_display = ['amQuestion', 'user', 'project', 'survey', 'integerValue', 'topicValue', 'skipValue', 'commentValue']
+    list_display = ['amQuestion', 'user', 'project', 'survey', 'integerValue', 'topicValue', 'commentValue', 'skipValue']
     fields = ['user', 'subjectUser', 'survey', 'project', 'amQuestion', 'controlType', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags']
     readonly_fields = ['user', 'subjectUser', 'survey', 'project', 'amQuestion', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags']
     
+    search_fields = ['amQuestion']
+    list_filter = ['user', 'project', 'survey']
     model = AMResponse
 
     def has_add_permission(self, request):

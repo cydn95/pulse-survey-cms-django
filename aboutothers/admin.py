@@ -23,6 +23,12 @@ class AOQuestionList(ChangeList):
         self.list_editable = ['shGroup', 'option', 'skipOption']
 
 class AOQuestionAdmin(admin.ModelAdmin):
+
+    # Search
+    search_fields = ['questionText']
+    # Filter
+    list_filter = ['driver', 'controlType', 'shGroup']
+
     def get_changelist(self, request, **kwargs):
         return AOQuestionList
     
@@ -41,10 +47,12 @@ class AOQuestionAdmin(admin.ModelAdmin):
 
 #class AOResponseAdmin(admin.ModelAdmin):
 class AOResponseAdmin(ImportExportModelAdmin):
-    list_display = ['aoQuestion', 'user', 'subjectUser', 'survey', 'topicValue', 'commentValue', 'skipValue']
+    list_display = ['aoQuestion', 'user', 'subjectUser', 'project', 'survey', 'integerValue', 'topicValue', 'commentValue', 'skipValue']
     fileds = ['user', 'subjectUser', 'survey', 'project', 'aoQuestion', 'controlType', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags']
     readonly_fields = ['user', 'subjectUser', 'survey', 'project', 'aoQuestion', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags']
     
+    search_fields = ['aoQuestion']
+    list_filter = ['user', 'subjectUser', 'project', 'survey']
     model = AOResponse
 
     def has_add_permission(self, request):
