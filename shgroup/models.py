@@ -80,23 +80,21 @@ class SHCategory(models.Model):
 class ProjectUser(models.Model):
     project = models.ForeignKey(Project, on_delete=models.PROTECT)
     user = models.ForeignKey(User, on_delete=models.PROTECT)
-    projectUserTitle = models.CharField(max_length=50, blank=True)
-    projectUserRoleDesc = models.CharField(max_length=500, blank=True)
+    projectUserTitle = models.CharField(max_length=50, blank=True, verbose_name='Project Title')
+    projectUserRoleDesc = models.CharField(max_length=500, blank=True, verbose_name='Description')
     #userPermission = models.ManyToManyField(Permission, blank=True)
-    team = models.ForeignKey(Team, on_delete=models.PROTECT)
+    # team = models.ForeignKey(Team, on_delete=models.PROTECT)
+    team = models.ForeignKey(Team, null=True, blank=True, verbose_name='Team')
     shCategory = models.ForeignKey(SHCategory, null=True, blank=True)
 
     class Meta:
-        unique_together = ['project', 'user', 'team']
+        unique_together = ['project', 'user']
 
     def __str__(self):
         return '{0} - {1}'.format(self.user.username, self.project)
 
     def save(self, *args, **kwargs):
         super(ProjectUser, self).save(*args, **kwargs)
-        # print(self.project.id)
-        # print(self.user.id)
-        # print(self.id)
 
         project = Project.objects.get(id=self.project.id)
         user = User.objects.get(id=self.user.id)
@@ -136,11 +134,6 @@ class ProjectUser(models.Model):
             image_logo = MIMEImage(f_logo.read())
             email.attach(image_logo)
             image_logo.add_header('Content-ID', f"<{image_name_logo}>")
-        
-        # with open(image_path_container, mode='rb') as f_container:
-        #     image_container = MIMEImage(f_container.read())
-        #     email.attach(image_container)
-        #     image_container.add_header('Content-ID', f"<{image_name_container}>")
 
         with open(image_path_connect, mode='rb') as f_connect:
             image_connect = MIMEImage(f_connect.read())
@@ -148,17 +141,6 @@ class ProjectUser(models.Model):
             image_connect.add_header('Content-ID', f"<{image_name_connect}>")
 
         email.send()
-
-        # if self.id is not None:
-        #     data = [{
-        #         'id': 'user-{0}'.format(self.id),
-        #         'label': 'user_{0}'.format(self.id),
-        #         'type': 'user',
-        #         'text': '{0}'.format(self.user)
-        #     }]
-        #     #print(data)
-        #     ret = addVertex(data)
-        #     #print(ret)
 
 # class ProjectUserForm(ModelForm):
 #     userPermission = forms.ModelMultipleChoiceField(queryset=Permission.objects.all(), required=False)

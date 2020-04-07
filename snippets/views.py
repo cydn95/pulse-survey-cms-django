@@ -291,10 +291,60 @@ class AOResponseViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         data = request.data.get("items") if 'items' in request.data else request.data
         many = isinstance(data, list)
-        #print(data, many)
-        serializer = self.get_serializer(data=data, many=many)
+        
+        if many == True:
+            for item in data:
+                defaults = item
+                try:
+                    obj = AOResponse.objects.get(survey_id=item['survey'], project_id=item['project'], user_id=item['user'], subjectUser_id=item['subjectUser'], aoQuestion_id=item['aoQuestion'])
+
+                    obj.integerValue = defaults['integerValue']
+                    obj.topicValue = defaults['topicValue']
+                    obj.commentValue = defaults['commentValue']
+                    obj.skipValue = defaults['skipValue']
+                    obj.topicTags = defaults['topicTags']
+                    obj.commentTags = defaults['commentTags']
+
+                    obj.save()
+
+                except AOResponse.DoesNotExist:
+                    obj = AOResponse(aoQuestion_id=defaults['aoQuestion'],
+                                user_id=defaults['user'], subjectUser_id=defaults['subjectUser'],
+                                survey_id=defaults['survey'], project_id=defaults['project'],
+                                controlType=defaults['controlType'], integerValue=defaults['integerValue'],
+                                topicValue=defaults['topicValue'], commentValue=defaults['commentValue'],
+                                skipValue=defaults['skipValue'], topicTags=defaults['topicTags'],
+                                commentTags=defaults['commentTags'])
+                    obj.save()
+        elif many == False:
+            defaults = data
+            try:
+                obj = AOResponse.objects.get(survey_id=item['survey'], project_id=item['project'], user_id=item['user'], subjectUser_id=item['subjectUser'], aoQuestion_id=item['aoQuestion'])
+
+                obj.integerValue = defaults['integerValue']
+                obj.topicValue = defaults['topicValue']
+                obj.commentValue = defaults['commentValue']
+                obj.skipValue = defaults['skipValue']
+                obj.topicTags = defaults['topicTags']
+                obj.commentTags = defaults['commentTags']
+
+                obj.save()
+            except AOResponse.DoesNotExist:
+                obj = AOResponse(aoQuestion_id=defaults['aoQuestion'],
+                            user_id=defaults['user'], subjectUser_id=defaults['subjectUser'],
+                            survey_id=defaults['survey'], project_id=defaults['project'],
+                            controlType=defaults['controlType'], integerValue=defaults['integerValue'],
+                            topicValue=defaults['topicValue'], commentValue=defaults['commentValue'],
+                            skipValue=defaults['skipValue'], topicTags=defaults['topicTags'],
+                            commentTags=defaults['commentTags'])
+                obj.save()
+        
+        result = AOResponse.objects.all().values('user', 'subjectUser', 'survey', 'project', 'aoQuestion', 'controlType', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags')
+        
+        list_result = [entry for entry in result]
+
+        serializer = self.get_serializer(data=list_result, many=True)
         serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
