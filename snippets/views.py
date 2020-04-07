@@ -492,6 +492,20 @@ class UserByProjectViewSet(viewsets.ModelViewSet):
     queryset = ProjectUser.objects.all()
     serializer_class = UserByProjectSerializer
 
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+
+        for i in range(len(response.data)):
+            # print(response.data[i])
+            response.data[i]['am_total'] = AMQuestion.objects.count()
+            response.data[i]['am_answered'] = AMResponse.objects.filter(user_id=response.data[i]['user']['id'], project_id=response.data[i]['project']['id']).count()
+            response.data[i]['ao_total'] = AOQuestion.objects.count()
+            response.data[i]['ao_answered'] = AOResponse.objects.filter(user_id=response.data[i]['user']['id'], project_id=response.data[i]['project']['id']).count()
+
+        print(response.data)
+
+        return response
+
     def get_queryset(self):
         queryset = ProjectUser.objects.all()
         project = self.request.query_params.get('project', None)
