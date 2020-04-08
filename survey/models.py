@@ -43,3 +43,7 @@ class Driver(models.Model):
     def __str__(self):
         return self.driverName
 
+class ProjectVideoUpload(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    project = models.ForeignKey(Project, on_delete=models.PROTECT)
+    videoFile = models.FileField(upload_to='uploads/pvideo')

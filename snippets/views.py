@@ -3,7 +3,7 @@ from pathlib import Path
 from email.mime.image import MIMEImage
 
 from snippets.models import Snippet
-from snippets.serializers import AMQuestionSerializer, AOQuestionSerializer, StakeHolderSerializer, SHCategorySerializer, MyMapLayoutStoreSerializer, ProjectMapLayoutStoreSerializer, UserByProjectSerializer, ProjectByUserSerializer, SkipOptionSerializer, DriverSerializer, AOQuestionSerializer, OrganizationSerializer, OptionSerializer, ProjectUserSerializer, SHGroupSerializer, SnippetSerializer, UserSerializer, PageSettingSerializer, PageSerializer, AMResponseSerializer, AMResponseTopicSerializer, AOResponseSerializer, AOResponseTopicSerializer, AOPageSerializer, TeamSerializer
+from snippets.serializers import ProjectVideoUploadSerializer, AMQuestionSerializer, AOQuestionSerializer, StakeHolderSerializer, SHCategorySerializer, MyMapLayoutStoreSerializer, ProjectMapLayoutStoreSerializer, UserByProjectSerializer, ProjectByUserSerializer, SkipOptionSerializer, DriverSerializer, AOQuestionSerializer, OrganizationSerializer, OptionSerializer, ProjectUserSerializer, SHGroupSerializer, SnippetSerializer, UserSerializer, PageSettingSerializer, PageSerializer, AMResponseSerializer, AMResponseTopicSerializer, AOResponseSerializer, AOResponseTopicSerializer, AOPageSerializer, TeamSerializer
 from rest_framework import generics, permissions
 from django.contrib.auth.models import User
 from snippets.permissions import IsOwnerOrReadOnly
@@ -22,7 +22,7 @@ from option.models import Option, SkipOption
 from rest_framework import status
 from organization.models import Organization, UserAvatar
 from aboutothers.models import AOQuestion
-from survey.models import Driver, Project
+from survey.models import Driver, Project, ProjectVideoUpload
 from rest_framework.views import APIView
 from django.forms.models import model_to_dict
 
@@ -516,6 +516,7 @@ class ProjectUserViewSet(viewsets.ModelViewSet):
 
 class AOQuestionViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+    queryset = AOQuestion.objects.all()
     serializer_class = AOQuestionSerializer
 
     def get_queryset(self):
@@ -523,6 +524,18 @@ class AOQuestionViewSet(viewsets.ModelViewSet):
         shGroup = self.request.query_params.get('shGroup', None)
         if shGroup is not None:
             queryset = queryset.filter(shGroup__id=shGroup)
+        return queryset
+
+class ProjectVideoUploadViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+    queryset = ProjectVideoUpload.objects.all()
+    serializer_class = ProjectVideoUploadSerializer
+
+    def get_queryset(self):
+        queryset = ProjectVideoUpload.objects.all()
+        project = self.request.query_params.get('project', None)
+        if project is not None:
+            queryset = queryset.filter(project__id=project)
         return queryset
 
 class ProjectByUserViewSet(viewsets.ModelViewSet):
