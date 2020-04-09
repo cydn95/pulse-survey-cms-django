@@ -7,21 +7,21 @@ from rest_framework.authtoken.models import Token
 
 class UserAvatar(models.Model):
     user = models.OneToOneField(User, unique=True, related_name='avatar', on_delete=models.CASCADE)
-    name = models.ImageField(upload_to='uploads/user', blank=True)
+    name = models.ImageField(upload_to='uploads/user', verbose_name='Avatar', blank=True)
 
     def save(self, *args, **kwargs):
         super(UserAvatar, self).save(*args, **kwargs)
 
 class UserTitle(models.Model):
     user = models.OneToOneField(User, unique=True, related_name='usertitle', on_delete=models.CASCADE)
-    name = models.CharField(max_length=50, blank=True)
+    name = models.CharField(max_length=50, verbose_name='Job Title', blank=True)
 
     def __str__(self):
         return self.name
     
 class UserTeam(models.Model):
     user = models.OneToOneField(User, unique=True, related_name='userteam', on_delete=models.CASCADE)
-    name = models.CharField(max_length=50, blank=True)
+    name = models.CharField(max_length=50, verbose_name='Department', blank=True)
 
     def __str__(self):
         return self.name
@@ -29,7 +29,7 @@ class UserTeam(models.Model):
 # Create your models here.
 class Organization(models.Model):
     user = models.OneToOneField(User, unique=True, on_delete=models.CASCADE)
-    name = models.CharField(max_length=200, blank=True)
+    name = models.CharField(max_length=200, verbose_name='Organization', blank=True)
 
     def __str__(self):
         return self.name

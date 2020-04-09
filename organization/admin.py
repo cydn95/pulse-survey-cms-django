@@ -12,21 +12,25 @@ class UserAvatarInline(admin.StackedInline):
     model = UserAvatar
     can_delete = False
     verbose_name_plural = 'avatar'
+    template = 'admin/user/stacked.html'
 
 class OrganizationInline(admin.StackedInline):
     model = Organization
     can_delete = False
     verbose_name_plural = 'organization'
+    template = 'admin/user/stacked.html'
 
 class UserTitleInline(admin.StackedInline):
     model = UserTitle
     can_delete = False
-    verbose_name_plural = 'usertitle'
+    verbose_name_plural = 'Job Title'
+    template = 'admin/user/stacked.html'
 
 class UserTeamInline(admin.StackedInline):
     model = UserTeam
     can_delete = False
-    verbose_name_plural = 'userteam'
+    verbose_name_plural = 'Department'
+    template = 'admin/user/stacked.html'
 
 class EmailRequiredMixin(object):
     def __init__(self, *args, **kwargs):
