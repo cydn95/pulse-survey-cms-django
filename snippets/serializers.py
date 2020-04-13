@@ -7,7 +7,7 @@ from aboutme.models import PageAMQuestion, AMQuestion, AMResponse, AMResponseTop
 from aboutothers.models import PageAOQuestion, AOQuestion, AOResponse, AOResponseTopic, AOPage
 from page_nav.models import PageNav
 from team.models import Team
-from shgroup.models import SHGroup, ProjectUser, MyMapLayout, ProjectMapLayout, SHCategory
+from shgroup.models import SHGroup, ProjectUser, MyMapLayout, ProjectMapLayout, SHCategory, SHMapping
 from option.models import Option, SkipOption
 from organization.models import Organization, UserAvatar, UserTeam, UserTitle
 from survey.models import Driver, Project, Survey, ProjectVideoUpload
@@ -246,3 +246,9 @@ class StakeHolderSerializer(serializers.ModelSerializer):
         #Token.objects.create(user=user)
         stakeHolder, created = Organization.objects.update_or_create(user=user, name=validated_data.pop('name'))
         return stakeHolder
+
+class SHMappingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SHMapping
+        # fields = '__all__'
+        fields = ['shCategory', 'projectUser', 'relationshipStatus']

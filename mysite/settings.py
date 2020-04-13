@@ -277,6 +277,7 @@ JET_SIDE_MENU_ITEMS = [ # A list of application or custom item dicts
         {'name':'survey.project', 'label': 'Projects'},
         {'name':'shgroup.projectuser', 'label': 'Project Users'},
         {'name':'team.team', 'label': 'Project Teams'},
+        {'name':'shgroup.shmapping', 'label': 'SHMapping'}
     ]},
 ]
 

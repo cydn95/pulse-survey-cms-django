@@ -34,6 +34,7 @@ router.register(r'projectByUser', views.ProjectByUserViewSet)
 router.register(r'userByProject', views.UserByProjectViewSet)
 router.register(r'shcategory', views.SHCategoryViewSet)
 router.register(r'projectVideoUpload', views.ProjectVideoUploadViewSet)
+router.register(r'shmapping', views.SHMappingViewSet)
 
 # The API URLs are now determined automatically by the router.
 urlpatterns = [

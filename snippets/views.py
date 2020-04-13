@@ -3,7 +3,7 @@ from pathlib import Path
 from email.mime.image import MIMEImage
 
 from snippets.models import Snippet
-from snippets.serializers import ProjectVideoUploadSerializer, AMQuestionSerializer, AOQuestionSerializer, StakeHolderSerializer, SHCategorySerializer, MyMapLayoutStoreSerializer, ProjectMapLayoutStoreSerializer, UserByProjectSerializer, ProjectByUserSerializer, SkipOptionSerializer, DriverSerializer, AOQuestionSerializer, OrganizationSerializer, OptionSerializer, ProjectUserSerializer, SHGroupSerializer, SnippetSerializer, UserSerializer, PageSettingSerializer, PageSerializer, AMResponseSerializer, AMResponseTopicSerializer, AOResponseSerializer, AOResponseTopicSerializer, AOPageSerializer, TeamSerializer
+from snippets.serializers import SHMappingSerializer, ProjectVideoUploadSerializer, AMQuestionSerializer, AOQuestionSerializer, StakeHolderSerializer, SHCategorySerializer, MyMapLayoutStoreSerializer, ProjectMapLayoutStoreSerializer, UserByProjectSerializer, ProjectByUserSerializer, SkipOptionSerializer, DriverSerializer, AOQuestionSerializer, OrganizationSerializer, OptionSerializer, ProjectUserSerializer, SHGroupSerializer, SnippetSerializer, UserSerializer, PageSettingSerializer, PageSerializer, AMResponseSerializer, AMResponseTopicSerializer, AOResponseSerializer, AOResponseTopicSerializer, AOPageSerializer, TeamSerializer
 from rest_framework import generics, permissions
 from django.contrib.auth.models import User
 from snippets.permissions import IsOwnerOrReadOnly
@@ -17,7 +17,7 @@ from cms.models import Page
 from aboutme.models import AMQuestion, AMResponse, AMResponseTopic
 from aboutothers.models import AOResponse, AOResponseTopic, AOPage
 from team.models import Team
-from shgroup.models import SHGroup, ProjectUser, MyMapLayout, ProjectMapLayout, SHCategory
+from shgroup.models import SHGroup, ProjectUser, MyMapLayout, ProjectMapLayout, SHCategory, SHMapping
 from option.models import Option, SkipOption
 from rest_framework import status
 from organization.models import Organization, UserAvatar
@@ -682,6 +682,12 @@ class SHCategoryViewSet(viewsets.ModelViewSet):
     queryset = SHCategory.objects.all()
     serializer_class = SHCategorySerializer
     filterset_fields = ['mapType', 'survey']
+
+class SHMappingViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+    queryset = SHMapping.objects.all()
+    serializer_class = SHMappingSerializer
+    filterset_fields = ['shCategory']
 
 class SetPasswordView(APIView):
     permission_classes = [permissions.AllowAny]

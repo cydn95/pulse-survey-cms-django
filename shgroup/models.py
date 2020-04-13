@@ -147,10 +147,8 @@ class ProjectUser(models.Model):
 #     userPermission = forms.ModelMultipleChoiceField(queryset=Permission.objects.all(), required=False)
 
 class SHMapping(models.Model):
-    projectUser = models.ForeignKey(ProjectUser, on_delete=models.PROTECT, blank=True)
-    subjectUser = models.ForeignKey(User, on_delete=models.PROTECT, related_name="subjectUser", blank=True)
-    project = models.ForeignKey(Project, on_delete=models.PROTECT, blank=True)
-    shCategory = models.ForeignKey(SHCategory, on_delete=models.PROTECT, blank=True)
+    shCategory = models.ForeignKey(SHCategory, on_delete=models.PROTECT)
+    projectUser = models.ForeignKey(ProjectUser, on_delete=models.PROTECT)
     relationshipStatus = models.CharField(max_length=100, blank=True)
 
 
