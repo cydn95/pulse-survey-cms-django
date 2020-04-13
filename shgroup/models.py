@@ -151,6 +151,9 @@ class SHMapping(models.Model):
     projectUser = models.ForeignKey(ProjectUser, on_delete=models.PROTECT)
     relationshipStatus = models.CharField(max_length=100, blank=True)
 
+    class Meta:
+        unique_together = ['shCategory', 'projectUser']
+        
     def __str__(self):
         return '{0} - {1}'.format(self.shCategory, self.projectUser)
 
