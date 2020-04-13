@@ -6,11 +6,21 @@ from django.forms import CheckboxSelectMultiple
 from django.contrib import messages
 
 class SHGroupAdmin(admin.ModelAdmin):
+    # fieldset = [
+    #     (None, {'fields': ('SHGroupName', 'SHGroupAbbrev', 'project')})
+    # ]
+
+    # list_display = ('SHGroupName', 'SHGroupAbbrev', 'project')
     fieldset = [
-        (None, {'fields': ('SHGroupName', 'SHGroupAbbrev', 'project')})
+        (None, {'fields': ('SHGroupName', 'SHGroupAbbrev')})
     ]
 
-    list_display = ('SHGroupName', 'SHGroupAbbrev', 'project')
+    list_display = ('SHGroupName', 'SHGroupAbbrev')
+
+    # Search
+    search_fields = ['SHGroupName', 'SHGroupAbbrev']
+    # Filter
+    list_filter = ['SHGroupName']
 
     model = SHGroup
     # action = ['delete_model']
@@ -26,6 +36,20 @@ class SHCategoryAdmin(admin.ModelAdmin):
     model = SHCategory
     # action = ['delete_model']
 
+    # Search
+    search_fields = ['SHCategoryName']
+    # Filter
+    list_filter = ['SHCategoryName', 'survey']
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        survey = form.base_fields['survey']
+
+        survey.widget.can_add_related = False
+        survey.widget.can_change_related = False
+        survey.widget.can_delete_related = False
+
+        return form
     # def delete_model(self, request, obj):
     #     if obj.id is not None:
     #         id = 'category-{0}'.format(obj.id)
@@ -36,6 +60,13 @@ class SHCategoryAdmin(admin.ModelAdmin):
 class ProjectUserAdmin(admin.ModelAdmin):
     list_display = ('user', 'projectUserTitle', 'project', 'team', 'shGroup', 'projectUserRoleDesc')
     model = ProjectUser
+
+    # Order
+    fields = ['user', 'projectUserTitle', 'project']
+    # Search
+    search_fields = ['user', 'projectUserTitle', 'project', 'team', 'shGroup', 'projectUserRoleDesc']
+    # Filter
+    list_filter = ['user', 'project', 'team', 'shGroup']
     #action = ['delete_model']
 
     # def get_changelist_form(self, request, **kwargs):
@@ -71,8 +102,35 @@ class ProjectUserAdmin(admin.ModelAdmin):
     #         deleteVertex(id)
     #     obj.delete()
 
+class SHMappingAdmin(admin.ModelAdmin):
+    list_display = ('shCategory', 'projectUser', 'relationshipStatus')
+
+    # Order
+    fields = ['shCategory', 'projectUser']
+    # Search
+    search_fields = ['shCategory', 'projectUser']
+    # Filter
+    list_filter = ['shCategory', 'projectUser']
+
+    model = SHMapping
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        shCategory = form.base_fields['shCategory']
+        projectUser = form.base_fields['projectUser']
+
+        shCategory.widget.can_add_related = False
+        shCategory.widget.can_change_related = False
+        shCategory.widget.can_delete_related = False
+
+        projectUser.widget.can_add_related = False
+        projectUser.widget.can_change_related = False
+        projectUser.widget.can_delete_related = False
+
+        return form
+
 admin.site.register(SHGroup, SHGroupAdmin)
 admin.site.register(ProjectUser, ProjectUserAdmin)
 admin.site.register(SHCategory, SHCategoryAdmin)
-admin.site.register(SHMapping)
+admin.site.register(SHMapping, SHMappingAdmin)
 admin.site.register(MapType)
