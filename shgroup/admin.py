@@ -22,7 +22,7 @@ class SHGroupAdmin(admin.ModelAdmin):
     #     obj.delete()
 
 class SHCategoryAdmin(admin.ModelAdmin):
-    list_display = ('SHCategoryName', 'survey', 'shGroup', 'mapType', 'colour', 'icon')
+    list_display = ('SHCategoryName', 'survey', 'mapType', 'colour', 'icon')
     model = SHCategory
     # action = ['delete_model']
 
@@ -34,7 +34,7 @@ class SHCategoryAdmin(admin.ModelAdmin):
     #     obj.delete()
 
 class ProjectUserAdmin(admin.ModelAdmin):
-    list_display = ('user', 'projectUserTitle', 'project', 'team', 'shCategory', 'projectUserRoleDesc')
+    list_display = ('user', 'projectUserTitle', 'project', 'team', 'shGroup', 'projectUserRoleDesc')
     model = ProjectUser
     #action = ['delete_model']
 

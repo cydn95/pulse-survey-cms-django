@@ -194,7 +194,7 @@ class ProjectByUserSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = ProjectUser
-        fields = ['id', 'user', 'project', 'shCategory']
+        fields = ['id', 'user', 'project', 'shGroup']
 
 class SHCategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -205,10 +205,10 @@ class UserByProjectSerializer(serializers.ModelSerializer):
     project = ProjectSerializer()
     user = UserSerializer()
     team = TeamSerializer()
-    shCategory = SHCategorySerializer()
+    shGroup = SHGroupSerializer()
     class Meta:
         model = ProjectUser
-        fields = ['id', 'project', 'projectUserTitle', 'projectUserRoleDesc', 'user', 'team', 'shCategory']
+        fields = ['id', 'project', 'projectUserTitle', 'projectUserRoleDesc', 'user', 'team', 'shGroup']
 
 class ProjectUserSerializer(serializers.ModelSerializer):
     #project = ProjectSerializer()

@@ -51,7 +51,7 @@ class MapType(models.Model):
         
 class SHCategory(models.Model):
     survey = models.ForeignKey(Survey, on_delete=models.PROTECT)
-    shGroup = models.ForeignKey(SHGroup, on_delete=models.PROTECT, blank=True)
+    # shGroup = models.ForeignKey(SHGroup, on_delete=models.PROTECT, blank=True)
     SHCategoryName = models.CharField(max_length=50, blank=True)
     SHCategoryDesc = models.CharField(max_length=200, blank=True)
     mapType = models.ForeignKey(MapType, on_delete=models.PROTECT)
@@ -84,8 +84,9 @@ class ProjectUser(models.Model):
     projectUserRoleDesc = models.CharField(max_length=500, blank=True, verbose_name='Description')
     #userPermission = models.ManyToManyField(Permission, blank=True)
     # team = models.ForeignKey(Team, on_delete=models.PROTECT)
-    team = models.ForeignKey(Team, null=True, blank=True, verbose_name='Team')
-    shCategory = models.ForeignKey(SHCategory, null=True, blank=True)
+    team = models.ForeignKey(Team, null=True, blank=True, verbose_name='Project Team')
+    #shCategory = models.ForeignKey(SHCategory, null=True, blank=True)
+    shGroup = models.ForeignKey(SHGroup, null=True, blank=True, verbose_name='SHGroup')
 
     class Meta:
         unique_together = ['project', 'user']
