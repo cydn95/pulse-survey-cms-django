@@ -3,8 +3,7 @@ from .models import Survey, Client, Project, Driver
 #from gremlin import deleteVertex
 
 class ProjectAdmin(admin.ModelAdmin):
-    # Order
-    fields = ['projectName']
+
     # Search
     search_fields = ['projectName']
     # Filter

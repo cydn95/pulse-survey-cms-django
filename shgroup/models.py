@@ -23,7 +23,7 @@ from django.contrib import messages
 class SHGroup(models.Model):
     SHGroupName = models.CharField(max_length=255)
     SHGroupAbbrev = models.CharField(max_length=50, blank=True)
-    # project = models.ForeignKey(Project, on_delete=models.PROTECT)
+    project = models.ForeignKey(Project, on_delete=models.PROTECT)
 
     def __str__(self):
         return self.SHGroupName

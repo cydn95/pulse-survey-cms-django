@@ -3,8 +3,7 @@ from .models import Team
 #from gremlin import deleteVertex
 
 class TeamAdmin(admin.ModelAdmin):
-    # Order
-    fields = ['project', 'name']
+
     # Search
     search_fields = ['project', 'name']
     # Filter

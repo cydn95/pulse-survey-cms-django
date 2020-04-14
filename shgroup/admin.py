@@ -6,16 +6,16 @@ from django.forms import CheckboxSelectMultiple
 from django.contrib import messages
 
 class SHGroupAdmin(admin.ModelAdmin):
-    # fieldset = [
-    #     (None, {'fields': ('SHGroupName', 'SHGroupAbbrev', 'project')})
-    # ]
-
-    # list_display = ('SHGroupName', 'SHGroupAbbrev', 'project')
     fieldset = [
-        (None, {'fields': ('SHGroupName', 'SHGroupAbbrev')})
+        (None, {'fields': ('SHGroupName', 'SHGroupAbbrev', 'project')})
     ]
 
-    list_display = ('SHGroupName', 'SHGroupAbbrev')
+    list_display = ('SHGroupName', 'SHGroupAbbrev', 'project')
+    # fieldset = [
+    #     (None, {'fields': ('SHGroupName', 'SHGroupAbbrev')})
+    # ]
+
+    # list_display = ('SHGroupName', 'SHGroupAbbrev')
 
     # Search
     search_fields = ['SHGroupName', 'SHGroupAbbrev']
@@ -23,6 +23,16 @@ class SHGroupAdmin(admin.ModelAdmin):
     list_filter = ['SHGroupName']
 
     model = SHGroup
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        project = form.base_fields['project']
+
+        project.widget.can_add_related = False
+        project.widget.can_change_related = False
+        project.widget.can_delete_related = False
+
+        return form
     # action = ['delete_model']
 
     # def delete_model(self, request, obj):
@@ -61,8 +71,6 @@ class ProjectUserAdmin(admin.ModelAdmin):
     list_display = ('user', 'projectUserTitle', 'project', 'team', 'shGroup', 'projectUserRoleDesc')
     model = ProjectUser
 
-    # Order
-    fields = ['user', 'projectUserTitle', 'project']
     # Search
     search_fields = ['user', 'projectUserTitle', 'project', 'team', 'shGroup', 'projectUserRoleDesc']
     # Filter
@@ -76,6 +84,7 @@ class ProjectUserAdmin(admin.ModelAdmin):
         team = form.base_fields['team']
         user = form.base_fields['user']
         project = form.base_fields['project']
+        shGroup = form.base_fields['shGroup']
 
         project.widget.can_add_related = False
         project.widget.can_change_related = False
@@ -88,6 +97,10 @@ class ProjectUserAdmin(admin.ModelAdmin):
         user.widget.can_add_related = False
         user.widget.can_change_related = False
         user.widget.can_delete_related = False
+
+        shGroup.widget.can_add_related = False
+        shGroup.widget.can_change_related = False
+        shGroup.widget.can_delete_related = False
 
         return form
 
@@ -105,8 +118,6 @@ class ProjectUserAdmin(admin.ModelAdmin):
 class SHMappingAdmin(admin.ModelAdmin):
     list_display = ('shCategory', 'projectUser', 'relationshipStatus')
 
-    # Order
-    fields = ['shCategory', 'projectUser']
     # Search
     search_fields = ['shCategory', 'projectUser']
     # Filter
