@@ -571,7 +571,9 @@ class UserByProjectViewSet(viewsets.ModelViewSet):
                 response.data[i]['ao_response'].append(item2['aoQuestion']) 
             response.data[i]['ao_answered'] = AOResponse.objects.filter(user_id=response.data[i]['user']['id'], project_id=response.data[i]['project']['id']).count()
 
-        print(response.data)
+            response.data[i]['shCategory'] = []
+            for item3 in SHMapping.objects.filter(projectUser_id=response.data[i]['id']).values('shCategory'):
+                response.data[i]['shCategory'].append(item3['shCategory'])
 
         return response
 
@@ -702,7 +704,7 @@ class SetPasswordView(APIView):
     #     return Response(serializer.data)
 
     def post(self, request):
-        print(request.data['email'])
+        # print(request.data['email'])
         password = request.data['password']
         email = request.data['email']
         
