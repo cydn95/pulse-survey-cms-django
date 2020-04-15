@@ -606,7 +606,7 @@ class MyMapLayoutViewSet(viewsets.ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
-        
+
         for i in range(len(response.data)):
             response.data[i]['pu_category'] = []
             for item in response.data[i]['projectUser']:
@@ -630,10 +630,11 @@ class MyMapLayoutViewSet(viewsets.ModelViewSet):
             #         obj.projectUser.add(new_obj)
             if "application/json" in content_type:
                 for item in data['pu_category']:
-                    new_obj = ProjectUser.objects.get(id=item.projectUser)
+                    print(item)
+                    new_obj = ProjectUser.objects.get(id=item['projectUser'])
                     obj.projectUser.add(new_obj)
 
-                    mapObj = SHMapping(shCategory_id=item.category, projectUser_id=item.projectUser, relationshipStatus="")
+                    mapObj = SHMapping(shCategory_id=item['category'], projectUser_id=item['projectUser'], relationshipStatus="")
                     mapObj.save()
 
             # else:
@@ -657,10 +658,10 @@ class MyMapLayoutViewSet(viewsets.ModelViewSet):
             #         obj.projectUser.add(new_obj)
             if "application/json" in content_type:
                 for item in data['pu_category']:
-                    new_obj = ProjectUser.objects.get(id=item.projectUser)
+                    new_obj = ProjectUser.objects.get(id=item['projectUser'])
                     obj.projectUser.add(new_obj)
 
-                    mapObj = SHMapping(shCategory_id=item.category, projectUser_id=item.projectUser, relationshipStatus="")
+                    mapObj = SHMapping(shCategory_id=item['category'], projectUser_id=item['projectUser'], relationshipStatus="")
                     mapObj.save()
             # else:
             #     for item in data.getlist('projectUser'):
