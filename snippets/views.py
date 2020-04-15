@@ -604,6 +604,16 @@ class MyMapLayoutViewSet(viewsets.ModelViewSet):
     serializer_class = MyMapLayoutStoreSerializer
     filterset_fields = ['user', 'project']
 
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+        
+        for i in range(len(response.data)):
+            response.data[i]['pu_category'] = []
+            for item in response.data[i]['projectUser']:
+                catID = SHMapping.objects.get(projectUser_id=item)
+                response.data[i]['pu_category'].append({'projectUser':item, 'category':catID.id})
+        return response
+
     def create(self, request, *args, **kwargs):
         data = request.data
         content_type = request.content_type
@@ -619,13 +629,17 @@ class MyMapLayoutViewSet(viewsets.ModelViewSet):
             #         new_obj = ProjectUser.objects.get(id=item)
             #         obj.projectUser.add(new_obj)
             if "application/json" in content_type:
-                for item in data['projectUser']:
-                    new_obj = ProjectUser.objects.get(id=item)
+                for item in data['pu_category']:
+                    new_obj = ProjectUser.objects.get(id=item.projectUser)
                     obj.projectUser.add(new_obj)
-            else:
-                for item in data.getlist('projectUser'):
-                    new_obj = ProjectUser.objects.get(id=item)
-                    obj.projectUser.add(new_obj)
+
+                    mapObj = SHMapping(shCategory_id=item.category, projectUser_id=item.projectUser, relationshipStatus="")
+                    mapObj.save()
+
+            # else:
+            #     for item in data.getlist('pu_category'):
+            #         new_obj = ProjectUser.objects.get(id=item.projectUser)
+            #         obj.projectUser.add(new_obj)
 
             obj.save()
 
@@ -642,13 +656,16 @@ class MyMapLayoutViewSet(viewsets.ModelViewSet):
             #         new_obj = ProjectUser.objects.get(id=item)
             #         obj.projectUser.add(new_obj)
             if "application/json" in content_type:
-                for item in data['projectUser']:
-                    new_obj = ProjectUser.objects.get(id=item)
+                for item in data['pu_category']:
+                    new_obj = ProjectUser.objects.get(id=item.projectUser)
                     obj.projectUser.add(new_obj)
-            else:
-                for item in data.getlist('projectUser'):
-                    new_obj = ProjectUser.objects.get(id=item)
-                    obj.projectUser.add(new_obj)
+
+                    mapObj = SHMapping(shCategory_id=item.category, projectUser_id=item.projectUser, relationshipStatus="")
+                    mapObj.save()
+            # else:
+            #     for item in data.getlist('projectUser'):
+            #         new_obj = ProjectUser.objects.get(id=item)
+            #         obj.projectUser.add(new_obj)
 
             obj.save()
 
