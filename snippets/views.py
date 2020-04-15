@@ -634,8 +634,11 @@ class MyMapLayoutViewSet(viewsets.ModelViewSet):
                     new_obj = ProjectUser.objects.get(id=item['projectUser'])
                     obj.projectUser.add(new_obj)
 
-                    mapObj = SHMapping(shCategory_id=item['category'], projectUser_id=item['projectUser'], relationshipStatus="")
-                    mapObj.save()
+                    try:
+                        shObj = SHMapping.objects.get(shCategory_id=item['category'], projectUser_id=item['projectUser'])
+                    except SHMapping.DoesNotExist:
+                        mapObj = SHMapping(shCategory_id=item['category'], projectUser_id=item['projectUser'], relationshipStatus="")
+                        mapObj.save()
 
             # else:
             #     for item in data.getlist('pu_category'):
@@ -661,8 +664,11 @@ class MyMapLayoutViewSet(viewsets.ModelViewSet):
                     new_obj = ProjectUser.objects.get(id=item['projectUser'])
                     obj.projectUser.add(new_obj)
 
-                    mapObj = SHMapping(shCategory_id=item['category'], projectUser_id=item['projectUser'], relationshipStatus="")
-                    mapObj.save()
+                    try:
+                        shObj = SHMapping.objects.get(shCategory_id=item['category'], projectUser_id=item['projectUser'])
+                    except SHMapping.DoesNotExist:
+                        mapObj = SHMapping(shCategory_id=item['category'], projectUser_id=item['projectUser'], relationshipStatus="")
+                        mapObj.save()
             # else:
             #     for item in data.getlist('projectUser'):
             #         new_obj = ProjectUser.objects.get(id=item)
