@@ -80,8 +80,8 @@ class SHCategory(models.Model):
 class ProjectUser(models.Model):
     project = models.ForeignKey(Project, on_delete=models.PROTECT)
     user = models.ForeignKey(User, on_delete=models.PROTECT)
-    projectUserTitle = models.CharField(max_length=50, blank=True, verbose_name='Project Title')
-    projectUserRoleDesc = models.CharField(max_length=500, blank=True, verbose_name='Description')
+    projectUserTitle = models.CharField(max_length=50, blank=True, verbose_name='Project Title', help_text='Role / Title of the stakeholder on this Project')
+    # projectUserRoleDesc = models.CharField(max_length=500, blank=True, verbose_name='Description')
     #userPermission = models.ManyToManyField(Permission, blank=True)
     # team = models.ForeignKey(Team, on_delete=models.PROTECT)
     team = models.ForeignKey(Team, null=True, blank=True, verbose_name='Project Team')

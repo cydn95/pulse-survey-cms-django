@@ -68,11 +68,11 @@ class SHCategoryAdmin(admin.ModelAdmin):
     #     obj.delete()
 
 class ProjectUserAdmin(admin.ModelAdmin):
-    list_display = ('user', 'projectUserTitle', 'project', 'team', 'shGroup', 'projectUserRoleDesc')
+    list_display = ('user', 'projectUserTitle', 'project', 'team', 'shGroup')
     model = ProjectUser
 
     # Search
-    search_fields = ['user', 'projectUserTitle', 'project', 'team', 'shGroup', 'projectUserRoleDesc']
+    search_fields = ['user', 'projectUserTitle', 'project', 'team', 'shGroup']
     # Filter
     list_filter = ['user', 'project', 'team', 'shGroup']
     #action = ['delete_model']

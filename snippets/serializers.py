@@ -208,7 +208,7 @@ class UserByProjectSerializer(serializers.ModelSerializer):
     shGroup = SHGroupSerializer()
     class Meta:
         model = ProjectUser
-        fields = ['id', 'project', 'projectUserTitle', 'projectUserRoleDesc', 'user', 'team', 'shGroup']
+        fields = ['id', 'project', 'projectUserTitle', 'user', 'team', 'shGroup']
 
 class ProjectUserSerializer(serializers.ModelSerializer):
     #project = ProjectSerializer()
