@@ -611,7 +611,7 @@ class MyMapLayoutViewSet(viewsets.ModelViewSet):
             response.data[i]['pu_category'] = []
             for item in response.data[i]['projectUser']:
                 catIDs = SHMapping.objects.filter(projectUser_id=item)
-                for catID in catIds:
+                for catID in catIDs:
                     response.data[i]['pu_category'].append({'projectUser':item, 'category':catID.shCategory_id})
         return response
 
