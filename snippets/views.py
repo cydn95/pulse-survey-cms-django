@@ -610,8 +610,9 @@ class MyMapLayoutViewSet(viewsets.ModelViewSet):
         for i in range(len(response.data)):
             response.data[i]['pu_category'] = []
             for item in response.data[i]['projectUser']:
-                catID = SHMapping.objects.get(projectUser_id=item)
-                response.data[i]['pu_category'].append({'projectUser':item, 'category':catID.shCategory_id})
+                catIDs = SHMapping.objects.filter(projectUser_id=item)
+                for catID in catIds:
+                    response.data[i]['pu_category'].append({'projectUser':item, 'category':catID.shCategory_id})
         return response
 
     def create(self, request, *args, **kwargs):
