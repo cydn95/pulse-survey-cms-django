@@ -162,7 +162,7 @@ class PageViewSet(viewsets.ReadOnlyModelViewSet):
                             list_drivers[i]['amquestion'][j]['topic'] = amresponsetopic_serializer.data
                             
                             try:
-                                ret = AMResponse.objects.get(user_id=projectuser.user, survey_id=survey_param)
+                                ret = AMResponse.objects.get(user_id=projectuser.user, survey_id=survey_param, amQuestion_id=list_drivers[i]['amquestion'][j]['id'])
                                 list_drivers[i]['amquestion'][j]['responsestatus'] = True
                             except AMResponse.DoesNotExist:
                                 ret = None
@@ -184,7 +184,7 @@ class PageViewSet(viewsets.ReadOnlyModelViewSet):
                             list_drivers[i]['aoquestion'][j]['topic'] = aoresponsetopic_serializer.data
 
                             try:
-                                ret = AOResponse.objects.get(subjectUser_id=projectuser.user, survey_id=survey_param)
+                                ret = AOResponse.objects.get(subjectUser_id=projectuser.user, survey_id=survey_param, aoQuestion_id=list_drivers[i]['aoquestion'][j]['id'])
                                 list_drivers[i]['aoquestion'][j]['responsestatus'] = True
                             except AOResponse.DoesNotExist:
                                 ret = None
@@ -207,7 +207,7 @@ class PageViewSet(viewsets.ReadOnlyModelViewSet):
                             list_drivers[i]['amquestion'][j]['topic'] = amresponsetopic_serializer.data
 
                             try:
-                                ret = AMResponse.objects.get(user_id=projectuser.user, survey_id=survey_param)
+                                ret = AMResponse.objects.get(user_id=projectuser.user, survey_id=survey_param, amQuestion_id=list_drivers[i]['amquestion'][j]['id'])
                                 list_drivers[i]['amquestion'][j]['responsestatus'] = True
                             except AMResponse.DoesNotExist:
                                 ret = None
@@ -229,7 +229,7 @@ class PageViewSet(viewsets.ReadOnlyModelViewSet):
                             list_drivers[i]['aoquestion'][j]['topic'] = aoresponsetopic_serializer.data
 
                             try:
-                                ret = AOResponse.objects.get(subjectUser_id=projectuser.user, survey_id=survey_param)
+                                ret = AOResponse.objects.get(subjectUser_id=projectuser.user, survey_id=survey_param, aoQuestion_id=list_drivers[i]['aoquestion'][j]['id'])
                                 list_drivers[i]['aoquestion'][j]['responsestatus'] = True
                             except AOResponse.DoesNotExist:
                                 ret = None
