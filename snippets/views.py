@@ -567,9 +567,9 @@ class UserByProjectViewSet(viewsets.ModelViewSet):
             response.data[i]['am_answered'] = AMResponse.objects.filter(user_id=response.data[i]['user']['id'], project_id=response.data[i]['project']['id']).count()
             response.data[i]['ao_total'] = AOQuestion.objects.count()
             response.data[i]['ao_response'] = []
-            for item2 in AOResponse.objects.filter(user_id=response.data[i]['subjectUser']['id'], project_id=response.data[i]['project']['id']).values('aoQuestion'):
+            for item2 in AOResponse.objects.filter(user_id=response.data[i]['user']['id'], project_id=response.data[i]['project']['id']).values('aoQuestion'):
                 response.data[i]['ao_response'].append(item2['aoQuestion']) 
-            response.data[i]['ao_answered'] = AOResponse.objects.filter(user_id=response.data[i]['subjectUser']['id'], project_id=response.data[i]['project']['id']).count()
+            response.data[i]['ao_answered'] = AOResponse.objects.filter(user_id=response.data[i]['user']['id'], project_id=response.data[i]['project']['id']).count()
 
             response.data[i]['shCategory'] = []
             for item3 in SHMapping.objects.filter(projectUser_id=response.data[i]['id']).values('shCategory'):
