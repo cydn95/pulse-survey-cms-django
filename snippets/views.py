@@ -153,20 +153,44 @@ class PageViewSet(viewsets.ReadOnlyModelViewSet):
                 list_drivers[i]['amquestion'] = am_serializer.data
 
                 if projectuser_param and isinstance(projectuser_param, int):
-                    for j in range(len(list_drivers[i]['amquestion'])):
-                        amresponsetopic_queryset = AMResponseTopic.objects.filter(amQuestion_id=list_drivers[i]['amquestion'][j]['id'], responseUser_id=projectuser_param)
-                        amresponsetopic_serializer = AMResponseTopicSerializer(amresponsetopic_queryset, many=True)
-                        list_drivers[i]['amquestion'][j]['topic'] = amresponsetopic_serializer.data
+                    try:
+                        projectuser = ProjectUser.objects.get(id=projectuser_param)
+
+                        for j in range(len(list_drivers[i]['amquestion'])):
+                            amresponsetopic_queryset = AMResponseTopic.objects.filter(amQuestion_id=list_drivers[i]['amquestion'][j]['id'], responseUser_id=projectuser_param)
+                            amresponsetopic_serializer = AMResponseTopicSerializer(amresponsetopic_queryset, many=True)
+                            list_drivers[i]['amquestion'][j]['topic'] = amresponsetopic_serializer.data
+                            
+                            try:
+                                ret = AMResponse.objects.get(user_id=projectuser.user, survey_id=survey_param)
+                                list_drivers[i]['amquestion'][j]['responsestatus'] = True
+                            except AMResponse.DoesNotExist:
+                                ret = None
+                                list_drivers[i]['amquestion'][j]['responsestatus'] = False
+                    except ProjectUser.DoesNotExist:
+                        projectuser = None
 
                 aoquestion_queryset = AOQuestion.objects.filter(driver_id=list_drivers[i]['id'], survey_id=survey_param)
                 ao_serializer = AOQuestionSerializer(aoquestion_queryset, many=True)
                 list_drivers[i]['aoquestion'] = ao_serializer.data
 
                 if projectuser_param and isinstance(projectuser_param, int):
-                    for j in range(len(list_drivers[i]['aoquestion'])):
-                        aoresponsetopic_queryset = AOResponseTopic.objects.filter(aoQuestion_id=list_drivers[i]['aoquestion'][j]['id'], responseUser_id=projectuser_param)
-                        aoresponsetopic_serializer = AOResponseTopicSerializer(aoresponsetopic_queryset, many=True)
-                        list_drivers[i]['aoquestion'][j]['topic'] = aoresponsetopic_serializer.data
+                    try:
+                        projectuser = ProjectUser.objects.get(id=projectuser_param)
+
+                        for j in range(len(list_drivers[i]['aoquestion'])):
+                            aoresponsetopic_queryset = AOResponseTopic.objects.filter(aoQuestion_id=list_drivers[i]['aoquestion'][j]['id'], responseUser_id=projectuser_param)
+                            aoresponsetopic_serializer = AOResponseTopicSerializer(aoresponsetopic_queryset, many=True)
+                            list_drivers[i]['aoquestion'][j]['topic'] = aoresponsetopic_serializer.data
+
+                            try:
+                                ret = AOResponse.objects.get(subjectUser_id=projectuser.user, survey_id=survey_param)
+                                list_drivers[i]['aoquestion'][j]['responsestatus'] = True
+                            except AOResponse.DoesNotExist:
+                                ret = None
+                                list_drivers[i]['aoquestion'][j]['responsestatus'] = False
+                    except ProjectUser.DoesNotExist:
+                        projectuser = None
 
             else:
                 amquestion_queryset = AMQuestion.objects.filter(driver_id=list_drivers[i]['id'])
@@ -174,20 +198,44 @@ class PageViewSet(viewsets.ReadOnlyModelViewSet):
                 list_drivers[i]['amquestion'] = am_serializer.data
 
                 if projectuser_param and isinstance(projectuser_param, int):
-                    for j in range(len(list_drivers[i]['amquestion'])):
-                        amresponsetopic_queryset = AMResponseTopic.objects.filter(amQuestion_id=list_drivers[i]['amquestion'][j]['id'], responseUser_id=projectuser_param)
-                        amresponsetopic_serializer = AMResponseTopicSerializer(amresponsetopic_queryset, many=True)
-                        list_drivers[i]['amquestion'][j]['topic'] = amresponsetopic_serializer.data
+                    try:
+                        projectuser = ProjectUser.objects.get(id=projectuser_param)
+
+                        for j in range(len(list_drivers[i]['amquestion'])):
+                            amresponsetopic_queryset = AMResponseTopic.objects.filter(amQuestion_id=list_drivers[i]['amquestion'][j]['id'], responseUser_id=projectuser_param)
+                            amresponsetopic_serializer = AMResponseTopicSerializer(amresponsetopic_queryset, many=True)
+                            list_drivers[i]['amquestion'][j]['topic'] = amresponsetopic_serializer.data
+
+                            try:
+                                ret = AMResponse.objects.get(user_id=projectuser.user, survey_id=survey_param)
+                                list_drivers[i]['amquestion'][j]['responsestatus'] = True
+                            except AMResponse.DoesNotExist:
+                                ret = None
+                                list_drivers[i]['amquestion'][j]['responsestatus'] = False
+                    except ProjectUser.DoesNotExist:
+                        projectuser = None
 
                 aoquestion_queryset = AOQuestion.objects.filter(driver_id=list_drivers[i]['id'])
                 ao_serializer = AOQuestionSerializer(aoquestion_queryset, many=True)
                 list_drivers[i]['aoquestion'] = ao_serializer.data
 
                 if projectuser_param and isinstance(projectuser_param, int):
-                    for j in range(len(list_drivers[i]['aoquestion'])):
-                        aoresponsetopic_queryset = AOResponseTopic.objects.filter(aoQuestion_id=list_drivers[i]['aoquestion'][j]['id'], responseUser_id=projectuser_param)
-                        aoresponsetopic_serializer = AOResponseTopicSerializer(aoresponsetopic_queryset, many=True)
-                        list_drivers[i]['aoquestion'][j]['topic'] = aoresponsetopic_serializer.data
+                    try:
+                        projectuser = ProjectUser.objects.get(id=projectuser_param)
+
+                        for j in range(len(list_drivers[i]['aoquestion'])):
+                            aoresponsetopic_queryset = AOResponseTopic.objects.filter(aoQuestion_id=list_drivers[i]['aoquestion'][j]['id'], responseUser_id=projectuser_param)
+                            aoresponsetopic_serializer = AOResponseTopicSerializer(aoresponsetopic_queryset, many=True)
+                            list_drivers[i]['aoquestion'][j]['topic'] = aoresponsetopic_serializer.data
+
+                            try:
+                                ret = AOResponse.objects.get(subjectUser_id=projectuser.user, survey_id=survey_param)
+                                list_drivers[i]['aoquestion'][j]['responsestatus'] = True
+                            except AOResponse.DoesNotExist:
+                                ret = None
+                                list_drivers[i]['aoquestion'][j]['responsestatus'] = False
+                    except ProjectUser.DoesNotExist:
+                        projectuser = None
 
         return Response(list_drivers)
 
