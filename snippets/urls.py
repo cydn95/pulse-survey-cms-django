@@ -53,5 +53,6 @@ urlpatterns = [
 
 urlpatterns += format_suffix_patterns([
     url(r'stakeholder', views.StakeHolderUserView.as_view()),
-    url(r'setpassword', views.SetPasswordView.as_view())
+    url(r'setpassword', views.SetPasswordView.as_view()),
+    url(r'changepassword', views.ChangePasswordView.as_view())
 ])
