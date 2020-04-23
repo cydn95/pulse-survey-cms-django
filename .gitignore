@@ -116,3 +116,4 @@ venv.bak/
 
 # upload folder
 /media/uploads/
+!/media/uploads/shcategory/project.svg
