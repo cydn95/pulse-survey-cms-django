@@ -10,7 +10,7 @@ from django.contrib.auth import views as auth_views
 
 # Create a router and register our viewsets with it.
 router = DefaultRouter()
-router.register(r'snippets', views.SnippetViewSet)
+# router.register(r'snippets', views.SnippetViewSet)
 router.register(r'users', views.UserViewSet)
 router.register(r'pagesettings', views.PageSettingViewSet)
 router.register(r'pages', views.PageViewSet)
@@ -55,5 +55,6 @@ urlpatterns = [
 urlpatterns += format_suffix_patterns([
     url(r'stakeholder', views.StakeHolderUserView.as_view()),
     url(r'setpassword', views.SetPasswordView.as_view()),
-    url(r'changepassword', views.ChangePasswordView.as_view())
+    url(r'changepassword', views.ChangePasswordView.as_view()),
+    url(r'userprofile', views.UserProfileView.as_view())
 ])

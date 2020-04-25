@@ -3,7 +3,7 @@ from pathlib import Path
 from email.mime.image import MIMEImage
 
 from snippets.models import Snippet
-from snippets.serializers import UserAvatarSerializer, SHMappingSerializer, ProjectVideoUploadSerializer, AMQuestionSerializer, AOQuestionSerializer, StakeHolderSerializer, SHCategorySerializer, MyMapLayoutStoreSerializer, ProjectMapLayoutStoreSerializer, UserByProjectSerializer, ProjectByUserSerializer, SkipOptionSerializer, DriverSerializer, AOQuestionSerializer, OrganizationSerializer, OptionSerializer, ProjectUserSerializer, SHGroupSerializer, SnippetSerializer, UserSerializer, PageSettingSerializer, PageSerializer, AMResponseSerializer, AMResponseTopicSerializer, AOResponseSerializer, AOResponseTopicSerializer, AOPageSerializer, TeamSerializer
+from snippets.serializers import UserAvatarSerializer, SHMappingSerializer, ProjectVideoUploadSerializer, AMQuestionSerializer, AOQuestionSerializer, StakeHolderSerializer, SHCategorySerializer, MyMapLayoutStoreSerializer, ProjectMapLayoutStoreSerializer, UserByProjectSerializer, ProjectByUserSerializer, SkipOptionSerializer, DriverSerializer, AOQuestionSerializer, OrganizationSerializer, OptionSerializer, ProjectUserSerializer, SHGroupSerializer, UserSerializer, PageSettingSerializer, PageSerializer, AMResponseSerializer, AMResponseTopicSerializer, AOResponseSerializer, AOResponseTopicSerializer, AOPageSerializer, TeamSerializer
 from rest_framework import generics, permissions
 from django.contrib.auth.models import User
 from snippets.permissions import IsOwnerOrReadOnly
@@ -20,7 +20,7 @@ from team.models import Team
 from shgroup.models import SHGroup, ProjectUser, MyMapLayout, ProjectMapLayout, SHCategory, SHMapping
 from option.models import Option, SkipOption
 from rest_framework import status
-from organization.models import Organization, UserAvatar
+from organization.models import Organization, UserAvatar, UserTeam
 from aboutothers.models import AOQuestion
 from survey.models import Driver, Project, ProjectVideoUpload
 from rest_framework.views import APIView
@@ -43,7 +43,8 @@ class CustomAuthToken(ObtainAuthToken):
         token = Token.objects.get(key=response.data['token'])
         return Response({'token': token.key, 'id': token.user_id})
  
-class UserViewSet(viewsets.ReadOnlyModelViewSet):
+#class UserViewSet(viewsets.ReadOnlyModelViewSet):
+class UserViewSet(viewsets.ModelViewSet):
     """
     This viewset automatically provides `list` and `detail` actions.
     """
@@ -51,24 +52,24 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
-class SnippetViewSet(viewsets.ModelViewSet):
-    """
-    This viewset automatically provides `list`, `create`, `retrieve`,
-    `update` and `destroy` actions.
+# class SnippetViewSet(viewsets.ModelViewSet):
+#     """
+#     This viewset automatically provides `list`, `create`, `retrieve`,
+#     `update` and `destroy` actions.
 
-    Additionally we also provide an extra `highlight` action.
-    """
-    queryset = Snippet.objects.all()
-    serializer_class = SnippetSerializer
-    permission_classes = [permissions.IsAuthenticated,permissions.IsAuthenticatedOrReadOnly]
+#     Additionally we also provide an extra `highlight` action.
+#     """
+#     queryset = Snippet.objects.all()
+#     serializer_class = SnippetSerializer
+#     permission_classes = [permissions.IsAuthenticated,permissions.IsAuthenticatedOrReadOnly]
     
-    @action(detail=True, renderer_classes=[renderers.StaticHTMLRenderer])
-    def highlight(self, request, *args, **kwargs):
-        snippet = self.get_object()
-        return Response(snippet.highlighted)
+#     @action(detail=True, renderer_classes=[renderers.StaticHTMLRenderer])
+#     def highlight(self, request, *args, **kwargs):
+#         snippet = self.get_object()
+#         return Response(snippet.highlighted)
 
-    def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
+#     def perform_create(self, serializer):
+#         serializer.save(owner=self.request.user)
 
 class PageSettingViewSet(viewsets.ReadOnlyModelViewSet):
     """
@@ -826,6 +827,64 @@ class ChangePasswordView(APIView):
 
             return Response("Invaid Token", status=status.HTTP_400_BAD_REQUEST)
 
+class UserProfileView(APIView):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+
+    @classmethod
+    def get_extra_actions(cls):
+        return []
+
+    def post(self, request):
+        first_name = request.data['first_name']
+        last_name = request.data['last_name']
+        email = request.data['email']
+        team = request.data['team']
+        organization = request.data['organization']
+
+        try:
+            token = Token.objects.get(key=request.data['token'])
+            try:
+                user = User.objects.get(id=token.user_id)
+            
+                user['first_name'] = first_name
+                user['last_name'] = last_name
+                user['email'] = email
+                user['username'] = email
+
+                try:
+                    userTeam = UserTeam.objects.get(id=token.user_id)
+                    userTeam['name'] = team
+
+                    userTeam.save()
+                except UserTeam.DoesNotExist:
+                    userTeam = UserTeam(name=team, user_id=token.user_id)
+
+                    userTeam.save()
+
+                try:
+                    userOrganization = Organization.objects.get(id=token.user_id)
+                    userOrganization['name'] = organization
+
+                    userOrganization.save()
+                
+                except Organization.DoesNotExist:
+                    userOrganization = Organization(name=organization, user_id=token.user_id)
+
+                    userOrganization.save()
+
+                user.save()
+
+                return Response('success', status=status.HTTP_201_CREATED)
+            except User.DoesNotExist:
+                user = None
+
+                return Response("Invalid User", status=status.HTTP_400_BAD_REQUEST)
+
+        except Token.DoesNotExist:
+            token = None
+
+            return Response("Invalid Token", status=status.HTTP_400_BAD_REQUEST)
+            
 class StakeHolderUserView(APIView):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
 

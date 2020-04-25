@@ -49,8 +49,8 @@ class UserTitleSerializer(serializers.ModelSerializer):
         model = UserTitle
         fields = '__all__'
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
-    snippets = serializers.HyperlinkedRelatedField(many=True, view_name='snippet-detail', read_only=True)
+class UserSerializer(serializers.ModelSerializer):
+    #snippets = serializers.HyperlinkedRelatedField(many=True, view_name='snippet-detail', read_only=True)
     organization = OrganizationSerializer()
     avatar = UserAvatarSerializer()
     userteam = UserTeamSerializer()
@@ -61,13 +61,13 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         fields = ['url', 'id', 'username', 'last_login', 'first_name', 'last_name', 'email', 'is_superuser', 'is_staff', 'is_active', 'snippets', 'organization', 'avatar', 'userteam', 'usertitle']
 
 
-class SnippetSerializer(serializers.HyperlinkedModelSerializer):
-    owner = serializers.ReadOnlyField(source='owner.username')
-    highlight = serializers.HyperlinkedIdentityField(view_name='snippet-highlight', format='html')
+# class SnippetSerializer(serializers.HyperlinkedModelSerializer):
+#     owner = serializers.ReadOnlyField(source='owner.username')
+#     highlight = serializers.HyperlinkedIdentityField(view_name='snippet-highlight', format='html')
 
-    class Meta:
-        model = Snippet
-        fields = ['url', 'id', 'highlight', 'owner', 'title', 'code', 'linenos', 'language', 'style']
+#     class Meta:
+#         model = Snippet
+#         fields = ['url', 'id', 'highlight', 'owner', 'title', 'code', 'linenos', 'language', 'style']
 
 class AMResponseSerializer(serializers.ModelSerializer):
     class Meta:
