@@ -846,14 +846,14 @@ class UserProfileView(APIView):
             try:
                 user = User.objects.get(id=token.user_id)
             
-                user['first_name'] = first_name
-                user['last_name'] = last_name
-                user['email'] = email
-                user['username'] = email
+                user.first_name = first_name
+                user.last_name = last_name
+                user.email = email
+                user.username = email
 
                 try:
                     userTeam = UserTeam.objects.get(id=token.user_id)
-                    userTeam['name'] = team
+                    userTeam.name = team
 
                     userTeam.save()
                 except UserTeam.DoesNotExist:
@@ -863,7 +863,7 @@ class UserProfileView(APIView):
 
                 try:
                     userOrganization = Organization.objects.get(id=token.user_id)
-                    userOrganization['name'] = organization
+                    userOrganization.name = organization
 
                     userOrganization.save()
                 
