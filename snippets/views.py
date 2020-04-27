@@ -852,7 +852,7 @@ class UserProfileView(APIView):
                 user.username = email
 
                 try:
-                    userTeam = UserTeam.objects.get(id=token.user_id)
+                    userTeam = UserTeam.objects.get(user_id=token.user_id)
                     userTeam.name = team
 
                     userTeam.save()
@@ -862,7 +862,7 @@ class UserProfileView(APIView):
                     userTeam.save()
 
                 try:
-                    userOrganization = Organization.objects.get(id=token.user_id)
+                    userOrganization = Organization.objects.get(user_id=token.user_id)
                     userOrganization.name = organization
 
                     userOrganization.save()
