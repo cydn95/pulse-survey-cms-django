@@ -502,12 +502,30 @@ class ProjectUserViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         data = request.data.get("items") if 'items' in request.data else request.data
         many = isinstance(data, list)
-        #print(data, many)
         serializer = self.get_serializer(data=data, many=many)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
 
+        projectUser_id = serializer.data['id']
         headers = self.get_success_headers(serializer.data)
+        
+        shcategories = request.data['shCategory']
+
+        obj = MyMapLayout.objects.create(user_id=data['user'], project_id=data['project'])
+
+        obj.user_id = data['user']
+        obj.project_id = data['project']
+        obj.layout_json = ''
+
+        for i in range(len(shcategories)):
+            try:
+                shObj = SHMapping.objects.get(shCategory_id=shcategories[i], projectUser_id=projectUser_id)
+            except SHMapping.DoesNotExist:
+                mapObj = SHMapping(shCategory_id=shcategories[i], projectUser_id=projectUser_id, relationshipStatus="")
+                mapObj.save()
+
+        obj.save()
+
         # print(serializer.data['project'])
         
         # project = Project.objects.get(id=serializer.data['project'])
