@@ -165,7 +165,7 @@ class PageViewSet(viewsets.ReadOnlyModelViewSet):
                             try:
                                 ret = AMResponse.objects.get(user_id=projectuser.user, survey_id=survey_param, amQuestion_id=list_drivers[i]['amquestion'][j]['id'])
                                 list_drivers[i]['amquestion'][j]['responsestatus'] = True
-                                list_drivers[i]['amquestion'][j]['response'] = ret.values()
+                                list_drivers[i]['amquestion'][j]['response'] = model_to_dict(ret)
                             except AMResponse.DoesNotExist:
                                 ret = None
                                 list_drivers[i]['amquestion'][j]['responsestatus'] = False
@@ -189,7 +189,7 @@ class PageViewSet(viewsets.ReadOnlyModelViewSet):
                             try:
                                 ret = AOResponse.objects.get(subjectUser_id=projectuser.user, survey_id=survey_param, aoQuestion_id=list_drivers[i]['aoquestion'][j]['id'])
                                 list_drivers[i]['aoquestion'][j]['responsestatus'] = True
-                                list_drivers[i]['aoquestion'][j]['response'] = ret.values()
+                                list_drivers[i]['aoquestion'][j]['response'] = model_to_dict(ret)
                             except AOResponse.DoesNotExist:
                                 ret = None
                                 list_drivers[i]['aoquestion'][j]['responsestatus'] = False
@@ -214,7 +214,7 @@ class PageViewSet(viewsets.ReadOnlyModelViewSet):
                             try:
                                 ret = AMResponse.objects.get(user_id=projectuser.user, survey_id=survey_param, amQuestion_id=list_drivers[i]['amquestion'][j]['id'])
                                 list_drivers[i]['amquestion'][j]['responsestatus'] = True
-                                list_drivers[i]['amquestion'][j]['response'] = ret.values()
+                                list_drivers[i]['amquestion'][j]['response'] = model_to_dict(ret)
                             except AMResponse.DoesNotExist:
                                 ret = None
                                 list_drivers[i]['amquestion'][j]['responsestatus'] = False
@@ -238,7 +238,7 @@ class PageViewSet(viewsets.ReadOnlyModelViewSet):
                             try:
                                 ret = AOResponse.objects.get(subjectUser_id=projectuser.user, survey_id=survey_param, aoQuestion_id=list_drivers[i]['aoquestion'][j]['id'])
                                 list_drivers[i]['aoquestion'][j]['responsestatus'] = True
-                                list_drivers[i]['aoquestion'][j]['response'] = ret.values()
+                                list_drivers[i]['aoquestion'][j]['response'] = model_to_dict(ret)
                             except AOResponse.DoesNotExist:
                                 ret = None
                                 list_drivers[i]['aoquestion'][j]['responsestatus'] = False
