@@ -141,6 +141,7 @@ INSTALLED_APPS = [
     'page_setting',
     'option',
     'journey',
+    'adminsortable2',
     'rest_framework',
     'rest_framework.authtoken',
     'rest_auth',
