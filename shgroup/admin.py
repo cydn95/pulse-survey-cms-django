@@ -42,7 +42,7 @@ class SHGroupAdmin(admin.ModelAdmin):
     #     obj.delete()
 
 class SHCategoryAdmin(admin.ModelAdmin):
-    list_display = ('SHCategoryName', 'survey', 'mapType', 'colour', 'icon')
+    list_display = ('SHCategoryName', 'survey', 'mapType', 'icon')
     model = SHCategory
     # action = ['delete_model']
 
@@ -59,6 +59,12 @@ class SHCategoryAdmin(admin.ModelAdmin):
         survey.widget.can_change_related = False
         survey.widget.can_delete_related = False
 
+        mapType = form.base_fields['mapType']
+
+        mapType.widget.can_add_related = False
+        mapType.widget.can_change_related = False
+        mapType.widget.can_delete_related = False
+        
         return form
     # def delete_model(self, request, obj):
     #     if obj.id is not None:
