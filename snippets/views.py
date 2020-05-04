@@ -784,6 +784,17 @@ class ProjectMapLayoutViewSet(viewsets.ModelViewSet):
     serializer_class = ProjectMapLayoutStoreSerializer
     filterset_fields = ['user', 'project']
 
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+
+        for i in range(len(response.data)):
+            response.data[i]['pu_category'] = []
+            for item in response.data[i]['projectUser']:
+                catIDs = SHMapping.objects.filter(projectUser_id=item)
+                for catID in catIDs:
+                    response.data[i]['pu_category'].append({'projectUser':item, 'category':catID.shCategory_id})
+        return response
+
 class SHCategoryViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
     queryset = SHCategory.objects.all()
