@@ -854,6 +854,15 @@ class SHCategoryViewSet(viewsets.ModelViewSet):
     serializer_class = SHCategorySerializer
     filterset_fields = ['mapType', 'survey']
 
+    def get_queryset(self):
+        queryset = SHCategory.objects.all()
+        mapType = self.request.query_params.get('mapType', None)
+        if mapType is not None:
+            # mapType = 2 : mymap
+            # mapType = 3 : projectmap
+            queryset = queryset.filter(mapType__id=mapType)
+        return queryset
+
 class SHMappingViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
     queryset = SHMapping.objects.all()
