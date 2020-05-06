@@ -516,7 +516,8 @@ class ProjectUserViewSet(viewsets.ModelViewSet):
     def update(self, request, *args, **kwargs):
         ret = super(ProjectUserViewSet, self).update(request, *args, **kwargs)
         
-        projectUser_id = ret['id']
+        print(ret.data)
+        projectUser_id = ret.data['id']
 
         shMyCategories = request.data['shMyCategory']
         
@@ -527,7 +528,7 @@ class ProjectUserViewSet(viewsets.ModelViewSet):
         obj.layout_json = ''
 
         SHMapping.objects.filter(projectUser_id=projectUser_id).delete()
-        
+
         for i in range(len(shMyCategories)):
             mapObj = SHMapping(shCategory_id=shMyCategories[i], projectUser_id=projectUser_id, relationshipStatus="")
             mapObj.save()
