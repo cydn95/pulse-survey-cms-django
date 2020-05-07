@@ -520,10 +520,10 @@ class ProjectUserViewSet(viewsets.ModelViewSet):
 
         shMyCategories = request.data['shMyCategory']
         
-        MyMapLayout.objects.filter(user_id=request.data['user'], project_id=request.data['project']).delete()
-        obj = MyMapLayout.objects.create(user_id=request.data['user'], project_id=request.data['project'])
+        MyMapLayout.objects.filter(user_id=request.user.id, project_id=request.data['project']).delete()
+        obj = MyMapLayout.objects.create(user_id=request.user.id, project_id=request.data['project'])
 
-        obj.user_id = request.data['user']
+        obj.user_id = request.user.id
         obj.project_id = request.data['project']
         obj.layout_json = ''   
 
@@ -543,10 +543,10 @@ class ProjectUserViewSet(viewsets.ModelViewSet):
 
         shProjectCategories = request.data['shProjectCategory']
 
-        ProjectMapLayout.objects.filter(user_id=request.data['user'], project_id=request.data['project']).delete()
-        obj1 = ProjectMapLayout.objects.create(user_id=request.data['user'], project_id=request.data['project'])
+        ProjectMapLayout.objects.filter(user_id=request.user.id, project_id=request.data['project']).delete()
+        obj1 = ProjectMapLayout.objects.create(user_id=request.user.id, project_id=request.data['project'])
 
-        obj1.user_id = request.data['user']
+        obj1.user_id = request.user.id
         obj1.project_id = request.data['project']
         obj1.layout_json = ''
 
@@ -576,9 +576,9 @@ class ProjectUserViewSet(viewsets.ModelViewSet):
         
         shMyCategories = request.data['shMyCategory']
 
-        obj = MyMapLayout.objects.create(user_id=data['user'], project_id=data['project'])
+        obj = MyMapLayout.objects.create(user_id=request.user.id, project_id=data['project'])
 
-        obj.user_id = data['user']
+        obj.user_id = request.user.id
         obj.project_id = data['project']
         obj.layout_json = ''
 
@@ -596,9 +596,9 @@ class ProjectUserViewSet(viewsets.ModelViewSet):
 
         shProjectCategories = request.data['shProjectCategory']
 
-        obj1 = ProjectMapLayout.objects.create(user_id=data['user'], project_id=data['project'])
+        obj1 = ProjectMapLayout.objects.create(user_id=request.user.id, project_id=data['project'])
 
-        obj1.user_id = data['user']
+        obj1.user_id = request.user.id
         obj1.project_id = data['project']
         obj1.layout_json = ''
 
