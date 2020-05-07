@@ -520,15 +520,19 @@ class ProjectUserViewSet(viewsets.ModelViewSet):
 
         shMyCategories = request.data['shMyCategory']
         
+        MyMapLayout.objects.filter(user_id=request.data['user'], project_id=request.data['project']).delete()
         obj = MyMapLayout.objects.create(user_id=request.data['user'], project_id=request.data['project'])
 
         obj.user_id = request.data['user']
         obj.project_id = request.data['project']
-        obj.layout_json = ''
+        obj.layout_json = ''   
 
         SHMapping.objects.filter(projectUser_id=projectUser_id).delete()
 
         for i in range(len(shMyCategories)):
+            new_obj = ProjectUser.objects.get(id=projectUser_id)
+            obj.projectUser.add(new_obj)
+
             try:
                 shObj = SHMapping.objects.get(shCategory_id=shMyCategories[i], projectUser_id=projectUser_id)
             except SHMapping.DoesNotExist:
@@ -539,6 +543,7 @@ class ProjectUserViewSet(viewsets.ModelViewSet):
 
         shProjectCategories = request.data['shProjectCategory']
 
+        ProjectMapLayout.objects.filter(user_id=request.data['user'], project_id=request.data['project']).delete()
         obj1 = ProjectMapLayout.objects.create(user_id=request.data['user'], project_id=request.data['project'])
 
         obj1.user_id = request.data['user']
@@ -546,6 +551,9 @@ class ProjectUserViewSet(viewsets.ModelViewSet):
         obj1.layout_json = ''
 
         for j in range(len(shProjectCategories)):
+            new_obj1 = ProjectUser.objects.get(id=projectUser_id)
+            obj1.projectUser.add(new_obj1)
+
             try:
                 shObj1 = SHMapping.objects.get(shCategory_id=shProjectCategories[j], projectUser_id=projectUser_id)
             except SHMapping.DoesNotExist:
@@ -575,6 +583,9 @@ class ProjectUserViewSet(viewsets.ModelViewSet):
         obj.layout_json = ''
 
         for i in range(len(shMyCategories)):
+            new_obj = ProjectUser.objects.get(id=projectUser_id)
+            obj.projectUser.add(new_obj)
+
             try:
                 shObj = SHMapping.objects.get(shCategory_id=shMyCategories[i], projectUser_id=projectUser_id)
             except SHMapping.DoesNotExist:
@@ -592,6 +603,9 @@ class ProjectUserViewSet(viewsets.ModelViewSet):
         obj1.layout_json = ''
 
         for j in range(len(shProjectCategories)):
+            new_obj1 = ProjectUser.objects.get(id=projectUser_id)
+            obj1.projectUser.add(new_obj1)
+
             try:
                 shObj1 = SHMapping.objects.get(shCategory_id=shProjectCategories[j], projectUser_id=projectUser_id)
             except SHMapping.DoesNotExist:
