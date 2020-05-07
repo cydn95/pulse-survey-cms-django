@@ -772,7 +772,11 @@ class MyMapLayoutViewSet(viewsets.ModelViewSet):
             for item in response.data[i]['projectUser']:
                 catIDs = SHMapping.objects.filter(projectUser_id=item)
                 for catID in catIDs:
-                    response.data[i]['pu_category'].append({'projectUser':item, 'category':catID.shCategory_id})
+                    try:
+                        obj = SHCategory.objects.get(id=catID.shCategory_id, mapType=2)
+                        response.data[i]['pu_category'].append({'projectUser':item, 'category':catID.shCategory_id})
+                    except SHCategory.DoesNotExist:
+                        continue
         return response
 
     def create(self, request, *args, **kwargs):
@@ -872,7 +876,12 @@ class ProjectMapLayoutViewSet(viewsets.ModelViewSet):
             for item in response.data[i]['projectUser']:
                 catIDs = SHMapping.objects.filter(projectUser_id=item)
                 for catID in catIDs:
-                    response.data[i]['pu_category'].append({'projectUser':item, 'category':catID.shCategory_id})
+                    try:
+                        obj = SHCategory.objects.get(id=catID.shCategory_id, mapType=3)
+                        response.data[i]['pu_category'].append({'projectUser':item, 'category':catID.shCategory_id})
+                    except SHCategory.DoesNotExist:
+                        continue
+
         return response
 
     def create(self, request, *args, **kwargs):
