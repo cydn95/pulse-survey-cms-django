@@ -21,7 +21,7 @@ class AMQuestionList(ChangeList):
 
         # currently commented the action_checkbox
         # self.list_display = ['action_checkbox', 'driver', 'subdriver', 'questionText', 'controlType', 'sliderTextLeft', 'sliderTextRight', 'shGroup']
-        self.list_display = ['action_checkbox', 'questionText', 'driver', 'subdriver', 'controlType', 'sliderTextLeft', 'sliderTextRight', 'shGroup']
+        self.list_display = ['action_checkbox', 'amqOrder', 'questionText', 'driver', 'subdriver', 'controlType', 'sliderTextLeft', 'sliderTextRight', 'shGroup']
         self.list_display_links = ['questionText']
         self.list_editable = ['shGroup', 'option', 'skipOption']
 
