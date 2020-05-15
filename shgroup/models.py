@@ -98,50 +98,50 @@ class ProjectUser(models.Model):
         super(ProjectUser, self).save(*args, **kwargs)
 
         # temporary hold
-        # project = Project.objects.get(id=self.project.id)
-        # user = User.objects.get(id=self.user.id)
-        # token = Token.objects.get(user_id=self.user.id)
+        project = Project.objects.get(id=self.project.id)
+        user = User.objects.get(id=self.user.id)
+        token = Token.objects.get(user_id=self.user.id)
 
-        # image_path_logo = os.path.join(settings.STATIC_ROOT, 'email', 'img', 'logo-2.png')
-        # image_name_logo = Path(image_path_logo).name
-        # image_path_container = os.path.join(settings.STATIC_ROOT, 'email', 'img', 'container.png')
-        # image_name_container = Path(image_path_container).name
-        # image_path_connect = os.path.join(settings.STATIC_ROOT, 'email', 'img', 'connect.png')
-        # image_name_connect = Path(image_path_connect).name
+        image_path_logo = os.path.join(settings.STATIC_ROOT, 'email', 'img', 'logo-2.png')
+        image_name_logo = Path(image_path_logo).name
+        image_path_container = os.path.join(settings.STATIC_ROOT, 'email', 'img', 'container.png')
+        image_name_container = Path(image_path_container).name
+        image_path_connect = os.path.join(settings.STATIC_ROOT, 'email', 'img', 'connect.png')
+        image_name_connect = Path(image_path_connect).name
 
-        # subject = 'Welcome to Pulse'
-        # message = get_template('email.html').render(
-        #     {
-        #         'project_name': project,
-        #         'image_name_logo': image_name_logo,
-        #         'image_name_container': image_name_container,
-        #         'image_name_connect': image_name_connect,
-        #         'token': token.key,
-        #         'email': user.email,
-        #         'first_name': user.first_name,
-        #         'last_name': user.last_name,
-        #         'site_url': settings.SITE_URL
-        #     }
-        # )
-        # email_from = settings.DEFAULT_FROM_EMAIL
-        # recipient_list = [user.email,]
+        subject = 'Welcome to Pulse'
+        message = get_template('email.html').render(
+            {
+                'project_name': project,
+                'image_name_logo': image_name_logo,
+                'image_name_container': image_name_container,
+                'image_name_connect': image_name_connect,
+                'token': token.key,
+                'email': user.email,
+                'first_name': user.first_name,
+                'last_name': user.last_name,
+                'site_url': settings.SITE_URL
+            }
+        )
+        email_from = settings.DEFAULT_FROM_EMAIL
+        recipient_list = [user.email,]
 
-        # email = EmailMultiAlternatives(subject=subject, body=message, from_email=email_from, to=recipient_list)
-        # email.attach_alternative(message, "text/html")
-        # email.content_subtype = 'html'
-        # email.mixed_subtype = 'related'
+        email = EmailMultiAlternatives(subject=subject, body=message, from_email=email_from, to=recipient_list)
+        email.attach_alternative(message, "text/html")
+        email.content_subtype = 'html'
+        email.mixed_subtype = 'related'
 
-        # with open(image_path_logo, mode='rb') as f_logo:
-        #     image_logo = MIMEImage(f_logo.read())
-        #     email.attach(image_logo)
-        #     image_logo.add_header('Content-ID', f"<{image_name_logo}>")
+        with open(image_path_logo, mode='rb') as f_logo:
+            image_logo = MIMEImage(f_logo.read())
+            email.attach(image_logo)
+            image_logo.add_header('Content-ID', f"<{image_name_logo}>")
 
-        # with open(image_path_connect, mode='rb') as f_connect:
-        #     image_connect = MIMEImage(f_connect.read())
-        #     email.attach(image_connect)
-        #     image_connect.add_header('Content-ID', f"<{image_name_connect}>")
+        with open(image_path_connect, mode='rb') as f_connect:
+            image_connect = MIMEImage(f_connect.read())
+            email.attach(image_connect)
+            image_connect.add_header('Content-ID', f"<{image_name_connect}>")
 
-        # email.send()
+        email.send()
 
 # class ProjectUserForm(ModelForm):
 #     userPermission = forms.ModelMultipleChoiceField(queryset=Permission.objects.all(), required=False)
