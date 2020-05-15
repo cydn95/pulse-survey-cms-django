@@ -26,7 +26,11 @@ class AOQuestion(models.Model):
     shGroup = models.ManyToManyField(SHGroup, blank=True)
     option = models.ManyToManyField(Option, blank=True)
     skipOption = models.ManyToManyField(SkipOption, blank=True)
+    aoqOrder = models.PositiveIntegerField(default=0, blank=False, null=False, verbose_name='Order')
 
+    class Meta(object):
+        ordering = ['aoqOrder']
+        
     def __str__(self):
         return self.questionText
 

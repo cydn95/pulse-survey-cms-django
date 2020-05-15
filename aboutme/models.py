@@ -26,7 +26,7 @@ class AMQuestion(models.Model):
     shGroup = models.ManyToManyField(SHGroup, blank=True)
     option = models.ManyToManyField(Option, blank=True)
     skipOption = models.ManyToManyField(SkipOption, blank=True)
-    amqOrder = models.PositiveIntegerField(default=0, blank=False, null=False)
+    amqOrder = models.PositiveIntegerField(default=0, blank=False, null=False, verbose_name='Order')
     
     class Meta(object):
         ordering = ['amqOrder']

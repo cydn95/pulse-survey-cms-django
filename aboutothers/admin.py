@@ -1,4 +1,5 @@
 from django.contrib import admin
+from adminsortable2.admin import SortableAdminMixin
 from .models import AOQuestion, AOQuestionSHGroup, AOQuestionOption, AOQuestionSkipOption, AOResponse, AOResponseTopic, AOPage, AOQuestionForm
 from django.forms import CheckboxSelectMultiple
 from django.contrib.admin.views.main import ChangeList
@@ -28,9 +29,12 @@ class AOQuestionAdmin(admin.ModelAdmin):
     search_fields = ['questionText']
     # Filter
     list_filter = ['driver', 'controlType', 'shGroup']
+    model = AOQuestion
+    list_display = ['aoqOrder', 'questionText', 'driver', 'subdriver', 'controlType', 'sliderTextLeft', 'sliderTextRight']
+    list_display_links = ['questionText']
 
-    def get_changelist(self, request, **kwargs):
-        return AOQuestionList
+    # def get_changelist(self, request, **kwargs):
+    #     return AOQuestionList
     
     def get_changelist_form(self, request, **kwargs):
         return AOQuestionForm
