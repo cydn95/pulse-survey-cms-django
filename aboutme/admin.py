@@ -3,6 +3,7 @@ from .models import AMQuestion, AMQuestionSHGroup, AMQuestionOption, AMQuestionS
 from django.forms import CheckboxSelectMultiple
 from django.contrib.admin.views.main import ChangeList
 from import_export.admin import ImportExportModelAdmin
+from adminsortable2.admin import SortableAdminMixin
 
 class AMQuestionList(ChangeList):
 
@@ -24,7 +25,7 @@ class AMQuestionList(ChangeList):
         self.list_editable = ['shGroup', 'option', 'skipOption']
 
 
-class AMQuestionAdmin(admin.ModelAdmin):
+class AMQuestionAdmin(SortableAdminMixin, admin.ModelAdmin):
 
     # Search
     search_fields = ['questionText']
