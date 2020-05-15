@@ -23,7 +23,7 @@ class AOQuestionList(ChangeList):
         self.list_display_links = ['questionText']
         self.list_editable = ['shGroup', 'option', 'skipOption']
 
-class AOQuestionAdmin(admin.ModelAdmin):
+class AOQuestionAdmin(SortableAdminMixin, admin.ModelAdmin):
 
     # Search
     search_fields = ['questionText']
