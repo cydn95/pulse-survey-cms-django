@@ -1,9 +1,10 @@
 from django.contrib import admin
+from adminsortable2.admin import SortableAdminMixin
 from .models import AMQuestion, AMQuestionSHGroup, AMQuestionOption, AMQuestionSkipOption, AMResponse, AMResponseTopic, AMQuestionForm
 from django.forms import CheckboxSelectMultiple
 from django.contrib.admin.views.main import ChangeList
 from import_export.admin import ImportExportModelAdmin
-from adminsortable2.admin import SortableAdminMixin
+
 
 class AMQuestionList(ChangeList):
 
@@ -20,7 +21,7 @@ class AMQuestionList(ChangeList):
 
         # currently commented the action_checkbox
         # self.list_display = ['action_checkbox', 'driver', 'subdriver', 'questionText', 'controlType', 'sliderTextLeft', 'sliderTextRight', 'shGroup']
-        self.list_display = ['action_checkbox', 'amqOrder', 'questionText', 'driver', 'subdriver', 'controlType', 'sliderTextLeft', 'sliderTextRight', 'shGroup']
+        self.list_display = ['action_checkbox', 'questionText', 'driver', 'subdriver', 'controlType', 'sliderTextLeft', 'sliderTextRight', 'shGroup']
         self.list_display_links = ['questionText']
         self.list_editable = ['shGroup', 'option', 'skipOption']
 
@@ -31,7 +32,8 @@ class AMQuestionAdmin(SortableAdminMixin, admin.ModelAdmin):
     search_fields = ['questionText']
     # Filter
     list_filter = ['driver', 'controlType', 'shGroup']
-    
+    model = AMQuestion
+
     def get_changelist(self, request, **kwargs):
         return AMQuestionList
 
