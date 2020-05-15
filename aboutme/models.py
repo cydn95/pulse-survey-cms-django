@@ -28,6 +28,9 @@ class AMQuestion(models.Model):
     skipOption = models.ManyToManyField(SkipOption, blank=True)
     amqOrder = models.PositiveIntegerField(default=0, blank=False, null=False)
     
+    class Meta(object):
+        ordering = ['amqOrder']
+
     def __str__(self):
         return self.questionText
 
