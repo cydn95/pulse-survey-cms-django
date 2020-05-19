@@ -252,7 +252,7 @@ JET_THEMES = [
     }
 ]
 
-JET_SIDE_MENU_COMPACT = False
+JET_SIDE_MENU_COMPACT = True
 JET_CHANGE_FORM_SIBLING_LINKS = False
 
 JET_SIDE_MENU_ITEMS = [ # A list of application or custom item dicts
@@ -284,6 +284,7 @@ JET_SIDE_MENU_ITEMS = [ # A list of application or custom item dicts
         {'name':'shgroup.shmapping', 'label': 'SHMapping'},
         {'name':'survey.page', 'label': 'Pages'},
     ]},
+    {'label': 'Configuration', 'app_label': 'survey.client', 'url': '/admin/survey/client', 'items': []}
     # {'label': 'Configuration', 'items': [
     #     {'name':'shgroup.projectuser', 'label': 'Project Users'},
     #     {'name':'survey.driver', 'label': 'Drivers'},
