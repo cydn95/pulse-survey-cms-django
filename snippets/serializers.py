@@ -10,7 +10,7 @@ from team.models import Team
 from shgroup.models import SHGroup, ProjectUser, MyMapLayout, ProjectMapLayout, SHCategory, SHMapping
 from option.models import Option, SkipOption
 from organization.models import Organization, UserAvatar, UserTeam, UserTitle
-from survey.models import Driver, Project, Survey, ProjectVideoUpload
+from survey.models import Driver, Project, Survey, ProjectVideoUpload, Client, ConfigPage
 from rest_framework.authtoken.models import Token
 
 class EnumField(serializers.ChoiceField):
@@ -188,7 +188,12 @@ class ProjectVideoUploadSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProjectVideoUpload
         fields = '__all__'
-        
+
+class ConfigPageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ConfigPage
+        fields = '__all__'
+
 class ProjectByUserSerializer(serializers.ModelSerializer):
     project = ProjectSerializer()
     

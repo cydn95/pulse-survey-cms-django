@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Survey, Client, Project, Driver, Page
+from .models import Survey, Client, Project, Driver, ConfigPage
 #from gremlin import deleteVertex
 from adminsortable2.admin import SortableAdminMixin
 from django.utils.html import format_html
@@ -46,6 +46,6 @@ class ClientAdmin(admin.ModelAdmin):
 # Register your models here.
 admin.site.register(Survey)
 admin.site.register(Client, ClientAdmin)
-admin.site.register(Page)
+admin.site.register(ConfigPage)
 admin.site.register(Project, ProjectAdmin)
 admin.site.register(Driver, DriverAdmin)

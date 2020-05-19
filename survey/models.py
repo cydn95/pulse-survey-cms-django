@@ -15,7 +15,7 @@ class Project(models.Model):
     def __str__(self):
         return self.projectName
 
-class Page(models.Model):
+class ConfigPage(models.Model):
     project = models.ForeignKey(Project, on_delete=models.PROTECT)
     tabName = models.CharField(max_length=40)
     pageName = models.CharField(max_length=200)
