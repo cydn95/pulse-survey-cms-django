@@ -129,6 +129,8 @@ INSTALLED_APPS = [
     'djangocms_snippet',
     'djangocms_googlemap',
     'djangocms_video',
+    'tinymce',
+    'filebrowser',
     'mysite',
     'organization',
     'team',
@@ -279,8 +281,16 @@ JET_SIDE_MENU_ITEMS = [ # A list of application or custom item dicts
         {'name':'survey.driver', 'label': 'Drivers'},
         {'name':'shgroup.projectuser', 'label': 'Project Users'},
         {'name':'team.team', 'label': 'Project Teams'},
-        {'name':'shgroup.shmapping', 'label': 'SHMapping'}
+        {'name':'shgroup.shmapping', 'label': 'SHMapping'},
+        {'name':'survey.page', 'label': 'Pages'},
     ]},
+    # {'label': 'Configuration', 'items': [
+    #     {'name':'shgroup.projectuser', 'label': 'Project Users'},
+    #     {'name':'survey.driver', 'label': 'Drivers'},
+    #     {'name':'aboutme.amquestion', 'label': 'AM Questions'},
+    #     {'name':'aboutothers.aoquestion', 'label': 'AO Questions'},
+    #     {''}
+    # ]}
 ]
 
 APPEND_SLASH = True
@@ -341,6 +351,21 @@ JWT_AUTH = {
 
     'JWT_AUTH_HEADER_PREFIX': 'JWT',
     'JWT_AUTH_COOKIE': None,
+}
+
+TINYMCE_JS_URL = os.path.join(STATIC_URL, "js/tinymce/tinymce.min.js")
+TINYMCE_JS_ROOT = os.path.join(STATIC_URL, "js/tinymce")
+
+TINYMCE_DEFAULT_CONFIG = {
+    'height': 300,
+    'plugins': "image, imagetools, media, codesample, link, code",
+    'cleanup_on_startup': True,
+    'menubar': False,
+    'toolbar': "styleselect | undo redo | bold italic | alignleft aligncenter alignright | link image media codesample code",
+    'image_caption': True,
+    'image_advtab': True,
+    'custom_undo_redo_levels': 10,
+    #'file_browser_callback': "myFileBrowser"
 }
 
 CORS_ORIGIN_WHITELIST = [

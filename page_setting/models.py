@@ -4,7 +4,6 @@ from enumfields import EnumField
 from enumfields import Enum
 from cms.models.fields import PageField
 
-
 class PageType(Enum):
     PG_WELCOME1 = 0
     PG_WELCOME2 = 1
@@ -14,14 +13,14 @@ class PageType(Enum):
     PG_ABOUT_STAKEHOLDER = 5
     PG_RESULT = 6
     
-    class Labels:
-        PG_WELCOME1 = 'Welcome 1'
-        PG_WELCOME2 = 'Welcome 2'
-        PG_ABOUT_ME = 'About Me'
-        PG_SURVEY = 'Survey'
-        PG_NEW_STAKEHOLDER = 'New StakeHolder'
-        PG_ABOUT_STAKEHOLDER = 'About StakeHolder'
-        PG_RESULT = 'Result'
+class Labels:
+    PG_WELCOME1 = 'Welcome 1'
+    PG_WELCOME2 = 'Welcome 2'
+    PG_ABOUT_ME = 'About Me'
+    PG_SURVEY = 'Survey'
+    PG_NEW_STAKEHOLDER = 'New StakeHolder'
+    PG_ABOUT_STAKEHOLDER = 'About StakeHolder'
+    PG_RESULT = 'Result'
 
 
 class PageSetting(models.Model):
@@ -32,6 +31,7 @@ class PageSetting(models.Model):
 class ExtendedPage(models.Model):
     page = models.OneToOneField(Page, verbose_name="Page", editable=False, related_name='extended_fields')
     my_extra_field = models.CharField(max_length=50)
+
 
 
 

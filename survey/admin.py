@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Survey, Client, Project, Driver
+from .models import Survey, Client, Project, Driver, Page
 #from gremlin import deleteVertex
 from adminsortable2.admin import SortableAdminMixin
 
@@ -32,5 +32,6 @@ class DriverAdmin(SortableAdminMixin, admin.ModelAdmin):
 # Register your models here.
 admin.site.register(Survey)
 admin.site.register(Client)
+admin.site.register(Page)
 admin.site.register(Project, ProjectAdmin)
 admin.site.register(Driver, DriverAdmin)
