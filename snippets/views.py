@@ -163,7 +163,9 @@ class PageViewSet(viewsets.ReadOnlyModelViewSet):
                             list_drivers[i]['amquestion'][j]['topic'] = amresponsetopic_serializer.data
                             
                             try:
-                                ret = AMResponse.objects.get(user_id=projectuser.user, survey_id=survey_param, amQuestion_id=list_drivers[i]['amquestion'][j]['id'])
+                                # 2020-05-20
+                                #ret = AMResponse.objects.get(user_id=projectuser.user, survey_id=survey_param, amQuestion_id=list_drivers[i]['amquestion'][j]['id'])
+                                ret = AMResponse.objects.get(projectUser_id=projectuser_param, survey_id=survey_param, amQuestion_id=list_drivers[i]['amquestion'][j]['id'])
                                 list_drivers[i]['amquestion'][j]['responsestatus'] = True
                                 list_drivers[i]['amquestion'][j]['response'] = model_to_dict(ret)
                             except AMResponse.DoesNotExist:
@@ -187,7 +189,9 @@ class PageViewSet(viewsets.ReadOnlyModelViewSet):
                             list_drivers[i]['aoquestion'][j]['topic'] = aoresponsetopic_serializer.data
 
                             try:
-                                ret = AOResponse.objects.get(subjectUser_id=projectuser.user, survey_id=survey_param, aoQuestion_id=list_drivers[i]['aoquestion'][j]['id'])
+                                # 2020-05-20
+                                # ret = AOResponse.objects.get(subjectUser_id=projectuser.user, survey_id=survey_param, aoQuestion_id=list_drivers[i]['aoquestion'][j]['id'])
+                                ret = AOResponse.objects.get(subProjectUser_id=projectuser_param, survey_id=survey_param, aoQuestion_id=list_drivers[i]['aoquestion'][j]['id'])
                                 list_drivers[i]['aoquestion'][j]['responsestatus'] = True
                                 list_drivers[i]['aoquestion'][j]['response'] = model_to_dict(ret)
                             except AOResponse.DoesNotExist:
@@ -212,7 +216,9 @@ class PageViewSet(viewsets.ReadOnlyModelViewSet):
                             list_drivers[i]['amquestion'][j]['topic'] = amresponsetopic_serializer.data
 
                             try:
-                                ret = AMResponse.objects.get(user_id=projectuser.user, survey_id=survey_param, amQuestion_id=list_drivers[i]['amquestion'][j]['id'])
+                                # 2020-05-20
+                                # ret = AMResponse.objects.get(user_id=projectuser.user, survey_id=survey_param, amQuestion_id=list_drivers[i]['amquestion'][j]['id'])
+                                ret = AMResponse.objects.get(projectUser_id=projectuser_param, survey_id=survey_param, amQuestion_id=list_drivers[i]['amquestion'][j]['id'])
                                 list_drivers[i]['amquestion'][j]['responsestatus'] = True
                                 list_drivers[i]['amquestion'][j]['response'] = model_to_dict(ret)
                             except AMResponse.DoesNotExist:
@@ -236,7 +242,9 @@ class PageViewSet(viewsets.ReadOnlyModelViewSet):
                             list_drivers[i]['aoquestion'][j]['topic'] = aoresponsetopic_serializer.data
 
                             try:
-                                ret = AOResponse.objects.get(subjectUser_id=projectuser.user, survey_id=survey_param, aoQuestion_id=list_drivers[i]['aoquestion'][j]['id'])
+                                # 2020-05-20
+                                # ret = AOResponse.objects.get(subjectUser_id=projectuser.user, survey_id=survey_param, aoQuestion_id=list_drivers[i]['aoquestion'][j]['id'])
+                                ret = AOResponse.objects.get(subProjectUser_id=projectuser_param, survey_id=survey_param, aoQuestion_id=list_drivers[i]['aoquestion'][j]['id'])
                                 list_drivers[i]['aoquestion'][j]['responsestatus'] = True
                                 list_drivers[i]['aoquestion'][j]['response'] = model_to_dict(ret)
                             except AOResponse.DoesNotExist:
@@ -261,7 +269,9 @@ class AMResponseViewSet(viewsets.ModelViewSet):
             for item in data:
                 defaults = item
                 try:
-                    obj = AMResponse.objects.get(survey_id=item['survey'], project_id=item['project'], user_id=item['user'], amQuestion_id=item['amQuestion']) 
+                    # 2020-05-20
+                    # obj = AMResponse.objects.get(survey_id=item['survey'], project_id=item['project'], user_id=item['user'], amQuestion_id=item['amQuestion']) 
+                    obj = AMResponse.objects.get(survey_id=item['survey'], project_id=item['project'], projectUser_id=item['projectUser'], amQuestion_id=item['amQuestion']) 
                     
                     obj.integerValue = defaults['integerValue']
                     obj.topicValue = defaults['topicValue']
@@ -273,8 +283,16 @@ class AMResponseViewSet(viewsets.ModelViewSet):
                     obj.save()
 
                 except AMResponse.DoesNotExist:
+                    # 2020-05-20
+                    # obj = AMResponse(amQuestion_id=defaults['amQuestion'], 
+                    #             user_id=defaults['user'], subjectUser_id=defaults['subjectUser'], 
+                    #             survey_id=defaults['survey'], project_id=defaults['project'], 
+                    #             controlType=defaults['controlType'], integerValue=defaults['integerValue'],
+                    #             topicValue=defaults['topicValue'], commentValue=defaults['commentValue'],
+                    #             skipValue=defaults['skipValue'], topicTags=defaults['topicTags'],
+                    #             commentTags=defaults['commentTags'])
                     obj = AMResponse(amQuestion_id=defaults['amQuestion'], 
-                                user_id=defaults['user'], subjectUser_id=defaults['subjectUser'], 
+                                projectUser_id=defaults['projectUser'], subProjectUser_id=defaults['subProjectUser'], 
                                 survey_id=defaults['survey'], project_id=defaults['project'], 
                                 controlType=defaults['controlType'], integerValue=defaults['integerValue'],
                                 topicValue=defaults['topicValue'], commentValue=defaults['commentValue'],
@@ -286,7 +304,9 @@ class AMResponseViewSet(viewsets.ModelViewSet):
         elif many == False:
             defaults = data
             try:
-                obj = AMResponse.objects.get(survey_id=defaults['survey'], project_id=defaults['project'], user_id=defaults['user'], amQuestion_id=defaults['amQuestion'])
+                # 2020-05-20
+                # obj = AMResponse.objects.get(survey_id=defaults['survey'], project_id=defaults['project'], user_id=defaults['user'], amQuestion_id=defaults['amQuestion'])
+                obj = AMResponse.objects.get(survey_id=defaults['survey'], project_id=defaults['project'], projectUser_id=defaults['projectUser'], amQuestion_id=defaults['amQuestion'])
                 
                 obj.integerValue = defaults['integerValue']
                 obj.topicValue = defaults['topicValue']
@@ -298,8 +318,16 @@ class AMResponseViewSet(viewsets.ModelViewSet):
                 obj.save()
             except AMResponse.DoesNotExist:
 
+                # 2020-05-20
+                # obj = AMResponse(amQuestion_id=data['amQuestion'], 
+                #                 user_id=data['user'], subjectUser_id=data['subjectUser'], 
+                #                 survey_id=data['survey'], project_id=data['project'], 
+                #                 controlType=data['controlType'], integerValue=data['integerValue'],
+                #                 topicValue=data['topicValue'], commentValue=data['commentValue'],
+                #                 skipValue=data['skipValue'], topicTags=data['topicTags'],
+                #                 commentTags=data['commentTags'])
                 obj = AMResponse(amQuestion_id=data['amQuestion'], 
-                                user_id=data['user'], subjectUser_id=data['subjectUser'], 
+                                projectUser_id=data['projectUser'], subProjectUser_id=data['subProjectUser'], 
                                 survey_id=data['survey'], project_id=data['project'], 
                                 controlType=data['controlType'], integerValue=data['integerValue'],
                                 topicValue=data['topicValue'], commentValue=data['commentValue'],
@@ -308,9 +336,10 @@ class AMResponseViewSet(viewsets.ModelViewSet):
 
                 obj.save()
 
-        
-        result = AMResponse.objects.all().values('user', 'subjectUser', 'survey', 'project', 'amQuestion', 'controlType', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags')
-        
+        # 2020-05-20
+        # result = AMResponse.objects.all().values('user', 'subjectUser', 'survey', 'project', 'amQuestion', 'controlType', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags')
+        result = AMResponse.objects.all().values('projectUser', 'subProjectUser', 'survey', 'project', 'amQuestion', 'controlType', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags')
+
         list_result = [entry for entry in result]
         
         serializer = self.get_serializer(data=list_result, many=True)
@@ -353,7 +382,9 @@ class AOResponseViewSet(viewsets.ModelViewSet):
             for item in data:
                 defaults = item
                 try:
-                    obj = AOResponse.objects.get(survey_id=item['survey'], project_id=item['project'], user_id=item['user'], subjectUser_id=item['subjectUser'], aoQuestion_id=item['aoQuestion'])
+                    # 2020-05-20
+                    # obj = AOResponse.objects.get(survey_id=item['survey'], project_id=item['project'], user_id=item['user'], subjectUser_id=item['subjectUser'], aoQuestion_id=item['aoQuestion'])
+                    obj = AOResponse.objects.get(survey_id=item['survey'], project_id=item['project'], projectUser_id=item['projectUser'], subProjectUser_id=item['subProjectUser'], aoQuestion_id=item['aoQuestion'])
 
                     obj.integerValue = defaults['integerValue']
                     obj.topicValue = defaults['topicValue']
@@ -365,8 +396,16 @@ class AOResponseViewSet(viewsets.ModelViewSet):
                     obj.save()
 
                 except AOResponse.DoesNotExist:
+                    # 2020-05-20
+                    # obj = AOResponse(aoQuestion_id=defaults['aoQuestion'],
+                    #             user_id=defaults['user'], subjectUser_id=defaults['subjectUser'],
+                    #             survey_id=defaults['survey'], project_id=defaults['project'],
+                    #             controlType=defaults['controlType'], integerValue=defaults['integerValue'],
+                    #             topicValue=defaults['topicValue'], commentValue=defaults['commentValue'],
+                    #             skipValue=defaults['skipValue'], topicTags=defaults['topicTags'],
+                    #             commentTags=defaults['commentTags'])
                     obj = AOResponse(aoQuestion_id=defaults['aoQuestion'],
-                                user_id=defaults['user'], subjectUser_id=defaults['subjectUser'],
+                                projectUser_id=defaults['projectUser'], subProjectUser_id=defaults['subProjectUser'],
                                 survey_id=defaults['survey'], project_id=defaults['project'],
                                 controlType=defaults['controlType'], integerValue=defaults['integerValue'],
                                 topicValue=defaults['topicValue'], commentValue=defaults['commentValue'],
@@ -376,7 +415,9 @@ class AOResponseViewSet(viewsets.ModelViewSet):
         elif many == False:
             defaults = data
             try:
-                obj = AOResponse.objects.get(survey_id=item['survey'], project_id=item['project'], user_id=item['user'], subjectUser_id=item['subjectUser'], aoQuestion_id=item['aoQuestion'])
+                # 2020-05-20
+                # obj = AOResponse.objects.get(survey_id=item['survey'], project_id=item['project'], user_id=item['user'], subjectUser_id=item['subjectUser'], aoQuestion_id=item['aoQuestion'])
+                obj = AOResponse.objects.get(survey_id=item['survey'], project_id=item['project'], projectUser_id=item['projectUser'], subProjectUser_id=item['subProjectUser'], aoQuestion_id=item['aoQuestion'])
 
                 obj.integerValue = defaults['integerValue']
                 obj.topicValue = defaults['topicValue']
@@ -387,8 +428,16 @@ class AOResponseViewSet(viewsets.ModelViewSet):
 
                 obj.save()
             except AOResponse.DoesNotExist:
+                # 2020-05-20
+                # obj = AOResponse(aoQuestion_id=defaults['aoQuestion'],
+                #             user_id=defaults['user'], subjectUser_id=defaults['subjectUser'],
+                #             survey_id=defaults['survey'], project_id=defaults['project'],
+                #             controlType=defaults['controlType'], integerValue=defaults['integerValue'],
+                #             topicValue=defaults['topicValue'], commentValue=defaults['commentValue'],
+                #             skipValue=defaults['skipValue'], topicTags=defaults['topicTags'],
+                #             commentTags=defaults['commentTags'])
                 obj = AOResponse(aoQuestion_id=defaults['aoQuestion'],
-                            user_id=defaults['user'], subjectUser_id=defaults['subjectUser'],
+                            projectUser_id=defaults['projectUser'], subProjectUser_id=defaults['subProjectUser'],
                             survey_id=defaults['survey'], project_id=defaults['project'],
                             controlType=defaults['controlType'], integerValue=defaults['integerValue'],
                             topicValue=defaults['topicValue'], commentValue=defaults['commentValue'],
@@ -396,7 +445,9 @@ class AOResponseViewSet(viewsets.ModelViewSet):
                             commentTags=defaults['commentTags'])
                 obj.save()
         
-        result = AOResponse.objects.all().values('user', 'subjectUser', 'survey', 'project', 'aoQuestion', 'controlType', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags')
+        # 2020-05-20
+        # result = AOResponse.objects.all().values('user', 'subjectUser', 'survey', 'project', 'aoQuestion', 'controlType', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags')
+        result = AOResponse.objects.all().values('projectUser', 'subProjectUser', 'survey', 'project', 'aoQuestion', 'controlType', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags')
         
         list_result = [entry for entry in result]
 
@@ -687,14 +738,23 @@ class UserByProjectViewSet(viewsets.ModelViewSet):
             # print(response.data[i])
             response.data[i]['am_total'] = AMQuestion.objects.count()
             response.data[i]['am_response'] = []
-            for item1 in AMResponse.objects.filter(user_id=response.data[i]['user']['id'], project_id=response.data[i]['project']['id']).values('amQuestion'):
+            # 2020-05-20
+            # for item1 in AMResponse.objects.filter(user_id=response.data[i]['user']['id'], project_id=response.data[i]['project']['id']).values('amQuestion'):
+            #     response.data[i]['am_response'].append(item1['amQuestion']) 
+            # response.data[i]['am_answered'] = AMResponse.objects.filter(user_id=response.data[i]['user']['id'], project_id=response.data[i]['project']['id']).count()
+            # response.data[i]['ao_total'] = AOQuestion.objects.count()
+            # response.data[i]['ao_response'] = []
+            # for item2 in AOResponse.objects.filter(subjectUser_id=response.data[i]['user']['id'], project_id=response.data[i]['project']['id']).values('aoQuestion'):
+            #     response.data[i]['ao_response'].append(item2['aoQuestion']) 
+            # response.data[i]['ao_answered'] = AOResponse.objects.filter(subjectUser_id=response.data[i]['user']['id'], project_id=response.data[i]['project']['id']).count()
+            for item1 in AMResponse.objects.filter(projectUser_id=response.data[i]['id'], project_id=response.data[i]['project']['id']).values('amQuestion'):
                 response.data[i]['am_response'].append(item1['amQuestion']) 
-            response.data[i]['am_answered'] = AMResponse.objects.filter(user_id=response.data[i]['user']['id'], project_id=response.data[i]['project']['id']).count()
+            response.data[i]['am_answered'] = AMResponse.objects.filter(projectUser_id=response.data[i]['id'], project_id=response.data[i]['project']['id']).count()
             response.data[i]['ao_total'] = AOQuestion.objects.count()
             response.data[i]['ao_response'] = []
-            for item2 in AOResponse.objects.filter(subjectUser_id=response.data[i]['user']['id'], project_id=response.data[i]['project']['id']).values('aoQuestion'):
+            for item2 in AOResponse.objects.filter(subProjectUser_id=response.data[i]['id'], project_id=response.data[i]['project']['id']).values('aoQuestion'):
                 response.data[i]['ao_response'].append(item2['aoQuestion']) 
-            response.data[i]['ao_answered'] = AOResponse.objects.filter(subjectUser_id=response.data[i]['user']['id'], project_id=response.data[i]['project']['id']).count()
+            response.data[i]['ao_answered'] = AOResponse.objects.filter(subProjectUser_id=response.data[i]['id'], project_id=response.data[i]['project']['id']).count()
 
             response.data[i]['shCategory'] = []
             for item3 in SHMapping.objects.filter(projectUser_id=response.data[i]['id']).values('shCategory'):

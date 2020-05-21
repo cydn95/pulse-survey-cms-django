@@ -52,12 +52,65 @@ class AMQuestionAdmin(SortableAdminMixin, admin.ModelAdmin):
         return form
 
 class AMResponseAdmin(ImportExportModelAdmin):
-    list_display = ['amQuestion', 'user', 'project', 'survey', 'integerValue', 'topicValue', 'commentValue', 'skipValue']
-    fields = ['user', 'subjectUser', 'survey', 'project', 'amQuestion', 'controlType', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags']
-    readonly_fields = ['user', 'subjectUser', 'survey', 'project', 'amQuestion', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags']
+    # old version
+    # list_display = ['amQuestion', 'user', 'project', 'survey', 'integerValue', 'topicValue', 'commentValue', 'skipValue']
+    # fields = ['user', 'subjectUser', 'survey', 'project', 'amQuestion', 'controlType', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags']
+    # readonly_fields = ['user', 'subjectUser', 'survey', 'project', 'amQuestion', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags']
+    
+    # search_fields = ['amQuestion']
+    # list_filter = ['user', 'project', 'survey']
+    # model = AMResponse
+
+    # def has_add_permission(self, request):
+    #     return False
+    
+    # def get_form(self, request, obj=None, **kwargs):
+    #     form = super(AMResponseAdmin, self).get_form(request, obj, **kwargs)
+        
+    #     controlType = getattr(obj, 'controlType')
+    #     skipValue = getattr(obj, 'skipValue')
+    #     if controlType == 'TEXT':
+    #         if skipValue != '':
+    #             self.fields = ['user', 'project', 'survey', 'amQuestion', 'skipValue']
+    #         else:
+    #             self.fields = ['user', 'project', 'survey', 'amQuestion', 'topicValue', 'commentValue']
+    #     elif controlType == 'SLIDER':
+    #         if skipValue != '':
+    #             self.fields = ['user', 'project', 'survey', 'amQuestion', 'skipValue']
+    #         else:
+    #             self.fields = ['user', 'project', 'survey', 'amQuestion', 'integerValue', 'commentValue']
+    #     elif controlType == 'TWO_OPTIONS':
+    #         if skipValue != '':
+    #             self.fields = ['user', 'project', 'survey', 'amQuestion', 'skipValue']
+    #         else:
+    #             self.fields = ['user', 'project', 'survey', 'amQuestion', 'topicValue', 'commentValue']
+    #     elif controlType == 'MULTI_OPTIONS':
+    #         if skipValue != '':
+    #             self.fields = ['user', 'project', 'survey', 'amQuestion', 'skipValue']
+    #         else:
+    #             self.fields = ['user', 'project', 'survey', 'amQuestion', 'topicValue', 'commentValue']
+    #     elif controlType == 'MULTI_TOPICS':
+    #         if skipValue != '':
+    #             self.fields = ['user', 'project', 'survey', 'amQuestion', 'skipValue']
+    #         else:
+    #             self.fields = ['user', 'project', 'survey', 'amQuestion', 'topicValue', 'commentValue']
+    #     elif controlType == 'SMART_TEXT':
+    #         if skipValue != '':
+    #             self.fields = ['user', 'project', 'survey', 'amQuestion', 'skipValue']
+    #         else:
+    #             self.fields = ['user', 'project', 'survey', 'amQuestion', 'topicValue', 'commentValue']
+    #     else:
+    #         self.fields = ['user', 'project', 'survey', 'amQuestion', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags']
+
+    #     return form
+
+    # update user, subjectuser to projectUser, subjectProjectUser     2020-05-20
+    list_display = ['amQuestion', 'projectUser', 'project', 'survey', 'integerValue', 'topicValue', 'commentValue', 'skipValue']
+    fields = ['projectUser', 'subProjectUser', 'survey', 'project', 'amQuestion', 'controlType', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags']
+    readonly_fields = ['projectUser', 'subProjectUser', 'survey', 'project', 'amQuestion', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags']
     
     search_fields = ['amQuestion']
-    list_filter = ['user', 'project', 'survey']
+    list_filter = ['projectUser', 'project', 'survey']
     model = AMResponse
 
     def has_add_permission(self, request):
@@ -70,36 +123,36 @@ class AMResponseAdmin(ImportExportModelAdmin):
         skipValue = getattr(obj, 'skipValue')
         if controlType == 'TEXT':
             if skipValue != '':
-                self.fields = ['user', 'project', 'survey', 'amQuestion', 'skipValue']
+                self.fields = ['projectUser', 'project', 'survey', 'amQuestion', 'skipValue']
             else:
-                self.fields = ['user', 'project', 'survey', 'amQuestion', 'topicValue', 'commentValue']
+                self.fields = ['projectUser', 'project', 'survey', 'amQuestion', 'topicValue', 'commentValue']
         elif controlType == 'SLIDER':
             if skipValue != '':
-                self.fields = ['user', 'project', 'survey', 'amQuestion', 'skipValue']
+                self.fields = ['projectUser', 'project', 'survey', 'amQuestion', 'skipValue']
             else:
-                self.fields = ['user', 'project', 'survey', 'amQuestion', 'integerValue', 'commentValue']
+                self.fields = ['projectUser', 'project', 'survey', 'amQuestion', 'integerValue', 'commentValue']
         elif controlType == 'TWO_OPTIONS':
             if skipValue != '':
-                self.fields = ['user', 'project', 'survey', 'amQuestion', 'skipValue']
+                self.fields = ['projectUser', 'project', 'survey', 'amQuestion', 'skipValue']
             else:
-                self.fields = ['user', 'project', 'survey', 'amQuestion', 'topicValue', 'commentValue']
+                self.fields = ['projectUser', 'project', 'survey', 'amQuestion', 'topicValue', 'commentValue']
         elif controlType == 'MULTI_OPTIONS':
             if skipValue != '':
-                self.fields = ['user', 'project', 'survey', 'amQuestion', 'skipValue']
+                self.fields = ['projectUser', 'project', 'survey', 'amQuestion', 'skipValue']
             else:
-                self.fields = ['user', 'project', 'survey', 'amQuestion', 'topicValue', 'commentValue']
+                self.fields = ['projectUser', 'project', 'survey', 'amQuestion', 'topicValue', 'commentValue']
         elif controlType == 'MULTI_TOPICS':
             if skipValue != '':
-                self.fields = ['user', 'project', 'survey', 'amQuestion', 'skipValue']
+                self.fields = ['projectUser', 'project', 'survey', 'amQuestion', 'skipValue']
             else:
-                self.fields = ['user', 'project', 'survey', 'amQuestion', 'topicValue', 'commentValue']
+                self.fields = ['projectUser', 'project', 'survey', 'amQuestion', 'topicValue', 'commentValue']
         elif controlType == 'SMART_TEXT':
             if skipValue != '':
-                self.fields = ['user', 'project', 'survey', 'amQuestion', 'skipValue']
+                self.fields = ['projectUser', 'project', 'survey', 'amQuestion', 'skipValue']
             else:
-                self.fields = ['user', 'project', 'survey', 'amQuestion', 'topicValue', 'commentValue']
+                self.fields = ['projectUser', 'project', 'survey', 'amQuestion', 'topicValue', 'commentValue']
         else:
-            self.fields = ['user', 'project', 'survey', 'amQuestion', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags']
+            self.fields = ['projectUser', 'project', 'survey', 'amQuestion', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags']
 
         return form
 
