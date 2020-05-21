@@ -53,8 +53,11 @@ class AMQuestionSkipOption(models.Model):
     amQuestion = models.ForeignKey(AMQuestion, on_delete=models.PROTECT)
     
 class AMResponse(models.Model):
+    # update user, subjectuser to projectUser, subjectProjectUser     2020-05-20
     user = models.ForeignKey(User, on_delete=models.PROTECT, related_name="amUser")
     subjectUser = models.ForeignKey(User, on_delete=models.PROTECT, related_name="amSubjectUser")
+    #projectUser = models.ForeignKey(ProjectUser, on_delete=models.PROTECT, related_name="amProjectUser")
+    #subProjectUser = models.ForeignKey(ProjectUser, on_delete=models.PROTECT, related_name="amSubProjectUser")
     survey = models.ForeignKey(Survey, on_delete=models.PROTECT)
     project = models.ForeignKey(Project, on_delete=models.PROTECT)
     amQuestion = models.ForeignKey(AMQuestion, on_delete=models.PROTECT, verbose_name='Question')

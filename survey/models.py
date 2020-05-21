@@ -9,7 +9,7 @@ class Client(models.Model):
         return self.clientName
 
 class Project(models.Model):
-    #client = models.ForeignKey(Client, on_delete=models.PROTECT)
+    client = models.ForeignKey(Client, on_delete=models.PROTECT)
     projectName = models.CharField(max_length=200)
 
     def __str__(self):
@@ -35,7 +35,8 @@ class Driver(models.Model):
     driverName = models.CharField(max_length=200)
     iconPath = models.CharField(max_length=255, blank=True)
     driveOrder = models.PositiveIntegerField(default=0, blank=False, null=False)
-
+    survey = models.ForeignKey(Survey, on_delete=models.PROTECT)
+    
     class Meta(object):
         ordering = ['driveOrder']
 

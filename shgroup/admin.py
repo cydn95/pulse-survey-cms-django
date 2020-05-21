@@ -7,10 +7,10 @@ from django.contrib import messages
 
 class SHGroupAdmin(admin.ModelAdmin):
     fieldset = [
-        (None, {'fields': ('SHGroupName', 'SHGroupAbbrev', 'project')})
+        (None, {'fields': ('SHGroupName', 'SHGroupAbbrev', 'survey')})
     ]
 
-    list_display = ('SHGroupName', 'SHGroupAbbrev', 'project')
+    list_display = ('SHGroupName', 'SHGroupAbbrev', 'survey')
     # fieldset = [
     #     (None, {'fields': ('SHGroupName', 'SHGroupAbbrev')})
     # ]
@@ -26,11 +26,11 @@ class SHGroupAdmin(admin.ModelAdmin):
 
     def get_form(self, request, obj=None, **kwargs):
         form = super().get_form(request, obj, **kwargs)
-        project = form.base_fields['project']
+        survey = form.base_fields['survey']
 
-        project.widget.can_add_related = False
-        project.widget.can_change_related = False
-        project.widget.can_delete_related = False
+        survey.widget.can_add_related = False
+        survey.widget.can_change_related = False
+        survey.widget.can_delete_related = False
 
         return form
     # action = ['delete_model']
@@ -122,12 +122,12 @@ class ProjectUserAdmin(admin.ModelAdmin):
     #     obj.delete()
 
 class SHMappingAdmin(admin.ModelAdmin):
-    list_display = ('shCategory', 'projectUser', 'relationshipStatus')
+    list_display = ('shCategory', 'projectUser', 'subProjectUser', 'relationshipStatus')
 
     # Search
-    search_fields = ['shCategory', 'projectUser']
+    search_fields = ['shCategory', 'projectUser', 'subProjectUser']
     # Filter
-    list_filter = ['shCategory', 'projectUser']
+    list_filter = ['shCategory', 'projectUser', 'subProjectUser']
 
     model = SHMapping
 
@@ -135,6 +135,7 @@ class SHMappingAdmin(admin.ModelAdmin):
         form = super().get_form(request, obj, **kwargs)
         shCategory = form.base_fields['shCategory']
         projectUser = form.base_fields['projectUser']
+        subProjectUser = form.base_fields['subProjectUser']
 
         shCategory.widget.can_add_related = False
         shCategory.widget.can_change_related = False
@@ -143,6 +144,10 @@ class SHMappingAdmin(admin.ModelAdmin):
         projectUser.widget.can_add_related = False
         projectUser.widget.can_change_related = False
         projectUser.widget.can_delete_related = False
+
+        subProjectUser.widget.can_add_related = False
+        subProjectUser.widget.can_change_related = False
+        subProjectUser.widget.can_delete_related = False
 
         return form
 

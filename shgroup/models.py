@@ -12,7 +12,6 @@ from django.forms.models import ModelForm
 from django.forms.widgets import CheckboxSelectMultiple
 from django import forms
 from rest_framework.authtoken.models import Token
-from survey.models import Project
 from django.core.mail import send_mail, EmailMultiAlternatives
 from django.template.loader import get_template, render_to_string
 from django.conf import settings
@@ -23,7 +22,8 @@ from django.contrib import messages
 class SHGroup(models.Model):
     SHGroupName = models.CharField(max_length=255)
     SHGroupAbbrev = models.CharField(max_length=50, blank=True)
-    project = models.ForeignKey(Project, on_delete=models.PROTECT)
+    # project = models.ForeignKey(Project, on_delete=models.PROTECT)
+    survey = models.ForeignKey(Survey, on_delete=models.PROTECT)
 
     def __str__(self):
         return self.SHGroupName
@@ -148,14 +148,15 @@ class ProjectUser(models.Model):
 
 class SHMapping(models.Model):
     shCategory = models.ForeignKey(SHCategory, on_delete=models.PROTECT)
-    projectUser = models.ForeignKey(ProjectUser, on_delete=models.PROTECT)
+    projectUser = models.ForeignKey(ProjectUser, on_delete=models.PROTECT, related_name='projectUser')
+    subProjectUser = models.ForeignKey(ProjectUser, on_delete=models.PROTECT, related_name='subProjectUser')
     relationshipStatus = models.CharField(max_length=100, blank=True)
 
     class Meta:
-        unique_together = ['shCategory', 'projectUser']
+        unique_together = ['shCategory', 'projectUser', 'subProjectUser']
         
     def __str__(self):
-        return '{0} - {1}'.format(self.shCategory, self.projectUser)
+        return '{0} - {1} - {2}'.format(self.shCategory, self.projectUser, self.subProjectUser)
 
 class MyMapLayout(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=False)

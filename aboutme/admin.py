@@ -100,21 +100,6 @@ class AMResponseAdmin(ImportExportModelAdmin):
                 self.fields = ['user', 'project', 'survey', 'amQuestion', 'topicValue', 'commentValue']
         else:
             self.fields = ['user', 'project', 'survey', 'amQuestion', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags']
-        # form.base_fields['survey'].widget.can_add_related = False
-        # form.base_fields['survey'].widget.can_change_related = False
-        # form.base_fields['survey'].widget.can_delete_related = False
-        # form.base_fields['user'].widget.can_add_related = False
-        # form.base_fields['user'].widget.can_change_related = False
-        # form.base_fields['user'].widget.can_delete_related = False
-        # form.base_fields['subjectUser'].widget.can_add_related = False
-        # form.base_fields['subjectUser'].widget.can_change_related = False
-        # form.base_fields['subjectUser'].widget.can_delete_related = False
-        # form.base_fields['project'].widget.can_add_related = False
-        # form.base_fields['project'].widget.can_change_related = False
-        # form.base_fields['project'].widget.can_delete_related = False
-        # form.base_fields['amQuestion'].widget.can_add_related = False
-        # form.base_fields['amQuestion'].widget.can_change_related = False
-        # form.base_fields['amQuestion'].widget.can_delete_related = False
 
         return form
 

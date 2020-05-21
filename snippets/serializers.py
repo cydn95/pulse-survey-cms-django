@@ -256,4 +256,4 @@ class SHMappingSerializer(serializers.ModelSerializer):
     class Meta:
         model = SHMapping
         # fields = '__all__'
-        fields = ['shCategory', 'projectUser', 'relationshipStatus']
+        fields = ['shCategory', 'projectUser', 'subProjectUser', 'relationshipStatus']

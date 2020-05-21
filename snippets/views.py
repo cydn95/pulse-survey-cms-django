@@ -464,9 +464,15 @@ class SHGroupViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = SHGroup.objects.all()
-        project = self.request.query_params.get('project', None)
-        if project is not None:
-            queryset = queryset.filter(project__id=project)
+
+        # updated project to survey   2020-05-20
+        # project = self.request.query_params.get('project', None)
+        # if project is not None:
+        #    queryset = queryset.filter(project__id=project)
+        survey = self.request.query_params.get('survey', None)
+        if survey is not None:
+            queryset = queryset.filter(survey__id=survey)
+
         return queryset
 
     def create(self, request, *args, **kwargs):
@@ -614,59 +620,6 @@ class ProjectUserViewSet(viewsets.ModelViewSet):
         
         obj1.save()
 
-        # print(serializer.data['project'])
-        
-        # project = Project.objects.get(id=serializer.data['project'])
-        # user = User.objects.get(id=serializer.data['user'])
-        # token = Token.objects.get(user_id=serializer.data['user'])
-
-        # image_path_logo = os.path.join(settings.STATIC_ROOT, 'email', 'img', 'logo-2.png')
-        # image_name_logo = Path(image_path_logo).name
-        # image_path_container = os.path.join(settings.STATIC_ROOT, 'email', 'img', 'container.png')
-        # image_name_container = Path(image_path_container).name
-        # image_path_connect = os.path.join(settings.STATIC_ROOT, 'email', 'img', 'connect.png')
-        # image_name_connect = Path(image_path_connect).name
-
-        # subject = 'Welcome to Pulse'
-        # message = get_template('email.html').render(
-        #     {
-        #         'project_name': project,
-        #         'image_name_logo': image_name_logo,
-        #         'image_name_container': image_name_container,
-        #         'image_name_connect': image_name_connect,
-        #         'token': token.key,
-        #         'email': user.email,
-        #         'first_name': user.first_name,
-        #         'last_name': user.last_name,
-        #         'site_url': settings.SITE_URL
-        #     }
-        # )
-        # email_from = settings.DEFAULT_FROM_EMAIL
-        # recipient_list = [user.email,]
-
-        # #send_mail(subject=subject, message='test', html_message=message, from_email=email_from, recipient_list=recipient_list, fail_silently=True)
-        # email = EmailMultiAlternatives(subject=subject, body=message, from_email=email_from, to=recipient_list)
-        # email.attach_alternative(message, "text/html")
-        # email.content_subtype = 'html'
-        # email.mixed_subtype = 'related'
-
-        # with open(image_path_logo, mode='rb') as f_logo:
-        #     image_logo = MIMEImage(f_logo.read())
-        #     email.attach(image_logo)
-        #     image_logo.add_header('Content-ID', f"<{image_name_logo}>")
-        
-        # with open(image_path_container, mode='rb') as f_container:
-        #     image_container = MIMEImage(f_container.read())
-        #     email.attach(image_container)
-        #     image_container.add_header('Content-ID', f"<{image_name_container}>")
-
-        # with open(image_path_connect, mode='rb') as f_connect:
-        #     image_connect = MIMEImage(f_connect.read())
-        #     email.attach(image_connect)
-        #     image_connect.add_header('Content-ID', f"<{image_name_connect}>")
-
-        # email.send()
-
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 class AOQuestionViewSet(viewsets.ModelViewSet):
@@ -768,6 +721,15 @@ class DriverViewSet(viewsets.ModelViewSet):
     queryset = Driver.objects.all()
     serializer_class = DriverSerializer
 
+    # added survey to the driver table     2020-05-20
+    def get_queryset(self):
+        queryset = Driver.objects.all()
+        survey = self.request.query_params.get('survey', None)
+
+        if survey is not None:
+            queryset = queryset.filter(survey__id=survey)
+
+        return queryset
 
 class MyMapLayoutViewSet(viewsets.ModelViewSet):
 

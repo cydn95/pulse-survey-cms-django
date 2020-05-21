@@ -8,11 +8,11 @@ from django.core.urlresolvers import reverse
 class ProjectAdmin(admin.ModelAdmin):
 
     # Search
-    search_fields = ['projectName']
+    search_fields = ['client', 'projectName']
     # Filter
-    list_filter = ['projectName']
+    list_filter = ['client', 'projectName']
     # list
-    list_display = ['projectName']
+    list_display = ['client', 'projectName']
     # Edit
     #list_editable = ['projectName']
 
