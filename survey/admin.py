@@ -18,15 +18,6 @@ class ProjectAdmin(admin.ModelAdmin):
 
     model = Project
     # actions = ['delete_model']
-
-    # def delete_model(self, request, obj):
-        
-    #     #print("before delete")
-    #     if obj.id is not None:
-    #         id = 'project-{0}'.format(obj.id)
-    #         deleteVertex(id)
-    #     obj.delete()
-    #     #print("after delete")
         
 class DriverAdmin(SortableAdminMixin, admin.ModelAdmin):
     pass

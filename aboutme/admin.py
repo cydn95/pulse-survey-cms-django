@@ -19,8 +19,6 @@ class AMQuestionList(ChangeList):
             list_per_page, list_max_show_all, list_editable, 
             model_admin)
 
-        # currently commented the action_checkbox
-        # self.list_display = ['action_checkbox', 'driver', 'subdriver', 'questionText', 'controlType', 'sliderTextLeft', 'sliderTextRight', 'shGroup']
         self.list_display = ['action_checkbox', 'amqOrder', 'questionText', 'driver', 'subdriver', 'controlType', 'sliderTextLeft', 'sliderTextRight', 'shGroup']
         self.list_display_links = ['questionText']
         self.list_editable = ['shGroup', 'option', 'skipOption']
@@ -35,8 +33,6 @@ class AMQuestionAdmin(SortableAdminMixin, admin.ModelAdmin):
     model = AMQuestion
     list_display = ['amqOrder', 'questionText', 'driver', 'subdriver', 'controlType', 'sliderTextLeft', 'sliderTextRight']
     list_display_links = ['questionText']
-    # def get_changelist(self, request, **kwargs):
-    #     return AMQuestionList
 
     def get_changelist_form(self, request, **kwargs):
         return AMQuestionForm

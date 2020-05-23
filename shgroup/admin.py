@@ -66,12 +66,6 @@ class SHCategoryAdmin(admin.ModelAdmin):
         mapType.widget.can_delete_related = False
         
         return form
-    # def delete_model(self, request, obj):
-    #     if obj.id is not None:
-    #         id = 'category-{0}'.format(obj.id)
-    #         #print(id)
-    #         deleteVertex(id)
-    #     obj.delete()
 
 class ProjectUserAdmin(admin.ModelAdmin):
     list_display = ('user', 'projectUserTitle', 'project', 'team', 'shGroup')
@@ -114,12 +108,6 @@ class ProjectUserAdmin(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
         super(ProjectUserAdmin, self).save_model(request, obj, form, change)
         messages.info(request, 'Email invitation has been sent.')
-    # def delete_model(self, request, obj):
-    #     if obj.id is not None:
-    #         id = 'user-{0}'.format(obj.id)
-    #         #print(id)
-    #         deleteVertex(id)
-    #     obj.delete()
 
 class SHMappingAdmin(admin.ModelAdmin):
     list_display = ('shCategory', 'projectUser', 'subProjectUser', 'relationshipStatus')

@@ -28,21 +28,6 @@ class SHGroup(models.Model):
     def __str__(self):
         return self.SHGroupName
 
-    # def save(self, *args, **kwargs):
-    #     super(SHGroup, self).save(*args, **kwargs)
-    #     #print(self.SHGroupName)
-
-    #     if self.id is not None:
-    #         data = [{
-    #             'id': 'stakeholder-{0}'.format(self.id),
-    #             'label': 'stakeholder_{0}'.format(self.id),
-    #             'type': 'stakeholder',
-    #             'text': self.SHGroupName
-    #         }]
-    #         #print(data)
-    #         ret = addVertex(data)
-    #         #print(ret)
-
 class MapType(models.Model):
     name = models.CharField(max_length=50)
 
@@ -61,21 +46,6 @@ class SHCategory(models.Model):
     
     def __str__(self):
         return self.SHCategoryName
-
-    # def save(self, *args, **kwargs):
-    #     super(SHCategory, self).save(*args, **kwargs)
-    #     #print(self.SHCategoryName)
-
-    #     if self.id is not None:
-    #         data = [{
-    #             'id': 'category-{0}'.format(self.id),
-    #             'label': 'category_{0}'.format(self.id),
-    #             'type': 'category',
-    #             'text': self.SHCategoryName
-    #         }]
-    #         #print(data)
-    #         ret = addVertex(data)
-    #         #print(ret)
 
 class ProjectUser(models.Model):
     project = models.ForeignKey(Project, on_delete=models.PROTECT)

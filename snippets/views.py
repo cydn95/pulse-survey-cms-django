@@ -362,7 +362,6 @@ class AMResponseTopicViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         data = request.data.get("items") if 'items' in request.data else request.data
         many = isinstance(data, list)
-        #print(data, many)
         serializer = self.get_serializer(data=data, many=many)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
@@ -471,7 +470,6 @@ class AOResponseTopicViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         data = request.data.get("items") if 'items' in request.data else request.data
         many = isinstance(data, list)
-        #print(data, many)
         serializer = self.get_serializer(data=data, many=many)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
@@ -486,7 +484,6 @@ class AOPageViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         data = request.data.get("items") if 'items' in request.data else request.data
         many = isinstance(data, list)
-        #print(data, many)
         serializer = self.get_serializer(data=data, many=many)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
@@ -501,7 +498,6 @@ class TeamViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         data = request.data.get("items") if 'items' in request.data else request.data
         many = isinstance(data, list)
-        #print(data, many)
         serializer = self.get_serializer(data=data, many=many)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
@@ -529,7 +525,6 @@ class SHGroupViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         data = request.data.get("items") if 'items' in request.data else request.data
         many = isinstance(data, list)
-        #print(data, many)
         serializer = self.get_serializer(data=data, many=many)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
@@ -743,7 +738,6 @@ class UserByProjectViewSet(viewsets.ModelViewSet):
         myProjectUser_id = self.request.GET.get('myProjectUser')
 
         for i in range(len(response.data)):
-            # print(response.data[i])
             response.data[i]['am_total'] = AMQuestion.objects.count()
             response.data[i]['am_response'] = []
             # 2020-05-20
@@ -835,17 +829,11 @@ class MyMapLayoutViewSet(viewsets.ModelViewSet):
         # 2020-05-20
         myProjectUser_id = data['myProjectUser']
 
-        #print(content_type)
         try:
             obj = MyMapLayout.objects.get(user_id=data['user'], project_id=data['project'])
 
             obj.projectUser.clear()
             
-            # if type(data) != "dict":
-            #     print(1)
-            #     for item in data.getlist('projectUser'):
-            #         new_obj = ProjectUser.objects.get(id=item)
-            #         obj.projectUser.add(new_obj)
             if "application/json" in content_type:
                 
 
@@ -877,11 +865,6 @@ class MyMapLayoutViewSet(viewsets.ModelViewSet):
             obj.project_id = data['project']
             obj.layout_json = data['layout_json']
 
-            # if type(data) != "dict":
-            #     print(1)
-            #     for item in data.getlist('projectUser'):
-            #         new_obj = ProjectUser.objects.get(id=item)
-            #         obj.projectUser.add(new_obj)
             if "application/json" in content_type:
                 for item in data['pu_category']:
                     new_obj = ProjectUser.objects.get(id=item['projectUser'])
@@ -1045,7 +1028,6 @@ class SetPasswordView(APIView):
         return []
 
     def post(self, request):
-        # print(request.data['email'])
         password = request.data['password']
         email = request.data['email']
         
@@ -1170,20 +1152,7 @@ class StakeHolderUserView(APIView):
         if serializer.is_valid(raise_exception=ValueError):
             serializer.create(validated_data=request.data)
             
-            #print(serializer.data['user']['username'])
-
             dt = User.objects.filter(username=serializer.data['user']['username']).values_list('pk', flat=True)
-
-            # subject = 'Test Message Title'
-            # message = get_template('email.html').render(
-            #     {
-            #         'project_name': 'Test Project'
-            #     }
-            # )
-            # email_from = settings.DEFAULT_FROM_EMAIL
-            # recipient_list = ['mrstevenwong815@gmail.com',]
-
-            # send_mail(subject=subject, message='test', html_message=message, from_email=email_from, recipient_list=recipient_list, fail_silently=True)
 
             return Response(dt[0], status=status.HTTP_201_CREATED)
         return Response(serializer.error_messages, status=status.HTTP_400_BAD_REQUEST)

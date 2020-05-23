@@ -36,18 +36,6 @@ class Organization(models.Model):
 
     def save(self, *args, **kwargs):
         super(Organization, self).save(*args, **kwargs)
-        #print(self.name)
-
-        # if self.id is not None:
-        #     data = [{
-        #         'id': 'organization-{0}'.format(self.id),
-        #         'label': 'organization_{0}'.format(self.id),
-        #         'type': 'organization',
-        #         'text': self.name
-        #     }]
-        #     #print(data)
-        #     ret = addVertex(data)
-        #     #print(ret)
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
