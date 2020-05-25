@@ -3,7 +3,7 @@ from pathlib import Path
 from email.mime.image import MIMEImage
 
 from snippets.models import Snippet
-from snippets.serializers import ConfigPageSerializer, UserAvatarSerializer, SHMappingSerializer, ProjectVideoUploadSerializer, AMQuestionSerializer, AOQuestionSerializer, StakeHolderSerializer, SHCategorySerializer, MyMapLayoutStoreSerializer, ProjectMapLayoutStoreSerializer, UserByProjectSerializer, ProjectByUserSerializer, SkipOptionSerializer, DriverSerializer, AOQuestionSerializer, OrganizationSerializer, OptionSerializer, ProjectUserSerializer, SHGroupSerializer, UserSerializer, PageSettingSerializer, PageSerializer, AMResponseSerializer, AMResponseTopicSerializer, AOResponseSerializer, AOResponseTopicSerializer, AOPageSerializer, TeamSerializer
+from snippets.serializers import NikelMobilePageSerializer, ConfigPageSerializer, UserAvatarSerializer, SHMappingSerializer, ProjectVideoUploadSerializer, AMQuestionSerializer, AOQuestionSerializer, StakeHolderSerializer, SHCategorySerializer, MyMapLayoutStoreSerializer, ProjectMapLayoutStoreSerializer, UserByProjectSerializer, ProjectByUserSerializer, SkipOptionSerializer, DriverSerializer, AOQuestionSerializer, OrganizationSerializer, OptionSerializer, ProjectUserSerializer, SHGroupSerializer, UserSerializer, PageSettingSerializer, PageSerializer, AMResponseSerializer, AMResponseTopicSerializer, AOResponseSerializer, AOResponseTopicSerializer, AOPageSerializer, TeamSerializer
 from rest_framework import generics, permissions
 from django.contrib.auth.models import User
 from snippets.permissions import IsOwnerOrReadOnly
@@ -22,7 +22,7 @@ from option.models import Option, SkipOption
 from rest_framework import status
 from organization.models import Organization, UserAvatar, UserTeam
 from aboutothers.models import AOQuestion
-from survey.models import Driver, Project, ProjectVideoUpload, ConfigPage
+from survey.models import Driver, Project, ProjectVideoUpload, ConfigPage, NikelMobilePage
 from rest_framework.views import APIView
 from django.forms.models import model_to_dict
 
@@ -710,6 +710,18 @@ class ConfigPageViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(project__id=project)
         return queryset
 
+class NikelMobilePageViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+    queryset = NikelMobilePage.objects.all()
+    serializer_class = NikelMobilePageSerializer
+
+    def get_queryset(self):
+        queryset = NikelMobilePage.objects.all()
+        project = self.request.query_params.get('project', None)
+        if project is not None:
+            queryset = queryset.filter(project__id=project)
+        return queryset
+        
 class UserAvatarViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
     queryset = UserAvatar.objects.all()

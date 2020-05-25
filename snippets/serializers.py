@@ -10,7 +10,7 @@ from team.models import Team
 from shgroup.models import SHGroup, ProjectUser, MyMapLayout, ProjectMapLayout, SHCategory, SHMapping
 from option.models import Option, SkipOption
 from organization.models import Organization, UserAvatar, UserTeam, UserTitle
-from survey.models import Driver, Project, Survey, ProjectVideoUpload, Client, ConfigPage
+from survey.models import Driver, Project, Survey, ProjectVideoUpload, Client, ConfigPage, NikelMobilePage
 from rest_framework.authtoken.models import Token
 
 class EnumField(serializers.ChoiceField):
@@ -194,6 +194,11 @@ class ConfigPageSerializer(serializers.ModelSerializer):
         model = ConfigPage
         fields = '__all__'
 
+class NikelMobilePageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = NikelMobilePage
+        fields = '__all__'
+        
 class ProjectByUserSerializer(serializers.ModelSerializer):
     project = ProjectSerializer()
     
