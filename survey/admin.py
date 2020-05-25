@@ -34,7 +34,7 @@ class ClientAdmin(admin.ModelAdmin):
         client_actions.short_description = 'Client Actions'
         client_actions.allow_tags = True
 
-class NikelMobilePageAdmin(admin.ModelAdmin):
+class NikelMobilePageAdmin(SortableAdminMixin, admin.ModelAdmin):
     list_display = ['pageOrder', 'project', 'pageName', 'pageText']
     list_display_links = ['pageName']
     model = NikelMobilePage
