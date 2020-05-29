@@ -58,8 +58,8 @@ class ProjectUser(models.Model):
     #shCategory = models.ForeignKey(SHCategory, null=True, blank=True)
     shGroup = models.ForeignKey(SHGroup, null=True, blank=True, verbose_name='SHGroup')
 
-    # class Meta:
-    #     unique_together = ['project', 'user']
+    class Meta:
+        unique_together = ['project', 'user']
 
     def __str__(self):
         return '{0} - {1}'.format(self.project, self.user.username)
