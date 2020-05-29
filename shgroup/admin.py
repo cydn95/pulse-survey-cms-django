@@ -67,24 +67,15 @@ class SHCategoryAdmin(admin.ModelAdmin):
         
         return form
 
-# upgraded the ProjectUser model
-# project => survey
-# 2020-05-27
 class ProjectUserAdmin(admin.ModelAdmin):
-    # 2020-05-27
-    # list_display = ('user', 'projectUserTitle', 'project', 'team', 'shGroup')
-    list_display = ('user', 'projectUserTitle', 'survey', 'team', 'shGroup')
+    list_display = ('user', 'projectUserTitle', 'project', 'team', 'shGroup')
     model = ProjectUser
 
     # Search
-    # 2020-05-27
-    # search_fields = ['user', 'projectUserTitle', 'project', 'team', 'shGroup']
-    search_fields = ['user', 'projectUserTitle', 'survey', 'team', 'shGroup']
-    
+    search_fields = ['user', 'projectUserTitle', 'project', 'team', 'shGroup']
     # Filter
-    # 2020-05-27
-    # list_filter = ['user', 'project', 'team', 'shGroup']
-    list_filter = ['user', 'survey', 'team', 'shGroup']
+    list_filter = ['user', 'project', 'team', 'shGroup']
+    #action = ['delete_model']
 
     # def get_changelist_form(self, request, **kwargs):
     #     return ProjectUserForm
@@ -92,18 +83,12 @@ class ProjectUserAdmin(admin.ModelAdmin):
         form = super().get_form(request, obj, **kwargs)
         team = form.base_fields['team']
         user = form.base_fields['user']
-        # 2020-05-27
-        # project = form.base_fields['project']
-        survey = form.base_fields['survey']
+        project = form.base_fields['project']
         shGroup = form.base_fields['shGroup']
 
-        # 2020-05-27
-        # project.widget.can_add_related = False
-        # project.widget.can_change_related = False
-        # project.widget.can_delete_related = False
-        survey.widget.can_add_related = False
-        survey.widget.can_change_related = False
-        survey.widget.can_delete_related = False
+        project.widget.can_add_related = False
+        project.widget.can_change_related = False
+        project.widget.can_delete_related = False
         
         team.widget.can_add_related = False
         team.widget.can_change_related = False

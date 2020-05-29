@@ -768,24 +768,13 @@ class UserByProjectViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = ProjectUser.objects.all()
-        
-        # 2020-05-27
-        # project = self.request.query_params.get('project', None)
-        # user = self.request.query_params.get('user', None)
-        
-        # if (project is not None ) & (user is not None):
-        #     queryset = queryset.filter(project__id=project, user__id=user)
-        # elif project is not None:
-        #     queryset = queryset.filter(project__id=project)    
-        # elif user is not None:
-        #     queryset = queryset.filter(user__id=user)
-        survey = self.request.query_params.get('survey', None)
+        project = self.request.query_params.get('project', None)
         user = self.request.query_params.get('user', None)
         
-        if (survey is not None ) & (user is not None):
-            queryset = queryset.filter(survey__id=survey, user__id=user)
-        elif survey is not None:
-            queryset = queryset.filter(survey__id=survey)    
+        if (project is not None ) & (user is not None):
+            queryset = queryset.filter(project__id=project, user__id=user)
+        elif project is not None:
+            queryset = queryset.filter(project__id=project)    
         elif user is not None:
             queryset = queryset.filter(user__id=user)
 
