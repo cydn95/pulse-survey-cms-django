@@ -57,7 +57,7 @@ class AOResponse(models.Model):
     # subjectUser = models.ForeignKey(User, on_delete=models.PROTECT, related_name="aoSubjectUser")
     projectUser = models.ForeignKey(ProjectUser, on_delete=models.PROTECT, related_name="aoProjectUser")
     #subProjectUser = models.ForeignKey(ProjectUser, on_delete=models.PROTECT, related_name="aoSubProjectUser")
-    subProjectUser = models.ForeignKey(SHMapping, on_delete=models.PROTECT, related_name="aoSubProjectUser")
+    subProjectUser = models.ForeignKey(ProjectUser, on_delete=models.PROTECT, related_name="aoSubProjectUser")
     survey = models.ForeignKey(Survey, on_delete=models.PROTECT)
     project = models.ForeignKey(Project, on_delete=models.PROTECT)
     aoQuestion = models.ForeignKey(AOQuestion, on_delete=models.PROTECT)
