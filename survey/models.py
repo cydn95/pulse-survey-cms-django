@@ -2,7 +2,6 @@ from django.db import models
 #from gremlin import addVertex
 from tinymce.models import HTMLField
 from rgbfield.fields import RGBColorField
-from colorfield.fields import ColorField
 
 class Client(models.Model):
     clientName = models.CharField(max_length=200)
@@ -29,9 +28,9 @@ class ConfigPage(models.Model):
 class NikelMobilePage(models.Model):
     project = models.ForeignKey(Project, on_delete=models.PROTECT)
     pageName = models.CharField(max_length=50)
-    pageText = models.CharField(max_length=500, blank=True)
-    backgroundColor = ColorField(default="#FF0000", blank=True)
-    pageContent = HTMLField(blank=True)
+    pageText = models.CharField(max_length=500)
+    backgroundColor = RGBColorField(default="#afd8f8")
+    pageContent = HTMLField()
     pageOrder = models.PositiveIntegerField(default=0, blank=False, null=False, verbose_name='Page Order')
 
     class Meta(object):
