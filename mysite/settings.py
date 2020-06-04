@@ -121,6 +121,7 @@ INSTALLED_APPS = [
     'djangocms_text_ckeditor',
     'filer',
     'easy_thumbnails',
+    'tabbed_admin',
     'djangocms_column',
     'djangocms_file',
     'djangocms_link',
@@ -210,6 +211,8 @@ MIGRATION_MODULES = {
     
 }
 
+TABBED_ADMIN_USE_JQUERY_UI = True
+
 THUMBNAIL_PROCESSORS = (
     'easy_thumbnails.processors.colorspace',
     'easy_thumbnails.processors.autocrop',
@@ -286,7 +289,10 @@ JET_SIDE_MENU_ITEMS = [ # A list of application or custom item dicts
         {'name':'survey.configpage', 'label': 'Pages'},
         {'name':'survey.nikelmobilepage', 'label': 'Nikel Tower(for mobile)'},
     ]},
-    {'label': 'Configuration', 'app_label': 'survey.client', 'url': '/admin/survey/client', 'items': []}
+    # {'label': 'Configuration', 'app_label': 'survey.client', 'url': '/admin/survey/client', 'items': []}
+    {'label': 'Configuration', 'items': [
+        {'name':'survey.survey', 'label': 'Configurations'}
+    ]}
     # {'label': 'Configuration', 'items': [
     #     {'name':'shgroup.projectuser', 'label': 'Project Users'},
     #     {'name':'survey.driver', 'label': 'Drivers'},

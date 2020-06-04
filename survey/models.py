@@ -16,9 +16,17 @@ class Project(models.Model):
 
     def __str__(self):
         return self.projectName
+    
+class Survey(models.Model):
+    project = models.ForeignKey(Project, on_delete=models.PROTECT)
+    surveyTitle = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.surveyTitle
 
 class ConfigPage(models.Model):
-    project = models.ForeignKey(Project, on_delete=models.PROTECT)
+    # project = models.ForeignKey(Project, on_delete=models.PROTECT)
+    survey = models.ForeignKey(Survey, on_delete=models.PROTECT)
     tabName = models.CharField(max_length=40)
     pageName = models.CharField(max_length=200)
     pageContent = HTMLField()
@@ -27,7 +35,8 @@ class ConfigPage(models.Model):
         return self.pageName
 
 class NikelMobilePage(models.Model):
-    project = models.ForeignKey(Project, on_delete=models.PROTECT)
+    # project = models.ForeignKey(Project, on_delete=models.PROTECT)
+    survey = models.ForeignKey(Survey, on_delete=models.PROTECT)
     pageName = models.CharField(max_length=50)
     pageText = models.CharField(max_length=500, blank=True)
     backgroundColor = ColorField(default="#FF0000", blank=True)
@@ -39,13 +48,6 @@ class NikelMobilePage(models.Model):
 
     def __str__(self):
         return self.pageName
-    
-class Survey(models.Model):
-    project = models.ForeignKey(Project, on_delete=models.PROTECT)
-    surveyTitle = models.CharField(max_length=200)
-
-    def __str__(self):
-        return self.surveyTitle
 
 class Driver(models.Model):
     driverName = models.CharField(max_length=200)

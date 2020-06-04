@@ -705,9 +705,9 @@ class ConfigPageViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = ConfigPage.objects.all()
-        project = self.request.query_params.get('project', None)
-        if project is not None:
-            queryset = queryset.filter(project__id=project)
+        survey = self.request.query_params.get('survey', None)
+        if survey is not None:
+            queryset = queryset.filter(survey__id=survey)
         return queryset
 
 class UserAvatarViewSet(viewsets.ModelViewSet):
@@ -1175,7 +1175,7 @@ class NikelMobilePageViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = NikelMobilePage.objects.all()
-        project = self.request.query_params.get('project', None)
-        if project is not None:
-            queryset = queryset.filter(project__id=project)
+        survey = self.request.query_params.get('survey', None)
+        if survey is not None:
+            queryset = queryset.filter(survey__id=survey)
         return queryset
