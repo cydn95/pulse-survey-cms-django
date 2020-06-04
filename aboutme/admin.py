@@ -31,7 +31,7 @@ class AMQuestionAdmin(SortableAdminMixin, admin.ModelAdmin):
     # Filter
     list_filter = ['driver', 'controlType', 'shGroup']
     model = AMQuestion
-    list_display = ['amqOrder', 'questionText', 'driver', 'subdriver', 'controlType', 'sliderTextLeft', 'sliderTextRight']
+    list_display = ['amqOrder', 'questionText', 'driver', 'subdriver', 'controlType', 'sliderTextLeft', 'sliderTextRight', 'longForm', 'shortForm']
     list_display_links = ['questionText']
 
     def get_changelist_form(self, request, **kwargs):

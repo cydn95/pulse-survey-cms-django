@@ -4,6 +4,7 @@ from .models import Survey, Client, Project, Driver, ConfigPage, NikelMobilePage
 from adminsortable2.admin import SortableAdminMixin
 from django.utils.html import format_html
 from django.core.urlresolvers import reverse
+from django.utils.safestring import mark_safe
 
 class ProjectAdmin(admin.ModelAdmin):
 
@@ -27,9 +28,13 @@ class ClientAdmin(admin.ModelAdmin):
 
     model = Client
 
+    def get_queryset(self, request):
+        self.full_path = request.get_full_path()
+        return super(ClientAdmin, self).get_queryset(request)
+
     def client_actions(self, obj):
         return format_html(
-            '<a class="button" href="">Add Project</a>',
+            mark_safe('<a class="button" href="{}project">Add Project</a>'.format(self.full_path)),
         )
         client_actions.short_description = 'Client Actions'
         client_actions.allow_tags = True

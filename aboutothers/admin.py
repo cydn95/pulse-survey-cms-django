@@ -30,7 +30,7 @@ class AOQuestionAdmin(SortableAdminMixin, admin.ModelAdmin):
     # Filter
     list_filter = ['driver', 'controlType', 'shGroup']
     model = AOQuestion
-    list_display = ['aoqOrder', 'questionText', 'driver', 'subdriver', 'controlType', 'sliderTextLeft', 'sliderTextRight']
+    list_display = ['aoqOrder', 'questionText', 'driver', 'subdriver', 'controlType', 'sliderTextLeft', 'sliderTextRight', 'longForm', 'shortForm']
     list_display_links = ['questionText']
     
     def get_changelist_form(self, request, **kwargs):

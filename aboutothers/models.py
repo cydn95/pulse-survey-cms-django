@@ -27,7 +27,9 @@ class AOQuestion(models.Model):
     option = models.ManyToManyField(Option, blank=True)
     skipOption = models.ManyToManyField(SkipOption, blank=True)
     aoqOrder = models.PositiveIntegerField(default=0, blank=False, null=False, verbose_name='Order')
-
+    shortForm = models.BooleanField(default=False)
+    longForm = models.BooleanField(default=False)
+    
     class Meta(object):
         ordering = ['aoqOrder']
         
