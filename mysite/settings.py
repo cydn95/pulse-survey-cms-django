@@ -130,6 +130,7 @@ INSTALLED_APPS = [
     'djangocms_googlemap',
     'djangocms_video',
     'tinymce',
+    'colorfield',
     'filebrowser',
     'mysite',
     'organization',

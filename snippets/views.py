@@ -3,7 +3,7 @@ from pathlib import Path
 from email.mime.image import MIMEImage
 
 from snippets.models import Snippet
-from snippets.serializers import ConfigPageSerializer, UserAvatarSerializer, SHMappingSerializer, ProjectVideoUploadSerializer, AMQuestionSerializer, AOQuestionSerializer, StakeHolderSerializer, SHCategorySerializer, MyMapLayoutStoreSerializer, ProjectMapLayoutStoreSerializer, UserByProjectSerializer, ProjectByUserSerializer, SkipOptionSerializer, DriverSerializer, AOQuestionSerializer, OrganizationSerializer, OptionSerializer, ProjectUserSerializer, SHGroupSerializer, UserSerializer, PageSettingSerializer, PageSerializer, AMResponseSerializer, AMResponseTopicSerializer, AOResponseSerializer, AOResponseTopicSerializer, AOPageSerializer, TeamSerializer
+from snippets.serializers import NikelMobilePageSerializer, ConfigPageSerializer, UserAvatarSerializer, SHMappingSerializer, ProjectVideoUploadSerializer, AMQuestionSerializer, AOQuestionSerializer, StakeHolderSerializer, SHCategorySerializer, MyMapLayoutStoreSerializer, ProjectMapLayoutStoreSerializer, UserByProjectSerializer, ProjectByUserSerializer, SkipOptionSerializer, DriverSerializer, AOQuestionSerializer, OrganizationSerializer, OptionSerializer, ProjectUserSerializer, SHGroupSerializer, UserSerializer, PageSettingSerializer, PageSerializer, AMResponseSerializer, AMResponseTopicSerializer, AOResponseSerializer, AOResponseTopicSerializer, AOPageSerializer, TeamSerializer
 from rest_framework import generics, permissions
 from django.contrib.auth.models import User
 from snippets.permissions import IsOwnerOrReadOnly
@@ -22,7 +22,7 @@ from option.models import Option, SkipOption
 from rest_framework import status
 from organization.models import Organization, UserAvatar, UserTeam
 from aboutothers.models import AOQuestion
-from survey.models import Driver, Project, ProjectVideoUpload, ConfigPage
+from survey.models import Driver, Project, ProjectVideoUpload, ConfigPage, NikelMobilePage
 from rest_framework.views import APIView
 from django.forms.models import model_to_dict
 
@@ -768,13 +768,24 @@ class UserByProjectViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = ProjectUser.objects.all()
-        project = self.request.query_params.get('project', None)
+
+        # 2020-05-27
+        # project = self.request.query_params.get('project', None)
+        # user = self.request.query_params.get('user', None)
+        
+        # if (project is not None ) & (user is not None):
+        #     queryset = queryset.filter(project__id=project, user__id=user)
+        # elif project is not None:
+        #     queryset = queryset.filter(project__id=project)    
+        # elif user is not None:
+        #     queryset = queryset.filter(user__id=user)
+        survey = self.request.query_params.get('survey', None)
         user = self.request.query_params.get('user', None)
         
-        if (project is not None ) & (user is not None):
-            queryset = queryset.filter(project__id=project, user__id=user)
-        elif project is not None:
-            queryset = queryset.filter(project__id=project)    
+        if (survey is not None ) & (user is not None):
+            queryset = queryset.filter(project__id=survey, user__id=user)
+        elif survey is not None:
+            queryset = queryset.filter(project__id=survey)    
         elif user is not None:
             queryset = queryset.filter(user__id=user)
 
@@ -1156,3 +1167,15 @@ class StakeHolderUserView(APIView):
 
             return Response(dt[0], status=status.HTTP_201_CREATED)
         return Response(serializer.error_messages, status=status.HTTP_400_BAD_REQUEST)
+
+class NikelMobilePageViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+    queryset = NikelMobilePage.objects.all()
+    serializer_class = NikelMobilePageSerializer
+
+    def get_queryset(self):
+        queryset = NikelMobilePage.objects.all()
+        project = self.request.query_params.get('project', None)
+        if project is not None:
+            queryset = queryset.filter(project__id=project)
+        return queryset

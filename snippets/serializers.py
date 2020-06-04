@@ -10,7 +10,7 @@ from team.models import Team
 from shgroup.models import SHGroup, ProjectUser, MyMapLayout, ProjectMapLayout, SHCategory, SHMapping
 from option.models import Option, SkipOption
 from organization.models import Organization, UserAvatar, UserTeam, UserTitle
-from survey.models import Driver, Project, Survey, ProjectVideoUpload, Client, ConfigPage
+from survey.models import Driver, Project, Survey, ProjectVideoUpload, Client, ConfigPage, NikelMobilePage
 from rest_framework.authtoken.models import Token
 
 class EnumField(serializers.ChoiceField):
@@ -199,7 +199,9 @@ class ProjectByUserSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = ProjectUser
-        fields = ['id', 'user', 'project', 'shGroup']
+        # 2020-05-27
+        # fields = ['id', 'user', 'project', 'shGroup']
+        fields = ['id', 'user', 'survey', 'shGroup']
 
 class SHCategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -213,7 +215,9 @@ class UserByProjectSerializer(serializers.ModelSerializer):
     shGroup = SHGroupSerializer()
     class Meta:
         model = ProjectUser
-        fields = ['id', 'project', 'projectUserTitle', 'user', 'team', 'shGroup']
+        # 2020-05-27
+        # fields = ['id', 'project', 'projectUserTitle', 'user', 'team', 'shGroup']
+        fields = ['id', 'survey', 'projectUserTitle', 'user', 'team', 'shGroup']
 
 class ProjectUserSerializer(serializers.ModelSerializer):
     #project = ProjectSerializer()
@@ -257,3 +261,8 @@ class SHMappingSerializer(serializers.ModelSerializer):
         model = SHMapping
         # fields = '__all__'
         fields = ['shCategory', 'projectUser', 'subProjectUser', 'relationshipStatus']
+
+class NikelMobilePageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = NikelMobilePage
+        fields = '__all__'

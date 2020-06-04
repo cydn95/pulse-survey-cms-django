@@ -68,13 +68,21 @@ class SHCategoryAdmin(admin.ModelAdmin):
         return form
 
 class ProjectUserAdmin(admin.ModelAdmin):
-    list_display = ('user', 'projectUserTitle', 'project', 'team', 'shGroup')
+    # 2020-05-27
+    # list_display = ('user', 'projectUserTitle', 'project', 'team', 'shGroup')
+    list_display = ('user', 'projectUserTitle', 'survey', 'team', 'shGroup')
     model = ProjectUser
 
     # Search
-    search_fields = ['user', 'projectUserTitle', 'project', 'team', 'shGroup']
+    # 2020-05-27
+    # search_fields = ['user', 'projectUserTitle', 'project', 'team', 'shGroup']
+    search_fields = ['user', 'projectUserTitle', 'survey', 'team', 'shGroup']
+
     # Filter
-    list_filter = ['user', 'project', 'team', 'shGroup']
+    # 2020-05-27
+    # list_filter = ['user', 'project', 'team', 'shGroup']
+    list_filter = ['user', 'survey', 'team', 'shGroup']
+
     #action = ['delete_model']
 
     # def get_changelist_form(self, request, **kwargs):
@@ -83,12 +91,18 @@ class ProjectUserAdmin(admin.ModelAdmin):
         form = super().get_form(request, obj, **kwargs)
         team = form.base_fields['team']
         user = form.base_fields['user']
-        project = form.base_fields['project']
+        # 2020-05-27
+        # project = form.base_fields['project']
+        survey = form.base_fields['survey']
         shGroup = form.base_fields['shGroup']
 
-        project.widget.can_add_related = False
-        project.widget.can_change_related = False
-        project.widget.can_delete_related = False
+        # 2020-05-27
+        # project.widget.can_add_related = False
+        # project.widget.can_change_related = False
+        # project.widget.can_delete_related = False
+        survey.widget.can_add_related = False
+        survey.widget.can_change_related = False
+        survey.widget.can_delete_related = False
         
         team.widget.can_add_related = False
         team.widget.can_change_related = False
