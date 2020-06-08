@@ -29,7 +29,7 @@ SECRET_KEY = 'oyxb8b(f@r*7bj6+3of@-(8y^lm-o#_e)umxq2)^1#275=!m8*'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['3.17.57.137', '127.0.0.1', 'localhost', '192.168.1.33']
+ALLOWED_HOSTS = ['3.12.84.76', '127.0.0.1', 'localhost', '192.168.1.33']
 
 
 # Application definition
@@ -58,7 +58,7 @@ STATICFILES_DIRS = (
 
 # 1: local 2: prod mode
 SITE_ID = 2
-SITE_URL = 'http://3.17.57.137:3031'
+SITE_URL = 'http://3.12.84.76:3031'
 
 TEMPLATES = [
     {
@@ -256,7 +256,7 @@ JET_THEMES = [
     }
 ]
 
-JET_SIDE_MENU_COMPACT = True
+JET_SIDE_MENU_COMPACT = False
 JET_CHANGE_FORM_SIBLING_LINKS = False
 
 JET_SIDE_MENU_ITEMS = [ # A list of application or custom item dicts
@@ -380,8 +380,8 @@ TINYMCE_DEFAULT_CONFIG = {
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:3000',
     'http://localhost:3001',
-    'http://3.17.57.137:3000',
-    'http://3.17.57.137:3001',
+    'http://3.12.84.76:3000',
+    'http://3.12.84.76:3001',
 ]
 
 # For sendgrid mail
