@@ -130,8 +130,7 @@ class PageViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = DriverSerializer
 
     def list(self, request, *kwargs):
-        serializer = self.get_serializer(self.get_queryset(), many=True)
-        list_drivers = serializer.data
+        
         # drivers = Driver.objects.all().values()
         # list_drivers = [entry for entry in drivers]
         survey_param = ''
@@ -145,6 +144,11 @@ class PageViewSet(viewsets.ReadOnlyModelViewSet):
 
         if t_projectuser_param:
             projectuser_param = int(t_projectuser_param)
+
+        queryset = Driver.objects.filter(survey_id=survey_param)
+        #serializer = self.get_serializer(self.get_queryset(), many=True)
+        serializer = self.get_serializer(queryset, many=True)
+        list_drivers = serializer.data
 
         for i in range(len(list_drivers)):
             if survey_param and isinstance(survey_param, int):

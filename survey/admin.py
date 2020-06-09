@@ -13,6 +13,7 @@ from inline_actions.admin import InlineActionsModelAdminMixin
 from django.utils.translation import ugettext_lazy as _
 from django.conf.urls import include, url
 from django.http import HttpResponse, HttpResponseRedirect
+from django.contrib.auth.models import User
 
 class ProjectAdmin(admin.ModelAdmin):
 
@@ -114,6 +115,9 @@ class SurveyAdmin(InlineActionsModelAdminMixin, admin.ModelAdmin):
     search_fields = ['surveyTitle', 'project']
     list_filter = ['project', 'surveyTitle']
 
+    # def change_view(self, request, object_id, form_url, extra_context):
+    #     return super(SurveyAdmin, self).change_view(self, request, object_id, form_url, extra_context)
+
     def get_urls(self):
         urls = super().get_urls()
         my_urls = [
@@ -124,6 +128,18 @@ class SurveyAdmin(InlineActionsModelAdminMixin, admin.ModelAdmin):
         return my_urls + urls
 
     def reset_driver(self, request):
+        # get superuser ids
+        superusers = User.objects.filter(is_superuser=True).values('id')
+        survey_ids = []
+
+        for i in range(len(superusers)):
+            items = ProjectUser.objects.filter(user_id=superusers[i]['id']).values('survey')
+            for j in range(len(items)):
+                if items[j]['survey'] not in survey_ids:
+                    survey_ids.append(items[j]['survey'])
+
+        
+        
         messages.success(request, 'Driver has been reset.')
         return HttpResponseRedirect("../#/tab/inline_1/")
 
