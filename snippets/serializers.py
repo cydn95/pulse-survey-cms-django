@@ -199,7 +199,7 @@ class SurveySerializer(serializers.ModelSerializer):
         model = Survey
         fields = '__all__'
 
-class ProjectByUserSerializer(serializers.ModelSerializer):
+class SurveyByUserSerializer(serializers.ModelSerializer):
     # project = ProjectSerializer()
     survey = SurveySerializer()
 
@@ -214,7 +214,7 @@ class SHCategorySerializer(serializers.ModelSerializer):
         model = SHCategory
         fields = '__all__'
 
-class UserByProjectSerializer(serializers.ModelSerializer):
+class UserBySurveySerializer(serializers.ModelSerializer):
     # project = ProjectSerializer()
     survey = SurveySerializer()
     user = UserSerializer()
