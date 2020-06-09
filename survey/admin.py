@@ -41,8 +41,6 @@ class ProjectUserInline(InlineActionsMixin, admin.TabularInline):
         obj.save()
         messages.info(request, 'Email invitation has been sent.')
 
-    send_invite.short_description = _("Resent Invitation")
-
     def formfield_for_dbfield(self, db_field, request, **kwargs):
         formfield = super(ProjectUserInline, self).formfield_for_dbfield(db_field, request, **kwargs)
         if db_field.name in ['user', 'team', 'shGroup']:
@@ -56,9 +54,13 @@ class DriverInline(SortableInlineAdminMixin, admin.TabularInline):
     model = Driver
     extra = 0
 
+    template = "admin/survey/edit_inline/driver_tabular.html"
+
 class AMQuestionInline(SortableInlineAdminMixin, admin.TabularInline):
     model = AMQuestion
     extra = 0
+
+    template = "admin/survey/edit_inline/amq_tabular.html"
 
     def formfield_for_dbfield(self, db_field, request, **kwargs):
         formfield = super(AMQuestionInline, self).formfield_for_dbfield(db_field, request, **kwargs)
@@ -72,6 +74,8 @@ class AMQuestionInline(SortableInlineAdminMixin, admin.TabularInline):
 class AOQuestionInline(SortableInlineAdminMixin, admin.TabularInline):
     model = AOQuestion
     extra = 0
+
+    template = "admin/survey/edit_inline/aoq_tabular.html"
 
     def formfield_for_dbfield(self, db_field, request, **kwargs):
         formfield = super(AOQuestionInline, self).formfield_for_dbfield(db_field, request, **kwargs)
