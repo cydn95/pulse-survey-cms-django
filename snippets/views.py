@@ -727,6 +727,34 @@ class SurveyByUserViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(user__id=user)
         return queryset
 
+class ProjectByUserViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+    queryset = ProjectUser.objects.all()
+    serializer_class = SurveyByUserSerializer
+
+    def get_queryset(self):
+        queryset = ProjectUser.objects.all()
+        user = self.request.query_params.get('user', None)
+        if user is not None:
+            queryset = queryset.filter(user__id=user)
+        return queryset
+
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+
+        new_data = []
+        project_ids = []
+        for i in range(len(response.data)):
+            if response.data[i]['survey']['project'] not in project_ids:
+                project_ids.append(response.data[i]['survey']['project'])
+
+        response.data = []
+        for i in range(len(project_ids)):
+            item = model_to_dict(Project.objects.get(id=project_ids[i]))
+            response.data.append(item)
+
+        return response
+
 class UserBySurveyViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
     queryset = ProjectUser.objects.all()
