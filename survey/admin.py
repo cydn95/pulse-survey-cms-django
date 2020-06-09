@@ -181,15 +181,15 @@ class SurveyAdmin(InlineActionsModelAdminMixin, admin.ModelAdmin):
                                         longForm=driver_amqs[j]['longForm'])
                     obj1.save()
 
-                    for a in range(len(amqshgroup)):
-                        o_shgroup = AMQuestionSHGroup(shGroup_id=amqshgroup[a]['shgroup_id'], amQuestion_id=obj1.id)
-                        o_shgroup.save()
-                    for b in range(len(amqoption)):
-                        o_option = AMQuestionOption(option_id=amqoption[b]['option_id'], amQuestion_id=obj1.id)
-                        o_option.save()
-                    for c in range(len(amqskipoption)):
-                        o_skipoption = AMQuestionSkipOption(skipOption_id=amqskipoption[c]['skipoption_id'], amQuestion_id=obj1.id)
-                        o_skipoption.save()
+                    # for a in range(len(amqshgroup)):
+                    #     o_shgroup = AMQuestionSHGroup(shGroup_id=amqshgroup[a]['shgroup_id'], amQuestion_id=obj1.id)
+                    #     o_shgroup.save()
+                    # for b in range(len(amqoption)):
+                    #     o_option = AMQuestionOption(option_id=amqoption[b]['option_id'], amQuestion_id=obj1.id)
+                    #     o_option.save()
+                    # for c in range(len(amqskipoption)):
+                    #     o_skipoption = AMQuestionSkipOption(skipOption_id=amqskipoption[c]['skipoption_id'], amQuestion_id=obj1.id)
+                    #     o_skipoption.save()
 
                 driver_aoqs = AOQuestion.objects.filter(driver_id=std_drivers[i]['id'], survey_id=std_drivers[i]['survey_id']).values()
                 for k in range(len(driver_aoqs)):
@@ -210,20 +210,20 @@ class SurveyAdmin(InlineActionsModelAdminMixin, admin.ModelAdmin):
                                         # shGroup=driver_aoqs[k]['shGroup'],
                                         # option=driver_aoqs[k]['option'],
                                         # skipOption=driver_aoqs[k]['skipOption'],
-                                        amqOrder=driver_aoqs[k]['amqOrder'],
+                                        aoqOrder=driver_aoqs[k]['aoqOrder'],
                                         shortForm=driver_aoqs[k]['shortForm'],
                                         longForm=driver_aoqs[k]['longForm'])
                     obj2.save()
 
-                    for a in range(len(aoqshgroup)):
-                        o_shgroup = AOQuestionSHGroup(shGroup_id=aoqshgroup[a]['shgroup_id'], amQuestion_id=obj2.id)
-                        o_shgroup.save()
-                    for b in range(len(aoqoption)):
-                        o_option = AOQuestionOption(option_id=aoqoption[b]['option_id'], amQuestion_id=obj2.id)
-                        o_option.save()
-                    for c in range(len(aoqskipoption)):
-                        o_skipoption = AOQuestionSkipOption(skipOption_id=aoqskipoption[c]['skipoption_id'], amQuestion_id=obj2.id)
-                        o_skipoption.save()
+                    # for a in range(len(aoqshgroup)):
+                    #     o_shgroup = AOQuestionSHGroup(shGroup_id=aoqshgroup[a]['shgroup_id'], amQuestion_id=obj2.id)
+                    #     o_shgroup.save()
+                    # for b in range(len(aoqoption)):
+                    #     o_option = AOQuestionOption(option_id=aoqoption[b]['option_id'], amQuestion_id=obj2.id)
+                    #     o_option.save()
+                    # for c in range(len(aoqskipoption)):
+                    #     o_skipoption = AOQuestionSkipOption(skipOption_id=aoqskipoption[c]['skipoption_id'], amQuestion_id=obj2.id)
+                    #     o_skipoption.save()
 
         messages.success(request, 'Driver has been reset.')
         return HttpResponseRedirect("../#/tab/inline_1/")
@@ -279,15 +279,15 @@ class SurveyAdmin(InlineActionsModelAdminMixin, admin.ModelAdmin):
                                         longForm=driver_amqs[j]['longForm'])
                     obj1.save()
 
-                    for a in range(len(amqshgroup)):
-                        o_shgroup = AMQuestionSHGroup(shGroup_id=amqshgroup[a]['shgroup_id'], amQuestion_id=obj1.id)
-                        o_shgroup.save()
-                    for b in range(len(amqoption)):
-                        o_option = AMQuestionOption(option_id=amqoption[b]['option_id'], amQuestion_id=obj1.id)
-                        o_option.save()
-                    for c in range(len(amqskipoption)):
-                        o_skipoption = AMQuestionSkipOption(skipOption_id=amqskipoption[c]['skipoption_id'], amQuestion_id=obj1.id)
-                        o_skipoption.save()
+                    # for a in range(len(amqshgroup)):
+                    #     o_shgroup = AMQuestionSHGroup(shGroup_id=amqshgroup[a]['shgroup_id'], amQuestion_id=obj1.id)
+                    #     o_shgroup.save()
+                    # for b in range(len(amqoption)):
+                    #     o_option = AMQuestionOption(option_id=amqoption[b]['option_id'], amQuestion_id=obj1.id)
+                    #     o_option.save()
+                    # for c in range(len(amqskipoption)):
+                    #     o_skipoption = AMQuestionSkipOption(skipOption_id=amqskipoption[c]['skipoption_id'], amQuestion_id=obj1.id)
+                    #     o_skipoption.save()
 
         messages.success(request, 'AM Question has been reset.')
         return HttpResponseRedirect("../#/tab/inline_2/")
@@ -337,20 +337,20 @@ class SurveyAdmin(InlineActionsModelAdminMixin, admin.ModelAdmin):
                                         # shGroup=driver_aoqs[k]['shGroup'],
                                         # option=driver_aoqs[k]['option'],
                                         # skipOption=driver_aoqs[k]['skipOption'],
-                                        amqOrder=driver_aoqs[k]['amqOrder'],
+                                        aoqOrder=driver_aoqs[k]['aoqOrder'],
                                         shortForm=driver_aoqs[k]['shortForm'],
                                         longForm=driver_aoqs[k]['longForm'])
                     obj2.save()
 
-                    for a in range(len(aoqshgroup)):
-                        o_shgroup = AOQuestionSHGroup(shGroup_id=aoqshgroup[a]['shgroup_id'], amQuestion_id=obj2.id)
-                        o_shgroup.save()
-                    for b in range(len(aoqoption)):
-                        o_option = AOQuestionOption(option_id=aoqoption[b]['option_id'], amQuestion_id=obj2.id)
-                        o_option.save()
-                    for c in range(len(aoqskipoption)):
-                        o_skipoption = AOQuestionSkipOption(skipOption_id=aoqskipoption[c]['skipoption_id'], amQuestion_id=obj2.id)
-                        o_skipoption.save()
+                    # for a in range(len(aoqshgroup)):
+                    #     o_shgroup = AOQuestionSHGroup(shGroup_id=aoqshgroup[a]['shgroup_id'], amQuestion_id=obj2.id)
+                    #     o_shgroup.save()
+                    # for b in range(len(aoqoption)):
+                    #     o_option = AOQuestionOption(option_id=aoqoption[b]['option_id'], amQuestion_id=obj2.id)
+                    #     o_option.save()
+                    # for c in range(len(aoqskipoption)):
+                    #     o_skipoption = AOQuestionSkipOption(skipOption_id=aoqskipoption[c]['skipoption_id'], amQuestion_id=obj2.id)
+                    #     o_skipoption.save()
 
         messages.success(request, 'AO Question has been reset.')
         return HttpResponseRedirect("../#/tab/inline_3/")
