@@ -3,7 +3,7 @@ from pathlib import Path
 from email.mime.image import MIMEImage
 
 from snippets.models import Snippet
-from snippets.serializers import NikelMobilePageSerializer, ConfigPageSerializer, UserAvatarSerializer, SHMappingSerializer, ProjectVideoUploadSerializer, AMQuestionSerializer, AOQuestionSerializer, StakeHolderSerializer, SHCategorySerializer, MyMapLayoutStoreSerializer, ProjectMapLayoutStoreSerializer, UserBySurveySerializer, SurveyByUserSerializer, SkipOptionSerializer, DriverSerializer, AOQuestionSerializer, OrganizationSerializer, OptionSerializer, ProjectUserSerializer, SHGroupSerializer, UserSerializer, PageSettingSerializer, PageSerializer, AMResponseSerializer, AMResponseTopicSerializer, AOResponseSerializer, AOResponseTopicSerializer, AOPageSerializer, TeamSerializer
+from snippets.serializers import SurveySerializer, NikelMobilePageSerializer, ConfigPageSerializer, UserAvatarSerializer, SHMappingSerializer, ProjectVideoUploadSerializer, AMQuestionSerializer, AOQuestionSerializer, StakeHolderSerializer, SHCategorySerializer, MyMapLayoutStoreSerializer, ProjectMapLayoutStoreSerializer, UserBySurveySerializer, SurveyByUserSerializer, SkipOptionSerializer, DriverSerializer, AOQuestionSerializer, OrganizationSerializer, OptionSerializer, ProjectUserSerializer, SHGroupSerializer, UserSerializer, PageSettingSerializer, PageSerializer, AMResponseSerializer, AMResponseTopicSerializer, AOResponseSerializer, AOResponseTopicSerializer, AOPageSerializer, TeamSerializer
 from rest_framework import generics, permissions
 from django.contrib.auth.models import User
 from snippets.permissions import IsOwnerOrReadOnly
@@ -22,7 +22,7 @@ from option.models import Option, SkipOption
 from rest_framework import status
 from organization.models import Organization, UserAvatar, UserTeam
 from aboutothers.models import AOQuestion
-from survey.models import Driver, Project, ProjectVideoUpload, ConfigPage, NikelMobilePage
+from survey.models import Survey, Driver, Project, ProjectVideoUpload, ConfigPage, NikelMobilePage
 from rest_framework.views import APIView
 from django.forms.models import model_to_dict
 
@@ -727,6 +727,20 @@ class SurveyByUserViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(user__id=user)
         return queryset
 
+class SurveyViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+    queryset = Survey.objects.all()
+    serializer_class = SurveySerializer
+
+    def get_queryset(self):
+        queryset = Survey.objects.all()
+        project = self.request.query_params.get('project', None)
+        
+        if project is not None:
+            queryset = queryset.filter(project__id=project)    
+        
+        return queryset
+
 class ProjectByUserViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
     queryset = ProjectUser.objects.all()
@@ -811,9 +825,9 @@ class UserBySurveyViewSet(viewsets.ModelViewSet):
         user = self.request.query_params.get('user', None)
         
         if (survey is not None ) & (user is not None):
-            queryset = queryset.filter(project__id=survey, user__id=user)
+            queryset = queryset.filter(survey__id=survey, user__id=user)
         elif survey is not None:
-            queryset = queryset.filter(project__id=survey)    
+            queryset = queryset.filter(survey__id=survey)    
         elif user is not None:
             queryset = queryset.filter(user__id=user)
 
