@@ -122,6 +122,7 @@ INSTALLED_APPS = [
     'filer',
     'easy_thumbnails',
     'tabbed_admin',
+    'inline_actions',
     'djangocms_column',
     'djangocms_file',
     'djangocms_link',

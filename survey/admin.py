@@ -1,4 +1,4 @@
-from django.contrib import admin
+from django.contrib import admin, messages
 from shgroup.models import ProjectUser, SHGroup, SHCategory
 from aboutme.models import AMQuestion
 from aboutothers.models import AOQuestion
@@ -8,6 +8,9 @@ from adminsortable2.admin import SortableAdminMixin, SortableInlineAdminMixin
 from django.utils.html import format_html
 from django.core.urlresolvers import reverse
 from django.utils.safestring import mark_safe
+from inline_actions.admin import InlineActionsMixin
+from inline_actions.admin import InlineActionsModelAdminMixin
+from django.utils.translation import ugettext_lazy as _
 
 class ProjectAdmin(admin.ModelAdmin):
 
@@ -26,13 +29,20 @@ class ProjectAdmin(admin.ModelAdmin):
 class DriverAdmin(SortableAdminMixin, admin.ModelAdmin):
     pass
 
-class ProjectUserInline(admin.TabularInline):
+class ProjectUserInline(InlineActionsMixin, admin.TabularInline):
     model = ProjectUser
     extra = 0
 
-    readonly_fields = ['invite_button']
-    fields = ('user', 'projectUserTitle', 'team', 'shGroup', 'invite_button')
- 
+    #readonly_fields = ['invite_button']
+    #fields = ('user', 'projectUserTitle', 'team', 'shGroup', 'invite_button')
+    inline_actions = ['send_invite']
+
+    def send_invite(self, request, obj, parent_obj=None):
+        obj.save()
+        messages.info(request, 'Email invitation has been sent.')
+
+    send_invite.short_description = _("Resent Invitation")
+
     def formfield_for_dbfield(self, db_field, request, **kwargs):
         formfield = super(ProjectUserInline, self).formfield_for_dbfield(db_field, request, **kwargs)
         if db_field.name in ['user', 'team', 'shGroup']:
@@ -93,7 +103,7 @@ class ConfigPageInline(admin.StackedInline):
     model = ConfigPage
     extra = 0
 
-class SurveyAdmin(admin.ModelAdmin):
+class SurveyAdmin(InlineActionsModelAdminMixin, admin.ModelAdmin):
     list_display = ['id', 'surveyTitle', 'get_client', 'project']
     search_fields = ['surveyTitle', 'project']
     list_filter = ['project', 'surveyTitle']

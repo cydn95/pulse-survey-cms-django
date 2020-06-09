@@ -76,11 +76,6 @@ class ProjectUser(models.Model):
         # return '{0} - {1}'.format(self.project, self.user.username)
         return '{0} - {1}'.format(self.survey, self.user.username)
 
-    def invite_button(self):
-        return mark_safe("<a class='default'>Resend Invite</a>")
-
-    invite_button.short_description = 'Action'
-
     def save(self, *args, **kwargs):
         super(ProjectUser, self).save(*args, **kwargs)
 
