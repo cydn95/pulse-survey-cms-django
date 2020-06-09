@@ -1,7 +1,7 @@
 from django.contrib import admin, messages
 from shgroup.models import ProjectUser, SHGroup, SHCategory
-from aboutme.models import AMQuestion
-from aboutothers.models import AOQuestion
+from aboutme.models import AMQuestion, AMQuestionSHGroup, AMQuestionOption, AMQuestionSkipOption
+from aboutothers.models import AOQuestion, AOQuestionSHGroup, AOQuestionOption, AOQuestionSkipOption
 from .models import Survey, Client, Project, Driver, ConfigPage, NikelMobilePage
 #from gremlin import deleteVertex
 from adminsortable2.admin import SortableAdminMixin, SortableInlineAdminMixin
@@ -129,6 +129,8 @@ class SurveyAdmin(InlineActionsModelAdminMixin, admin.ModelAdmin):
         return my_urls + urls
 
     def reset_driver(self, request):
+        print(self.object_id)
+
         # get superuser ids
         superusers = User.objects.filter(is_superuser=True).values('id')
         survey_ids = []
@@ -155,44 +157,73 @@ class SurveyAdmin(InlineActionsModelAdminMixin, admin.ModelAdmin):
                 obj.save()
 
                 driver_amqs = AMQuestion.objects.filter(driver_id=std_drivers[i]['id'], survey_id=std_drivers[i]['survey_id']).values()
+                print(driver_amqs)
                 for j in range(len(driver_amqs)):
+                    amqshgroup = AMQuestionSHGroup.objects.filter(amQuestion_id=driver_amqs[j]['id']).values()
+                    amqoption = AMQuestionOption.objects.filter(amQuestion_id=driver_amqs[j]['id']).values()
+                    amqskipoption = AMQuestionSkipOption.objects.filter(amQuestion_id=driver_amqs[j]['id']).values()
+
                     obj1 = AMQuestion(survey_id=self.object_id,
                                         driver_id=obj.id, subdriver=driver_amqs[j]['subdriver'],
                                         questionText=driver_amqs[j]['questionText'],
-                                        controlType=driver_amqs[j]['controlType'],
+                                        controlType_id=driver_amqs[j]['controlType_id'],
                                         questionSequence=driver_amqs[j]['questionSequence'],
                                         sliderTextLeft=driver_amqs[j]['sliderTextLeft'],
                                         sliderTextRight=driver_amqs[j]['sliderTextRight'],
                                         skipOptionYN=driver_amqs[j]['skipOptionYN'],
                                         topicPrompt=driver_amqs[j]['topicPrompt'],
                                         commentPrompt=driver_amqs[j]['commentPrompt'],
-                                        shGroup=driver_amqs[j]['shGroup'],
-                                        option=driver_amqs[j]['option'],
-                                        skipOption=driver_amqs[j]['skipOption'],
+                                        # shGroup=driver_amqs[j]['shGroup'],
+                                        # option=driver_amqs[j]['option'],
+                                        # skipOption=driver_amqs[j]['skipOption'],
                                         amqOrder=driver_amqs[j]['amqOrder'],
                                         shortForm=driver_amqs[j]['shortForm'],
                                         longForm=driver_amqs[j]['longForm'])
                     obj1.save()
 
+                    for a in range(len(amqshgroup)):
+                        o_shgroup = AMQuestionSHGroup(shGroup_id=amqshgroup[a]['shGroup_id'], amQuestion_id=obj1.id)
+                        o_shgroup.save()
+                    for b in range(len(amqoption)):
+                        o_option = AMQuestionOption(option_id=amqoption[b]['option_id'], amQuestion_id=obj1.id)
+                        o_option.save()
+                    for c in range(len(amqskipoption)):
+                        o_skipoption = AMQuestionSkipOption(skipOption_id=amqskipoption[c]['skipOption_id'], amQuestion_id=obj1.id)
+                        o_skipoption.save()
+
                 driver_aoqs = AOQuestion.objects.filter(driver_id=std_drivers[i]['id'], survey_id=std_drivers[i]['survey_id']).values()
                 for k in range(len(driver_aoqs)):
+                    aoqshgroup = AOQuestionSHGroup.objects.filter(aoQuestion_id=driver_aoqs[k]['id']).values()
+                    aoqoption = AOQuestionOption.objects.filter(aoQuestion_id=driver_aoqs[k]['id']).values()
+                    aoqskipoption = AOQuestionSkipOption.objects.filter(aoQuestion_id=driver_aoqs[k]['id']).values()
+
                     obj2 = AOQuestion(survey_id=self.object_id,
                                         driver_id=obj.id, subdriver=driver_aoqs[k]['subdriver'],
                                         questionText=driver_aoqs[k]['questionText'],
-                                        controlType=driver_aoqs[k]['controlType'],
+                                        controlType_id=driver_aoqs[k]['controlType_id'],
                                         questionSequence=driver_aoqs[k]['questionSequence'],
                                         sliderTextLeft=driver_aoqs[k]['sliderTextLeft'],
                                         sliderTextRight=driver_aoqs[k]['sliderTextRight'],
                                         skipOptionYN=driver_aoqs[k]['skipOptionYN'],
                                         topicPrompt=driver_aoqs[k]['topicPrompt'],
                                         commentPrompt=driver_aoqs[k]['commentPrompt'],
-                                        shGroup=driver_aoqs[k]['shGroup'],
-                                        option=driver_aoqs[k]['option'],
-                                        skipOption=driver_aoqs[k]['skipOption'],
+                                        # shGroup=driver_aoqs[k]['shGroup'],
+                                        # option=driver_aoqs[k]['option'],
+                                        # skipOption=driver_aoqs[k]['skipOption'],
                                         amqOrder=driver_aoqs[k]['amqOrder'],
                                         shortForm=driver_aoqs[k]['shortForm'],
                                         longForm=driver_aoqs[k]['longForm'])
                     obj2.save()
+
+                    for a in range(len(aoqshgroup)):
+                        o_shgroup = AOQuestionSHGroup(shGroup_id=aoqshgroup[a]['shGroup_id'], amQuestion_id=obj2.id)
+                        o_shgroup.save()
+                    for b in range(len(aoqoption)):
+                        o_option = AOQuestionOption(option_id=aoqoption[b]['option_id'], amQuestion_id=obj2.id)
+                        o_option.save()
+                    for c in range(len(aoqskipoption)):
+                        o_skipoption = AOQuestionSkipOption(skipOption_id=aoqskipoption[c]['skipOption_id'], amQuestion_id=obj2.id)
+                        o_skipoption.save()
 
         messages.success(request, 'Driver has been reset.')
         return HttpResponseRedirect("../#/tab/inline_1/")
@@ -224,24 +255,39 @@ class SurveyAdmin(InlineActionsModelAdminMixin, admin.ModelAdmin):
                 obj.save()
 
                 driver_amqs = AMQuestion.objects.filter(driver_id=std_drivers[i]['id'], survey_id=std_drivers[i]['survey_id']).values()
+                print(driver_amqs)
                 for j in range(len(driver_amqs)):
+                    amqshgroup = AMQuestionSHGroup.objects.filter(amQuestion_id=driver_amqs[j]['id']).values()
+                    amqoption = AMQuestionOption.objects.filter(amQuestion_id=driver_amqs[j]['id']).values()
+                    amqskipoption = AMQuestionSkipOption.objects.filter(amQuestion_id=driver_amqs[j]['id']).values()
+
                     obj1 = AMQuestion(survey_id=self.object_id,
                                         driver_id=obj.id, subdriver=driver_amqs[j]['subdriver'],
                                         questionText=driver_amqs[j]['questionText'],
-                                        controlType=driver_amqs[j]['controlType'],
+                                        controlType_id=driver_amqs[j]['controlType_id'],
                                         questionSequence=driver_amqs[j]['questionSequence'],
                                         sliderTextLeft=driver_amqs[j]['sliderTextLeft'],
                                         sliderTextRight=driver_amqs[j]['sliderTextRight'],
                                         skipOptionYN=driver_amqs[j]['skipOptionYN'],
                                         topicPrompt=driver_amqs[j]['topicPrompt'],
                                         commentPrompt=driver_amqs[j]['commentPrompt'],
-                                        shGroup=driver_amqs[j]['shGroup'],
-                                        option=driver_amqs[j]['option'],
-                                        skipOption=driver_amqs[j]['skipOption'],
+                                        # shGroup=driver_amqs[j]['shGroup'],
+                                        # option=driver_amqs[j]['option'],
+                                        # skipOption=driver_amqs[j]['skipOption'],
                                         amqOrder=driver_amqs[j]['amqOrder'],
                                         shortForm=driver_amqs[j]['shortForm'],
                                         longForm=driver_amqs[j]['longForm'])
                     obj1.save()
+
+                    for a in range(len(amqshgroup)):
+                        o_shgroup = AMQuestionSHGroup(shGroup_id=amqshgroup[a]['shGroup_id'], amQuestion_id=obj1.id)
+                        o_shgroup.save()
+                    for b in range(len(amqoption)):
+                        o_option = AMQuestionOption(option_id=amqoption[b]['option_id'], amQuestion_id=obj1.id)
+                        o_option.save()
+                    for c in range(len(amqskipoption)):
+                        o_skipoption = AMQuestionSkipOption(skipOption_id=amqskipoption[c]['skipOption_id'], amQuestion_id=obj1.id)
+                        o_skipoption.save()
 
         messages.success(request, 'AM Question has been reset.')
         return HttpResponseRedirect("../#/tab/inline_2/")
@@ -274,23 +320,37 @@ class SurveyAdmin(InlineActionsModelAdminMixin, admin.ModelAdmin):
 
                 driver_aoqs = AOQuestion.objects.filter(driver_id=std_drivers[i]['id'], survey_id=std_drivers[i]['survey_id']).values()
                 for k in range(len(driver_aoqs)):
+                    aoqshgroup = AOQuestionSHGroup.objects.filter(aoQuestion_id=driver_aoqs[k]['id']).values()
+                    aoqoption = AOQuestionOption.objects.filter(aoQuestion_id=driver_aoqs[k]['id']).values()
+                    aoqskipoption = AOQuestionSkipOption.objects.filter(aoQuestion_id=driver_aoqs[k]['id']).values()
+
                     obj2 = AOQuestion(survey_id=self.object_id,
                                         driver_id=obj.id, subdriver=driver_aoqs[k]['subdriver'],
                                         questionText=driver_aoqs[k]['questionText'],
-                                        controlType=driver_aoqs[k]['controlType'],
+                                        controlType_id=driver_aoqs[k]['controlType_id'],
                                         questionSequence=driver_aoqs[k]['questionSequence'],
                                         sliderTextLeft=driver_aoqs[k]['sliderTextLeft'],
                                         sliderTextRight=driver_aoqs[k]['sliderTextRight'],
                                         skipOptionYN=driver_aoqs[k]['skipOptionYN'],
                                         topicPrompt=driver_aoqs[k]['topicPrompt'],
                                         commentPrompt=driver_aoqs[k]['commentPrompt'],
-                                        shGroup=driver_aoqs[k]['shGroup'],
-                                        option=driver_aoqs[k]['option'],
-                                        skipOption=driver_aoqs[k]['skipOption'],
+                                        # shGroup=driver_aoqs[k]['shGroup'],
+                                        # option=driver_aoqs[k]['option'],
+                                        # skipOption=driver_aoqs[k]['skipOption'],
                                         amqOrder=driver_aoqs[k]['amqOrder'],
                                         shortForm=driver_aoqs[k]['shortForm'],
                                         longForm=driver_aoqs[k]['longForm'])
                     obj2.save()
+
+                    for a in range(len(aoqshgroup)):
+                        o_shgroup = AOQuestionSHGroup(shGroup_id=aoqshgroup[a]['shGroup_id'], amQuestion_id=obj2.id)
+                        o_shgroup.save()
+                    for b in range(len(aoqoption)):
+                        o_option = AOQuestionOption(option_id=aoqoption[b]['option_id'], amQuestion_id=obj2.id)
+                        o_option.save()
+                    for c in range(len(aoqskipoption)):
+                        o_skipoption = AOQuestionSkipOption(skipOption_id=aoqskipoption[c]['skipOption_id'], amQuestion_id=obj2.id)
+                        o_skipoption.save()
 
         messages.success(request, 'AO Question has been reset.')
         return HttpResponseRedirect("../#/tab/inline_3/")
