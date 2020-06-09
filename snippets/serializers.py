@@ -194,9 +194,15 @@ class ConfigPageSerializer(serializers.ModelSerializer):
         model = ConfigPage
         fields = '__all__'
 
+class SurveySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Survey
+        fields = '__all__'
+
 class ProjectByUserSerializer(serializers.ModelSerializer):
-    project = ProjectSerializer()
-    
+    # project = ProjectSerializer()
+    survey = SurveySerializer()
+
     class Meta:
         model = ProjectUser
         # 2020-05-27
@@ -209,7 +215,8 @@ class SHCategorySerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class UserByProjectSerializer(serializers.ModelSerializer):
-    project = ProjectSerializer()
+    # project = ProjectSerializer()
+    survey = SurveySerializer()
     user = UserSerializer()
     team = TeamSerializer()
     shGroup = SHGroupSerializer()

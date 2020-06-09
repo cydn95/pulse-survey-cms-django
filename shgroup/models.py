@@ -16,6 +16,7 @@ from django.core.mail import send_mail, EmailMultiAlternatives
 from django.template.loader import get_template, render_to_string
 from django.conf import settings
 from django.contrib import messages
+from django.utils.safestring import mark_safe
 
 # Create your models here.
 
@@ -62,6 +63,11 @@ class ProjectUser(models.Model):
     #shCategory = models.ForeignKey(SHCategory, null=True, blank=True)
     shGroup = models.ForeignKey(SHGroup, null=True, blank=True, verbose_name='SHGroup')
 
+    # def send_invite(self):
+    #     return mark_safe("<a class='default' href='#'>Resend Invite</a>")
+
+    # send_invite.short_description = 'Action'
+
     class Meta:
         # unique_together = ['project', 'user']
         unique_together = ['survey', 'user']
@@ -69,6 +75,11 @@ class ProjectUser(models.Model):
     def __str__(self):
         # return '{0} - {1}'.format(self.project, self.user.username)
         return '{0} - {1}'.format(self.survey, self.user.username)
+
+    def invite_button(self):
+        return mark_safe("<a class='default'>Resend Invite</a>")
+
+    invite_button.short_description = 'Action'
 
     def save(self, *args, **kwargs):
         super(ProjectUser, self).save(*args, **kwargs)

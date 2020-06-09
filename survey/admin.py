@@ -9,7 +9,6 @@ from django.utils.html import format_html
 from django.core.urlresolvers import reverse
 from django.utils.safestring import mark_safe
 
-
 class ProjectAdmin(admin.ModelAdmin):
 
     # Search
@@ -31,6 +30,9 @@ class ProjectUserInline(admin.TabularInline):
     model = ProjectUser
     extra = 0
 
+    readonly_fields = ['invite_button']
+    fields = ('user', 'projectUserTitle', 'team', 'shGroup', 'invite_button')
+ 
     def formfield_for_dbfield(self, db_field, request, **kwargs):
         formfield = super(ProjectUserInline, self).formfield_for_dbfield(db_field, request, **kwargs)
         if db_field.name in ['user', 'team', 'shGroup']:

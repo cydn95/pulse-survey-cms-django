@@ -749,14 +749,14 @@ class UserByProjectViewSet(viewsets.ModelViewSet):
             # for item2 in AOResponse.objects.filter(subjectUser_id=response.data[i]['user']['id'], project_id=response.data[i]['project']['id']).values('aoQuestion'):
             #     response.data[i]['ao_response'].append(item2['aoQuestion']) 
             # response.data[i]['ao_answered'] = AOResponse.objects.filter(subjectUser_id=response.data[i]['user']['id'], project_id=response.data[i]['project']['id']).count()
-            for item1 in AMResponse.objects.filter(projectUser_id=response.data[i]['id'], project_id=response.data[i]['project']['id']).values('amQuestion'):
+            for item1 in AMResponse.objects.filter(projectUser_id=response.data[i]['id']).values('amQuestion'):
                 response.data[i]['am_response'].append(item1['amQuestion']) 
-            response.data[i]['am_answered'] = AMResponse.objects.filter(projectUser_id=response.data[i]['id'], project_id=response.data[i]['project']['id']).count()
+            response.data[i]['am_answered'] = AMResponse.objects.filter(projectUser_id=response.data[i]['id']).count()
             response.data[i]['ao_total'] = AOQuestion.objects.count()
             response.data[i]['ao_response'] = []
-            for item2 in AOResponse.objects.filter(subProjectUser_id=response.data[i]['id'], project_id=response.data[i]['project']['id']).values('aoQuestion'):
+            for item2 in AOResponse.objects.filter(subProjectUser_id=response.data[i]['id']).values('aoQuestion'):
                 response.data[i]['ao_response'].append(item2['aoQuestion']) 
-            response.data[i]['ao_answered'] = AOResponse.objects.filter(subProjectUser_id=response.data[i]['id'], project_id=response.data[i]['project']['id']).count()
+            response.data[i]['ao_answered'] = AOResponse.objects.filter(subProjectUser_id=response.data[i]['id']).count()
 
             # 2020-05-20
             response.data[i]['shCategory'] = []
