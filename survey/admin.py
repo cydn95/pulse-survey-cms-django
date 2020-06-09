@@ -11,6 +11,8 @@ from django.utils.safestring import mark_safe
 from inline_actions.admin import InlineActionsMixin
 from inline_actions.admin import InlineActionsModelAdminMixin
 from django.utils.translation import ugettext_lazy as _
+from django.conf.urls import include, url
+from django.http import HttpResponse, HttpResponseRedirect
 
 class ProjectAdmin(admin.ModelAdmin):
 
@@ -111,6 +113,27 @@ class SurveyAdmin(InlineActionsModelAdminMixin, admin.ModelAdmin):
     list_display = ['id', 'surveyTitle', 'get_client', 'project']
     search_fields = ['surveyTitle', 'project']
     list_filter = ['project', 'surveyTitle']
+
+    def get_urls(self):
+        urls = super().get_urls()
+        my_urls = [
+            url(r'resetdriver/', self.reset_driver),
+            url(r'resetamq/', self.reset_amq),
+            url(r'resetaoq/', self.reset_aoq),
+        ]
+        return my_urls + urls
+
+    def reset_driver(self, request):
+        messages.success(request, 'Driver has been reset.')
+        return HttpResponseRedirect("../#/tab/inline_1/")
+
+    def reset_amq(self, request):
+        messages.success(request, 'AM Question has been reset.')
+        return HttpResponseRedirect("../#/tab/inline_2/")
+
+    def reset_aoq(self, request):
+        messages.success(request, 'AO Question has been reset.')
+        return HttpResponseRedirect("../#/tab/inline_3/")
 
     def get_client(self, obj):
         return obj.project.client
