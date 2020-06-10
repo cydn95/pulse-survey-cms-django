@@ -19,7 +19,7 @@ class AOQuestionList(ChangeList):
             model_admin)
 
         # these need to be defined here, and not in MovieAdmin
-        self.list_display = ['action_checkbox', 'aoqOrder', 'questionText', 'driver', 'subdriver', 'controlType', 'sliderTextLeft', 'sliderTextRight', 'shGroup']
+        self.list_display = ['action_checkbox', 'aoqOrder', 'questionText', 'survey', 'driver', 'subdriver', 'controlType', 'sliderTextLeft', 'sliderTextRight', 'shGroup']
         self.list_display_links = ['questionText']
         self.list_editable = ['shGroup', 'option', 'skipOption']
 
@@ -30,7 +30,7 @@ class AOQuestionAdmin(SortableAdminMixin, admin.ModelAdmin):
     # Filter
     list_filter = ['driver', 'controlType', 'shGroup']
     model = AOQuestion
-    list_display = ['aoqOrder', 'questionText', 'driver', 'subdriver', 'controlType', 'sliderTextLeft', 'sliderTextRight', 'longForm', 'shortForm']
+    list_display = ['aoqOrder', 'questionText', 'survey', 'driver', 'subdriver', 'controlType', 'sliderTextLeft', 'sliderTextRight', 'longForm', 'shortForm']
     list_display_links = ['questionText']
     
     def get_changelist_form(self, request, **kwargs):
