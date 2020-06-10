@@ -40,6 +40,7 @@ router.register(r'configpage', views.ConfigPageViewSet)
 router.register(r'nikelmobilepage', views.NikelMobilePageViewSet)
 router.register(r'shmapping', views.SHMappingViewSet)
 router.register(r'useravatar', views.UserAvatarViewSet)
+router.register(r'tooltipguide', views.ToolTipGuideViewSet)
 
 # The API URLs are now determined automatically by the router.
 urlpatterns = [

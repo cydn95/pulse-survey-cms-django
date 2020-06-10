@@ -42,6 +42,7 @@ class NikelMobilePage(models.Model):
     backgroundColor = ColorField(default="#FF0000", blank=True)
     pageContent = HTMLField()
     pageOrder = models.PositiveIntegerField(default=0, blank=False, null=False, verbose_name='Page Order')
+    img = models.FileField(upload_to='uploads/nikel', blank=True)
 
     class Meta(object):
         ordering = ['pageOrder']
@@ -49,6 +50,14 @@ class NikelMobilePage(models.Model):
     def __str__(self):
         return self.pageName
 
+class ToolTipGuide(models.Model):
+    title = models.CharField(max_length=50)
+    content = models.CharField(max_length=1000, blank=True)
+    img = models.FileField(upload_to='uploads/tooltip', blank=True)
+
+    def __str__(self):
+        return self.title
+        
 class Driver(models.Model):
     driverName = models.CharField(max_length=200)
     iconPath = models.CharField(max_length=255, blank=True)
