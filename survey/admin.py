@@ -116,7 +116,8 @@ class SurveyAdmin(InlineActionsModelAdminMixin, admin.ModelAdmin):
     search_fields = ['surveyTitle', 'project']
     list_filter = ['project', 'surveyTitle']
     exclude = ['isStandard']
-    
+    object_id = None
+
     def change_view(self, request, object_id, form_url='', extra_context=None):
 
         self.object_id = object_id
@@ -147,7 +148,7 @@ class SurveyAdmin(InlineActionsModelAdminMixin, admin.ModelAdmin):
 
     def reset_driver(self, request):
         current_survey_id = self.object_id
-        
+
         try:
             current_survey = Survey.objects.get(id=current_survey_id)
             try:
