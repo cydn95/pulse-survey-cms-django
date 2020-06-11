@@ -237,7 +237,7 @@ class SurveyAdmin(InlineActionsModelAdminMixin, admin.ModelAdmin):
             except Survey.DoesNotExist:
                 messages.error(request, 'Unknown errors. Please try again.')
                 return HttpResponseRedirect("../#/tab/inline_1/")
-        except current_survey.DoesNotExist:
+        except Survey.DoesNotExist:
             messages.error(request, 'Unknown errors. Please try again.')
             return HttpResponseRedirect("../#/tab/inline_1/")
 
@@ -316,7 +316,7 @@ class SurveyAdmin(InlineActionsModelAdminMixin, admin.ModelAdmin):
             except Survey.DoesNotExist:
                 messages.error(request, 'Unknown errors. Please try again.')
                 return HttpResponseRedirect("../#/tab/inline_1/")
-        except current_survey.DoesNotExist:
+        except Survey.DoesNotExist:
             messages.error(request, 'Unknown errors. Please try again.')
             return HttpResponseRedirect("../#/tab/inline_1/")
 
@@ -391,7 +391,7 @@ class SurveyAdmin(InlineActionsModelAdminMixin, admin.ModelAdmin):
             except Survey.DoesNotExist:
                 messages.error(request, 'Unknown errors. Please try again.')
                 return HttpResponseRedirect("../#/tab/inline_1/")
-        except current_survey.DoesNotExist:
+        except Survey.DoesNotExist:
             messages.error(request, 'Unknown errors. Please try again.')
             return HttpResponseRedirect("../#/tab/inline_1/")
 
