@@ -118,20 +118,34 @@ class SurveyAdmin(InlineActionsModelAdminMixin, admin.ModelAdmin):
     exclude = ['isStandard']
     object_id = None
 
-    def change_view(self, request, object_id, form_url='', extra_context=None):
+    def get_form(self, request, obj=None, **kwargs):
+        if obj:
+            self.object_id = obj.id
+            self.inlines = [
+                ProjectUserInline,
+                DriverInline,
+                AMQuestionInline,
+                AOQuestionInline,
+                SHGroupInline,
+                SHCategoryInline,
+                ConfigPageInline
+            ]
+        return super(SurveyAdmin, self).get_form(request, obj, **kwargs)
 
-        self.object_id = object_id
-        self.inlines = [
-            ProjectUserInline,
-            DriverInline,
-            AMQuestionInline,
-            AOQuestionInline,
-            SHGroupInline,
-            SHCategoryInline,
-            ConfigPageInline
-        ]
+    # def change_view(self, request, object_id, form_url='', extra_context=None):
 
-        return super(SurveyAdmin, self).change_view(request, object_id, form_url, extra_context)
+    #     # self.object_id = object_id
+    #     self.inlines = [
+    #         ProjectUserInline,
+    #         DriverInline,
+    #         AMQuestionInline,
+    #         AOQuestionInline,
+    #         SHGroupInline,
+    #         SHCategoryInline,
+    #         ConfigPageInline
+    #     ]
+
+    #     return super(SurveyAdmin, self).change_view(request, object_id, form_url, extra_context)
 
     def add_view(self, request, form_url='', extra_context=None):
         self.inlines = []
