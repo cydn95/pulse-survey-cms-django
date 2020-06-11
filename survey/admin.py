@@ -116,11 +116,11 @@ class SurveyAdmin(InlineActionsModelAdminMixin, admin.ModelAdmin):
     search_fields = ['surveyTitle', 'project']
     list_filter = ['project', 'surveyTitle']
     exclude = ['isStandard']
-    object_id = None
+    
 
     def get_form(self, request, obj=None, **kwargs):
         if obj:
-            self.object_id = obj.id
+            
             self.inlines = [
                 ProjectUserInline,
                 DriverInline,
@@ -130,30 +130,14 @@ class SurveyAdmin(InlineActionsModelAdminMixin, admin.ModelAdmin):
                 SHCategoryInline,
                 ConfigPageInline
             ]
+            context = {
+                'object_id': obj.id
+            }
         else:
-            self.object_id = None
-            self.inlines = []
             
+            self.inlines = []
+
         return super(SurveyAdmin, self).get_form(request, obj, **kwargs)
-
-    # def change_view(self, request, object_id, form_url='', extra_context=None):
-
-    #     # self.object_id = object_id
-    #     self.inlines = [
-    #         ProjectUserInline,
-    #         DriverInline,
-    #         AMQuestionInline,
-    #         AOQuestionInline,
-    #         SHGroupInline,
-    #         SHCategoryInline,
-    #         ConfigPageInline
-    #     ]
-
-    #     return super(SurveyAdmin, self).change_view(request, object_id, form_url, extra_context)
-
-    # def add_view(self, request, form_url='', extra_context=None):
-    #     self.inlines = []
-    #     return super(SurveyAdmin, self).add_view(request)
 
     def get_urls(self):
         urls = super().get_urls()
@@ -169,7 +153,7 @@ class SurveyAdmin(InlineActionsModelAdminMixin, admin.ModelAdmin):
         return my_urls + urls
 
     def reset_driver(self, request):
-        current_survey_id = self.object_id
+        current_survey_id = request.GET['id']
 
         try:
             current_survey = Survey.objects.get(id=current_survey_id)
@@ -268,7 +252,7 @@ class SurveyAdmin(InlineActionsModelAdminMixin, admin.ModelAdmin):
         return HttpResponseRedirect("../#/tab/inline_1/")
 
     def reset_amq(self, request):
-        current_survey_id = self.object_id
+        current_survey_id = request.GET['id']
         
         try:
             current_survey = Survey.objects.get(id=current_survey_id)
@@ -347,7 +331,7 @@ class SurveyAdmin(InlineActionsModelAdminMixin, admin.ModelAdmin):
         return HttpResponseRedirect("../#/tab/inline_2/")
 
     def reset_amq_long(self, request):
-        current_survey_id = self.object_id
+        current_survey_id = request.GET['id']
         
         try:
             current_survey = Survey.objects.get(id=current_survey_id)
@@ -426,7 +410,7 @@ class SurveyAdmin(InlineActionsModelAdminMixin, admin.ModelAdmin):
         return HttpResponseRedirect("../#/tab/inline_2/")
 
     def reset_amq_short(self, request):
-        current_survey_id = self.object_id
+        current_survey_id = request.GET['id']
         
         try:
             current_survey = Survey.objects.get(id=current_survey_id)
@@ -505,7 +489,7 @@ class SurveyAdmin(InlineActionsModelAdminMixin, admin.ModelAdmin):
         return HttpResponseRedirect("../#/tab/inline_2/")
 
     def reset_aoq(self, request):
-        current_survey_id = self.object_id
+        current_survey_id = request.GET['id']
         
         try:
             current_survey = Survey.objects.get(id=current_survey_id)
@@ -580,7 +564,7 @@ class SurveyAdmin(InlineActionsModelAdminMixin, admin.ModelAdmin):
         return HttpResponseRedirect("../#/tab/inline_3/")
 
     def reset_aoq_long(self, request):
-        current_survey_id = self.object_id
+        current_survey_id = request.GET['id']
         
         try:
             current_survey = Survey.objects.get(id=current_survey_id)
@@ -655,7 +639,7 @@ class SurveyAdmin(InlineActionsModelAdminMixin, admin.ModelAdmin):
         return HttpResponseRedirect("../#/tab/inline_3/")
 
     def reset_aoq_short(self, request):
-        current_survey_id = self.object_id
+        current_survey_id = request.GET['id']
         
         try:
             current_survey = Survey.objects.get(id=current_survey_id)
