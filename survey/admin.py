@@ -15,7 +15,9 @@ from django.conf.urls import include, url
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.models import User
 from django.core import serializers
-
+from django import forms
+from django.forms import widgets
+     
 class ProjectAdmin(admin.ModelAdmin):
 
     # Search
@@ -116,7 +118,6 @@ class SurveyAdmin(InlineActionsModelAdminMixin, admin.ModelAdmin):
     search_fields = ['surveyTitle', 'project']
     list_filter = ['project', 'surveyTitle']
     exclude = ['isStandard']
-    
 
     def get_form(self, request, obj=None, **kwargs):
         if obj:

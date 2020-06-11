@@ -4,7 +4,13 @@ from .models import AMQuestion, AMQuestionSHGroup, AMQuestionOption, AMQuestionS
 from django.forms import CheckboxSelectMultiple
 from django.contrib.admin.views.main import ChangeList
 from import_export.admin import ImportExportModelAdmin
-
+from django.http import HttpResponse
+from django.http.response import JsonResponse
+from django.utils.encoding import smart_text
+import json
+from django.conf.urls import include, url
+from survey.models import Driver
+from django.core.serializers import serialize
 
 class AMQuestionList(ChangeList):
 
@@ -33,6 +39,29 @@ class AMQuestionAdmin(SortableAdminMixin, admin.ModelAdmin):
     model = AMQuestion
     list_display = ['amqOrder', 'questionText', 'survey', 'driver', 'subdriver', 'controlType', 'sliderTextLeft', 'sliderTextRight', 'longForm', 'shortForm']
     list_display_links = ['questionText']
+
+    def get_urls(self):
+        urls = super().get_urls()
+        my_urls = [
+            url(r'drivers_for_survey/', self.drivers_for_survey),
+        ]
+        return my_urls + urls
+
+    def drivers_for_survey(self, request):
+        if request.GET and 'survey_id' in request.GET:
+            # objs = Driver.objects.filter(survey=request.GET['survey_id'])
+            # print(objs)
+            # ret = []
+            # for o in objs:
+            #     ret.append({'id': o.id, 'name': o.driverName})
+            data = serialize('json', Driver.objects.filter(survey=request.GET['survey_id']))
+
+            return HttpResponse(data, content_type="text/plain")
+        else:
+            return JsonResponse({'error': 'Not Ajax or no GET'})
+
+    class Media:
+        js = ('//ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js', '/static/admin/js/fill_driver.js',)
 
     def get_changelist_form(self, request, **kwargs):
         return AMQuestionForm
