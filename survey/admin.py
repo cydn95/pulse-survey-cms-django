@@ -130,6 +130,10 @@ class SurveyAdmin(InlineActionsModelAdminMixin, admin.ModelAdmin):
                 SHCategoryInline,
                 ConfigPageInline
             ]
+        else:
+            self.object_id = None
+            self.inlines = []
+            
         return super(SurveyAdmin, self).get_form(request, obj, **kwargs)
 
     # def change_view(self, request, object_id, form_url='', extra_context=None):
@@ -147,9 +151,9 @@ class SurveyAdmin(InlineActionsModelAdminMixin, admin.ModelAdmin):
 
     #     return super(SurveyAdmin, self).change_view(request, object_id, form_url, extra_context)
 
-    def add_view(self, request, form_url='', extra_context=None):
-        self.inlines = []
-        return super(SurveyAdmin, self).add_view(request)
+    # def add_view(self, request, form_url='', extra_context=None):
+    #     self.inlines = []
+    #     return super(SurveyAdmin, self).add_view(request)
 
     def get_urls(self):
         urls = super().get_urls()
