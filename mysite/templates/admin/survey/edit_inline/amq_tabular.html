@@ -4,6 +4,22 @@
         {{ inline_admin_formset.formset.management_form }}
         <div class="row" style="padding: 1rem 1rem;">
             <a class="button" id="open_amq_dialog">Reset to Standard AM Questions</a>
+            <div id="confirmAMQDialog" style="display:none">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4>Reset AM Questions</h4>
+                        </div>
+                        <div class="modal-body">
+                            <a class="button" id="reset_amq_standard" href="resetamq">Reset to Standard AM Questions</a>
+                            <a class="button" id="reset_amq_long" href="resetamqlong">Reset to Standard AM Questions
+                                with Long-Form</a>
+                            <a class="button" id="reset_amq_short" href="resetamqshort">Reset to Standard AM Questions
+                                with Short-Form</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         <fieldset class="module {{ inline_admin_formset.classes }}">
             <h2>{{ inline_admin_formset.opts.verbose_name_plural|capfirst }}</h2>
@@ -90,20 +106,7 @@
         </fieldset>
     </div>
 </div>
-<div id="confirmAMQDialog" style="display:none">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4>Reset AM Questions</h4>
-            </div>
-            <div class="modal-body">
-                <a class="button" id="reset_amq_standard" href="resetamq">Reset to Standard AM Questions</a>
-                <a class="button" id="reset_amq_long" href="resetamqlong">Reset to Standard AM Questions with Long-Form</a>
-                <a class="button" id="reset_amq_short" href="resetamqshort">Reset to Standard AM Questions with Short-Form</a>
-            </div>
-        </div>
-    </div>
-</div>
+
 <script type="application/json" class="inline-tabular-config">
     {
         "prefix": "{{ inline_admin_formset.formset.prefix|escapejs }}",
