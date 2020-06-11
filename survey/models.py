@@ -20,7 +20,7 @@ class Project(models.Model):
 class Survey(models.Model):
     project = models.ForeignKey(Project, on_delete=models.PROTECT)
     surveyTitle = models.CharField(max_length=200)
-    isStandard = models.BooleanField(auto_created=False)
+    isStandard = models.BooleanField(default=False)
 
     def __str__(self):
         return self.surveyTitle
