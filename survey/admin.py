@@ -142,7 +142,11 @@ class SurveyAdmin(InlineActionsModelAdminMixin, admin.ModelAdmin):
         my_urls = [
             url(r'resetdriver/', self.reset_driver),
             url(r'resetamq/', self.reset_amq),
+            url(r'resetamqlong/', self.reset_amq_long),
+            url(r'resetamqshort/', self.reset_amq_short),
             url(r'resetaoq/', self.reset_aoq),
+            url(r'resetaoqlong/', self.reset_aoq_long),
+            url(r'resetaoqshort/', self.reset_aoq_short),
         ]
         return my_urls + urls
 
@@ -324,6 +328,164 @@ class SurveyAdmin(InlineActionsModelAdminMixin, admin.ModelAdmin):
         messages.success(request, 'AM Question has been reset.')
         return HttpResponseRedirect("../#/tab/inline_2/")
 
+    def reset_amq_long(self, request):
+        current_survey_id = self.object_id
+        
+        try:
+            current_survey = Survey.objects.get(id=current_survey_id)
+            try:
+                std_survey = Survey.objects.get(isStandard=True)
+                
+                if current_survey.id != std_survey.id:
+                    AMQuestion.objects.filter(survey_id=current_survey.id).delete()
+                    # AOQuestion.objects.filter(survey_id=current_survey.id).delete()
+                    # Driver.objects.filter(survey_id=current_survey.id).delete()
+                    
+                    try:
+                        std_driver = Driver.objects.filter(survey_id=std_survey.id).values()
+                        print(std_driver)
+                        for i in range(len(std_driver)):
+                            obj = None
+                            try:
+                                obj = Driver.objects.get(driverName=std_driver[i]['driverName'],
+                                                    iconPath=std_driver[i]['iconPath'],
+                                                    driveOrder=std_driver[i]['driveOrder'],
+                                                    survey=current_survey)
+                            except Driver.DoesNotExist:
+                                obj = Driver(driverName=std_driver[i]['driverName'],
+                                        iconPath=std_driver[i]['iconPath'],
+                                        driveOrder=std_driver[i]['driveOrder'],
+                                        survey_id=current_survey.id)
+                                obj.save()
+
+                            driver_id = obj.id
+
+                            std_amq = AMQuestion.objects.filter(survey_id=std_survey.id, driver_id=std_driver[i]['id'])
+
+                            for j in range(len(std_amq)):
+                                amq_obj = AMQuestion(survey=current_survey, driver=obj, 
+                                                subdriver=std_amq[j].subdriver,
+                                                questionText=std_amq[j].questionText,
+                                                controlType_id=std_amq[j].controlType_id,
+                                                questionSequence=std_amq[j].questionSequence,
+                                                sliderTextLeft=std_amq[j].sliderTextLeft,
+                                                sliderTextRight=std_amq[j].sliderTextRight,
+                                                skipOptionYN=std_amq[j].skipOptionYN,
+                                                topicPrompt=std_amq[j].topicPrompt,
+                                                commentPrompt=std_amq[j].commentPrompt,
+                                                #shGroup=std_amq[j].shGroup,
+                                                #option=std_amq[j].option,
+                                                #skipOption=std_amq[j].skipOption,
+                                                amqOrder=std_amq[j].amqOrder,
+                                                shortForm=False,
+                                                longForm=True)
+                                amq_obj.save()
+                                stdamq_shgroup = std_amq[j].shGroup.all()
+                                for a in range(len(stdamq_shgroup)):
+                                    amq_obj.shGroup.add(stdamq_shgroup[a])
+                                stdamq_option = std_amq[j].option.all()
+                                for b in range(len(stdamq_option)):
+                                    amq_obj.option.add(stdamq_option[b])
+                                stdamq_skipoption = std_amq[j].skipOption.all()
+                                for c in range(len(stdamq_skipoption)):
+                                    amq_obj.skipOption.add(stdamq_skipoption[c])
+
+                    except Driver.DoesNotExist:
+                        messages.error(request, 'Standard Driver doesn\'t exist.')
+                        return HttpResponseRedirect("../#/tab/inline_1/")
+                else:
+                    messages.info(request, 'This is the standard survey.')
+                    return HttpResponseRedirect("../#/tab/inline_2/")
+
+            except Survey.DoesNotExist:
+                messages.error(request, 'Unknown errors. Please try again.')
+                return HttpResponseRedirect("../#/tab/inline_1/")
+        except Survey.DoesNotExist:
+            messages.error(request, 'Unknown errors. Please try again.')
+            return HttpResponseRedirect("../#/tab/inline_1/")
+
+        messages.success(request, 'AM Question has been reset.')
+        return HttpResponseRedirect("../#/tab/inline_2/")
+
+    def reset_amq_short(self, request):
+        current_survey_id = self.object_id
+        
+        try:
+            current_survey = Survey.objects.get(id=current_survey_id)
+            try:
+                std_survey = Survey.objects.get(isStandard=True)
+                
+                if current_survey.id != std_survey.id:
+                    AMQuestion.objects.filter(survey_id=current_survey.id).delete()
+                    # AOQuestion.objects.filter(survey_id=current_survey.id).delete()
+                    # Driver.objects.filter(survey_id=current_survey.id).delete()
+                    
+                    try:
+                        std_driver = Driver.objects.filter(survey_id=std_survey.id).values()
+                        print(std_driver)
+                        for i in range(len(std_driver)):
+                            obj = None
+                            try:
+                                obj = Driver.objects.get(driverName=std_driver[i]['driverName'],
+                                                    iconPath=std_driver[i]['iconPath'],
+                                                    driveOrder=std_driver[i]['driveOrder'],
+                                                    survey=current_survey)
+                            except Driver.DoesNotExist:
+                                obj = Driver(driverName=std_driver[i]['driverName'],
+                                        iconPath=std_driver[i]['iconPath'],
+                                        driveOrder=std_driver[i]['driveOrder'],
+                                        survey_id=current_survey.id)
+                                obj.save()
+
+                            driver_id = obj.id
+
+                            std_amq = AMQuestion.objects.filter(survey_id=std_survey.id, driver_id=std_driver[i]['id'])
+
+                            for j in range(len(std_amq)):
+                                amq_obj = AMQuestion(survey=current_survey, driver=obj, 
+                                                subdriver=std_amq[j].subdriver,
+                                                questionText=std_amq[j].questionText,
+                                                controlType_id=std_amq[j].controlType_id,
+                                                questionSequence=std_amq[j].questionSequence,
+                                                sliderTextLeft=std_amq[j].sliderTextLeft,
+                                                sliderTextRight=std_amq[j].sliderTextRight,
+                                                skipOptionYN=std_amq[j].skipOptionYN,
+                                                topicPrompt=std_amq[j].topicPrompt,
+                                                commentPrompt=std_amq[j].commentPrompt,
+                                                #shGroup=std_amq[j].shGroup,
+                                                #option=std_amq[j].option,
+                                                #skipOption=std_amq[j].skipOption,
+                                                amqOrder=std_amq[j].amqOrder,
+                                                shortForm=True,
+                                                longForm=False)
+                                amq_obj.save()
+                                stdamq_shgroup = std_amq[j].shGroup.all()
+                                for a in range(len(stdamq_shgroup)):
+                                    amq_obj.shGroup.add(stdamq_shgroup[a])
+                                stdamq_option = std_amq[j].option.all()
+                                for b in range(len(stdamq_option)):
+                                    amq_obj.option.add(stdamq_option[b])
+                                stdamq_skipoption = std_amq[j].skipOption.all()
+                                for c in range(len(stdamq_skipoption)):
+                                    amq_obj.skipOption.add(stdamq_skipoption[c])
+
+                    except Driver.DoesNotExist:
+                        messages.error(request, 'Standard Driver doesn\'t exist.')
+                        return HttpResponseRedirect("../#/tab/inline_1/")
+                else:
+                    messages.info(request, 'This is the standard survey.')
+                    return HttpResponseRedirect("../#/tab/inline_2/")
+
+            except Survey.DoesNotExist:
+                messages.error(request, 'Unknown errors. Please try again.')
+                return HttpResponseRedirect("../#/tab/inline_1/")
+        except Survey.DoesNotExist:
+            messages.error(request, 'Unknown errors. Please try again.')
+            return HttpResponseRedirect("../#/tab/inline_1/")
+
+        messages.success(request, 'AM Question has been reset.')
+        return HttpResponseRedirect("../#/tab/inline_2/")
+
     def reset_aoq(self, request):
         current_survey_id = self.object_id
         
@@ -371,6 +533,156 @@ class SurveyAdmin(InlineActionsModelAdminMixin, admin.ModelAdmin):
                                                 aoqOrder=std_aoq[k].aoqOrder,
                                                 shortForm=std_aoq[k].shortForm,
                                                 longForm=std_aoq[k].longForm)
+                                aoq_obj.save()
+                                stdaoq_shgroup = std_aoq[k].shGroup.all()
+                                for a in range(len(stdaoq_shgroup)):
+                                    aoq_obj.shGroup.add(stdaoq_shgroup[a])
+                                stdaoq_option = std_aoq[k].option.all()
+                                for b in range(len(stdaoq_option)):
+                                    aoq_obj.option.add(stdaoq_option[b])
+                                stdaoq_skipoption = std_aoq[k].skipOption.all()
+                                for c in range(len(stdaoq_skipoption)):
+                                    aoq_obj.skipOption.add(stdaoq_skipoption[c])
+
+                    except Driver.DoesNotExist:
+                        messages.error(request, 'Standard Driver doesn\'t exist.')
+                        return HttpResponseRedirect("../#/tab/inline_1/")
+                else:
+                    messages.info(request, 'This is the standard survey.')
+                    return HttpResponseRedirect("../#/tab/inline_3/")
+
+            except Survey.DoesNotExist:
+                messages.error(request, 'Unknown errors. Please try again.')
+                return HttpResponseRedirect("../#/tab/inline_1/")
+        except Survey.DoesNotExist:
+            messages.error(request, 'Unknown errors. Please try again.')
+            return HttpResponseRedirect("../#/tab/inline_1/")
+
+        messages.success(request, 'AO Question has been reset.')
+        return HttpResponseRedirect("../#/tab/inline_3/")
+
+    def reset_aoq_long(self, request):
+        current_survey_id = self.object_id
+        
+        try:
+            current_survey = Survey.objects.get(id=current_survey_id)
+            try:
+                std_survey = Survey.objects.get(isStandard=True)
+
+                if current_survey.id != std_survey.id:
+                    # AMQuestion.objects.filter(survey_id=current_survey.id).delete()
+                    AOQuestion.objects.filter(survey_id=current_survey.id).delete()
+                    # Driver.objects.filter(survey_id=current_survey.id).delete()
+                    
+                    try:
+                        std_driver = Driver.objects.filter(survey_id=std_survey.id).values()
+                        print(std_driver)
+                        for i in range(len(std_driver)):
+                            obj = None
+                            try:
+                                obj = Driver.objects.get(driverName=std_driver[i]['driverName'],
+                                                    iconPath=std_driver[i]['iconPath'],
+                                                    driveOrder=std_driver[i]['driveOrder'],
+                                                    survey=current_survey)
+                            except Driver.DoesNotExist:
+                                obj = Driver(driverName=std_driver[i]['driverName'],
+                                        iconPath=std_driver[i]['iconPath'],
+                                        driveOrder=std_driver[i]['driveOrder'],
+                                        survey_id=current_survey.id)
+                                obj.save()
+
+                            driver_id = obj.id
+                            
+                            std_aoq = AOQuestion.objects.filter(survey_id=std_survey.id, driver_id=std_driver[i]['id'])
+                            for k in range(len(std_aoq)):
+                                aoq_obj = AOQuestion(survey=current_survey, driver=obj, 
+                                                subdriver=std_aoq[k].subdriver,
+                                                questionText=std_aoq[k].questionText,
+                                                controlType_id=std_aoq[k].controlType_id,
+                                                questionSequence=std_aoq[k].questionSequence,
+                                                sliderTextLeft=std_aoq[k].sliderTextLeft,
+                                                sliderTextRight=std_aoq[k].sliderTextRight,
+                                                skipOptionYN=std_aoq[k].skipOptionYN,
+                                                topicPrompt=std_aoq[k].topicPrompt,
+                                                commentPrompt=std_aoq[k].commentPrompt,
+                                                aoqOrder=std_aoq[k].aoqOrder,
+                                                shortForm=False,
+                                                longForm=True)
+                                aoq_obj.save()
+                                stdaoq_shgroup = std_aoq[k].shGroup.all()
+                                for a in range(len(stdaoq_shgroup)):
+                                    aoq_obj.shGroup.add(stdaoq_shgroup[a])
+                                stdaoq_option = std_aoq[k].option.all()
+                                for b in range(len(stdaoq_option)):
+                                    aoq_obj.option.add(stdaoq_option[b])
+                                stdaoq_skipoption = std_aoq[k].skipOption.all()
+                                for c in range(len(stdaoq_skipoption)):
+                                    aoq_obj.skipOption.add(stdaoq_skipoption[c])
+
+                    except Driver.DoesNotExist:
+                        messages.error(request, 'Standard Driver doesn\'t exist.')
+                        return HttpResponseRedirect("../#/tab/inline_1/")
+                else:
+                    messages.info(request, 'This is the standard survey.')
+                    return HttpResponseRedirect("../#/tab/inline_3/")
+
+            except Survey.DoesNotExist:
+                messages.error(request, 'Unknown errors. Please try again.')
+                return HttpResponseRedirect("../#/tab/inline_1/")
+        except Survey.DoesNotExist:
+            messages.error(request, 'Unknown errors. Please try again.')
+            return HttpResponseRedirect("../#/tab/inline_1/")
+
+        messages.success(request, 'AO Question has been reset.')
+        return HttpResponseRedirect("../#/tab/inline_3/")
+
+    def reset_aoq_short(self, request):
+        current_survey_id = self.object_id
+        
+        try:
+            current_survey = Survey.objects.get(id=current_survey_id)
+            try:
+                std_survey = Survey.objects.get(isStandard=True)
+
+                if current_survey.id != std_survey.id:
+                    # AMQuestion.objects.filter(survey_id=current_survey.id).delete()
+                    AOQuestion.objects.filter(survey_id=current_survey.id).delete()
+                    # Driver.objects.filter(survey_id=current_survey.id).delete()
+                    
+                    try:
+                        std_driver = Driver.objects.filter(survey_id=std_survey.id).values()
+                        print(std_driver)
+                        for i in range(len(std_driver)):
+                            obj = None
+                            try:
+                                obj = Driver.objects.get(driverName=std_driver[i]['driverName'],
+                                                    iconPath=std_driver[i]['iconPath'],
+                                                    driveOrder=std_driver[i]['driveOrder'],
+                                                    survey=current_survey)
+                            except Driver.DoesNotExist:
+                                obj = Driver(driverName=std_driver[i]['driverName'],
+                                        iconPath=std_driver[i]['iconPath'],
+                                        driveOrder=std_driver[i]['driveOrder'],
+                                        survey_id=current_survey.id)
+                                obj.save()
+
+                            driver_id = obj.id
+                            
+                            std_aoq = AOQuestion.objects.filter(survey_id=std_survey.id, driver_id=std_driver[i]['id'])
+                            for k in range(len(std_aoq)):
+                                aoq_obj = AOQuestion(survey=current_survey, driver=obj, 
+                                                subdriver=std_aoq[k].subdriver,
+                                                questionText=std_aoq[k].questionText,
+                                                controlType_id=std_aoq[k].controlType_id,
+                                                questionSequence=std_aoq[k].questionSequence,
+                                                sliderTextLeft=std_aoq[k].sliderTextLeft,
+                                                sliderTextRight=std_aoq[k].sliderTextRight,
+                                                skipOptionYN=std_aoq[k].skipOptionYN,
+                                                topicPrompt=std_aoq[k].topicPrompt,
+                                                commentPrompt=std_aoq[k].commentPrompt,
+                                                aoqOrder=std_aoq[k].aoqOrder,
+                                                shortForm=True,
+                                                longForm=False)
                                 aoq_obj.save()
                                 stdaoq_shgroup = std_aoq[k].shGroup.all()
                                 for a in range(len(stdaoq_shgroup)):
