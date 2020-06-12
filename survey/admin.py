@@ -135,7 +135,6 @@ class SurveyAdmin(InlineActionsModelAdminMixin, admin.ModelAdmin):
                 'object_id': obj.id
             }
         else:
-            
             self.inlines = []
 
         return super(SurveyAdmin, self).get_form(request, obj, **kwargs)

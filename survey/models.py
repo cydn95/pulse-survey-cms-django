@@ -52,10 +52,11 @@ class NikelMobilePage(models.Model):
         return self.pageName
 
 class ToolTipGuide(models.Model):
-    place = models.CharField(max_length=50, blank=True)
+    place = models.CharField(max_length=50)
     title = models.CharField(max_length=50)
-    content = models.CharField(max_length=1000, blank=True)
+    content = models.CharField(max_length=1000)
     img = models.FileField(upload_to='uploads/tooltip', blank=True)
+    group = models.CharField(max_length=50)
 
     def __str__(self):
         return self.title
