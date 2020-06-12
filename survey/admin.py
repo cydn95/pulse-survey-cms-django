@@ -2,7 +2,7 @@ from django.contrib import admin, messages
 from shgroup.models import ProjectUser, SHGroup, SHCategory
 from aboutme.models import AMQuestion, AMQuestionSHGroup, AMQuestionOption, AMQuestionSkipOption
 from aboutothers.models import AOQuestion, AOQuestionSHGroup, AOQuestionOption, AOQuestionSkipOption
-from .models import Survey, Client, Project, Driver, ConfigPage, NikelMobilePage
+from .models import Survey, Client, Project, Driver, ConfigPage, NikelMobilePage, ToolTipGuide
 #from gremlin import deleteVertex
 from adminsortable2.admin import SortableAdminMixin, SortableInlineAdminMixin
 from django.utils.html import format_html
@@ -33,6 +33,9 @@ class ProjectAdmin(admin.ModelAdmin):
     # actions = ['delete_model']
         
 class DriverAdmin(SortableAdminMixin, admin.ModelAdmin):
+    pass
+
+class ToolTipGuideAdmin(SortableAdminMixin, admin.ModelAdmin):
     pass
 
 class ProjectUserInline(InlineActionsMixin, admin.TabularInline):
@@ -757,4 +760,5 @@ admin.site.register(Client, ClientAdmin)
 admin.site.register(ConfigPage)
 admin.site.register(Project, ProjectAdmin)
 admin.site.register(Driver, DriverAdmin)
+admin.site.register(ToolTipGuide, ToolTipGuideAdmin)
 admin.site.register(NikelMobilePage, NikelMobilePageAdmin)

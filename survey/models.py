@@ -57,7 +57,11 @@ class ToolTipGuide(models.Model):
     content = models.CharField(max_length=1000)
     img = models.FileField(upload_to='uploads/tooltip', blank=True)
     group = models.CharField(max_length=50)
+    tooltipOrder = models.PositiveIntegerField(default=0, blank=False, null=False, verbose_name='Tooltip Order')
 
+    class Meta(object):
+        ordering = ['tooltipOrder']
+        
     def __str__(self):
         return self.title
 
