@@ -19,6 +19,8 @@ function fill_drivers(survey_id) {
 }
 
 window.addEventListener("load", function() {
+    $("#id_survey").prop("selectedIndex", 1).val();
+    
     fill_drivers($("#id_survey").val());
     (function($) {
         $("#id_survey").change(function () {
