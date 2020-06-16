@@ -71,7 +71,7 @@ class ProjectUserInline(InlineActionsMixin, admin.TabularInline):
             
         if db_field.name == 'team':
             if self_proj_pub_id is not None:
-                formfield.queryset = formfield.queryset.filter(project_id=self_proj_pub_id.id)
+                formfield.queryset = formfield.queryset.filter(project_id=self_proj_pub_id.project_id)
             else:
                 formfield.queryset = formfield.queryset.none()
 
