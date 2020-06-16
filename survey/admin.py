@@ -152,7 +152,8 @@ class ConfigPageInline(admin.StackedInline):
     model = ConfigPage
     extra = 0
 
-class SurveyAdmin(InlineActionsModelAdminMixin, admin.ModelAdmin):
+# class SurveyAdmin(InlineActionsModelAdminMixin, admin.ModelAdmin):
+class SurveyAdmin(admin.ModelAdmin):
     list_display = ['id', 'surveyTitle', 'get_client', 'project']
     search_fields = ['surveyTitle', 'project']
     list_filter = ['project', 'surveyTitle']
