@@ -33,7 +33,10 @@ class ProjectAdmin(admin.ModelAdmin):
     # actions = ['delete_model']
         
 class DriverAdmin(SortableAdminMixin, admin.ModelAdmin):
-    pass
+    search_fields = ['driverName']
+    list_filter = ['survey']
+    list_display = ['driverName', 'survey', 'iconPath']
+    model = Driver
 
 class ToolTipGuideAdmin(SortableAdminMixin, admin.ModelAdmin):
     pass
