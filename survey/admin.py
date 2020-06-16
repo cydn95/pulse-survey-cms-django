@@ -139,6 +139,8 @@ class SHCategoryInline(admin.TabularInline):
     model = SHCategory
     extra = 0
 
+    template = "admin/survey/edit_inline/shcategory_tabular.html"
+
     def formfield_for_dbfield(self, db_field, request, **kwargs):
         formfield = super(SHCategoryInline, self).formfield_for_dbfield(db_field, request, **kwargs)
         if db_field.name in ['mapType']:
@@ -189,8 +191,49 @@ class SurveyAdmin(admin.ModelAdmin):
             url(r'resetaoq/', self.reset_aoq),
             url(r'resetaoqlong/', self.reset_aoq_long),
             url(r'resetaoqshort/', self.reset_aoq_short),
+            url(r'resetshcategory/', self.reset_shcategory),
         ]
         return my_urls + urls
+
+    def reset_shcategory(self, request):
+        current_survey_id = request.GET['id']
+
+        try:
+            current_survey = Survey.objects.get(id=current_survey_id)
+            try:
+                std_survey = Survey.objects.get(isStandard=True)
+
+                if current_survey.id != std_survey.id:
+                    SHCategory.objects.filter(survey_id=current_survey.id).delete()
+
+                    try:
+                        std_shcategory = SHCategory.objects.filter(survey_id=std_survey.id).values()
+
+                        for i in range(len(std_shcategory)):
+                            obj = SHCategory(survey_id=current_survey.id,
+                                        SHCategoryName=std_shcategory[i]['SHCategoryName'],
+                                        SHCategoryDesc=std_shcategory[i]['SHCategoryDesc'],
+                                        mapType_id=std_shcategory[i]['mapType_id'],
+                                        colour=std_shcategory[i]['colour'],
+                                        icon=std_shcategory[i]['icon'])
+                            obj.save()
+                    except SHCategory.DoesNotExist:
+                        messages.error(request, 'Standard SHCategory doesn\'t exist.')
+                        return HttpResponseRedirect("../#/tab/inline_5/")
+                else:
+                    messages.info(request, 'This is the standard SHCategory.')
+                    return HttpResponseRedirect("../#/tab/inline_5/")
+
+            except Survey.DoesNotExist:
+                messages.error(request, 'Unknown errors. Please try again.')
+                return HttpResponseRedirect("../#/tab/inline_5/")
+
+        except Survey.DoesNotExist:
+            messages.error(request, 'Unknown errors. Please try again.')
+            return HttpResponseRedirect("../#/tab/inline_5/")
+
+        messages.success(request, 'SHCategory has been reset.')
+        return HttpResponseRedirect("../#/tab/inline_5/")
 
     def reset_driver(self, request):
         current_survey_id = request.GET['id']
