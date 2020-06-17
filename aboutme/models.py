@@ -11,7 +11,7 @@ from django import forms
 
 # Create your models here.
 class AMQuestion(models.Model):
-    survey = models.ForeignKey(Survey, on_delete=models.PROTECT)
+    survey = models.ForeignKey(Survey, on_delete=models.CASCADE)
     driver = models.ForeignKey(Driver, on_delete=models.SET_NULL, null=True, blank=True)
     subdriver = models.CharField(max_length=50, blank=True)
     questionText = models.CharField(max_length=1000)
@@ -44,26 +44,26 @@ class AMQuestionForm(ModelForm):
     skipOption = forms.ModelMultipleChoiceField(queryset=SkipOption.objects.all(), required=False)
 
 class AMQuestionSHGroup(models.Model):
-    shGroup = models.ForeignKey(SHGroup, on_delete=models.PROTECT)
-    amQuestion = models.ForeignKey(AMQuestion, on_delete=models.PROTECT)
+    shGroup = models.ForeignKey(SHGroup, on_delete=models.CASCADE)
+    amQuestion = models.ForeignKey(AMQuestion, on_delete=models.CASCADE)
 
 class AMQuestionOption(models.Model):
-    option = models.ForeignKey(Option, on_delete=models.PROTECT)
-    amQuestion = models.ForeignKey(AMQuestion, on_delete=models.PROTECT)
+    option = models.ForeignKey(Option, on_delete=models.CASCADE)
+    amQuestion = models.ForeignKey(AMQuestion, on_delete=models.CASCADE)
 
 class AMQuestionSkipOption(models.Model):
-    skipOption = models.ForeignKey(SkipOption, on_delete=models.PROTECT)
-    amQuestion = models.ForeignKey(AMQuestion, on_delete=models.PROTECT)
+    skipOption = models.ForeignKey(SkipOption, on_delete=models.CASCADE)
+    amQuestion = models.ForeignKey(AMQuestion, on_delete=models.CASCADE)
     
 class AMResponse(models.Model):
     # update user, subjectuser to projectUser, subjectProjectUser     2020-05-20
-    # user = models.ForeignKey(User, on_delete=models.PROTECT, related_name="amUser")
-    # subjectUser = models.ForeignKey(User, on_delete=models.PROTECT, related_name="amSubjectUser")
-    projectUser = models.ForeignKey(ProjectUser, on_delete=models.PROTECT, related_name="amProjectUser")
-    subProjectUser = models.ForeignKey(ProjectUser, on_delete=models.PROTECT, related_name="amSubProjectUser")
-    survey = models.ForeignKey(Survey, on_delete=models.PROTECT)
-    project = models.ForeignKey(Project, on_delete=models.PROTECT)
-    amQuestion = models.ForeignKey(AMQuestion, on_delete=models.PROTECT, verbose_name='Question')
+    # user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="amUser")
+    # subjectUser = models.ForeignKey(User, on_delete=models.CASCADE, related_name="amSubjectUser")
+    projectUser = models.ForeignKey(ProjectUser, on_delete=models.CASCADE, related_name="amProjectUser")
+    subProjectUser = models.ForeignKey(ProjectUser, on_delete=models.CASCADE, related_name="amSubProjectUser")
+    survey = models.ForeignKey(Survey, on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    amQuestion = models.ForeignKey(AMQuestion, on_delete=models.CASCADE, verbose_name='Question')
     controlType = models.CharField(max_length=30)
     integerValue = models.PositiveIntegerField(blank=True, verbose_name='Answer(Int)')
     topicValue = models.TextField(blank=True, verbose_name='Answer(Text)')
@@ -73,12 +73,12 @@ class AMResponse(models.Model):
     commentTags = models.TextField(blank=True)
 
 class AMResponseTopic(models.Model):
-    # amResponse = models.ForeignKey(AMResponse, on_delete=models.PROTECT)
-    amQuestion = models.ForeignKey(AMQuestion, on_delete=models.PROTECT)
-    responseUser = models.ForeignKey(ProjectUser, on_delete=models.PROTECT)
+    # amResponse = models.ForeignKey(AMResponse, on_delete=models.CASCADE)
+    amQuestion = models.ForeignKey(AMQuestion, on_delete=models.CASCADE)
+    responseUser = models.ForeignKey(ProjectUser, on_delete=models.CASCADE)
     topicName = models.CharField(max_length=255, blank=True)
     topicComment = models.CharField(max_length=255, blank=True)
     
 class PageAMQuestion(models.Model):
     pageSetting = models.ForeignKey(PageSetting, related_name="ampagesetting", on_delete=models.SET_NULL, default=None, blank=True, null=True)
-    amQuestion = models.ForeignKey(AMQuestion, on_delete=models.PROTECT)
+    amQuestion = models.ForeignKey(AMQuestion, on_delete=models.CASCADE)

@@ -11,7 +11,7 @@ from django import forms
 
 # Create your models here.
 class AOQuestion(models.Model):
-    survey = models.ForeignKey(Survey, on_delete=models.PROTECT)
+    survey = models.ForeignKey(Survey, on_delete=models.CASCADE)
     driver = models.ForeignKey(Driver, on_delete=models.SET_NULL, null=True, blank=True)
     subdriver = models.CharField(max_length=50, blank=True)
     questionText = models.CharField(max_length=1000)
@@ -43,27 +43,27 @@ class AOQuestionForm(ModelForm):
     skipOption = forms.ModelMultipleChoiceField(queryset=SkipOption.objects.all(), required=False)
 
 class AOQuestionSHGroup(models.Model):
-    aoQuestion = models.ForeignKey(AOQuestion, on_delete=models.PROTECT)
-    shGroup = models.ForeignKey(SHGroup, on_delete=models.PROTECT)
+    aoQuestion = models.ForeignKey(AOQuestion, on_delete=models.CASCADE)
+    shGroup = models.ForeignKey(SHGroup, on_delete=models.CASCADE)
 
 class AOQuestionOption(models.Model):
-    option = models.ForeignKey(Option, on_delete=models.PROTECT)
-    aoQuestion = models.ForeignKey(AOQuestion, on_delete=models.PROTECT)
+    option = models.ForeignKey(Option, on_delete=models.CASCADE)
+    aoQuestion = models.ForeignKey(AOQuestion, on_delete=models.CASCADE)
     
 class AOQuestionSkipOption(models.Model):
-    skipOption = models.ForeignKey(SkipOption, on_delete=models.PROTECT)
-    aoQuestion = models.ForeignKey(AOQuestion, on_delete=models.PROTECT)
+    skipOption = models.ForeignKey(SkipOption, on_delete=models.CASCADE)
+    aoQuestion = models.ForeignKey(AOQuestion, on_delete=models.CASCADE)
 
 class AOResponse(models.Model):
     # update user, subjectuser to projectUser, subjectProjectUser     2020-05-20
-    # user = models.ForeignKey(User, on_delete=models.PROTECT, related_name="aoUser")
-    # subjectUser = models.ForeignKey(User, on_delete=models.PROTECT, related_name="aoSubjectUser")
-    projectUser = models.ForeignKey(ProjectUser, on_delete=models.PROTECT, related_name="aoProjectUser")
-    subProjectUser = models.ForeignKey(ProjectUser, on_delete=models.PROTECT, related_name="aoSubProjectUser")
-    # subProjectUser = models.ForeignKey(SHMapping, on_delete=models.PROTECT, related_name="aoSubProjectUser")
-    survey = models.ForeignKey(Survey, on_delete=models.PROTECT)
-    project = models.ForeignKey(Project, on_delete=models.PROTECT)
-    aoQuestion = models.ForeignKey(AOQuestion, on_delete=models.PROTECT)
+    # user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="aoUser")
+    # subjectUser = models.ForeignKey(User, on_delete=models.CASCADE, related_name="aoSubjectUser")
+    projectUser = models.ForeignKey(ProjectUser, on_delete=models.CASCADE, related_name="aoProjectUser")
+    subProjectUser = models.ForeignKey(ProjectUser, on_delete=models.CASCADE, related_name="aoSubProjectUser")
+    # subProjectUser = models.ForeignKey(SHMapping, on_delete=models.CASCADE, related_name="aoSubProjectUser")
+    survey = models.ForeignKey(Survey, on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    aoQuestion = models.ForeignKey(AOQuestion, on_delete=models.CASCADE)
     controlType = models.CharField(max_length=30)
     integerValue = models.PositiveIntegerField(blank=True)
     topicValue = models.TextField(blank=True)
@@ -73,8 +73,8 @@ class AOResponse(models.Model):
     commentTags = models.TextField(blank=True)
 
 class AOResponseTopic(models.Model):
-    aoQuestion = models.ForeignKey(AOQuestion, on_delete=models.PROTECT)
-    responseUser = models.ForeignKey(ProjectUser, on_delete=models.PROTECT)
+    aoQuestion = models.ForeignKey(AOQuestion, on_delete=models.CASCADE)
+    responseUser = models.ForeignKey(ProjectUser, on_delete=models.CASCADE)
     topicName = models.CharField(max_length=255, blank=True)
     topicComment = models.CharField(max_length=255, blank=True)
     
@@ -86,6 +86,6 @@ class AOPage(models.Model):
         return self.aoPageName
 
 class PageAOQuestion(models.Model):
-    #pageSetting = models.ForeignKey(PageSetting, on_delete=models.PROTECT)
+    #pageSetting = models.ForeignKey(PageSetting, on_delete=models.CASCADE)
     pageSetting = models.ForeignKey(PageSetting, related_name="aopagesetting", on_delete=models.SET_NULL, default=None, blank=True, null=True)
-    aoQuestion = models.ForeignKey(AOQuestion, on_delete=models.PROTECT)
+    aoQuestion = models.ForeignKey(AOQuestion, on_delete=models.CASCADE)

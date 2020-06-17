@@ -23,8 +23,8 @@ from django.utils.safestring import mark_safe
 class SHGroup(models.Model):
     SHGroupName = models.CharField(max_length=255)
     SHGroupAbbrev = models.CharField(max_length=50, blank=True)
-    # project = models.ForeignKey(Project, on_delete=models.PROTECT)
-    survey = models.ForeignKey(Survey, on_delete=models.PROTECT)
+    # project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    survey = models.ForeignKey(Survey, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.SHGroupName
@@ -36,8 +36,8 @@ class MapType(models.Model):
         return self.name
         
 class SHCategory(models.Model):
-    survey = models.ForeignKey(Survey, on_delete=models.PROTECT)
-    # shGroup = models.ForeignKey(SHGroup, on_delete=models.PROTECT, blank=True)
+    survey = models.ForeignKey(Survey, on_delete=models.CASCADE)
+    # shGroup = models.ForeignKey(SHGroup, on_delete=models.CASCADE, blank=True)
     SHCategoryName = models.CharField(max_length=50, blank=True)
     SHCategoryDesc = models.CharField(max_length=200, blank=True)
     mapType = models.ForeignKey(MapType, on_delete=models.PROTECT)
@@ -52,13 +52,13 @@ class SHCategory(models.Model):
 # project => survey
 # 2020-05-27
 class ProjectUser(models.Model):
-    # project = models.ForeignKey(Project, on_delete=models.PROTECT)
+    # project = models.ForeignKey(Project, on_delete=models.CASCADE)
     survey = models.ForeignKey(Survey, on_delete=models.PROTECT)
     user = models.ForeignKey(User, on_delete=models.PROTECT)
     projectUserTitle = models.CharField(max_length=50, blank=True, verbose_name='Project Title', help_text='Role / Title of the stakeholder on this Project')
     # projectUserRoleDesc = models.CharField(max_length=500, blank=True, verbose_name='Description')
     # userPermission = models.ManyToManyField(Permission, blank=True)
-    # team = models.ForeignKey(Team, on_delete=models.PROTECT)
+    # team = models.ForeignKey(Team, on_delete=models.CASCADE)
     team = models.ForeignKey(Team, null=True, blank=True, verbose_name='Project Team')
     #shCategory = models.ForeignKey(SHCategory, null=True, blank=True)
     shGroup = models.ForeignKey(SHGroup, null=True, blank=True, verbose_name='SHGroup')
@@ -131,9 +131,9 @@ class ProjectUser(models.Model):
 #     userPermission = forms.ModelMultipleChoiceField(queryset=Permission.objects.all(), required=False)
 
 class SHMapping(models.Model):
-    shCategory = models.ForeignKey(SHCategory, on_delete=models.PROTECT)
-    projectUser = models.ForeignKey(ProjectUser, on_delete=models.PROTECT, related_name='projectUser')
-    subProjectUser = models.ForeignKey(ProjectUser, on_delete=models.PROTECT, related_name='subProjectUser')
+    shCategory = models.ForeignKey(SHCategory, on_delete=models.CASCADE)
+    projectUser = models.ForeignKey(ProjectUser, on_delete=models.CASCADE, related_name='projectUser')
+    subProjectUser = models.ForeignKey(ProjectUser, on_delete=models.CASCADE, related_name='subProjectUser')
     relationshipStatus = models.CharField(max_length=100, blank=True)
 
     class Meta:

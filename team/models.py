@@ -7,7 +7,7 @@ from survey.models import Project
 class Team(models.Model):
     name = models.CharField(max_length=200)
     # organization = models.CharField(max_length=200)
-    project = models.ForeignKey(Project, on_delete=models.PROTECT)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name

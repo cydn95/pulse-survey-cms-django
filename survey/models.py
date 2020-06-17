@@ -11,14 +11,14 @@ class Client(models.Model):
         return self.clientName
 
 class Project(models.Model):
-    client = models.ForeignKey(Client, on_delete=models.PROTECT)
+    client = models.ForeignKey(Client, on_delete=models.CASCADE)
     projectName = models.CharField(max_length=200)
 
     def __str__(self):
         return self.projectName
     
 class Survey(models.Model):
-    project = models.ForeignKey(Project, on_delete=models.PROTECT)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
     surveyTitle = models.CharField(max_length=200)
     isStandard = models.BooleanField(default=False)
 
@@ -26,8 +26,8 @@ class Survey(models.Model):
         return self.surveyTitle
 
 class ConfigPage(models.Model):
-    # project = models.ForeignKey(Project, on_delete=models.PROTECT)
-    survey = models.ForeignKey(Survey, on_delete=models.PROTECT)
+    # project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    survey = models.ForeignKey(Survey, on_delete=models.CASCADE)
     tabName = models.CharField(max_length=40)
     pageName = models.CharField(max_length=200)
     pageContent = HTMLField()
@@ -36,8 +36,8 @@ class ConfigPage(models.Model):
         return self.pageName
 
 class NikelMobilePage(models.Model):
-    # project = models.ForeignKey(Project, on_delete=models.PROTECT)
-    survey = models.ForeignKey(Survey, on_delete=models.PROTECT)
+    # project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    survey = models.ForeignKey(Survey, on_delete=models.CASCADE)
     pageName = models.CharField(max_length=50)
     pageText = models.CharField(max_length=500, blank=True)
     backgroundColor = ColorField(default="#FF0000", blank=True)
@@ -69,7 +69,7 @@ class Driver(models.Model):
     driverName = models.CharField(max_length=200)
     iconPath = models.CharField(max_length=255, blank=True)
     driveOrder = models.PositiveIntegerField(default=0, blank=False, null=False)
-    survey = models.ForeignKey(Survey, on_delete=models.PROTECT)
+    survey = models.ForeignKey(Survey, on_delete=models.CASCADE)
     
     class Meta(object):
         ordering = ['driveOrder']
@@ -79,5 +79,5 @@ class Driver(models.Model):
 
 class ProjectVideoUpload(models.Model):
     created = models.DateTimeField(auto_now_add=True)
-    project = models.ForeignKey(Project, on_delete=models.PROTECT)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
     videoFile = models.FileField(upload_to='uploads/pvideo')
