@@ -379,6 +379,8 @@ TINYMCE_DEFAULT_CONFIG = {
     #'file_browser_callback': "myFileBrowser"
 }
 
+DATA_UPLOAD_MAX_MEMORY_SIZE = 100000000
+
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:3000',
     'http://localhost:3001',
