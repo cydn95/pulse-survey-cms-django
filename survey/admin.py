@@ -39,7 +39,9 @@ class DriverAdmin(SortableAdminMixin, admin.ModelAdmin):
     model = Driver
 
 class ToolTipGuideAdmin(SortableAdminMixin, admin.ModelAdmin):
-    pass
+    search_fields = ['title', 'content']
+    list_display = ['title', 'place', 'content']
+    model = ToolTipGuide
 
 class ProjectUserInline(InlineActionsMixin, admin.TabularInline):
     model = ProjectUser
