@@ -3,7 +3,7 @@
     <div class="tabular inline-related {% if forloop.last %}last-related{% endif %}">
         {{ inline_admin_formset.formset.management_form }}
         <div class="row" style="padding: 1rem 1rem;">
-            <a class="button" href="resetdriver/?id={{object_id}}">Reset to Standard Drivers</a>
+            <a class="button" style="cursor:pointer;" href="resetdriver/?id={{object_id}}">Reset to Standard Drivers</a>
         </div>
         <fieldset class="module {{ inline_admin_formset.classes }}">
             <h2>{{ inline_admin_formset.opts.verbose_name_plural|capfirst }}</h2>

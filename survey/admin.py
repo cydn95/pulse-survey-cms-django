@@ -353,7 +353,9 @@ class SurveyAdmin(admin.ModelAdmin):
 
     def reset_amq(self, request):
         current_survey_id = request.GET['id']
-        
+        reset = int(request.GET['reset'])
+        print("RESET")
+        print(reset)
         try:
             current_survey = Survey.objects.get(id=current_survey_id)
             try:
@@ -362,7 +364,9 @@ class SurveyAdmin(admin.ModelAdmin):
                 if current_survey.id != std_survey.id:
                     AMQuestion.objects.filter(survey_id=current_survey.id).delete()
                     # AOQuestion.objects.filter(survey_id=current_survey.id).delete()
-                    # Driver.objects.filter(survey_id=current_survey.id).delete()
+                    if reset == 1:
+                        print(reset)
+                        Driver.objects.filter(survey_id=current_survey.id).delete()
                     
                     try:
                         std_driver = Driver.objects.filter(survey_id=std_survey.id).values()
@@ -432,7 +436,8 @@ class SurveyAdmin(admin.ModelAdmin):
 
     def reset_amq_long(self, request):
         current_survey_id = request.GET['id']
-        
+        reset = int(request.GET['reset'])
+
         try:
             current_survey = Survey.objects.get(id=current_survey_id)
             try:
@@ -441,7 +446,8 @@ class SurveyAdmin(admin.ModelAdmin):
                 if current_survey.id != std_survey.id:
                     AMQuestion.objects.filter(survey_id=current_survey.id).delete()
                     # AOQuestion.objects.filter(survey_id=current_survey.id).delete()
-                    # Driver.objects.filter(survey_id=current_survey.id).delete()
+                    if reset == 1:
+                        Driver.objects.filter(survey_id=current_survey.id).delete()
                     
                     try:
                         std_driver = Driver.objects.filter(survey_id=std_survey.id).values()
@@ -511,7 +517,8 @@ class SurveyAdmin(admin.ModelAdmin):
 
     def reset_amq_short(self, request):
         current_survey_id = request.GET['id']
-        
+        reset = int(request.GET['reset'])
+
         try:
             current_survey = Survey.objects.get(id=current_survey_id)
             try:
@@ -520,7 +527,8 @@ class SurveyAdmin(admin.ModelAdmin):
                 if current_survey.id != std_survey.id:
                     AMQuestion.objects.filter(survey_id=current_survey.id).delete()
                     # AOQuestion.objects.filter(survey_id=current_survey.id).delete()
-                    # Driver.objects.filter(survey_id=current_survey.id).delete()
+                    if reset == 1:
+                        Driver.objects.filter(survey_id=current_survey.id).delete()
                     
                     try:
                         std_driver = Driver.objects.filter(survey_id=std_survey.id).values()
@@ -590,7 +598,8 @@ class SurveyAdmin(admin.ModelAdmin):
 
     def reset_aoq(self, request):
         current_survey_id = request.GET['id']
-        
+        reset = int(request.GET['reset'])
+
         try:
             current_survey = Survey.objects.get(id=current_survey_id)
             try:
@@ -599,7 +608,8 @@ class SurveyAdmin(admin.ModelAdmin):
                 if current_survey.id != std_survey.id:
                     # AMQuestion.objects.filter(survey_id=current_survey.id).delete()
                     AOQuestion.objects.filter(survey_id=current_survey.id).delete()
-                    # Driver.objects.filter(survey_id=current_survey.id).delete()
+                    if reset == 1:
+                        Driver.objects.filter(survey_id=current_survey.id).delete()
                     
                     try:
                         std_driver = Driver.objects.filter(survey_id=std_survey.id).values()
@@ -665,7 +675,8 @@ class SurveyAdmin(admin.ModelAdmin):
 
     def reset_aoq_long(self, request):
         current_survey_id = request.GET['id']
-        
+        reset = int(request.GET['reset'])
+
         try:
             current_survey = Survey.objects.get(id=current_survey_id)
             try:
@@ -674,7 +685,8 @@ class SurveyAdmin(admin.ModelAdmin):
                 if current_survey.id != std_survey.id:
                     # AMQuestion.objects.filter(survey_id=current_survey.id).delete()
                     AOQuestion.objects.filter(survey_id=current_survey.id).delete()
-                    # Driver.objects.filter(survey_id=current_survey.id).delete()
+                    if reset == 1:
+                        Driver.objects.filter(survey_id=current_survey.id).delete()
                     
                     try:
                         std_driver = Driver.objects.filter(survey_id=std_survey.id).values()
@@ -740,7 +752,8 @@ class SurveyAdmin(admin.ModelAdmin):
 
     def reset_aoq_short(self, request):
         current_survey_id = request.GET['id']
-        
+        reset = int(request.GET['reset'])
+
         try:
             current_survey = Survey.objects.get(id=current_survey_id)
             try:
@@ -749,7 +762,8 @@ class SurveyAdmin(admin.ModelAdmin):
                 if current_survey.id != std_survey.id:
                     # AMQuestion.objects.filter(survey_id=current_survey.id).delete()
                     AOQuestion.objects.filter(survey_id=current_survey.id).delete()
-                    # Driver.objects.filter(survey_id=current_survey.id).delete()
+                    if reset == 1:
+                        Driver.objects.filter(survey_id=current_survey.id).delete()
                     
                     try:
                         std_driver = Driver.objects.filter(survey_id=std_survey.id).values()
@@ -842,7 +856,7 @@ class NikelMobilePageAdmin(SortableAdminMixin, admin.ModelAdmin):
     list_display_links = ['pageName']
     model = NikelMobilePage
     list_per_page = 10
-    
+
     def get_form(self, request, obj=None, **kwargs):
         form = super().get_form(request, obj, **kwargs)
         survey = form.base_fields['survey']

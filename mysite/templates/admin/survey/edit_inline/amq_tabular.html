@@ -3,7 +3,7 @@
     <div class="tabular inline-related {% if forloop.last %}last-related{% endif %}">
         {{ inline_admin_formset.formset.management_form }}
         <div class="row" style="padding: 1rem 1rem;">
-            <a class="button" id="open_amq_dialog">Reset to Standard AM Questions</a>
+            <a class="button" id="open_amq_dialog" style="cursor:pointer;">Reset to Standard AM Questions</a>
             <div id="confirmAMQDialog" style="display:none">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -11,12 +11,12 @@
                             <h4>Reset AM Questions</h4>
                         </div>
                         <div class="modal-body">
-                            <a class="button" id="reset_amq_standard" href="resetamq/?id={{object_id}}">Reset to
+                            <a class="button" id="reset_amq_standard" style="cursor:pointer;">Reset to
                                 Standard AM Questions</a>
-                            <a class="button" id="reset_amq_long" href="resetamqlong/?id={{object_id}}">Reset to
+                            <a class="button" id="reset_amq_long" style="cursor:pointer;">Reset to
                                 Standard AM Questions
                                 with Long-Form</a>
-                            <a class="button" id="reset_amq_short" href="resetamqshort/?id={{object_id}}">Reset to
+                            <a class="button" id="reset_amq_short" style="cursor:pointer;">Reset to
                                 Standard AM Questions
                                 with Short-Form</a>
                         </div>
@@ -119,18 +119,69 @@
 </script>
 <div class="default_order_field" default_order_field="{{ inline_admin_formset.formset.default_order_field }}"
     default_order_direction="{{ inline_admin_formset.formset.default_order_direction }}"></div>
+<div id="myModal" class="modal">
 
+    <!-- Modal content -->
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h1 style="text-align: center; margin-top: 30px;">Do you want to reset your Drivers(Non-Standard), too?</h1>
+        <div style="text-align: center; margin-top: 20px;">
+            <a class="button default" id="btnYes" style="min-width: 100px; cursor: pointer;">Yes</a>
+            <a class="button" id="btnNo" style="min-width: 100px; cursor: pointer;">No</a>
+        </div>
+    </div>
+
+</div>
 <script>
     $("#open_amq_dialog").click(function(){
         document.getElementById("confirmAMQDialog").style.display = "block";
+        var modal = document.getElementById("myModal");
+        var span = document.getElementsByClassName("close")[0];
+
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        window.onclick = function(e) {
+            if (e.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
         document.getElementById("reset_amq_standard").onclick = function() {
-            document.getElementById("confirmAMQDialog").style.display = "none";
+            modal.style.display = "block";
+            document.getElementById("btnYes").onclick = function() {
+                location.href="resetamq/?id={{object_id}}&reset=1";
+                document.getElementById("confirmAMQDialog").style.display = "none";
+            }
+            document.getElementById("btnNo").onclick = function() {
+                location.href="resetamq/?id={{object_id}}&reset=0";
+                document.getElementById("confirmAMQDialog").style.display = "none";
+            }
         }
         document.getElementById("reset_amq_long").onclick = function() {
-            document.getElementById("confirmAMQDialog").style.display = "none";
+            modal.style.display = "block";
+            document.getElementById("btnYes").onclick = function() {
+                location.href="resetamqlong/?id={{object_id}}&reset=1";
+                document.getElementById("confirmAMQDialog").style.display = "none";
+            }
+            document.getElementById("btnNo").onclick = function() {
+                location.href="resetamqlong/?id={{object_id}}&reset=0";
+                document.getElementById("confirmAMQDialog").style.display = "none";
+            }
         }
         document.getElementById("reset_amq_short").onclick = function() {
-            document.getElementById("confirmAMQDialog").style.display = "none";
+            modal.style.display = "block";
+            document.getElementById("btnYes").onclick = function() {
+                location.href="resetamqshort/?id={{object_id}}&reset=1";
+                document.getElementById("confirmAMQDialog").style.display = "none";
+            }
+            document.getElementById("btnNo").onclick = function() {
+                location.href="resetamqshort/?id={{object_id}}&reset=0";
+                document.getElementById("confirmAMQDialog").style.display = "none";
+            }
         }
     });
 </script>
+
+
