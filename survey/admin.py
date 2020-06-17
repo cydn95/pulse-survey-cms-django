@@ -88,6 +88,7 @@ class DriverInline(SortableInlineAdminMixin, admin.TabularInline):
 class AMQuestionInline(SortableInlineAdminMixin, admin.TabularInline):
     model = AMQuestion
     extra = 0
+    exclude = ['isStandard']
 
     template = "admin/survey/edit_inline/amq_tabular.html"
 
@@ -112,7 +113,8 @@ class AMQuestionInline(SortableInlineAdminMixin, admin.TabularInline):
 class AOQuestionInline(SortableInlineAdminMixin, admin.TabularInline):
     model = AOQuestion
     extra = 0
-
+    exclude = ['isStandard']
+    
     template = "admin/survey/edit_inline/aoq_tabular.html"
 
     def formfield_for_dbfield(self, db_field, request, **kwargs):
@@ -246,8 +248,8 @@ class SurveyAdmin(admin.ModelAdmin):
                 std_survey = Survey.objects.get(isStandard=True)
 
                 if current_survey.id != std_survey.id:
-                    AMQuestion.objects.filter(survey_id=current_survey.id).delete()
-                    AOQuestion.objects.filter(survey_id=current_survey.id).delete()
+                    AMQuestion.objects.filter(survey_id=current_survey.id, isStandard=True).delete()
+                    AOQuestion.objects.filter(survey_id=current_survey.id, isStandard=True).delete()
                     Driver.objects.filter(survey_id=current_survey.id).delete()
                     
                     try:
@@ -280,7 +282,8 @@ class SurveyAdmin(admin.ModelAdmin):
                                                 #skipOption=std_amq[j].skipOption,
                                                 amqOrder=std_amq[j].amqOrder,
                                                 shortForm=std_amq[j].shortForm,
-                                                longForm=std_amq[j].longForm)
+                                                longForm=std_amq[j].longForm,
+                                                isStandard=True)
                                 amq_obj.save()
                                 stdamq_shgroup = std_amq[j].shGroup.all()
                                 for a in range(len(stdamq_shgroup)):
@@ -306,7 +309,8 @@ class SurveyAdmin(admin.ModelAdmin):
                                                 commentPrompt=std_aoq[k].commentPrompt,
                                                 aoqOrder=std_aoq[k].aoqOrder,
                                                 shortForm=std_aoq[k].shortForm,
-                                                longForm=std_aoq[k].longForm)
+                                                longForm=std_aoq[k].longForm,
+                                                isStandard=True)
                                 aoq_obj.save()
                                 stdaoq_shgroup = std_aoq[k].shGroup.all()
                                 for a in range(len(stdaoq_shgroup)):

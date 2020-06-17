@@ -39,6 +39,7 @@ class AOQuestionAdmin(SortableAdminMixin, admin.ModelAdmin):
     model = AOQuestion
     list_display = ['aoqOrder', 'questionText', 'survey', 'driver', 'subdriver', 'controlType', 'sliderTextLeft', 'sliderTextRight', 'longForm', 'shortForm']
     list_display_links = ['questionText']
+    exclude = ['isStandard']
     
     def get_urls(self):
         urls = super().get_urls()

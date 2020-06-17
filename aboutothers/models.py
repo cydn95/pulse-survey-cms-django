@@ -12,7 +12,7 @@ from django import forms
 # Create your models here.
 class AOQuestion(models.Model):
     survey = models.ForeignKey(Survey, on_delete=models.PROTECT)
-    driver = models.ForeignKey(Driver, on_delete=models.PROTECT)
+    driver = models.ForeignKey(Driver, on_delete=models.SET_NULL, null=True, blank=True)
     subdriver = models.CharField(max_length=50, blank=True)
     questionText = models.CharField(max_length=1000)
     controlType = models.ForeignKey(ControlType)
@@ -29,6 +29,7 @@ class AOQuestion(models.Model):
     aoqOrder = models.PositiveIntegerField(default=0, blank=False, null=False, verbose_name='Order')
     shortForm = models.BooleanField(default=False)
     longForm = models.BooleanField(default=False)
+    isStandard = models.BooleanField(default=False)
     
     class Meta(object):
         ordering = ['aoqOrder']

@@ -39,7 +39,8 @@ class AMQuestionAdmin(SortableAdminMixin, admin.ModelAdmin):
     model = AMQuestion
     list_display = ['amqOrder', 'questionText', 'survey', 'driver', 'subdriver', 'controlType', 'sliderTextLeft', 'sliderTextRight', 'longForm', 'shortForm']
     list_display_links = ['questionText']
-
+    exclude = ['isStandard']
+    
     def get_urls(self):
         urls = super().get_urls()
         my_urls = [
