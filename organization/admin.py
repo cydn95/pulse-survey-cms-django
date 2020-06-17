@@ -47,6 +47,8 @@ class MyUserChangeForm(EmailRequiredMixin, UserChangeForm):
 class UserAdmin(BaseUserAdmin):
     form = MyUserChangeForm
     add_form = MyUserCreationForm
+    list_per_page = 10
+    
     BaseUserAdmin.list_display = ('email', 'first_name', 'last_name', 'is_active', 'date_joined', 'is_staff')
     BaseUserAdmin.fieldsets = (
         (None, {'fields': ('username', 'email', 'password')}),

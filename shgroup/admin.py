@@ -21,6 +21,7 @@ class SHGroupAdmin(admin.ModelAdmin):
     search_fields = ['SHGroupName', 'SHGroupAbbrev']
     # Filter
     list_filter = ['SHGroupName']
+    list_per_page = 10
 
     model = SHGroup
 
@@ -50,6 +51,7 @@ class SHCategoryAdmin(admin.ModelAdmin):
     search_fields = ['SHCategoryName']
     # Filter
     list_filter = ['SHCategoryName', 'survey']
+    list_per_page = 10
 
     def get_form(self, request, obj=None, **kwargs):
         form = super().get_form(request, obj, **kwargs)
@@ -82,6 +84,7 @@ class ProjectUserAdmin(admin.ModelAdmin):
     # 2020-05-27
     # list_filter = ['user', 'project', 'team', 'shGroup']
     list_filter = ['user', 'survey', 'team', 'shGroup']
+    list_per_page = 10
 
     #action = ['delete_model']
 
@@ -130,7 +133,8 @@ class SHMappingAdmin(admin.ModelAdmin):
     search_fields = ['shCategory', 'projectUser', 'subProjectUser']
     # Filter
     list_filter = ['shCategory', 'projectUser', 'subProjectUser']
-
+    list_per_page = 10
+    
     model = SHMapping
 
     def get_form(self, request, obj=None, **kwargs):

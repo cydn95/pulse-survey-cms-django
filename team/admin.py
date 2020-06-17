@@ -14,6 +14,7 @@ class TeamAdmin(admin.ModelAdmin):
     # list_editable = ['project']
 
     model = Team
+    list_per_page = 10
     # actions = ['delete_model']
 
     # def delete_model(self, request, obj):

@@ -28,6 +28,7 @@ class ProjectAdmin(admin.ModelAdmin):
     list_display = ['client', 'projectName']
     # Edit
     #list_editable = ['projectName']
+    list_per_page = 10
 
     model = Project
     # actions = ['delete_model']
@@ -36,15 +37,18 @@ class DriverAdmin(SortableAdminMixin, admin.ModelAdmin):
     search_fields = ['driverName']
     list_filter = ['survey']
     list_display = ['driverName', 'survey', 'iconPath']
+    list_per_page = 10
     model = Driver
 
 class ToolTipGuideAdmin(SortableAdminMixin, admin.ModelAdmin):
     search_fields = ['title', 'content']
     list_display = ['title', 'place', 'content']
+    list_per_page = 10
     model = ToolTipGuide
 
 class ProjectUserInline(InlineActionsMixin, admin.TabularInline):
     model = ProjectUser
+    list_per_page = 10
     extra = 0
 
     #readonly_fields = ['invite_button']
@@ -82,6 +86,7 @@ class ProjectUserInline(InlineActionsMixin, admin.TabularInline):
 class DriverInline(SortableInlineAdminMixin, admin.TabularInline):
     model = Driver
     extra = 0
+    list_per_page = 10
 
     template = "admin/survey/edit_inline/driver_tabular.html"
 
@@ -89,6 +94,7 @@ class AMQuestionInline(SortableInlineAdminMixin, admin.TabularInline):
     model = AMQuestion
     extra = 0
     exclude = ['isStandard']
+    list_per_page = 10
 
     template = "admin/survey/edit_inline/amq_tabular.html"
 
@@ -114,7 +120,8 @@ class AOQuestionInline(SortableInlineAdminMixin, admin.TabularInline):
     model = AOQuestion
     extra = 0
     exclude = ['isStandard']
-    
+    list_per_page = 10
+
     template = "admin/survey/edit_inline/aoq_tabular.html"
 
     def formfield_for_dbfield(self, db_field, request, **kwargs):
@@ -138,10 +145,12 @@ class AOQuestionInline(SortableInlineAdminMixin, admin.TabularInline):
 class SHGroupInline(admin.TabularInline):
     model = SHGroup
     extra = 0
+    list_per_page = 10
 
 class SHCategoryInline(admin.TabularInline):
     model = SHCategory
     extra = 0
+    list_per_page = 10
 
     template = "admin/survey/edit_inline/shcategory_tabular.html"
 
@@ -157,6 +166,7 @@ class SHCategoryInline(admin.TabularInline):
 class ConfigPageInline(admin.StackedInline):
     model = ConfigPage
     extra = 0
+    list_per_page = 10
 
 # class SurveyAdmin(InlineActionsModelAdminMixin, admin.ModelAdmin):
 class SurveyAdmin(admin.ModelAdmin):
@@ -164,6 +174,7 @@ class SurveyAdmin(admin.ModelAdmin):
     search_fields = ['surveyTitle', 'project']
     list_filter = ['project', 'surveyTitle']
     exclude = ['isStandard']
+    list_per_page = 10
 
     def get_form(self, request, obj=None, **kwargs):
         if obj:
@@ -813,6 +824,7 @@ class ClientAdmin(admin.ModelAdmin):
     #list_display = ['clientName', 'client_actions']
     list_display = ['clientName']
     model = Client
+    list_per_page = 10
 
     # def get_queryset(self, request):
     #     self.full_path = request.get_full_path()
@@ -829,7 +841,8 @@ class NikelMobilePageAdmin(SortableAdminMixin, admin.ModelAdmin):
     list_display = ['pageOrder', 'survey', 'pageName', 'pageText', 'img']
     list_display_links = ['pageName']
     model = NikelMobilePage
-
+    list_per_page = 10
+    
     def get_form(self, request, obj=None, **kwargs):
         form = super().get_form(request, obj, **kwargs)
         survey = form.base_fields['survey']

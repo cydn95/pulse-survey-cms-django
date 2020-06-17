@@ -40,7 +40,8 @@ class AOQuestionAdmin(SortableAdminMixin, admin.ModelAdmin):
     list_display = ['aoqOrder', 'questionText', 'survey', 'driver', 'subdriver', 'controlType', 'sliderTextLeft', 'sliderTextRight', 'longForm', 'shortForm']
     list_display_links = ['questionText']
     exclude = ['isStandard']
-    
+    list_per_page = 10
+
     def get_urls(self):
         urls = super().get_urls()
         my_urls = [
@@ -138,6 +139,8 @@ class AOResponseAdmin(ImportExportModelAdmin):
     
     search_fields = ['aoQuestion']
     list_filter = ['projectUser', 'subProjectUser', 'project', 'survey']
+    list_per_page = 10
+    
     model = AOResponse
 
     def has_add_permission(self, request):
