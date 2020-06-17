@@ -170,7 +170,7 @@ class ConfigPageInline(admin.StackedInline):
 
 # class SurveyAdmin(InlineActionsModelAdminMixin, admin.ModelAdmin):
 class SurveyAdmin(admin.ModelAdmin):
-    list_display = ['id', 'surveyTitle', 'get_client', 'project']
+    list_display = ['surveyTitle', 'get_client', 'project']
     search_fields = ['surveyTitle', 'project']
     list_filter = ['project', 'surveyTitle']
     exclude = ['isStandard']
