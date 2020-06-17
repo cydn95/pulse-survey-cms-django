@@ -289,6 +289,7 @@ JET_SIDE_MENU_ITEMS = [ # A list of application or custom item dicts
         {'name':'shgroup.shmapping', 'label': 'SHMapping'},
         {'name':'survey.configpage', 'label': 'Pages'},
         {'name':'survey.nikelmobilepage', 'label': 'Nikel Tower(for mobile)'},
+        {'name':'survey.tooltipguide', 'label': 'Tooltip'},
     ]},
     # {'label': 'Configuration', 'app_label': 'survey.client', 'url': '/admin/survey/client', 'items': []}
     {'label': 'Configuration', 'items': [
