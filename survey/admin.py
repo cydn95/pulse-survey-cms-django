@@ -405,7 +405,8 @@ class SurveyAdmin(admin.ModelAdmin):
                                                 #skipOption=std_amq[j].skipOption,
                                                 amqOrder=std_amq[j].amqOrder,
                                                 shortForm=std_amq[j].shortForm,
-                                                longForm=std_amq[j].longForm)
+                                                longForm=std_amq[j].longForm,
+                                                isStandard=True)
                                 amq_obj.save()
                                 stdamq_shgroup = std_amq[j].shGroup.all()
                                 for a in range(len(stdamq_shgroup)):
@@ -486,7 +487,8 @@ class SurveyAdmin(admin.ModelAdmin):
                                                 #skipOption=std_amq[j].skipOption,
                                                 amqOrder=std_amq[j].amqOrder,
                                                 shortForm=False,
-                                                longForm=True)
+                                                longForm=True,
+                                                isStandard=True)
                                 amq_obj.save()
                                 stdamq_shgroup = std_amq[j].shGroup.all()
                                 for a in range(len(stdamq_shgroup)):
@@ -567,7 +569,8 @@ class SurveyAdmin(admin.ModelAdmin):
                                                 #skipOption=std_amq[j].skipOption,
                                                 amqOrder=std_amq[j].amqOrder,
                                                 shortForm=True,
-                                                longForm=False)
+                                                longForm=False,
+                                                isStandard=True)
                                 amq_obj.save()
                                 stdamq_shgroup = std_amq[j].shGroup.all()
                                 for a in range(len(stdamq_shgroup)):
@@ -644,7 +647,8 @@ class SurveyAdmin(admin.ModelAdmin):
                                                 commentPrompt=std_aoq[k].commentPrompt,
                                                 aoqOrder=std_aoq[k].aoqOrder,
                                                 shortForm=std_aoq[k].shortForm,
-                                                longForm=std_aoq[k].longForm)
+                                                longForm=std_aoq[k].longForm,
+                                                isStandard=True)
                                 aoq_obj.save()
                                 stdaoq_shgroup = std_aoq[k].shGroup.all()
                                 for a in range(len(stdaoq_shgroup)):
@@ -721,7 +725,8 @@ class SurveyAdmin(admin.ModelAdmin):
                                                 commentPrompt=std_aoq[k].commentPrompt,
                                                 aoqOrder=std_aoq[k].aoqOrder,
                                                 shortForm=False,
-                                                longForm=True)
+                                                longForm=True,
+                                                isStandard=True)
                                 aoq_obj.save()
                                 stdaoq_shgroup = std_aoq[k].shGroup.all()
                                 for a in range(len(stdaoq_shgroup)):
@@ -798,7 +803,8 @@ class SurveyAdmin(admin.ModelAdmin):
                                                 commentPrompt=std_aoq[k].commentPrompt,
                                                 aoqOrder=std_aoq[k].aoqOrder,
                                                 shortForm=True,
-                                                longForm=False)
+                                                longForm=False,
+                                                isStandard=True)
                                 aoq_obj.save()
                                 stdaoq_shgroup = std_aoq[k].shGroup.all()
                                 for a in range(len(stdaoq_shgroup)):
