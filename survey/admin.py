@@ -114,6 +114,12 @@ class AMQuestionInline(SortableInlineAdminMixin, admin.TabularInline):
             else:
                 formfield.queryset = formfield.queryset.none()
 
+        if db_field.name == 'shGroup':
+            if self_pub_id is not None:
+                formfield.queryset = formfield.queryset.filter(survey_id=self_pub_id)
+            else:
+                formfield.queryset = formfield.queryset.none()
+
         return formfield
 
 class AOQuestionInline(SortableInlineAdminMixin, admin.TabularInline):
@@ -140,6 +146,12 @@ class AOQuestionInline(SortableInlineAdminMixin, admin.TabularInline):
             else:
                 formfield.queryset = formfield.queryset.none()
 
+        if db_field.name == 'shGroup':
+            if self_pub_id is not None:
+                formfield.queryset = formfield.queryset.filter(survey_id=self_pub_id)
+            else:
+                formfield.queryset = formfield.queryset.none()
+                
         return formfield
 
 class SHGroupInline(admin.TabularInline):
