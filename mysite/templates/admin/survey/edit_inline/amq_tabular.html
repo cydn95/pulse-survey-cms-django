@@ -134,7 +134,7 @@
                 }
             </style>
             <div>
-                {% with inline_admin_formset.formset.page as page_obj %}
+                {% with inline_admin_formset.formset as page_obj %}
                 <p class="paginator">
                     {% if page_obj.previous_page_number > 1 %}
                     <a href="?page={{ page_obj.previous_page_number|add:'-1' }}">{% trans 'previous' %}</a>

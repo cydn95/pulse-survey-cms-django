@@ -140,6 +140,9 @@ class AMQuestionInline(SortableInlineAdminMixin, admin.TabularInline):
                 else:
                     self._queryset = page.object_list
 
+                print("Test")
+                print(page.object_list)
+
         AMQuestionFormSet.per_page = self.per_page
         
         return AMQuestionFormSet
