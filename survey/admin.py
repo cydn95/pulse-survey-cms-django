@@ -93,7 +93,7 @@ class DriverInline(SortableInlineAdminMixin, admin.TabularInline):
 
 class AMQuestionInline(SortableInlineAdminMixin, admin.TabularInline):
     model = AMQuestion
-    ordering = ('driver', 'questionText')
+    ordering = ['driver', 'questionText']
     extra = 0
     exclude = ['isStandard']
     list_per_page = 10
@@ -126,7 +126,7 @@ class AMQuestionInline(SortableInlineAdminMixin, admin.TabularInline):
 
 class AOQuestionInline(SortableInlineAdminMixin, admin.TabularInline):
     model = AOQuestion
-    ordering = ('driver', 'questionText')
+    ordering = ['driver', 'questionText']
     extra = 0
     exclude = ['isStandard']
     list_per_page = 10
