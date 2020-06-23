@@ -9,7 +9,7 @@ class ControlType(models.Model):
         return self.controlTypeName
 
 class ConceptClass(models.Model):
-    project = models.ForeignKey(Project, on_delete=models.PROTECT)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
     conceptClassName = models.CharField(max_length=50)
     childOf = models.PositiveIntegerField()
     conceptClassDesc = models.TextField()
@@ -20,7 +20,7 @@ class ConceptClass(models.Model):
 
 class ConceptInstance(models.Model):
     instanceName = models.CharField(max_length=100)
-    conceptClass = models.ForeignKey(ConceptClass, on_delete=models.PROTECT)
+    conceptClass = models.ForeignKey(ConceptClass, on_delete=models.CASCADE)
     instanceIRI = models.TextField()
     instanceDesc = models.TextField()
     preferLabel = models.CharField(max_length=100, blank=True)

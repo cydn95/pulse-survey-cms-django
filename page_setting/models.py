@@ -25,7 +25,7 @@ class Labels:
 
 class PageSetting(models.Model):
     
-    page = models.OneToOneField(Page, limit_choices_to={'publisher_is_draft': False}, related_name='pages', on_delete=models.PROTECT, primary_key=True, unique=True)
+    page = models.OneToOneField(Page, limit_choices_to={'publisher_is_draft': False}, related_name='pages', on_delete=models.CASCADE, primary_key=True, unique=True)
     pageType = EnumField(PageType, max_length=1)
 
 class ExtendedPage(models.Model):
