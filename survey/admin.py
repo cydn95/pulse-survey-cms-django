@@ -18,6 +18,8 @@ from django.core import serializers
 from django import forms
 from django.forms import widgets
 from django.forms.models import BaseInlineFormSet
+from django.contrib.admin.views.main import ChangeList
+from django.core.paginator import EmptyPage, InvalidPage, Paginator
 
 class ProjectAdmin(admin.ModelAdmin):
 
@@ -91,14 +93,56 @@ class DriverInline(SortableInlineAdminMixin, admin.TabularInline):
 
     template = "admin/survey/edit_inline/driver_tabular.html"
 
+class InlineChangeList(object):
+    can_show_all = True
+    multi_page = True
+    get_query_string = ChangeList.__dict__['get_query_string']
+
+    def __init__(self, request, page_num, paginator):
+        self.show_all = 'all' in request.GET
+        self.page_num = page_num
+        self.paginator = paginator
+        self.result_count = paginator.count
+        self.params = dict(request.GET.items())
+        
 class AMQuestionInline(SortableInlineAdminMixin, admin.TabularInline):
     model = AMQuestion
     ordering = ['driver', 'questionText']
     extra = 0
     exclude = ['isStandard']
-    list_per_page = 10
+    per_page = 10
 
     template = "admin/survey/edit_inline/amq_tabular.html"
+
+    def get_formset(self, request, obj=None, **kwargs):
+        formset_class = super(AMQuestionInline, self).get_formset(request, obj, **kwargs)
+        class AMQuestionFormSet(formset_class):
+            def __init__(self, *args, **kwargs):
+                super(AMQuestionFormSet, self).__init__(*args, **kwargs)
+
+                qs = self.queryset
+                paginator = Paginator(qs, self.per_page)
+                try:
+                    page_num = int(request.GET.get('p', '0'))
+                except ValueError:
+                    page_num = 0
+
+                try:
+                    page = paginator.page(page_num + 1)
+                except (EmptyPage, InvalidPage):
+                    page = paginator.page(paginator.num_pages)
+
+                self.cl = InlineChangeList(request, page_num, paginator)
+                self.paginator = paginator
+
+                if self.cl.show_all:
+                    self._queryset = qs
+                else:
+                    self._queryset = page.object_list
+
+        AMQuestionFormSet.per_page = self.per_page
+        
+        return AMQuestionFormSet
 
     def formfield_for_dbfield(self, db_field, request, **kwargs):
         formfield = super(AMQuestionInline, self).formfield_for_dbfield(db_field, request, **kwargs)
