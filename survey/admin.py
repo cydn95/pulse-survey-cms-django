@@ -20,6 +20,7 @@ from django.forms import widgets
 from django.forms.models import BaseInlineFormSet
 from django.contrib.admin.views.main import ChangeList
 from django.core.paginator import EmptyPage, InvalidPage, Paginator
+from django.forms import ModelForm
 
 class ProjectAdmin(admin.ModelAdmin):
 
@@ -229,6 +230,11 @@ class ConfigPageInline(admin.StackedInline):
     extra = 0
     list_per_page = 10
 
+class DriverForm(ModelForm):
+    class Meta:
+        model = AMQuestion
+        fields = ['driver']
+
 # class SurveyAdmin(InlineActionsModelAdminMixin, admin.ModelAdmin):
 class SurveyAdmin(admin.ModelAdmin):
     list_display = ['surveyTitle', 'get_client', 'project']
@@ -237,8 +243,17 @@ class SurveyAdmin(admin.ModelAdmin):
     exclude = ['isStandard']
     list_per_page = 10
     # change_form_template = 'admin/survey/change_form.html'
+    
+    def change_view(self, request, object_id, form_url='', extra_context=None):
+        extra = extra_context or {}
+        form = DriverForm()
+        form.fields['driver'].queryset = Driver.objects.filter(survey_id=object_id)
+        extra['driver'] = form
 
+        return super(SurveyAdmin, self).change_view(request, object_id, form_url, extra_context=extra)
+        
     def get_form(self, request, obj=None, **kwargs):
+        
         if obj:
             self.inlines = [
                 ProjectUserInline,

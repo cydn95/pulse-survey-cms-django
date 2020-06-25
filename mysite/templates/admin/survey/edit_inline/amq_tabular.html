@@ -2,8 +2,10 @@
 <div class="inline-group sortable" id="{{ inline_admin_formset.formset.prefix }}-group">
     <div class="tabular inline-related {% if forloop.last %}last-related{% endif %}">
         {{ inline_admin_formset.formset.management_form }}
-        <div class="row" style="padding: 1rem 1rem;">
+
+        <div id="amq_tabular_row1" class="row col-md-12" style="padding: 1rem 1rem;">
             <a class="button" id="open_amq_dialog" style="cursor:pointer;">Reset to Standard AM Questions</a>
+            {{driver}}
             <div id="confirmAMQDialog" style="display:none">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -23,8 +25,10 @@
                     </div>
                 </div>
             </div>
+            
         </div>
-        <fieldset class="module {{ inline_admin_formset.classes }}" style="height: 400px;">
+        
+        <fieldset id="amq_table" class="module {{ inline_admin_formset.classes }}" style="height: 400px;">
             <h2>{{ inline_admin_formset.opts.verbose_name_plural|capfirst }}</h2>
             {{ inline_admin_formset.formset.non_form_errors }}
             
@@ -132,6 +136,39 @@
 
 </div>
 <script>
+
+    var observer = new MutationObserver(function(mutations){
+        for(let mutation of mutations) {
+            if (mutation.type === 'childList' && mutation.addedNodes.length == 1) {
+                if (mutation.target.id == "select2-id_driver-container") {
+                    var title = mutation.target.getAttribute("title");
+                    var alltrs = document.querySelectorAll(`#amq_table .field-driver span.select2-selection__rendered`)
+                    if (alltrs.length > 0) {
+                        if (title == "---------") {
+                            for (var tr of alltrs) {
+                                tr.closest("tr").style.display = "table-row";
+                            }
+                        } else {
+                            for (var tr of alltrs) {
+                                if (tr.getAttribute("title") == title)
+                                    tr.closest("tr").style.display = "table-row";
+                                else
+                                    tr.closest("tr").style.display = "none";
+                            }
+                        // console.log(allspans.closest("tr"));
+                        }
+                    }
+                }
+            }
+        }
+    });
+    
+    var config = {attributes:true, childList: true, subtree: true};
+    var observeNode = document.getElementById("amq_tabular_row1");
+    observer.observe(observeNode, config);
+    $('label[for="id_driver"]').hide();
+    console.log($("#select2-id_driver-container").attr('title'));
+    
     $("#open_amq_dialog").click(function(){
         document.getElementById("confirmAMQDialog").style.display = "block";
         var modal = document.getElementById("myModal");
