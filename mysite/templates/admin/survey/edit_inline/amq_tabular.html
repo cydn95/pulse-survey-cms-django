@@ -4,8 +4,10 @@
         {{ inline_admin_formset.formset.management_form }}
 
         <div id="amq_tabular_row1" class="row col-md-12" style="padding: 1rem 1rem;">
-            <a class="button" id="open_amq_dialog" style="cursor:pointer;">Reset to Standard AM Questions</a>
-            {{driver}}
+            <div style="padding: 1rem 0;">{{driver}}</div>
+            <hr style="margin-bottom: 1rem;" />
+            <a class="button" id="open_amq_dialog" style="cursor:pointer; ">Reset to Standard AM Questions</a>
+
             <div id="confirmAMQDialog" style="display:none">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -162,12 +164,11 @@
             }
         }
     });
-    
+
     var config = {attributes:true, childList: true, subtree: true};
     var observeNode = document.getElementById("amq_tabular_row1");
     observer.observe(observeNode, config);
-    $('label[for="id_driver"]').hide();
-    console.log($("#select2-id_driver-container").attr('title'));
+    $('label[for="id_driver"]').html("Filter by : ");
     
     $("#open_amq_dialog").click(function(){
         document.getElementById("confirmAMQDialog").style.display = "block";
