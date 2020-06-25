@@ -144,7 +144,8 @@
             if (mutation.type === 'childList' && mutation.addedNodes.length == 1) {
                 if (mutation.target.id == "select2-id_driver-container") {
                     var title = mutation.target.getAttribute("title");
-                    var alltrs = document.querySelectorAll(`#aoq_table .field-driver span.select2-selection__rendered`)
+                    var alltrs = document.querySelectorAll(`#aoq_table .has_original .field-driver
+                    span.select2-selection__rendered`)
                     if (alltrs.length > 0) {
                         if (title == "---------") {
                             for (var tr of alltrs) {
