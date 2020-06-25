@@ -236,6 +236,7 @@ class SurveyAdmin(admin.ModelAdmin):
     list_filter = ['project', 'surveyTitle']
     exclude = ['isStandard']
     list_per_page = 10
+    # change_form_template = 'admin/survey/change_form.html'
 
     def get_form(self, request, obj=None, **kwargs):
         if obj:
