@@ -190,8 +190,8 @@
     var ao_observeNode = document.getElementById("aoq_tabular_row1");
     ao_observer.observe(ao_observeNode, config);
 
-    var search_item = document.getElementById("aoq_search");
-    search_item.addEventListener("keyup", function(e){
+    var ao_search_item = document.getElementById("aoq_search");
+    ao_search_item.addEventListener("keyup", function(e){
         filterAOText = e.target.value;
         ao_filter(filterAOTitle, filterAOText);
     });
