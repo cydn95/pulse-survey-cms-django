@@ -4,7 +4,7 @@
         {{ inline_admin_formset.formset.management_form }}
 
         <div id="amq_tabular_row1" class="row col-md-12" style="padding: 1rem 1rem;">
-            <div style="padding: 1rem 0;">{{driver}}<input type="text" id="amq_search" style="margin-left: 1rem; padding-left: 1rem;" placeholder="Search" value="" /></div>
+            <div style="padding: 1rem 0;">{{am_driver}}<input type="text" id="amq_search" style="margin-left: 1rem; padding-left: 1rem;" placeholder="Search" value="" /></div>
             <hr style="margin-bottom: 1rem;" />
             <a class="button" id="open_amq_dialog" style="cursor:pointer; ">Reset to Standard AM Questions</a>
 
@@ -138,21 +138,21 @@
 
 </div>
 <script>
-    var filterTitle = "";
-    var filterText = "";
-    var observer = new MutationObserver(function(mutations) {
+    var filterAMTitle = "";
+    var filterAMText = "";
+    var am_observer = new MutationObserver(function(mutations) {
         for (let mutation of mutations) {
             if (mutation.type === 'childList' && mutation.addedNodes.length == 1) {
-                if (mutation.target.id == "select2-id_driver-container") {
+                if (mutation.target.id == "select2-id_am_driver-container") {
                     var title = mutation.target.getAttribute("title");
-                    filterTitle = title;
-                    filter(filterTitle, filterText);
+                    filterAMTitle = title;
+                    am_filter(filterAMTitle, filterAMText);
                 }
             }
         }
     });
 
-    function filter(title, searchKey) {
+    function am_filter(title, searchKey) {
         var alltrs = document.querySelectorAll(`#amq_table .has_original .field-driver span.select2-selection__rendered`);
         if (alltrs.length > 0) {
             if (title == "---------") {
@@ -185,16 +185,16 @@
     }
 
     var config = {attributes:true, childList: true, subtree: true};
-    var observeNode = document.getElementById("amq_tabular_row1");
-    observer.observe(observeNode, config);
+    var am_observeNode = document.getElementById("amq_tabular_row1");
+    am_observer.observe(am_observeNode, config);
 
-    var search_item = document.getElementById("amq_search");
-    search_item.addEventListener("keyup", function(e){
-        filterText = e.target.value;
-        filter(filterTitle, filterText);
+    var am_search_item = document.getElementById("amq_search");
+    am_search_item.addEventListener("keyup", function(e){
+        filterAMText = e.target.value;
+        am_filter(filterAMTitle, filterAMText);
     });
 
-    $('label[for="id_driver"]').html("Filter by : ");
+    $('label[for="id_am_driver"]').html("Filter by : ");
     
     $("#open_amq_dialog").click(function(){
         document.getElementById("confirmAMQDialog").style.display = "block";
