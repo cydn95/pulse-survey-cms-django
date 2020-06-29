@@ -21,7 +21,8 @@ class Survey(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     surveyTitle = models.CharField(max_length=200)
     isStandard = models.BooleanField(default=False)
-
+    isActive = models.BooleanField(default=False)
+    
     def __str__(self):
         return self.surveyTitle
 
