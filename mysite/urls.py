@@ -36,6 +36,7 @@ urlpatterns += [
 
 
 urlpatterns += i18n_patterns(
+    url(r'^admin/', include('boolean_switch.urls')),
     url(r'^admin/', admin.site.urls),  # NOQA
 )
 

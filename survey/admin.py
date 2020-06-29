@@ -21,6 +21,7 @@ from django.forms.models import BaseInlineFormSet
 from django.contrib.admin.views.main import ChangeList
 from django.core.paginator import EmptyPage, InvalidPage, Paginator
 from django.forms import ModelForm
+from boolean_switch.admin import AdminBooleanMixin
 
 class ProjectAdmin(admin.ModelAdmin):
 
@@ -237,14 +238,14 @@ class AODriverForm(forms.Form):
     ao_driver = forms.ModelChoiceField(queryset=None)
 
 # class SurveyAdmin(InlineActionsModelAdminMixin, admin.ModelAdmin):
-class SurveyAdmin(admin.ModelAdmin):
+class SurveyAdmin(AdminBooleanMixin, admin.ModelAdmin):
     list_display = ['surveyTitle', 'get_client', 'project', 'isActive']
     search_fields = ['surveyTitle', 'project']
     list_filter = ['project']
     exclude = ['isStandard', 'isActive']
     list_per_page = 10
     # change_form_template = 'admin/survey/change_form.html'
-    
+
     def change_view(self, request, object_id, form_url='', extra_context=None):
         extra = extra_context or {}
         amform = AMDriverForm()

@@ -120,6 +120,7 @@ INSTALLED_APPS = [
     'treebeard',
     'djangocms_text_ckeditor',
     'filer',
+    'boolean_switch',
     'easy_thumbnails',
     'tabbed_admin',
     'inline_actions',
