@@ -240,7 +240,7 @@ class AODriverForm(forms.Form):
 class SurveyAdmin(admin.ModelAdmin):
     list_display = ['surveyTitle', 'get_client', 'project']
     search_fields = ['surveyTitle', 'project']
-    list_filter = ['project', 'surveyTitle']
+    list_filter = ['project']
     exclude = ['isStandard']
     list_per_page = 10
     # change_form_template = 'admin/survey/change_form.html'
