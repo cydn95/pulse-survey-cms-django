@@ -741,7 +741,7 @@ class SurveyViewSet(viewsets.ModelViewSet):
         project = self.request.query_params.get('project', None)
         
         if project is not None:
-            queryset = queryset.filter(project__id=project)    
+            queryset = queryset.filter(project__id=project, isActive=True)    
         
         return queryset
 
