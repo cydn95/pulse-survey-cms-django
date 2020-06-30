@@ -244,8 +244,7 @@ class SurveyAdmin(AdminBooleanMixin, admin.ModelAdmin):
     list_filter = ['project']
     exclude = ['isStandard', 'isActive']
     list_per_page = 10
-    # change_form_template = 'admin/survey/change_form.html'
-
+    
     def change_view(self, request, object_id, form_url='', extra_context=None):
         extra = extra_context or {}
         amform = AMDriverForm()
