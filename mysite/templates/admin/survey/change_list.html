@@ -4,6 +4,7 @@
 {% block extrastyle %}
   {{ block.super }}
   <link rel="stylesheet" type="text/css" href="{% static "admin/css/changelists.css" %}" />
+  <link rel="stylesheet" type="text/css" href="{% static "admin/css/custom.css" %}" />
   {% if cl.formset %}
     <link rel="stylesheet" type="text/css" href="{% static "admin/css/forms.css" %}" />
   {% endif %}
@@ -86,27 +87,53 @@
       </form>
     </div>
   </div>
+  <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="crossorigin="anonymous"></script>
   <script>
-    var tick_observer = new MutationObserver(function(mutations) {
-        for (let mutation of mutations) {
-            if (mutation.type === 'childList' && mutation.addedNodes.length == 1) {
-                if (mutation.target.classList.contains("boolean_switch")) {
-                  mutation.target.addEventListener("click", function(e){
-                    if (e.target.classList.contains("icon-tick")) {
-                      e.target.classList.remove("icon-tick");
-                      e.target.classList.add("icon-cross");
-                    } else if (e.target.classList.contains("icon-cross")) {
-                      e.target.classList.remove("icon-cross");
-                      e.target.classList.add("icon-tick");
-                    }
-                  });
-                }
-            }
+    var activeSurvey = function(id) {
+      console.log(id);
+      $.ajax(
+        {
+          type: "GET",
+          url: "activesurvey/",
+          data: {
+            'id': id
+          },
+          success: function(data) {
+          }
         }
-    });
+      )
+    }
 
-    var ticks_parent = document.getElementById("changelist-form");
-    var config = {attributes:true, childList: true, subtree: true};
-    tick_observer.observe(ticks_parent, config);
+    // var tick_observer = new MutationObserver(function(mutations) {
+    //     for (let mutation of mutations) {
+    //         if (mutation.type === 'childList' && mutation.addedNodes.length == 1) {
+    //             if (mutation.target.classList.contains("switch")) {
+    //               if (mutation.target.querySelector("input:not([checked])")) {
+    //                 mutation.target.addEventListener("click", function(e){
+    //                   var inputs = e.target.closest("tr").querySelectorAll("input");
+    //                   for (var input of inputs) {
+    //                     if (input != e.target) {
+    //                       input.removeAttribute("checked");
+    //                     }
+    //                   }
+    //                 })
+    //               }
+    //               // mutation.target.addEventListener("click", function(e){
+    //               //   if (e.target.classList.contains("icon-tick")) {
+    //               //     e.target.classList.remove("icon-tick");
+    //               //     e.target.classList.add("icon-cross");
+    //               //   } else if (e.target.classList.contains("icon-cross")) {
+    //               //     e.target.classList.remove("icon-cross");
+    //               //     e.target.classList.add("icon-tick");
+    //               //   }
+    //               // });
+    //             }
+    //         }
+    //     }
+    // });
+
+    // var ticks_parent = document.getElementById("changelist-form");
+    // var config = {attributes:true, childList: true, subtree: true};
+    // tick_observer.observe(ticks_parent, config);
   </script>
 {% endblock %}

@@ -22,6 +22,7 @@ from django.contrib.admin.views.main import ChangeList
 from django.core.paginator import EmptyPage, InvalidPage, Paginator
 from django.forms import ModelForm
 from boolean_switch.admin import AdminBooleanMixin
+from django.db.models import Q
 
 class ProjectAdmin(admin.ModelAdmin):
 
@@ -238,13 +239,23 @@ class AODriverForm(forms.Form):
     ao_driver = forms.ModelChoiceField(queryset=None)
 
 # class SurveyAdmin(InlineActionsModelAdminMixin, admin.ModelAdmin):
-class SurveyAdmin(AdminBooleanMixin, admin.ModelAdmin):
-    list_display = ['surveyTitle', 'get_client', 'project', 'isActive']
+# class SurveyAdmin(AdminBooleanMixin, admin.ModelAdmin):
+class SurveyAdmin(admin.ModelAdmin):
+    list_display = ['surveyTitle', 'get_client', 'project', 'survey_status']
     search_fields = ['surveyTitle', 'project']
     list_filter = ['project']
     exclude = ['isStandard', 'isActive']
     list_per_page = 10
     
+    def survey_status(self, obj):
+        # return '<div><label class="switch"><input type="checkbox"><span class="slider round"></span></label></div>'
+        if obj.isActive:
+            return '<a onclick="activeSurvey(%s)"><label class="switch"><input type="radio" name="project_%s" checked><span class="slider round"></span></label></a>' % (obj.id, obj.project_id)
+        else:
+            return '<a onclick="activeSurvey(%s)"><label class="switch"><input type="radio" name="project_%s"><span class="slider round"></span></label></a>' % (obj.id, obj.project_id)
+    survey_status.allow_tags = True
+    survey_status.short_description = 'Survey Status'
+
     def change_view(self, request, object_id, form_url='', extra_context=None):
         extra = extra_context or {}
         amform = AMDriverForm()
@@ -287,8 +298,20 @@ class SurveyAdmin(AdminBooleanMixin, admin.ModelAdmin):
             url(r'resetaoqlong/', self.reset_aoq_long),
             url(r'resetaoqshort/', self.reset_aoq_short),
             url(r'resetshcategory/', self.reset_shcategory),
+            url(r'activesurvey/', self.active_survey),
         ]
         return my_urls + urls
+
+    def active_survey(self, request):
+        current_survey_id = request.GET['id']
+        project_id = Survey.objects.get(pk=current_survey_id).project_id
+        Survey.objects.filter(pk=current_survey_id).update(isActive=True)
+        Survey.objects.filter(~Q(pk=current_survey_id), project_id=project_id).update(isActive=False)
+        if request.is_ajax():
+            message = "Yes, AJAX!"
+        else:
+            message = "Not Ajax"
+        return HttpResponse(message)
 
     def reset_shcategory(self, request):
         current_survey_id = request.GET['id']
