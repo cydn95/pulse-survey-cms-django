@@ -373,7 +373,7 @@ class SurveyAdmin(admin.ModelAdmin):
                     
                     if std_driver.count() == 0:
                         messages.error(request, 'Standard Driver doesn\'t exist.')
-                        return HttpResponseRedirect("../#/tab/inline_1/")
+                        return HttpResponseRedirect("../#/tab/inline_2/")
 
                     for i in range(len(std_driver)):
                         obj = Driver(driverName=std_driver[i]['driverName'],
@@ -444,16 +444,16 @@ class SurveyAdmin(admin.ModelAdmin):
                         
                 else:
                     messages.info(request, 'This is the standard survey.')
-                    return HttpResponseRedirect("../#/tab/inline_1/")
+                    return HttpResponseRedirect("../#/tab/inline_2/")
             except Survey.DoesNotExist:
                 messages.error(request, 'Unknown errors. Please try again.')
-                return HttpResponseRedirect("../#/tab/inline_1/")
+                return HttpResponseRedirect("../#/tab/inline_2/")
         except Survey.DoesNotExist:
             messages.error(request, 'Unknown errors. Please try again.')
-            return HttpResponseRedirect("../#/tab/inline_1/")
+            return HttpResponseRedirect("../#/tab/inline_2/")
 
         messages.success(request, 'Driver has been reset.')
-        return HttpResponseRedirect("../#/tab/inline_1/")
+        return HttpResponseRedirect("../#/tab/inline_2/")
 
     def reset_amq(self, request):
         current_survey_id = request.GET['id']
@@ -473,7 +473,7 @@ class SurveyAdmin(admin.ModelAdmin):
                     std_driver = Driver.objects.filter(survey_id=std_survey.id).values()
                     if std_driver.count() == 0:
                         messages.error(request, 'Standard Driver doesn\'t exist.')
-                        return HttpResponseRedirect("../#/tab/inline_1/")
+                        return HttpResponseRedirect("../#/tab/inline_3/")
 
                     for i in range(len(std_driver)):
                         obj = None
@@ -524,17 +524,17 @@ class SurveyAdmin(admin.ModelAdmin):
 
                 else:
                     messages.info(request, 'This is the standard survey.')
-                    return HttpResponseRedirect("../#/tab/inline_2/")
+                    return HttpResponseRedirect("../#/tab/inline_3/")
 
             except Survey.DoesNotExist:
                 messages.error(request, 'Unknown errors. Please try again.')
-                return HttpResponseRedirect("../#/tab/inline_1/")
+                return HttpResponseRedirect("../#/tab/inline_3/")
         except Survey.DoesNotExist:
             messages.error(request, 'Unknown errors. Please try again.')
-            return HttpResponseRedirect("../#/tab/inline_1/")
+            return HttpResponseRedirect("../#/tab/inline_3/")
 
         messages.success(request, 'AM Question has been reset.')
-        return HttpResponseRedirect("../#/tab/inline_2/")
+        return HttpResponseRedirect("../#/tab/inline_3/")
 
     def reset_amq_long(self, request):
         current_survey_id = request.GET['id']
@@ -556,7 +556,7 @@ class SurveyAdmin(admin.ModelAdmin):
                     std_driver = Driver.objects.filter(survey_id=std_survey.id).values()
                     if std_driver.count() == 0:
                         messages.error(request, 'Standard Driver doesn\'t exist.')
-                        return HttpResponseRedirect("../#/tab/inline_1/")
+                        return HttpResponseRedirect("../#/tab/inline_3/")
                     
                     for i in range(len(std_driver)):
                         obj = None
@@ -607,17 +607,17 @@ class SurveyAdmin(admin.ModelAdmin):
 
                 else:
                     messages.info(request, 'This is the standard survey.')
-                    return HttpResponseRedirect("../#/tab/inline_2/")
+                    return HttpResponseRedirect("../#/tab/inline_3/")
 
             except Survey.DoesNotExist:
                 messages.error(request, 'Unknown errors. Please try again.')
-                return HttpResponseRedirect("../#/tab/inline_1/")
+                return HttpResponseRedirect("../#/tab/inline_3/")
         except Survey.DoesNotExist:
             messages.error(request, 'Unknown errors. Please try again.')
-            return HttpResponseRedirect("../#/tab/inline_1/")
+            return HttpResponseRedirect("../#/tab/inline_3/")
 
         messages.success(request, 'AM Question has been reset.')
-        return HttpResponseRedirect("../#/tab/inline_2/")
+        return HttpResponseRedirect("../#/tab/inline_3/")
 
     def reset_amq_short(self, request):
         current_survey_id = request.GET['id']
@@ -637,7 +637,7 @@ class SurveyAdmin(admin.ModelAdmin):
                     std_driver = Driver.objects.filter(survey_id=std_survey.id).values()
                     if std_driver.count() == 0:
                         messages.error(request, 'Standard Driver doesn\'t exist.')
-                        return HttpResponseRedirect("../#/tab/inline_1/")
+                        return HttpResponseRedirect("../#/tab/inline_3/")
 
                     for i in range(len(std_driver)):
                         obj = None
@@ -688,17 +688,17 @@ class SurveyAdmin(admin.ModelAdmin):
   
                 else:
                     messages.info(request, 'This is the standard survey.')
-                    return HttpResponseRedirect("../#/tab/inline_2/")
+                    return HttpResponseRedirect("../#/tab/inline_3/")
 
             except Survey.DoesNotExist:
                 messages.error(request, 'Unknown errors. Please try again.')
-                return HttpResponseRedirect("../#/tab/inline_1/")
+                return HttpResponseRedirect("../#/tab/inline_3/")
         except Survey.DoesNotExist:
             messages.error(request, 'Unknown errors. Please try again.')
-            return HttpResponseRedirect("../#/tab/inline_1/")
+            return HttpResponseRedirect("../#/tab/inline_3/")
 
         messages.success(request, 'AM Question has been reset.')
-        return HttpResponseRedirect("../#/tab/inline_2/")
+        return HttpResponseRedirect("../#/tab/inline_3/")
 
     def reset_aoq(self, request):
         current_survey_id = request.GET['id']
@@ -718,7 +718,7 @@ class SurveyAdmin(admin.ModelAdmin):
                     std_driver = Driver.objects.filter(survey_id=std_survey.id).values()
                     if std_driver.count() == 0:
                         messages.error(request, 'Standard Driver doesn\'t exist.')
-                        return HttpResponseRedirect("../#/tab/inline_1/")
+                        return HttpResponseRedirect("../#/tab/inline_4/")
 
                     for i in range(len(std_driver)):
                         obj = None
@@ -765,17 +765,17 @@ class SurveyAdmin(admin.ModelAdmin):
  
                 else:
                     messages.info(request, 'This is the standard survey.')
-                    return HttpResponseRedirect("../#/tab/inline_3/")
+                    return HttpResponseRedirect("../#/tab/inline_4/")
 
             except Survey.DoesNotExist:
                 messages.error(request, 'Unknown errors. Please try again.')
-                return HttpResponseRedirect("../#/tab/inline_1/")
+                return HttpResponseRedirect("../#/tab/inline_4/")
         except Survey.DoesNotExist:
             messages.error(request, 'Unknown errors. Please try again.')
-            return HttpResponseRedirect("../#/tab/inline_1/")
+            return HttpResponseRedirect("../#/tab/inline_4/")
 
         messages.success(request, 'AO Question has been reset.')
-        return HttpResponseRedirect("../#/tab/inline_3/")
+        return HttpResponseRedirect("../#/tab/inline_4/")
 
     def reset_aoq_long(self, request):
         current_survey_id = request.GET['id']
@@ -795,7 +795,7 @@ class SurveyAdmin(admin.ModelAdmin):
                     std_driver = Driver.objects.filter(survey_id=std_survey.id).values()
                     if std_driver.count() == 0:
                         messages.error(request, 'Standard Driver doesn\'t exist.')
-                        return HttpResponseRedirect("../#/tab/inline_1/")
+                        return HttpResponseRedirect("../#/tab/inline_4/")
 
                     for i in range(len(std_driver)):
                         obj = None
@@ -842,17 +842,17 @@ class SurveyAdmin(admin.ModelAdmin):
  
                 else:
                     messages.info(request, 'This is the standard survey.')
-                    return HttpResponseRedirect("../#/tab/inline_3/")
+                    return HttpResponseRedirect("../#/tab/inline_4/")
 
             except Survey.DoesNotExist:
                 messages.error(request, 'Unknown errors. Please try again.')
-                return HttpResponseRedirect("../#/tab/inline_1/")
+                return HttpResponseRedirect("../#/tab/inline_4/")
         except Survey.DoesNotExist:
             messages.error(request, 'Unknown errors. Please try again.')
-            return HttpResponseRedirect("../#/tab/inline_1/")
+            return HttpResponseRedirect("../#/tab/inline_4/")
 
         messages.success(request, 'AO Question has been reset.')
-        return HttpResponseRedirect("../#/tab/inline_3/")
+        return HttpResponseRedirect("../#/tab/inline_4/")
 
     def reset_aoq_short(self, request):
         current_survey_id = request.GET['id']
@@ -872,7 +872,7 @@ class SurveyAdmin(admin.ModelAdmin):
                     std_driver = Driver.objects.filter(survey_id=std_survey.id).values()
                     if std_driver.count() == 0:
                         messages.error(request, 'Standard Driver doesn\'t exist.')
-                        return HttpResponseRedirect("../#/tab/inline_1/")
+                        return HttpResponseRedirect("../#/tab/inline_4/")
 
                     for i in range(len(std_driver)):
                         obj = None
@@ -919,17 +919,17 @@ class SurveyAdmin(admin.ModelAdmin):
 
                 else:
                     messages.info(request, 'This is the standard survey.')
-                    return HttpResponseRedirect("../#/tab/inline_3/")
+                    return HttpResponseRedirect("../#/tab/inline_4/")
 
             except Survey.DoesNotExist:
                 messages.error(request, 'Unknown errors. Please try again.')
-                return HttpResponseRedirect("../#/tab/inline_1/")
+                return HttpResponseRedirect("../#/tab/inline_4/")
         except Survey.DoesNotExist:
             messages.error(request, 'Unknown errors. Please try again.')
-            return HttpResponseRedirect("../#/tab/inline_1/")
+            return HttpResponseRedirect("../#/tab/inline_4/")
 
         messages.success(request, 'AO Question has been reset.')
-        return HttpResponseRedirect("../#/tab/inline_3/")
+        return HttpResponseRedirect("../#/tab/inline_4/")
 
     def get_client(self, obj):
         return obj.project.client
