@@ -382,65 +382,65 @@ class SurveyAdmin(admin.ModelAdmin):
                                 survey_id=current_survey.id)
                         obj.save()
 
-                        driver_id = obj.id
+                        # driver_id = obj.id
 
-                        std_amq = AMQuestion.objects.filter(survey_id=std_survey.id, driver_id=std_driver[i]['id'])
+                        # std_amq = AMQuestion.objects.filter(survey_id=std_survey.id, driver_id=std_driver[i]['id'])
 
-                        for j in range(len(std_amq)):
-                            amq_obj = AMQuestion(survey=current_survey, driver=obj, 
-                                            subdriver=std_amq[j].subdriver,
-                                            questionText=std_amq[j].questionText,
-                                            controlType_id=std_amq[j].controlType_id,
-                                            questionSequence=std_amq[j].questionSequence,
-                                            sliderTextLeft=std_amq[j].sliderTextLeft,
-                                            sliderTextRight=std_amq[j].sliderTextRight,
-                                            skipOptionYN=std_amq[j].skipOptionYN,
-                                            topicPrompt=std_amq[j].topicPrompt,
-                                            commentPrompt=std_amq[j].commentPrompt,
-                                            #shGroup=std_amq[j].shGroup,
-                                            #option=std_amq[j].option,
-                                            #skipOption=std_amq[j].skipOption,
-                                            amqOrder=std_amq[j].amqOrder,
-                                            shortForm=std_amq[j].shortForm,
-                                            longForm=std_amq[j].longForm,
-                                            isStandard=True)
-                            amq_obj.save()
-                            stdamq_shgroup = std_amq[j].shGroup.all()
-                            for a in range(len(stdamq_shgroup)):
-                                amq_obj.shGroup.add(stdamq_shgroup[a])
-                            stdamq_option = std_amq[j].option.all()
-                            for b in range(len(stdamq_option)):
-                                amq_obj.option.add(stdamq_option[b])
-                            stdamq_skipoption = std_amq[j].skipOption.all()
-                            for c in range(len(stdamq_skipoption)):
-                                amq_obj.skipOption.add(stdamq_skipoption[c])
+                        # for j in range(len(std_amq)):
+                        #     amq_obj = AMQuestion(survey=current_survey, driver=obj, 
+                        #                     subdriver=std_amq[j].subdriver,
+                        #                     questionText=std_amq[j].questionText,
+                        #                     controlType_id=std_amq[j].controlType_id,
+                        #                     questionSequence=std_amq[j].questionSequence,
+                        #                     sliderTextLeft=std_amq[j].sliderTextLeft,
+                        #                     sliderTextRight=std_amq[j].sliderTextRight,
+                        #                     skipOptionYN=std_amq[j].skipOptionYN,
+                        #                     topicPrompt=std_amq[j].topicPrompt,
+                        #                     commentPrompt=std_amq[j].commentPrompt,
+                        #                     #shGroup=std_amq[j].shGroup,
+                        #                     #option=std_amq[j].option,
+                        #                     #skipOption=std_amq[j].skipOption,
+                        #                     amqOrder=std_amq[j].amqOrder,
+                        #                     shortForm=std_amq[j].shortForm,
+                        #                     longForm=std_amq[j].longForm,
+                        #                     isStandard=True)
+                        #     amq_obj.save()
+                        #     stdamq_shgroup = std_amq[j].shGroup.all()
+                        #     for a in range(len(stdamq_shgroup)):
+                        #         amq_obj.shGroup.add(stdamq_shgroup[a])
+                        #     stdamq_option = std_amq[j].option.all()
+                        #     for b in range(len(stdamq_option)):
+                        #         amq_obj.option.add(stdamq_option[b])
+                        #     stdamq_skipoption = std_amq[j].skipOption.all()
+                        #     for c in range(len(stdamq_skipoption)):
+                        #         amq_obj.skipOption.add(stdamq_skipoption[c])
 
-                        std_aoq = AOQuestion.objects.filter(survey_id=std_survey.id, driver_id=std_driver[i]['id'])
-                        for k in range(len(std_aoq)):
-                            aoq_obj = AOQuestion(survey=current_survey, driver=obj, 
-                                            subdriver=std_aoq[k].subdriver,
-                                            questionText=std_aoq[k].questionText,
-                                            controlType_id=std_aoq[k].controlType_id,
-                                            questionSequence=std_aoq[k].questionSequence,
-                                            sliderTextLeft=std_aoq[k].sliderTextLeft,
-                                            sliderTextRight=std_aoq[k].sliderTextRight,
-                                            skipOptionYN=std_aoq[k].skipOptionYN,
-                                            topicPrompt=std_aoq[k].topicPrompt,
-                                            commentPrompt=std_aoq[k].commentPrompt,
-                                            aoqOrder=std_aoq[k].aoqOrder,
-                                            shortForm=std_aoq[k].shortForm,
-                                            longForm=std_aoq[k].longForm,
-                                            isStandard=True)
-                            aoq_obj.save()
-                            stdaoq_shgroup = std_aoq[k].shGroup.all()
-                            for a in range(len(stdaoq_shgroup)):
-                                aoq_obj.shGroup.add(stdaoq_shgroup[a])
-                            stdaoq_option = std_aoq[k].option.all()
-                            for b in range(len(stdaoq_option)):
-                                aoq_obj.option.add(stdaoq_option[b])
-                            stdaoq_skipoption = std_aoq[k].skipOption.all()
-                            for c in range(len(stdaoq_skipoption)):
-                                aoq_obj.skipOption.add(stdaoq_skipoption[c])
+                        # std_aoq = AOQuestion.objects.filter(survey_id=std_survey.id, driver_id=std_driver[i]['id'])
+                        # for k in range(len(std_aoq)):
+                        #     aoq_obj = AOQuestion(survey=current_survey, driver=obj, 
+                        #                     subdriver=std_aoq[k].subdriver,
+                        #                     questionText=std_aoq[k].questionText,
+                        #                     controlType_id=std_aoq[k].controlType_id,
+                        #                     questionSequence=std_aoq[k].questionSequence,
+                        #                     sliderTextLeft=std_aoq[k].sliderTextLeft,
+                        #                     sliderTextRight=std_aoq[k].sliderTextRight,
+                        #                     skipOptionYN=std_aoq[k].skipOptionYN,
+                        #                     topicPrompt=std_aoq[k].topicPrompt,
+                        #                     commentPrompt=std_aoq[k].commentPrompt,
+                        #                     aoqOrder=std_aoq[k].aoqOrder,
+                        #                     shortForm=std_aoq[k].shortForm,
+                        #                     longForm=std_aoq[k].longForm,
+                        #                     isStandard=True)
+                        #     aoq_obj.save()
+                        #     stdaoq_shgroup = std_aoq[k].shGroup.all()
+                        #     for a in range(len(stdaoq_shgroup)):
+                        #         aoq_obj.shGroup.add(stdaoq_shgroup[a])
+                        #     stdaoq_option = std_aoq[k].option.all()
+                        #     for b in range(len(stdaoq_option)):
+                        #         aoq_obj.option.add(stdaoq_option[b])
+                        #     stdaoq_skipoption = std_aoq[k].skipOption.all()
+                        #     for c in range(len(stdaoq_skipoption)):
+                        #         aoq_obj.skipOption.add(stdaoq_skipoption[c])
                         
                 else:
                     messages.info(request, 'This is the standard survey.')
