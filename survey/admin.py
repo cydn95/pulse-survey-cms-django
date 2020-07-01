@@ -271,11 +271,11 @@ class SurveyAdmin(admin.ModelAdmin):
         
         if obj:
             self.inlines = [
+                SHGroupInline,
                 ProjectUserInline,
                 DriverInline,
                 AMQuestionInline,
                 AOQuestionInline,
-                SHGroupInline,
                 SHCategoryInline,
                 ConfigPageInline
             ]
