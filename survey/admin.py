@@ -227,6 +227,12 @@ class SHCategoryInline(admin.TabularInline):
 
         return formfield
 
+# class ProjectTeamInline(admin.TabularInline):
+#     model = Team
+#     extra = 0
+#     list_per_page = 10
+
+
 class ConfigPageInline(admin.StackedInline):
     model = ConfigPage
     extra = 0
