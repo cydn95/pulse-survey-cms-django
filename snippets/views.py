@@ -820,8 +820,6 @@ class UserBySurveyViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = ProjectUser.objects.all()
 
-        myProjectUser_id = self.request.GET.get('myProjectUser')
-
         # 2020-05-27
         # project = self.request.query_params.get('project', None)
         # user = self.request.query_params.get('user', None)
@@ -836,11 +834,11 @@ class UserBySurveyViewSet(viewsets.ModelViewSet):
         user = self.request.query_params.get('user', None)
         
         if (survey is not None) & (user is not None):
-            queryset = queryset.filter(survey__id=survey, user__id=user).exclude(pk=myProjectUser_id)
+            queryset = queryset.filter(survey__id=survey, user__id=user).exclude(user__id=self.request.user.id)
         elif survey is not None:
-            queryset = queryset.filter(survey__id=survey).exclude(pk=myProjectUser_id)   
+            queryset = queryset.filter(survey__id=survey).exclude(user__id=self.request.user.id)   
         elif user is not None:
-            queryset = queryset.filter(user__id=user).exclude(pk=myProjectUser_id)
+            queryset = queryset.filter(user__id=user).exclude(user__id=self.request.user.id)
 
         return queryset
 
