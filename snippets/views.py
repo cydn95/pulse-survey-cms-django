@@ -834,11 +834,14 @@ class UserBySurveyViewSet(viewsets.ModelViewSet):
         user = self.request.query_params.get('user', None)
         
         if (survey is not None) & (user is not None):
-            queryset = queryset.filter(survey__id=survey, user__id=user).exclude(user__id=self.request.user.id)
+            # queryset = queryset.filter(survey__id=survey, user__id=user).exclude(user__id=self.request.user.id)
+            queryset = queryset.filter(survey__id=survey, user__id=user)
         elif survey is not None:
-            queryset = queryset.filter(survey__id=survey).exclude(user__id=self.request.user.id)   
+            # queryset = queryset.filter(survey__id=survey).exclude(user__id=self.request.user.id)
+            queryset = queryset.filter(survey__id=survey)   
         elif user is not None:
-            queryset = queryset.filter(user__id=user).exclude(user__id=self.request.user.id)
+            # queryset = queryset.filter(user__id=user).exclude(user__id=self.request.user.id)
+            queryset = queryset.filter(user__id=user)
 
         return queryset
 
