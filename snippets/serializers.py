@@ -9,7 +9,7 @@ from page_nav.models import PageNav
 from team.models import Team
 from shgroup.models import SHGroup, ProjectUser, MyMapLayout, ProjectMapLayout, SHCategory, SHMapping
 from option.models import Option, SkipOption
-from organization.models import Organization, UserAvatar, UserTeam, UserTitle
+from organization.models import Organization, UserAvatar, UserTeam, UserTitle, UserGuideMode
 from survey.models import ToolTipGuide, Driver, Project, Survey, ProjectVideoUpload, Client, ConfigPage, NikelMobilePage
 from rest_framework.authtoken.models import Token
 
@@ -49,16 +49,22 @@ class UserTitleSerializer(serializers.ModelSerializer):
         model = UserTitle
         fields = '__all__'
 
+class UserGuideModeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserGuideMode
+        fields = '__all__'
+
 class UserSerializer(serializers.ModelSerializer):
     #snippets = serializers.HyperlinkedRelatedField(many=True, view_name='snippet-detail', read_only=True)
     organization = OrganizationSerializer()
     avatar = UserAvatarSerializer()
     userteam = UserTeamSerializer()
     usertitle = UserTitleSerializer()
+    guidemode = UserGuideModeSerializer()
 
     class Meta:
         model = User
-        fields = ['url', 'id', 'username', 'last_login', 'first_name', 'last_name', 'email', 'is_superuser', 'is_staff', 'is_active', 'snippets', 'organization', 'avatar', 'userteam', 'usertitle']
+        fields = ['url', 'id', 'username', 'last_login', 'first_name', 'last_name', 'email', 'is_superuser', 'is_staff', 'is_active', 'snippets', 'organization', 'avatar', 'userteam', 'usertitle', 'guidemode']
 
 
 # class SnippetSerializer(serializers.HyperlinkedModelSerializer):
