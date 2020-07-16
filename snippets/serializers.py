@@ -12,6 +12,7 @@ from option.models import Option, SkipOption
 from organization.models import Organization, UserAvatar, UserTeam, UserTitle, UserGuideMode
 from survey.models import ToolTipGuide, Driver, Project, Survey, ProjectVideoUpload, Client, ConfigPage, NikelMobilePage
 from rest_framework.authtoken.models import Token
+from drf_writable_nested.serializers import WritableNestedModelSerializer
 
 class EnumField(serializers.ChoiceField):
     def __init__(self, enum, **kwargs):
@@ -65,6 +66,29 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['url', 'id', 'username', 'last_login', 'first_name', 'last_name', 'email', 'is_superuser', 'is_staff', 'is_active', 'snippets', 'organization', 'avatar', 'userteam', 'usertitle', 'guidemode']
+        
+    # def create(self, validated_data):
+    #     organizations = Organization.objects.create(**(validated_data.pop('organization')))
+    #     avatars = UserAvatar.objects.create(**(validated_data.pop('avatar')))
+    #     userteams = UserTeam.objects.create(**(validated_data.pop('userteam')))
+    #     usertitles = UserTitle.objects.create(**(validated_data.pop('usertitle')))
+    #     guidemodes = UserGuideMode.objects.create(**(validated_data.pop('guidemode')))
+
+    #     user = User.objects.create(**validated_data, organization=organizations, avatar=avatars, userteam=userteams, usertitle=usertitles, guidemode=guidemodes)
+
+    #     return user
+
+
+    # def update(self, instance, validated_data):
+        # organization, _ = Organization.objects.update_or_create(id=instance.organization.id, defaults=validated_data.pop('organization'))
+        # avatar, _ = UserAvatar.objects.update_or_create(id=instance.avatar.id, defaults=validated_data.pop('avatar'))
+        # userteam, _ = UserTeam.objects.update_or_create(id=instance.userteam.id, defaults=validated_data.pop('userteam'))
+        # usertitle, _ = UserTitle.objects.update_or_create(id=instance.usertitle.id, defaults=validated_data.pop('usertitle'))
+        # guidemode, _ = UserGuideMode.objects.update_or_create(id=instance.guidemode.id, defaults=validated_data.pop('guidemode'))
+
+        # new_instance, _ = User.objects.update_or_create(id=instance.id, defaults=validated_data)
+        
+        # return new_instance
 
 
 # class SnippetSerializer(serializers.HyperlinkedModelSerializer):

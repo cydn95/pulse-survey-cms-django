@@ -20,7 +20,7 @@ from team.models import Team
 from shgroup.models import SHGroup, ProjectUser, MyMapLayout, ProjectMapLayout, SHCategory, SHMapping
 from option.models import Option, SkipOption
 from rest_framework import status
-from organization.models import Organization, UserAvatar, UserTeam
+from organization.models import Organization, UserAvatar, UserTeam, UserGuideMode
 from aboutothers.models import AOQuestion
 from survey.models import ToolTipGuide, Survey, Driver, Project, ProjectVideoUpload, ConfigPage, NikelMobilePage
 from rest_framework.views import APIView
@@ -52,6 +52,27 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+
+        for i in range(len(response.data)):
+            if response.data[i]['guidemode'] is None:
+                response.data[i]['guide'] = True
+            else:
+                response.data[i]['guide'] = response.data[i]['guidemode']['name']
+
+        return response
+
+    def retrieve(self, request, pk=None):
+        response = super().retrieve(request, pk)
+        
+        if response.data['guidemode'] is None:
+            response.data['guide'] = True
+        else:
+            response.data['guide'] = response.data['guidemode']['name']
+
+        return response
+        
 # class SnippetViewSet(viewsets.ModelViewSet):
 #     """
 #     This viewset automatically provides `list`, `create`, `retrieve`,
@@ -1140,6 +1161,35 @@ class ChangePasswordView(APIView):
             token = None
 
             return Response("Invaid Token", status=status.HTTP_400_BAD_REQUEST)
+
+class UserGuideModeView(APIView):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+
+    @classmethod
+    def get_extra_actions(cls):
+        return []
+
+    def post(self, request):
+        guidemode = request.data['guidemode']
+
+        try:
+            token = Token.objects.get(key=request.data['token'])
+
+            try:
+                userGuideMode = UserGuideMode.objects.get(user_id=token.user_id)
+                userGuideMode.name = guidemode
+
+                userGuideMode.save()
+            except UserGuideMode.DoesNotExist:
+                userGuideMode = UserGuideMode(name=guidemode, user_id=token.user_id)
+
+                userGuideMode.save()
+
+            return Response('success', status=status.HTTP_201_CREATED)
+        except Token.DoesNotExist:
+            token = None
+
+            return Response("Invalid Token", status=status.HTTP_400_BAD_REQUEST)
 
 class UserProfileView(APIView):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
