@@ -922,7 +922,6 @@ class MyMapLayoutViewSet(viewsets.ModelViewSet):
             
             if "application/json" in content_type:
                 
-
                 for item in data['pu_category']:
                     new_obj = ProjectUser.objects.get(id=item['projectUser'])
                     obj.projectUser.add(new_obj)

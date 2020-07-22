@@ -77,6 +77,7 @@ class Driver(models.Model):
     iconPath = models.CharField(max_length=255, blank=True)
     driveOrder = models.PositiveIntegerField(default=0, blank=False, null=False)
     survey = models.ForeignKey(Survey, on_delete=models.CASCADE)
+    isStandard = models.BooleanField(default=False)
     
     class Meta(object):
         ordering = ['driveOrder']

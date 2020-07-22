@@ -43,6 +43,7 @@ class DriverAdmin(SortableAdminMixin, admin.ModelAdmin):
     search_fields = ['driverName']
     list_filter = ['survey']
     list_display = ['driverName', 'survey', 'iconPath']
+    exclude = ['isStandard']
     list_per_page = 10
     model = Driver
 
@@ -93,7 +94,7 @@ class DriverInline(SortableInlineAdminMixin, admin.TabularInline):
     model = Driver
     extra = 0
     list_per_page = 10
-
+    exclude = ['isStandard']
     template = "admin/survey/edit_inline/driver_tabular.html"
 
 # class InlineChangeList(object):
@@ -385,7 +386,8 @@ class SurveyAdmin(admin.ModelAdmin):
                         obj = Driver(driverName=std_driver[i]['driverName'],
                                 iconPath=std_driver[i]['iconPath'],
                                 driveOrder=std_driver[i]['driveOrder'],
-                                survey_id=current_survey.id)
+                                survey_id=current_survey.id,
+                                isStandard=True)
                         obj.save()
 
                         # driver_id = obj.id
@@ -474,7 +476,7 @@ class SurveyAdmin(admin.ModelAdmin):
                     AMQuestion.objects.filter(survey_id=current_survey.id).delete()
                     # AOQuestion.objects.filter(survey_id=current_survey.id).delete()
                     if reset == 1:
-                        Driver.objects.filter(survey_id=current_survey.id).delete()
+                        Driver.objects.filter(survey_id=current_survey.id, isStandard=False).delete()
                     
                     std_driver = Driver.objects.filter(survey_id=std_survey.id).values()
                     if std_driver.count() == 0:
@@ -492,7 +494,7 @@ class SurveyAdmin(admin.ModelAdmin):
                             obj = Driver(driverName=std_driver[i]['driverName'],
                                     iconPath=std_driver[i]['iconPath'],
                                     driveOrder=std_driver[i]['driveOrder'],
-                                    survey_id=current_survey.id)
+                                    survey_id=current_survey.id, isStandard=True)
                             obj.save()
 
                         driver_id = obj.id
@@ -555,7 +557,7 @@ class SurveyAdmin(admin.ModelAdmin):
                     AMQuestion.objects.filter(survey_id=current_survey.id).delete()
                     # AOQuestion.objects.filter(survey_id=current_survey.id).delete()
                     if reset == 1:
-                        Driver.objects.filter(survey_id=current_survey.id).delete()
+                        Driver.objects.filter(survey_id=current_survey.id, isStandard=False).delete()
                     
                     
 
@@ -575,7 +577,7 @@ class SurveyAdmin(admin.ModelAdmin):
                             obj = Driver(driverName=std_driver[i]['driverName'],
                                     iconPath=std_driver[i]['iconPath'],
                                     driveOrder=std_driver[i]['driveOrder'],
-                                    survey_id=current_survey.id)
+                                    survey_id=current_survey.id, isStandard=True)
                             obj.save()
 
                         driver_id = obj.id
@@ -638,7 +640,7 @@ class SurveyAdmin(admin.ModelAdmin):
                     AMQuestion.objects.filter(survey_id=current_survey.id).delete()
                     # AOQuestion.objects.filter(survey_id=current_survey.id).delete()
                     if reset == 1:
-                        Driver.objects.filter(survey_id=current_survey.id).delete()
+                        Driver.objects.filter(survey_id=current_survey.id, isStandard=False).delete()
                     
                     std_driver = Driver.objects.filter(survey_id=std_survey.id).values()
                     if std_driver.count() == 0:
@@ -656,7 +658,7 @@ class SurveyAdmin(admin.ModelAdmin):
                             obj = Driver(driverName=std_driver[i]['driverName'],
                                     iconPath=std_driver[i]['iconPath'],
                                     driveOrder=std_driver[i]['driveOrder'],
-                                    survey_id=current_survey.id)
+                                    survey_id=current_survey.id, isStandard=True)
                             obj.save()
 
                         driver_id = obj.id
@@ -719,7 +721,7 @@ class SurveyAdmin(admin.ModelAdmin):
                     # AMQuestion.objects.filter(survey_id=current_survey.id).delete()
                     AOQuestion.objects.filter(survey_id=current_survey.id).delete()
                     if reset == 1:
-                        Driver.objects.filter(survey_id=current_survey.id).delete()
+                        Driver.objects.filter(survey_id=current_survey.id, isStandard=False).delete()
 
                     std_driver = Driver.objects.filter(survey_id=std_survey.id).values()
                     if std_driver.count() == 0:
@@ -737,7 +739,7 @@ class SurveyAdmin(admin.ModelAdmin):
                             obj = Driver(driverName=std_driver[i]['driverName'],
                                     iconPath=std_driver[i]['iconPath'],
                                     driveOrder=std_driver[i]['driveOrder'],
-                                    survey_id=current_survey.id)
+                                    survey_id=current_survey.id, isStandard=True)
                             obj.save()
 
                         driver_id = obj.id
@@ -796,7 +798,7 @@ class SurveyAdmin(admin.ModelAdmin):
                     # AMQuestion.objects.filter(survey_id=current_survey.id).delete()
                     AOQuestion.objects.filter(survey_id=current_survey.id).delete()
                     if reset == 1:
-                        Driver.objects.filter(survey_id=current_survey.id).delete()
+                        Driver.objects.filter(survey_id=current_survey.id, isStandard=False).delete()
                     
                     std_driver = Driver.objects.filter(survey_id=std_survey.id).values()
                     if std_driver.count() == 0:
@@ -814,7 +816,7 @@ class SurveyAdmin(admin.ModelAdmin):
                             obj = Driver(driverName=std_driver[i]['driverName'],
                                     iconPath=std_driver[i]['iconPath'],
                                     driveOrder=std_driver[i]['driveOrder'],
-                                    survey_id=current_survey.id)
+                                    survey_id=current_survey.id, isStandard=True)
                             obj.save()
 
                         driver_id = obj.id
@@ -873,7 +875,7 @@ class SurveyAdmin(admin.ModelAdmin):
                     # AMQuestion.objects.filter(survey_id=current_survey.id).delete()
                     AOQuestion.objects.filter(survey_id=current_survey.id).delete()
                     if reset == 1:
-                        Driver.objects.filter(survey_id=current_survey.id).delete()
+                        Driver.objects.filter(survey_id=current_survey.id, isStandard=False).delete()
                     
                     std_driver = Driver.objects.filter(survey_id=std_survey.id).values()
                     if std_driver.count() == 0:
@@ -891,7 +893,7 @@ class SurveyAdmin(admin.ModelAdmin):
                             obj = Driver(driverName=std_driver[i]['driverName'],
                                     iconPath=std_driver[i]['iconPath'],
                                     driveOrder=std_driver[i]['driveOrder'],
-                                    survey_id=current_survey.id)
+                                    survey_id=current_survey.id, isStandard=True)
                             obj.save()
 
                         driver_id = obj.id
