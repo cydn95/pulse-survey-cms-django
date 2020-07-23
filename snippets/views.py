@@ -582,12 +582,12 @@ class ProjectUserViewSet(viewsets.ModelViewSet):
 
         shMyCategories = request.data['shMyCategory']
         
-        MyMapLayout.objects.filter(user_id=request.user.id, project_id=request.data['project']).delete()
-        obj = MyMapLayout.objects.create(user_id=request.user.id, project_id=request.data['project'])
+        # MyMapLayout.objects.filter(user_id=request.user.id, project_id=request.data['project']).delete()
+        obj = MyMapLayout.objects.get(user_id=request.user.id, project_id=request.data['project'])
 
-        obj.user_id = request.user.id
-        obj.project_id = request.data['project']
-        obj.layout_json = ''   
+        # obj.user_id = request.user.id
+        # obj.project_id = request.data['project']
+        # obj.layout_json = ''   
 
         # 2020-05-20     added projectUser, subProjectUser
         # SHMapping.objects.filter(projectUser_id=projectUser_id).delete()
@@ -595,8 +595,8 @@ class ProjectUserViewSet(viewsets.ModelViewSet):
         SHMapping.objects.filter(projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id).delete()
 
         for i in range(len(shMyCategories)):
-            new_obj = ProjectUser.objects.get(id=projectUser_id)
-            obj.projectUser.add(new_obj)
+            # new_obj = ProjectUser.objects.get(id=projectUser_id)
+            # obj.projectUser.add(new_obj)
 
             try:
                 # 2020-05-20
@@ -608,20 +608,20 @@ class ProjectUserViewSet(viewsets.ModelViewSet):
                 mapObj = SHMapping(shCategory_id=shMyCategories[i], projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id, relationshipStatus="")
                 mapObj.save()
         
-        obj.save()
+        # obj.save()
 
         shProjectCategories = request.data['shProjectCategory']
 
-        ProjectMapLayout.objects.filter(user_id=request.user.id, project_id=request.data['project']).delete()
-        obj1 = ProjectMapLayout.objects.create(user_id=request.user.id, project_id=request.data['project'])
+        # ProjectMapLayout.objects.filter(user_id=request.user.id, project_id=request.data['project']).delete()
+        obj1 = ProjectMapLayout.objects.get(user_id=request.user.id, project_id=request.data['project'])
 
-        obj1.user_id = request.user.id
-        obj1.project_id = request.data['project']
-        obj1.layout_json = ''
+        # obj1.user_id = request.user.id
+        # obj1.project_id = request.data['project']
+        # obj1.layout_json = ''
 
         for j in range(len(shProjectCategories)):
-            new_obj1 = ProjectUser.objects.get(id=projectUser_id)
-            obj1.projectUser.add(new_obj1)
+            # new_obj1 = ProjectUser.objects.get(id=projectUser_id)
+            # obj1.projectUser.add(new_obj1)
 
             try:
                 # 2020-05-20
@@ -633,7 +633,7 @@ class ProjectUserViewSet(viewsets.ModelViewSet):
                 mapObj1 = SHMapping(shCategory_id=shProjectCategories[j], projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id, relationshipStatus="")
                 mapObj1.save()
         
-        obj1.save()
+        # obj1.save()
 
         return ret
 
