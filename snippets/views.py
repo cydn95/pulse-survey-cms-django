@@ -918,7 +918,7 @@ class MyMapLayoutViewSet(viewsets.ModelViewSet):
         try:
             obj = MyMapLayout.objects.get(user_id=data['user'], project_id=data['project'])
 
-            obj.projectUser.clear()
+            #obj.projectUser.clear()
             
             if "application/json" in content_type:
                 
@@ -941,7 +941,7 @@ class MyMapLayoutViewSet(viewsets.ModelViewSet):
             #         new_obj = ProjectUser.objects.get(id=item.projectUser)
             #         obj.projectUser.add(new_obj)
 
-            obj.save()
+            #obj.save()
 
         except MyMapLayout.DoesNotExist:
             obj = MyMapLayout.objects.create(user_id=data['user'], project_id=data['project'])
@@ -1030,7 +1030,7 @@ class ProjectMapLayoutViewSet(viewsets.ModelViewSet):
         try:
             obj = ProjectMapLayout.objects.get(user_id=data['user'], project_id=data['project'])
 
-            obj.projectUser.clear()
+            #obj.projectUser.clear()
 
             if "application/json" in content_type:
                 for item in data["pu_category"]:
@@ -1046,7 +1046,7 @@ class ProjectMapLayoutViewSet(viewsets.ModelViewSet):
                         # mapObj = SHMapping(shCategory_id=item['category'], projectUser_id=item['projectUser'], relationshipStatus="")
                         mapObj = SHMapping(shCategory_id=item['category'], projectUser_id=myProjectUser_id, subProjectUser_id=item['projectUser'], relationshipStatus="")
                         mapObj.save()
-            obj.save()
+            #obj.save()
 
         except ProjectMapLayout.DoesNotExist:
             obj = ProjectMapLayout.objects.create(user_id=data['user'], project_id=data['project'])
