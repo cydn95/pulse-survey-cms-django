@@ -25,6 +25,7 @@ from aboutothers.models import AOQuestion
 from survey.models import ToolTipGuide, Survey, Driver, Project, ProjectVideoUpload, ConfigPage, NikelMobilePage
 from rest_framework.views import APIView
 from django.forms.models import model_to_dict
+from django.db.models import Q
 
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
@@ -844,9 +845,11 @@ class UserBySurveyViewSet(viewsets.ModelViewSet):
         response = super().list(request, *args, **kwargs)
 
         myProjectUser_id = self.request.GET.get('myProjectUser')
+        survey = self.request.GET.get('survey')
 
         for i in range(len(response.data)):
-            response.data[i]['am_total'] = AMQuestion.objects.count()
+            filters = ~Q(shGroup=None)
+            response.data[i]['am_total'] = AMQuestion.objects.filter(filters).filter(survey__id=survey).count()
             response.data[i]['am_response'] = []
             # 2020-05-20
             # for item1 in AMResponse.objects.filter(user_id=response.data[i]['user']['id'], project_id=response.data[i]['project']['id']).values('amQuestion'):
@@ -860,7 +863,7 @@ class UserBySurveyViewSet(viewsets.ModelViewSet):
             for item1 in AMResponse.objects.filter(projectUser_id=response.data[i]['id']).values('amQuestion'):
                 response.data[i]['am_response'].append(item1['amQuestion']) 
             response.data[i]['am_answered'] = AMResponse.objects.filter(projectUser_id=response.data[i]['id']).count()
-            response.data[i]['ao_total'] = AOQuestion.objects.count()
+            response.data[i]['ao_total'] = AOQuestion.objects.filter(filters).filter(survey__id=survey).count()
             response.data[i]['ao_response'] = []
             for item2 in AOResponse.objects.filter(subProjectUser_id=response.data[i]['id']).values('aoQuestion'):
                 response.data[i]['ao_response'].append(item2['aoQuestion']) 
