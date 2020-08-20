@@ -223,7 +223,10 @@ class PageViewSet(viewsets.ReadOnlyModelViewSet):
                             
                             if (len(ret) > 0):
                                 list_drivers[i]['aoquestion'][j]['responsestatus'] = True
-                                list_drivers[i]['aoquestion'][j]['response'] = model_to_dict(ret)
+                                list_drivers[i]['aoquestion'][j]['response'] = []
+                                for k in range(len(ret)):
+                                    item = model_to_dict(ret[k])
+                                    list_drivers[i]['aoquestion'][j]['response'].append(item)
                             # except AOResponse.DoesNotExist:
                             else:
                                 list_drivers[i]['aoquestion'][j]['responsestatus'] = False
@@ -280,7 +283,10 @@ class PageViewSet(viewsets.ReadOnlyModelViewSet):
                             
                             if (len(ret) > 0):
                                 list_drivers[i]['aoquestion'][j]['responsestatus'] = True
-                                list_drivers[i]['aoquestion'][j]['response'] = model_to_dict(ret)
+                                list_drivers[i]['aoquestion'][j]['response'] = []
+                                for k in range(len(ret)):
+                                    item = model_to_dict(ret[k])
+                                    list_drivers[i]['aoquestion'][j]['response'].append(item)
                             # except AOResponse.DoesNotExist:
                             else:
                                 list_drivers[i]['aoquestion'][j]['responsestatus'] = False
