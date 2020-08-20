@@ -1,7 +1,7 @@
 from django.db import models
 from survey.models import Survey, Driver, Project
 from setting.models import ControlType
-from shgroup.models import SHGroup, ProjectUser, SHMapping
+from shgroup.models import SHGroup, ProjectUser, SHCategory
 from option.models import Option, SkipOption
 from page_setting.models import PageSetting
 from django.contrib.auth.models import User
@@ -59,8 +59,9 @@ class AOResponse(models.Model):
     # user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="aoUser")
     # subjectUser = models.ForeignKey(User, on_delete=models.CASCADE, related_name="aoSubjectUser")
     projectUser = models.ForeignKey(ProjectUser, on_delete=models.CASCADE, related_name="aoProjectUser")
-    # subProjectUser = models.ForeignKey(ProjectUser, on_delete=models.CASCADE, related_name="aoSubProjectUser")
-    subProjectUser = models.ForeignKey(SHMapping, on_delete=models.CASCADE, related_name="aoSubProjectUser")
+    subProjectUser = models.ForeignKey(ProjectUser, on_delete=models.CASCADE, related_name="aoSubProjectUser")
+    shCategory = models.ForeignKey(SHCategory, on_delete=models.CASCADE)
+    # subProjectUser = models.ForeignKey(SHMapping, on_delete=models.CASCADE, related_name="aoSubProjectUser")
     survey = models.ForeignKey(Survey, on_delete=models.CASCADE)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     aoQuestion = models.ForeignKey(AOQuestion, on_delete=models.CASCADE)

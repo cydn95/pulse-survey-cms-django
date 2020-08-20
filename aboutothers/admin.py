@@ -133,12 +133,12 @@ class AOResponseAdmin(ImportExportModelAdmin):
     #     return form
 
     # update user, subjectuser to projectUser, subjectProjectUser     2020-05-20
-    list_display = ['aoQuestion', 'projectUser', 'subProjectUser', 'project', 'survey', 'integerValue', 'topicValue', 'commentValue', 'skipValue']
-    fileds = ['projectUser', 'subProjectUser', 'survey', 'project', 'aoQuestion', 'controlType', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags']
-    readonly_fields = ['projectUser', 'subProjectUser', 'survey', 'project', 'aoQuestion', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags']
+    list_display = ['aoQuestion', 'projectUser', 'subProjectUser', 'shCategory', 'project', 'survey', 'integerValue', 'topicValue', 'commentValue', 'skipValue']
+    fileds = ['projectUser', 'subProjectUser', 'shCategory', 'survey', 'project', 'aoQuestion', 'controlType', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags']
+    readonly_fields = ['projectUser', 'subProjectUser', 'shCategory', 'survey', 'project', 'aoQuestion', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags']
     
     search_fields = ['aoQuestion']
-    list_filter = ['projectUser', 'subProjectUser', 'project', 'survey']
+    list_filter = ['projectUser', 'subProjectUser', 'shCategory', 'project', 'survey']
     list_per_page = 10
     
     model = AOResponse
@@ -153,36 +153,36 @@ class AOResponseAdmin(ImportExportModelAdmin):
         skipValue = getattr(obj, 'skipValue')
         if controlType == 'TEXT':
             if skipValue != '':
-                self.fields = ['projectUser', 'subProjectUser', 'survey', 'project', 'aoQuestion', 'skipValue']
+                self.fields = ['projectUser', 'subProjectUser', 'shCategory', 'survey', 'project', 'aoQuestion', 'skipValue']
             else:
-                self.fields = ['projectUser', 'subProjectUser', 'survey', 'project', 'aoQuestion', 'topicValue', 'commentValue']
+                self.fields = ['projectUser', 'subProjectUser', 'shCategory', 'survey', 'project', 'aoQuestion', 'topicValue', 'commentValue']
         elif controlType == 'SLIDER':
             if skipValue != '':
-                self.fields = ['projectUser', 'subProjectUser', 'survey', 'project', 'aoQuestion', 'skipValue']
+                self.fields = ['projectUser', 'subProjectUser', 'shCategory', 'survey', 'project', 'aoQuestion', 'skipValue']
             else:
-                self.fields = ['projectUser', 'subProjectUser', 'survey', 'project', 'aoQuestion', 'integerValue', 'commentValue']
+                self.fields = ['projectUser', 'subProjectUser', 'shCategory', 'survey', 'project', 'aoQuestion', 'integerValue', 'commentValue']
         elif controlType == 'TWO_OPTIONS':
             if skipValue != '':
-                self.fields = ['projectUser', 'subProjectUser', 'survey', 'project', 'aoQuestion', 'skipValue']
+                self.fields = ['projectUser', 'subProjectUser', 'shCategory', 'survey', 'project', 'aoQuestion', 'skipValue']
             else:
-                self.fields = ['projectUser', 'subProjectUser', 'survey', 'project', 'aoQuestion', 'topicValue', 'commentValue']
+                self.fields = ['projectUser', 'subProjectUser', 'shCategory', 'survey', 'project', 'aoQuestion', 'topicValue', 'commentValue']
         elif controlType == 'MULTI_OPTIONS':
             if skipValue != '':
-                self.fields = ['projectUser', 'subProjectUser', 'survey', 'project', 'aoQuestion', 'skipValue']
+                self.fields = ['projectUser', 'subProjectUser', 'shCategory', 'survey', 'project', 'aoQuestion', 'skipValue']
             else:
-                self.fields = ['projectUser', 'subProjectUser', 'survey', 'project', 'aoQuestion', 'topicValue', 'commentValue']
+                self.fields = ['projectUser', 'subProjectUser', 'shCategory', 'survey', 'project', 'aoQuestion', 'topicValue', 'commentValue']
         elif controlType == 'MULTI_TOPICS':
             if skipValue != '':
-                self.fields = ['projectUser', 'subProjectUser', 'survey', 'project', 'aoQuestion', 'skipValue']
+                self.fields = ['projectUser', 'subProjectUser', 'shCategory', 'survey', 'project', 'aoQuestion', 'skipValue']
             else:
-                self.fields = ['projectUser', 'subProjectUser', 'survey', 'project', 'aoQuestion', 'topicValue', 'commentValue']
+                self.fields = ['projectUser', 'subProjectUser', 'shCategory', 'survey', 'project', 'aoQuestion', 'topicValue', 'commentValue']
         elif controlType == 'SMART_TEXT':
             if skipValue != '':
-                self.fields = ['projectUser', 'subProjectUser', 'survey', 'project', 'aoQuestion', 'skipValue']
+                self.fields = ['projectUser', 'subProjectUser', 'shCategory', 'survey', 'project', 'aoQuestion', 'skipValue']
             else:
-                self.fields = ['projectUser', 'subProjectUser', 'survey', 'project', 'aoQuestion', 'topicValue', 'commentValue']
+                self.fields = ['projectUser', 'subProjectUser', 'shCategory', 'survey', 'project', 'aoQuestion', 'topicValue', 'commentValue']
         else:
-            self.fields = ['projectUser', 'subProjectUser', 'survey', 'project', 'aoQuestion', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags']
+            self.fields = ['projectUser', 'subProjectUser', 'shCategory', 'survey', 'project', 'aoQuestion', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags']
 
         return form
 
