@@ -1343,3 +1343,163 @@ class ToolTipGuideViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
     queryset = ToolTipGuide.objects.all()
     serializer_class = ToolTipGuideSerializer
+
+
+
+###
+class ReportByStakeholderViewSet(viewsets.ModelViewSet):
+
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+    queryset = MyMapLayout.objects.all()
+    serializer_class = MyMapLayoutStoreSerializer
+    filterset_fields = ['user', 'project']
+
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+
+        # 2020-05-20
+        myProjectUser_id = self.request.GET.get('myProjectUser')
+        
+        for i in range(len(response.data)):
+            response.data[i]['pu_category'] = []
+            for item in response.data[i]['projectUser']:
+                catIDs = SHMapping.objects.filter(projectUser_id=myProjectUser_id, subProjectUser_id=item)
+
+                for catID in catIDs:
+                    try:
+                        obj = SHCategory.objects.get(id=catID.shCategory_id, mapType=2)
+                        response.data[i]['pu_category'].append({'projectUser':item, 'category':catID.shCategory_id})
+                    except SHCategory.DoesNotExist:
+                        continue
+        return response
+
+    def create(self, request, *args, **kwargs):
+        data = request.data
+        content_type = request.content_type
+        myProjectUser_id = data['myProjectUser']
+
+        try:
+            obj = MyMapLayout.objects.get(user_id=data['user'], project_id=data['project'])
+
+            obj.projectUser.clear()
+            
+            if "application/json" in content_type:
+                
+                for item in data['pu_category']:
+                    new_obj = ProjectUser.objects.get(id=item['projectUser'])
+                    obj.projectUser.add(new_obj)
+
+                    try:
+                        
+                        shObj = SHMapping.objects.get(shCategory_id=item['category'], projectUser_id=myProjectUser_id, subProjectUser_id=item['projectUser'])
+                    except SHMapping.DoesNotExist:
+                        
+                        mapObj = SHMapping(shCategory_id=item['category'], projectUser_id=myProjectUser_id, subProjectUser_id=item['projectUser'], relationshipStatus="")
+                        mapObj.save()
+
+            obj.save()
+
+        except MyMapLayout.DoesNotExist:
+            obj = MyMapLayout.objects.create(user_id=data['user'], project_id=data['project'])
+
+            obj.user_id = data['user']
+            obj.project_id = data['project']
+            obj.layout_json = data['layout_json']
+
+            if "application/json" in content_type:
+                for item in data['pu_category']:
+                    new_obj = ProjectUser.objects.get(id=item['projectUser'])
+                    obj.projectUser.add(new_obj)
+
+                    try:
+                        
+                        shObj = SHMapping.objects.get(shCategory_id=item['category'], projectUser_id=myProjectUser_id, subProjectUser_id=item['projectUser'])
+                    except SHMapping.DoesNotExist:
+                        
+                        mapObj = SHMapping(shCategory_id=item['category'], projectUser_id=myProjectUser_id, subProjectUser_id=item['projectUser'], relationshipStatus="")
+                        mapObj.save()
+
+            obj.save()
+
+        result = model_to_dict(MyMapLayout.objects.get(user_id=data['user'], project_id=data['project']))
+
+        list_result = result
+        for idx in range(len(result['projectUser'])):
+            list_result['projectUser'][idx] = result['projectUser'][idx].id
+
+        serializer = self.get_serializer(data=list_result)
+        serializer.is_valid(raise_exception=True)
+        headers = self.get_success_headers(serializer.data)
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+
+class ReportByProjectViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated,permissions.IsAuthenticatedOrReadOnly]
+    queryset = AOResponse.objects.all()
+    serializer_class = AOResponseSerializer
+
+    def create(self, request, *args, **kwargs):
+        data = request.data.get("items") if 'items' in request.data else request.data
+        many = isinstance(data, list)
+        
+        if many == True:
+            for item in data:
+                defaults = item
+                try:
+                    obj = AOResponse.objects.get(survey_id=item['survey'], project_id=item['project'], projectUser_id=item['projectUser'], subProjectUser_id=item['subProjectUser'], shCategory_id=item['shCategory'], aoQuestion_id=item['aoQuestion'])
+
+                    obj.integerValue = defaults['integerValue']
+                    obj.topicValue = defaults['topicValue']
+                    obj.commentValue = defaults['commentValue']
+                    obj.skipValue = defaults['skipValue']
+                    obj.topicTags = defaults['topicTags']
+                    obj.commentTags = defaults['commentTags']
+
+                    obj.save()
+
+                except AOResponse.DoesNotExist:
+                    obj = AOResponse(aoQuestion_id=defaults['aoQuestion'],
+                                projectUser_id=defaults['projectUser'], subProjectUser_id=defaults['subProjectUser'],
+                                shCategory_id=defaults['shCategory'],
+                                survey_id=defaults['survey'], project_id=defaults['project'],
+                                controlType=defaults['controlType'], integerValue=defaults['integerValue'],
+                                topicValue=defaults['topicValue'], commentValue=defaults['commentValue'],
+                                skipValue=defaults['skipValue'], topicTags=defaults['topicTags'],
+                                commentTags=defaults['commentTags'])
+                    obj.save()
+        elif many == False:
+            defaults = data
+            try:
+               
+                obj = AOResponse.objects.get(survey_id=item['survey'], project_id=item['project'], projectUser_id=item['projectUser'], subProjectUser_id=item['subProjectUser'], shCategory_id=item['shCategory'], aoQuestion_id=item['aoQuestion'])
+
+                obj.integerValue = defaults['integerValue']
+                obj.topicValue = defaults['topicValue']
+                obj.commentValue = defaults['commentValue']
+                obj.skipValue = defaults['skipValue']
+                obj.topicTags = defaults['topicTags']
+                obj.commentTags = defaults['commentTags']
+
+                obj.save()
+            except AOResponse.DoesNotExist:
+                
+                obj = AOResponse(aoQuestion_id=defaults['aoQuestion'],
+                            projectUser_id=defaults['projectUser'], subProjectUser_id=defaults['subProjectUser'],
+                            shCategory_id=defaults['shCategory'],
+                            survey_id=defaults['survey'], project_id=defaults['project'],
+                            controlType=defaults['controlType'], integerValue=defaults['integerValue'],
+                            topicValue=defaults['topicValue'], commentValue=defaults['commentValue'],
+                            skipValue=defaults['skipValue'], topicTags=defaults['topicTags'],
+                            commentTags=defaults['commentTags'])
+                obj.save()
+        
+        
+        result = AOResponse.objects.all().values('projectUser', 'subProjectUser', 'shCategory', 'survey', 'project', 'aoQuestion', 'controlType', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags')
+        
+        list_result = [entry for entry in result]
+
+        serializer = self.get_serializer(data=list_result, many=True)
+        serializer.is_valid(raise_exception=True)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
