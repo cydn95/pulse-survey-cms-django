@@ -538,6 +538,15 @@ class TeamViewSet(viewsets.ModelViewSet):
     queryset = Team.objects.all()
     serializer_class = TeamSerializer
 
+    def get_queryset(self):
+        queryset = Team.objects.all()
+
+        project = self.request.query_params.get('project', None)
+        if project is not None:
+            queryset = queryset.filter(project__id=project)
+
+        return queryset
+        
     def create(self, request, *args, **kwargs):
         data = request.data.get("items") if 'items' in request.data else request.data
         many = isinstance(data, list)
