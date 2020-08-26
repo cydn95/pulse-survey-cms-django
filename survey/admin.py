@@ -257,9 +257,9 @@ class SurveyAdmin(admin.ModelAdmin):
     def survey_status(self, obj):
         # return '<div><label class="switch"><input type="checkbox"><span class="slider round"></span></label></div>'
         if obj.isActive:
-            return '<a onclick="activeSurvey(%s)"><label class="switch"><input type="radio" name="project_%s" checked><span class="slider round"></span></label></a>' % (obj.id, obj.project_id)
+            return '<a onclick="activeSurvey(%s, 0)"><label class="switch"><input type="checkbox" name="project_%s" checked><span class="slider round"></span></label></a>' % (obj.id, obj.project_id)
         else:
-            return '<a onclick="activeSurvey(%s)"><label class="switch"><input type="radio" name="project_%s"><span class="slider round"></span></label></a>' % (obj.id, obj.project_id)
+            return '<a onclick="activeSurvey(%s, 1)"><label class="switch"><input type="checkbox" name="project_%s"><span class="slider round"></span></label></a>' % (obj.id, obj.project_id)
     survey_status.allow_tags = True
     survey_status.short_description = 'Survey Status'
 
@@ -311,8 +311,15 @@ class SurveyAdmin(admin.ModelAdmin):
 
     def active_survey(self, request):
         current_survey_id = request.GET['id']
+        status = request.GET['status']
+
         project_id = Survey.objects.get(pk=current_survey_id).project_id
-        Survey.objects.filter(pk=current_survey_id).update(isActive=True)
+        
+        if status == "1":
+            Survey.objects.filter(pk=current_survey_id).update(isActive=True)
+        elif status == "0":
+            Survey.objects.filter(pk=current_survey_id).update(isActive=False)
+
         Survey.objects.filter(~Q(pk=current_survey_id), project_id=project_id).update(isActive=False)
         if request.is_ajax():
             message = "Yes, AJAX!"
