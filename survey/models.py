@@ -22,9 +22,9 @@ class Survey(models.Model):
     surveyTitle = models.CharField(max_length=200)
     isStandard = models.BooleanField(default=False)
     isActive = models.BooleanField(default=False)
-    customGroup1 = models.CharField(max_length=100, default="")
-    customGroup2 = models.CharField(max_length=100, default="")
-    customGroup3 = models.CharField(max_length=100, default="")
+    customGroup1 = models.CharField(max_length=100, blank=True, default="")
+    customGroup2 = models.CharField(max_length=100, blank=True, default="")
+    customGroup3 = models.CharField(max_length=100, blank=True, default="")
 
     def __str__(self):
         return self.surveyTitle
