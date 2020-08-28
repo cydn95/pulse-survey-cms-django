@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
 from django.forms.models import ModelForm
 from django.forms.widgets import CheckboxSelectMultiple
 from django import forms
+from django.utils import timezone
 
 # Create your models here.
 class AOQuestion(models.Model):
@@ -73,11 +74,17 @@ class AOResponse(models.Model):
     topicTags = models.TextField(blank=True)
     commentTags = models.TextField(blank=True)
 
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(default=timezone.now)
+
 class AOResponseTopic(models.Model):
     aoQuestion = models.ForeignKey(AOQuestion, on_delete=models.CASCADE)
     responseUser = models.ForeignKey(ProjectUser, on_delete=models.CASCADE)
     topicName = models.CharField(max_length=255, blank=True)
     topicComment = models.CharField(max_length=255, blank=True)
+
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(default=timezone.now)
     
 class AOPage(models.Model):
     aoPageName = models.CharField(max_length=50)

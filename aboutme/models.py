@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
 from django.forms.models import ModelForm
 from django.forms.widgets import CheckboxSelectMultiple
 from django import forms
+from django.utils import timezone
 
 # Create your models here.
 class AMQuestion(models.Model):
@@ -72,12 +73,18 @@ class AMResponse(models.Model):
     topicTags = models.TextField(blank=True)
     commentTags = models.TextField(blank=True)
 
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(default=timezone.now)
+
 class AMResponseTopic(models.Model):
     # amResponse = models.ForeignKey(AMResponse, on_delete=models.CASCADE)
     amQuestion = models.ForeignKey(AMQuestion, on_delete=models.CASCADE)
     responseUser = models.ForeignKey(ProjectUser, on_delete=models.CASCADE)
     topicName = models.CharField(max_length=255, blank=True)
     topicComment = models.CharField(max_length=255, blank=True)
+
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(default=timezone.now)
     
 class PageAMQuestion(models.Model):
     pageSetting = models.ForeignKey(PageSetting, related_name="ampagesetting", on_delete=models.SET_NULL, default=None, blank=True, null=True)
