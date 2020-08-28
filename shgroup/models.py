@@ -63,6 +63,11 @@ class ProjectUser(models.Model):
     #shCategory = models.ForeignKey(SHCategory, null=True, blank=True)
     shGroup = models.ForeignKey(SHGroup, null=True, blank=True, verbose_name='SHGroup')
 
+    isTeamMember = models.BooleanField(default=False)
+    isCGroup1 = models.BooleanField(default=False)
+    isCGroup2 = models.BooleanField(default=False)
+    isCGroup3 = models.BooleanField(default=False)
+    
     # def send_invite(self):
     #     return mark_safe("<a class='default' href='#'>Resend Invite</a>")
 
