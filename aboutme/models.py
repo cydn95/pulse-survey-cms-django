@@ -73,8 +73,8 @@ class AMResponse(models.Model):
     topicTags = models.TextField(blank=True)
     commentTags = models.TextField(blank=True)
 
-    created_at = models.DateTimeField(default=timezone.now)
-    updated_at = models.DateTimeField(default=timezone.now)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
 class AMResponseTopic(models.Model):
     # amResponse = models.ForeignKey(AMResponse, on_delete=models.CASCADE)
@@ -83,8 +83,8 @@ class AMResponseTopic(models.Model):
     topicName = models.CharField(max_length=255, blank=True)
     topicComment = models.CharField(max_length=255, blank=True)
 
-    created_at = models.DateTimeField(default=timezone.now)
-    updated_at = models.DateTimeField(default=timezone.now)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     
 class PageAMQuestion(models.Model):
     pageSetting = models.ForeignKey(PageSetting, related_name="ampagesetting", on_delete=models.SET_NULL, default=None, blank=True, null=True)

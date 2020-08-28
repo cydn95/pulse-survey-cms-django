@@ -74,8 +74,8 @@ class AOResponse(models.Model):
     topicTags = models.TextField(blank=True)
     commentTags = models.TextField(blank=True)
 
-    created_at = models.DateTimeField(default=timezone.now)
-    updated_at = models.DateTimeField(default=timezone.now)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
 class AOResponseTopic(models.Model):
     aoQuestion = models.ForeignKey(AOQuestion, on_delete=models.CASCADE)
@@ -83,8 +83,8 @@ class AOResponseTopic(models.Model):
     topicName = models.CharField(max_length=255, blank=True)
     topicComment = models.CharField(max_length=255, blank=True)
 
-    created_at = models.DateTimeField(default=timezone.now)
-    updated_at = models.DateTimeField(default=timezone.now)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     
 class AOPage(models.Model):
     aoPageName = models.CharField(max_length=50)
