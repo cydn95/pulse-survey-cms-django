@@ -359,7 +359,7 @@ class AMResponseReportViewSet(viewsets.ModelViewSet):
             if response.data[i]['controlType'] == 'TEXT' or response.data[i]['controlType'] == 'MULTI_TOPICS':
                 Text = response.data[i]['topicValue']
 
-                if len(Text) > 0:
+                if response.data[i]['topicValue'] != "":
                     sentimentData = comprehend.detect_sentiment(Text=Text, LanguageCode="en")
                     print(sentimentData)
                     if "Sentiment" in sentimentData:
