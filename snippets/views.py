@@ -348,11 +348,30 @@ class AMResponseReportViewSet(viewsets.ModelViewSet):
         response = super().list(request, *args, **kwargs)
         print(response.data)
         for i in range(len(response.data)):
-            response.data[i]['report'] = []
-            
-            Text = "Test"
-            sentimentData = comprehend.detect_sentiment(Text=Text, LanguageCode="en")
-            print(sentimentData)
+            response.data[i]['report'] = {
+                "Sentiment": "ERROR",
+                "MixedScore": 0,
+                "NegativeScore": 0,
+                "NeutralScore": 0,
+                "PositiveScore": 0,
+            }
+
+            # if response.data[i]['controlType'] == 'TEXT' | response.data[i]['controlType'] == 'MULTI_TOPICS':
+            #     Text = response.data[i]['topicValue']
+            #     sentimentData = comprehend.detect_sentiment(Text=Text, LanguageCode="en")
+            #     print(sentimentData)
+            #     if "Sentiment" in sentimentData:
+            #         response.data[i]['report']["Sentiment"] = sentimentData["Sentiment"]
+            #     if "SentimentScore" in sentimentData:
+            #         if "Mixed" in sentimentData["SentimentScore"]:
+            #             response.data[i]['report']["MixedScore"] = sentimentData["SentimentScore"]["Mixed"]
+            #         if "Negative" in sentimentData["SentimentScore"]:
+            #             response.data[i]['report']["NegativeScore"] = sentimentData["SentimentScore"]["Negative"]
+            #         if "Neutral" in sentimentData["SentimentScore"]:
+            #             response.data[i]['report']["NeutralScore"] = sentimentData["SentimentScore"]["Neutral"]
+            #         if "Positive" in sentimentData["SentimentScore"]:
+            #             response.data[i]['report']["PositiveScore"] = sentimentData["SentimentScore"]["Positive"]
+
             # qdata = {
             #     "Sentiment": "ERROR",
             #     "MixedScore": 0,
