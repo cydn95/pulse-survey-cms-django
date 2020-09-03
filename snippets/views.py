@@ -358,19 +358,21 @@ class AMResponseReportViewSet(viewsets.ModelViewSet):
 
             if response.data[i]['controlType'] == 'TEXT' or response.data[i]['controlType'] == 'MULTI_TOPICS':
                 Text = response.data[i]['topicValue']
-                sentimentData = comprehend.detect_sentiment(Text=Text, LanguageCode="en")
-                print(sentimentData)
-                if "Sentiment" in sentimentData:
-                    response.data[i]['report']["Sentiment"] = sentimentData["Sentiment"]
-                if "SentimentScore" in sentimentData:
-                    if "Mixed" in sentimentData["SentimentScore"]:
-                        response.data[i]['report']["MixedScore"] = sentimentData["SentimentScore"]["Mixed"]
-                    if "Negative" in sentimentData["SentimentScore"]:
-                        response.data[i]['report']["NegativeScore"] = sentimentData["SentimentScore"]["Negative"]
-                    if "Neutral" in sentimentData["SentimentScore"]:
-                        response.data[i]['report']["NeutralScore"] = sentimentData["SentimentScore"]["Neutral"]
-                    if "Positive" in sentimentData["SentimentScore"]:
-                        response.data[i]['report']["PositiveScore"] = sentimentData["SentimentScore"]["Positive"]
+
+                if len(Text) > 0:
+                    sentimentData = comprehend.detect_sentiment(Text=Text, LanguageCode="en")
+                    print(sentimentData)
+                    if "Sentiment" in sentimentData:
+                        response.data[i]['report']["Sentiment"] = sentimentData["Sentiment"]
+                    if "SentimentScore" in sentimentData:
+                        if "Mixed" in sentimentData["SentimentScore"]:
+                            response.data[i]['report']["MixedScore"] = sentimentData["SentimentScore"]["Mixed"]
+                        if "Negative" in sentimentData["SentimentScore"]:
+                            response.data[i]['report']["NegativeScore"] = sentimentData["SentimentScore"]["Negative"]
+                        if "Neutral" in sentimentData["SentimentScore"]:
+                            response.data[i]['report']["NeutralScore"] = sentimentData["SentimentScore"]["Neutral"]
+                        if "Positive" in sentimentData["SentimentScore"]:
+                            response.data[i]['report']["PositiveScore"] = sentimentData["SentimentScore"]["Positive"]
 
         return response
         
