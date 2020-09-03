@@ -37,6 +37,11 @@ from drf_renderer_xlsx.renderers import XLSXRenderer
 from django.core.mail import send_mail, EmailMultiAlternatives
 from django.template.loader import get_template, render_to_string
 from django.conf import settings
+import boto3
+import json
+
+#initialize comprehend module
+comprehend = boto3.client(service_name='comprehend', region_name='us-east-2')
 
 class CustomAuthToken(ObtainAuthToken):
     def post(self, request, *args, **kwargs):
@@ -297,6 +302,78 @@ class PageViewSet(viewsets.ReadOnlyModelViewSet):
 
         return Response(list_drivers)
 
+class AOResponseReportViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+    queryset = AOResponse.objects.all()
+    serializer_class = AOResponseSerializer
+
+    def list(self, request, *args, **kwargs):
+
+        response = super().list(request, *args, **kwargs)
+
+        for i in range(len(response.data)):
+            response.data[i]['report'] = []
+
+            Text = "Test"
+            sentimentData = comprehend.detect_sentiment(Text=Text, LanguageCode="en")
+
+            # qdata = {
+            #     "Sentiment": "ERROR",
+            #     "MixedScore": 0,
+            #     "NegativeScore": 0,
+            #     "NeutralScore": 0,
+            #     "PositiveScore": 0,
+            # }
+
+            # if "Sentiment" in sentimentData:
+            #     qdata["Sentiment"] = sentimentData["Sentiment"]
+            # if "SentimentScore" in sentimentData:
+            #     if "Mixed" in sentimentData["SentimentScore"]:
+            #         qdata["MixedScore"] = sentimentData["SentimentScore"]["Mixed"]
+            #     if "Negative" in sentimentData["SentimentScore"]:
+            #         qdata["NegativeScore"] = sentimentData["SentimentScore"]["Negative"]
+            #     if "Neutral" in sentimentData["SentimentScore"]:
+            #         qdata["NeutralScore"] = sentimentData["SentimentScore"]["Neutral"]
+            #     if "Positive" in sentimentData["SentimentScore"]:
+            #         qdata["PositiveScore"] = sentimentData["SentimentScore"]["Positive"]
+
+        return response
+class AMResponseReportViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+    queryset = AMResponse.objects.all()
+    serializer_class = AMResponseSerializer
+
+    def list(self, request, *args, **kwargs):
+
+        response = super().list(request, *args, **kwargs)
+        print(response.data)
+        for i in range(len(response.data)):
+            response.data[i]['report'] = []
+            
+            Text = "Test"
+            sentimentData = comprehend.detect_sentiment(Text=Text, LanguageCode="en")
+            print(sentimentData)
+            # qdata = {
+            #     "Sentiment": "ERROR",
+            #     "MixedScore": 0,
+            #     "NegativeScore": 0,
+            #     "NeutralScore": 0,
+            #     "PositiveScore": 0,
+            # }
+
+            # if "Sentiment" in sentimentData:
+            #     qdata["Sentiment"] = sentimentData["Sentiment"]
+            # if "SentimentScore" in sentimentData:
+            #     if "Mixed" in sentimentData["SentimentScore"]:
+            #         qdata["MixedScore"] = sentimentData["SentimentScore"]["Mixed"]
+            #     if "Negative" in sentimentData["SentimentScore"]:
+            #         qdata["NegativeScore"] = sentimentData["SentimentScore"]["Negative"]
+            #     if "Neutral" in sentimentData["SentimentScore"]:
+            #         qdata["NeutralScore"] = sentimentData["SentimentScore"]["Neutral"]
+            #     if "Positive" in sentimentData["SentimentScore"]:
+            #         qdata["PositiveScore"] = sentimentData["SentimentScore"]["Positive"]
+        return response
+        
 class AMResponseViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated,permissions.IsAuthenticatedOrReadOnly]
     queryset = AMResponse.objects.all()
