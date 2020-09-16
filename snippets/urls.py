@@ -44,7 +44,7 @@ router.register(r'useravatar', views.UserAvatarViewSet)
 router.register(r'tooltipguide', views.ToolTipGuideViewSet)
 router.register(r'amresponsereport', views.AMResponseReportViewSet)
 router.register(r'aoresponsereport', views.AOResponseReportViewSet)
-
+router.register(r'overallsentimentreport', views.OverallSentimentReportViewSet)
 
 # The API URLs are now determined automatically by the router.
 urlpatterns = [

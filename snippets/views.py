@@ -377,7 +377,28 @@ class AMResponseReportViewSet(viewsets.ModelViewSet):
                             response.data[i]['report']["PositiveScore"] = sentimentData["SentimentScore"]["Positive"]
 
         return response
-        
+
+# class AOResponseFeedbackSummaryViewset(viewsets.ModelViewSet):
+#     permission_classes = [permissios.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+#     queryset = AOResponse.objects.all()
+#     serializer_class = AOResponseSerializer
+
+#     def list(self, request, *args, **kwargs):
+#         response = super().list(request, *args, **kwargs)
+
+#         new_data = []
+#         project_ids = []
+#         for i in range(len(response.data)):
+#             # if response.data[i]['survey']['project'] not in project_ids:
+#             #     project_ids.append(response.data[i]['survey']['project'])
+
+#         # response.data = []
+#         # for i in range(len(project_ids)):
+#         #     item = model_to_dict(Project.objects.get(id=project_ids[i]))
+#         #     response.data.append(item)
+
+#        return response
+
 class AMResponseViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated,permissions.IsAuthenticatedOrReadOnly]
     queryset = AMResponse.objects.all()
@@ -1489,7 +1510,41 @@ class ToolTipGuideViewSet(viewsets.ModelViewSet):
     queryset = ToolTipGuide.objects.all()
     serializer_class = ToolTipGuideSerializer
 
+class OverallSentimentReportViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+    queryset = AMResponse.objects.all()
+    serializer_class = AMResponseSerializer
 
+    def get_queryset(self):
+        queryset = AMResponse.objects.all()
+        survey = self.request.query_params.get('survey', None)
+        if survey is not None:
+            queryset = queryset.filter(survey__id=survey)
+        return queryset
+
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+        total = 0
+        for i in range(len(response.data)):
+            total = total + response.data[i]['integerValue']
+        cnt = len(response.data)
+        percentage = total / cnt
+
+        response.data = []
+        if percentage < 40:
+            response.data.append({'emojiType': 'angry', 'value': percentage})
+        elif percentage < 50:
+            response.data.append({'emojiType': 'worried', 'value': percentage})
+        elif percentage < 60:
+            response.data.append({'emojiType': 'flat', 'value': percentage})
+        elif percentage < 70:
+            response.data.append({'emojiType': 'smile', 'value': percentage})
+        elif percentage < 80:
+            response.data.append({'emojiType': 'big', 'value': percentage})
+        else:
+            response.data.append({'emojiType': 'green', 'value': percentage})
+
+        return response
 
 ###
 class ReportByStakeholderViewSet(viewsets.ModelViewSet):
