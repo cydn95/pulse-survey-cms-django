@@ -315,7 +315,7 @@ class AOResponseReportViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(survey__id=survey)
 
         return queryset
-        
+
     def list(self, request, *args, **kwargs):
 
         response = super().list(request, *args, **kwargs)
@@ -1543,15 +1543,15 @@ class SentimentReportByDriverViewSet(viewsets.ModelViewSet):
 
         return queryset
 
-    def list(self, request, *args, **kwargs):
-        response = super().list(request, *args, **kwargs)
+    # def list(self, request, *args, **kwargs):
+    #     response = super().list(request, *args, **kwargs)
 
-        for i in range(len(response.data)):
-            amResponseData = AMResponse.objects.filter(survey_id=response.data[i]['survey'])
+    #     for i in range(len(response.data)):
+    #         amResponseData = AMResponse.objects.filter(survey_id=response.data[i]['survey'])
             
-            for j in range(len(amResponseData)):
-                amResponseData[j].amQuestion.
-                response.data[i]['amResponse'] = amResponseData
+    #         for j in range(len(amResponseData)):
+    #             amResponseData[j].amQuestion.
+    #             response.data[i]['amResponse'] = amResponseData
         # total = 0
         # for i in range(len(response.data)):
         #     total = total + response.data[i]['integerValue']
