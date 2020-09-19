@@ -307,6 +307,15 @@ class AOResponseReportViewSet(viewsets.ModelViewSet):
     queryset = AOResponse.objects.all()
     serializer_class = AOResponseSerializer
 
+    def get_queryset(self):
+        queryset = AMResponse.objects.all()
+
+        survey = self.request.query_params.get('survey', None)
+        if survey is not None:
+            queryset = queryset.filter(survey__id=survey)
+
+        return queryset
+        
     def list(self, request, *args, **kwargs):
 
         response = super().list(request, *args, **kwargs)
@@ -344,6 +353,15 @@ class AMResponseReportViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
     queryset = AMResponse.objects.all()
     serializer_class = AMResponseSerializer
+
+    def get_queryset(self):
+        queryset = AMResponse.objects.all()
+
+        survey = self.request.query_params.get('survey', None)
+        if survey is not None:
+            queryset = queryset.filter(survey__id=survey)
+
+        return queryset
 
     def list(self, request, *args, **kwargs):
 
@@ -1509,6 +1527,52 @@ class ToolTipGuideViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
     queryset = ToolTipGuide.objects.all()
     serializer_class = ToolTipGuideSerializer
+
+class SentimentReportByDriverViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+    queryset = Driver.objects.all()
+    serializer_class = DriverSerializer
+
+    def get_queryset(self):
+        queryset = Driver.objects.all()
+        survey = self.request.query_params.get('survey', None)
+        driver = self.request.query_params.get('driver', None)
+
+        if (survey is not None) & (driver is not None):
+            queryset = queryset.filter(survey__id=survey, driverName=driver)
+
+        return queryset
+
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+
+        for i in range(len(response.data)):
+            amResponseData = AMResponse.objects.filter(survey_id=response.data[i]['survey'])
+            
+            for j in range(len(amResponseData)):
+                amResponseData[j].amQuestion.
+                response.data[i]['amResponse'] = amResponseData
+        # total = 0
+        # for i in range(len(response.data)):
+        #     total = total + response.data[i]['integerValue']
+        # cnt = len(response.data)
+        # percentage = total / cnt
+
+        # response.data = []
+        # if percentage < 40:
+        #     response.data.append({'emojiType': 'angry', 'value': percentage})
+        # elif percentage < 50:
+        #     response.data.append({'emojiType': 'worried', 'value': percentage})
+        # elif percentage < 60:
+        #     response.data.append({'emojiType': 'flat', 'value': percentage})
+        # elif percentage < 70:
+        #     response.data.append({'emojiType': 'smile', 'value': percentage})
+        # elif percentage < 80:
+        #     response.data.append({'emojiType': 'big', 'value': percentage})
+        # else:
+        #     response.data.append({'emojiType': 'green', 'value': percentage})
+
+        return response
 
 class OverallSentimentReportViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
