@@ -29,7 +29,7 @@ SECRET_KEY = 'oyxb8b(f@r*7bj6+3of@-(8y^lm-o#_e)umxq2)^1#275=!m8*'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['3.12.84.76', '127.0.0.1', 'localhost', '192.168.1.33']
+ALLOWED_HOSTS = ['3.12.84.76', '127.0.0.1', 'localhost', '192.168.1.33', '13.211.252.207']
 
 
 # Application definition
@@ -58,7 +58,7 @@ STATICFILES_DIRS = (
 
 # 1: local 2: prod mode
 SITE_ID = 2
-SITE_URL = 'http://3.12.84.76:3031'
+SITE_URL = 'http://13.211.252.207:3031'
 
 TEMPLATES = [
     {
@@ -386,8 +386,8 @@ DATA_UPLOAD_MAX_NUMBER_FIELDS = 102400 # higher than the count of fields
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:3000',
     'http://localhost:3001',
-    'http://3.12.84.76:3000',
-    'http://3.12.84.76:3001',
+    'http://13.211.252.207:3000',
+    'http://13.211.252.207:3001',
 ]
 
 # For sendgrid mail
