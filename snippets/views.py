@@ -14,7 +14,7 @@ from rest_framework import renderers
 from rest_framework import viewsets
 from page_setting.models import PageSetting
 from cms.models import Page
-from aboutme.models import AMQuestion, AMResponse, AMResponseTopic
+from aboutme.models import AMQuestion, AMResponse, AMResponseTopic, AMQuestionSHGroup
 from aboutothers.models import AOResponse, AOResponseTopic, AOPage
 from team.models import Team
 from shgroup.models import SHGroup, ProjectUser, MyMapLayout, ProjectMapLayout, SHCategory, SHMapping
@@ -398,13 +398,13 @@ class AMResponseReportViewSet(viewsets.ModelViewSet):
 
         return response
 
-class AOResponseFeedbackSummaryViewset(viewsets.ModelViewSet):
+class AMResponseFeedbackSummaryViewset(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
-    queryset = AOResponse.objects.all()
-    serializer_class = AOResponseSerializer
+    queryset = AMResponse.objects.all()
+    serializer_class = AMResponseSerializer
 
     def get_queryset(self):
-        queryset = AOResponse.objects.all()
+        queryset = AMResponse.objects.all()
 
         survey = self.request.query_params.get('survey', None)
         if survey is not None:
@@ -417,7 +417,8 @@ class AOResponseFeedbackSummaryViewset(viewsets.ModelViewSet):
         response = super().list(request, *args, **kwargs)
         # print(response.data)
         for i in range(len(response.data)):
-            print(response.data[i])
+            response.data[i]['amQuestionData'] = AMQuestion.objects.filter(id=response.data[i]['amQuestion']).values()[0]
+            response.data[i]['shGroups'] = AMQuestionSHGroup.objects.filter(amQuestion=response.data[i]['amQuestion']).values_list('shGroup')
             response.data[i]['report'] = {
                 "Sentiment": "ERROR",
                 "MixedScore": 0,
