@@ -402,7 +402,7 @@ class AOResponseFeedbackSummaryViewset(viewsets.ModelViewSet):
     serializer_class = AOResponseSerializer
 
     def get_queryset(self):
-        queryset = AMResponse.objects.all()
+        queryset = AOResponse.objects.all()
 
         survey = self.request.query_params.get('survey', None)
         if survey is not None:
