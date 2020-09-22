@@ -3,7 +3,7 @@ from pathlib import Path
 from email.mime.image import MIMEImage
 
 from snippets.models import Snippet
-from snippets.serializers import AMResponseReportSerializer, AOResponseReportSerializer, ProjectSerializer, ToolTipGuideSerializer, SurveySerializer, NikelMobilePageSerializer, ConfigPageSerializer, UserAvatarSerializer, SHMappingSerializer, ProjectVideoUploadSerializer, AMQuestionSerializer, AOQuestionSerializer, StakeHolderSerializer, SHCategorySerializer, MyMapLayoutStoreSerializer, ProjectMapLayoutStoreSerializer, UserBySurveySerializer, SurveyByUserSerializer, SkipOptionSerializer, DriverSerializer, AOQuestionSerializer, OrganizationSerializer, OptionSerializer, ProjectUserSerializer, SHGroupSerializer, UserSerializer, PageSettingSerializer, PageSerializer, AMResponseSerializer, AMResponseTopicSerializer, AOResponseSerializer, AOResponseTopicSerializer, AOPageSerializer, TeamSerializer
+from snippets.serializers import ProjectSerializer, ToolTipGuideSerializer, SurveySerializer, NikelMobilePageSerializer, ConfigPageSerializer, UserAvatarSerializer, SHMappingSerializer, ProjectVideoUploadSerializer, AMQuestionSerializer, AOQuestionSerializer, StakeHolderSerializer, SHCategorySerializer, MyMapLayoutStoreSerializer, ProjectMapLayoutStoreSerializer, UserBySurveySerializer, SurveyByUserSerializer, SkipOptionSerializer, DriverSerializer, AOQuestionSerializer, OrganizationSerializer, OptionSerializer, ProjectUserSerializer, SHGroupSerializer, UserSerializer, PageSettingSerializer, PageSerializer, AMResponseSerializer, AMResponseTopicSerializer, AOResponseSerializer, AOResponseTopicSerializer, AOPageSerializer, TeamSerializer
 from rest_framework import generics, permissions
 from django.contrib.auth.models import User
 from snippets.permissions import IsOwnerOrReadOnly
@@ -319,8 +319,8 @@ class AOResponseReportViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
 
         response = super().list(request, *args, **kwargs)
-        print(response.data)
         for i in range(len(response.data)):
+            response.data[i]['aoResponseData'] = AOQuestion.objects.filter(id=response.data[i]['aoQuestion']).values()[0]
             response.data[i]['report'] = {
                 "Sentiment": "ERROR",
                 "MixedScore": 0,
@@ -352,7 +352,7 @@ class AOResponseReportViewSet(viewsets.ModelViewSet):
 class AMResponseReportViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
     queryset = AMResponse.objects.all()
-    serializer_class = AMResponseReportSerializer
+    serializer_class = AMResponseSerializer
 
     def get_queryset(self):
         queryset = AMResponse.objects.all()
@@ -366,8 +366,10 @@ class AMResponseReportViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
 
         response = super().list(request, *args, **kwargs)
-        print(response.data)
+
         for i in range(len(response.data)):
+            print(response.data[i]['amQuestion'])
+            response.data[i]['amResponseData'] = AMQuestion.objects.filter(id=response.data[i]['amQuestion']).values()[0]
             response.data[i]['report'] = {
                 "Sentiment": "ERROR",
                 "MixedScore": 0,
@@ -399,7 +401,7 @@ class AMResponseReportViewSet(viewsets.ModelViewSet):
 class AOResponseFeedbackSummaryViewset(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
     queryset = AOResponse.objects.all()
-    serializer_class = AOResponseReportSerializer
+    serializer_class = AOResponseSerializer
 
     def get_queryset(self):
         queryset = AOResponse.objects.all()
