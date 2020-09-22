@@ -104,6 +104,7 @@ class AMResponseSerializer(serializers.ModelSerializer):
         model = AMResponse
         fields = '__all__'
 
+
 class AMResponseTopicSerializer(serializers.ModelSerializer):
     class Meta:
         model = AMResponseTopic
@@ -308,3 +309,15 @@ class ToolTipGuideSerializer(serializers.ModelSerializer):
     class Meta:
         model = ToolTipGuide
         fields = '__all__'
+
+class AMResponseReportSerializer(serializers.ModelSerializer):
+    amQuestion = AMQuestionSerializer
+    class Meta:
+        model = AMResponse
+        fields = ['id', 'controlType', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags', 'created_at', 'updated_at', 'projectUser', 'subProjectUser', 'survey', 'project', 'amQuestion']
+
+class AOResponseReportSerializer(serializers.ModelSerializer):
+    aoQuestion = AOQuestionSerializer
+    class Meta:
+        model = AOResponse
+        fields = ['id', 'controlType', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags', 'created_at', 'updated_at', 'projectUser', 'subProjectUser', 'survey', 'project', 'aoQuestion']
