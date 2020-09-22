@@ -320,7 +320,9 @@ class AOResponseReportViewSet(viewsets.ModelViewSet):
 
         response = super().list(request, *args, **kwargs)
         for i in range(len(response.data)):
-            response.data[i]['aoResponseData'] = AOQuestion.objects.filter(id=response.data[i]['aoQuestion']).values()[0]
+            aoquestion_queryset = AOQuestion.objects.filter(id=response.data[i]['aoQuestion'])
+            ao_serializer = AOQuestionSerializer(aoquestion_queryset, many=True)
+            response.data[i]['aoQuestionData'] = ao_serializer.data
             response.data[i]['report'] = {
                 "Sentiment": "ERROR",
                 "MixedScore": 0,
@@ -368,8 +370,9 @@ class AMResponseReportViewSet(viewsets.ModelViewSet):
         response = super().list(request, *args, **kwargs)
 
         for i in range(len(response.data)):
-            print(response.data[i]['amQuestion'])
-            response.data[i]['amResponseData'] = AMQuestion.objects.filter(id=response.data[i]['amQuestion']).values()[0]
+            resamquestion_queryset = AMQuestion.objects.filter(id=response.data[i]['amQuestion'])
+            am_serializer = AMQuestionSerializer(amquestion_queryset, many=True)
+            response.data[i]['amQuestionData'] = am_serializer.data
             response.data[i]['report'] = {
                 "Sentiment": "ERROR",
                 "MixedScore": 0,
@@ -417,8 +420,11 @@ class AMResponseFeedbackSummaryViewset(viewsets.ModelViewSet):
         response = super().list(request, *args, **kwargs)
         # print(response.data)
         for i in range(len(response.data)):
-            response.data[i]['amQuestionData'] = AMQuestion.objects.filter(id=response.data[i]['amQuestion']).values()[0]
-            response.data[i]['shGroups'] = AMQuestionSHGroup.objects.filter(amQuestion=response.data[i]['amQuestion']).values_list('shGroup')
+            amquestion_queryset = AMQuestion.objects.filter(id=response.data[i]['amQuestion'])
+            am_serializer = AMQuestionSerializer(amquestion_queryset, many=True)
+            response.data[i]['amQuestionData'] = am_serializer.data
+            # response.data[i]['amQuestionData'] = AMQuestion.objects.filter(id=response.data[i]['amQuestion']).values()[0]
+            # response.data[i]['shGroups'] = AMQuestionSHGroup.objects.filter(amQuestion=response.data[i]['amQuestion']).values_list('shGroup')
             response.data[i]['report'] = {
                 "Sentiment": "ERROR",
                 "MixedScore": 0,
