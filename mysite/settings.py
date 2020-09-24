@@ -30,7 +30,7 @@ SECRET_KEY = 'oyxb8b(f@r*7bj6+3of@-(8y^lm-o#_e)umxq2)^1#275=!m8*'
 DEBUG = True
 
 # ALLOWED_HOSTS = ['3.12.84.76', '127.0.0.1', 'localhost', '192.168.1.33', '13.211.252.207', 'pulse.projectai.com']
-ALLOWED_HOSTS = ['localhost', '13.211.252.207', 'pulse.projectai.com']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '13.211.252.207', 'pulse.projectai.com']
 
 
 # Application definition
@@ -330,6 +330,8 @@ REST_FRAMEWORK = {
 }
 
 CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
+CSRF_COOKIE_NAME = "csrftoken"
 
 JWT_AUTH = {
     'JWT_ENCODE_HANDLER':
@@ -389,6 +391,7 @@ CORS_ORIGIN_WHITELIST = [
     'http://localhost:3001',
     'http://13.211.252.207:3000',
     'http://13.211.252.207:3001',
+    'http://13.211.252.207',
 ]
 
 # For sendgrid mail
