@@ -370,7 +370,7 @@ class AMResponseReportViewSet(viewsets.ModelViewSet):
         response = super().list(request, *args, **kwargs)
 
         for i in range(len(response.data)):
-            resamquestion_queryset = AMQuestion.objects.filter(id=response.data[i]['amQuestion'])
+            amquestion_queryset = AMQuestion.objects.filter(id=response.data[i]['amQuestion'])
             am_serializer = AMQuestionSerializer(amquestion_queryset, many=True)
             response.data[i]['amQuestionData'] = am_serializer.data
             response.data[i]['report'] = {
