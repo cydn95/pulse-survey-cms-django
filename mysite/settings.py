@@ -59,7 +59,8 @@ STATICFILES_DIRS = (
 
 # 1: local 2: prod mode
 SITE_ID = 2
-SITE_URL = 'http://13.211.252.207:3031'
+# SITE_URL = 'http://13.211.252.207:3031'
+SITE_URL = 'http://pulse.projectai.com'
 
 TEMPLATES = [
     {
