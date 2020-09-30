@@ -1086,6 +1086,11 @@ class UserBySurveyViewSet(viewsets.ModelViewSet):
 
         for i in range(len(response.data)):
             filters = ~Q(shGroup=None)
+            if response.data[i]['user']['last_login'] is not None:
+                response.data[i]['accept_status'] = True
+            else:
+                response.data[i]['accept_status'] = False
+
             response.data[i]['am_total'] = AMQuestion.objects.filter(filters).filter(survey__id=survey).count()
             response.data[i]['am_response'] = []
             # 2020-05-20

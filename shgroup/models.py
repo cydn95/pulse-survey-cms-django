@@ -67,7 +67,8 @@ class ProjectUser(models.Model):
     isCGroup1 = models.BooleanField(default=False)
     isCGroup2 = models.BooleanField(default=False)
     isCGroup3 = models.BooleanField(default=False)
-    
+    sendInvite = models.BooleanField(default=False)
+
     # def send_invite(self):
     #     return mark_safe("<a class='default' href='#'>Resend Invite</a>")
 
@@ -82,6 +83,7 @@ class ProjectUser(models.Model):
         return '{0} - {1}'.format(self.survey, self.user.username)
 
     def save(self, *args, **kwargs):
+        self.sendInvite = True
         super(ProjectUser, self).save(*args, **kwargs)
 
         # temporary hold

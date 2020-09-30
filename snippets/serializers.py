@@ -255,7 +255,7 @@ class UserBySurveySerializer(serializers.ModelSerializer):
         model = ProjectUser
         # 2020-05-27
         # fields = ['id', 'project', 'projectUserTitle', 'user', 'team', 'shGroup']
-        fields = ['id', 'survey', 'projectUserTitle', 'user', 'team', 'shGroup']
+        fields = ['id', 'survey', 'projectUserTitle', 'user', 'team', 'shGroup', 'sendInvite']
 
 class ProjectUserSerializer(serializers.ModelSerializer):
     #project = ProjectSerializer()
