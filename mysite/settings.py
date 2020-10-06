@@ -24,23 +24,26 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'oyxb8b(f@r*7bj6+3of@-(8y^lm-o#_e)umxq2)^1#275=!m8*'
+# SECRET_KEY = 'oyxb8b(f@r*7bj6+3of@-(8y^lm-o#_e)umxq2)^1#275=!m8*'
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG = True
+DEBUG = int(os.environ.get("DEBUG", default=0))
 
-# ALLOWED_HOSTS = ['3.12.84.76', '127.0.0.1', 'localhost', '192.168.1.33', '13.211.252.207', 'pulse.projectai.com']
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '13.211.252.207', 'pulse.projectai.com']
-
+# ALLOWED_HOSTS = ['localhost', '127.0.0.1', '13.211.252.207', 'pulse.projectai.com']
+ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
 
 # Application definition
 ROOT_URLCONF = 'mysite.urls'
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
-LANGUAGE_CODE = 'en'
+# LANGUAGE_CODE = 'en'
+LANGUAGE_CODE = os.environ.get("LANGUAGE_CODE")
 
-TIME_ZONE = 'America/Los_Angeles'
+# TIME_ZONE = 'America/Los_Angeles'
+TIME_ZONE = os.environ.get("TIME_ZONE")
 
 USE_I18N = True
 USE_L10N = True
@@ -202,12 +205,12 @@ CMS_PERMISSION = True
 CMS_PLACEHOLDER_CONF = {}
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'pulse',
-        'USER': 'fullstack412',
-        'PASSWORD': 'piggy41294',
-        'HOST': 'localhost',
-        'PORT': '',
+        'ENGINE': os.environ.get("SQL_ENGINE", 'django.db.backends.sqlite3'),
+        'NAME': os.environ.get("SQL_DATABASE", os.path.join(BASE_DIR, 'db.sqlite3')),
+        'USER': os.environ.get("SQL_USER", "user"),
+        'PASSWORD': os.environ.get("SQL_PASSWORD", "password"),
+        'HOST': os.environ.get("SQL_HOST", 'localhost'),
+        'PORT': os.environ.get("SQL_PORT", '5432'),
     }
 }
 
