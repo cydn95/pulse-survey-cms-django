@@ -43,7 +43,7 @@ ROOT_URLCONF = 'mysite.urls'
 LANGUAGE_CODE = 'en'
 # LANGUAGE_CODE = os.environ.get("LANGUAGE_CODE")
 
-TIME_ZONE = 'America/Los_Angeles'
+TIME_ZONE = 'Australia/Perth'
 # TIME_ZONE = os.environ.get("TIME_ZONE")
 
 USE_I18N = True
