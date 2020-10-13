@@ -1,5 +1,14 @@
 import os  # isort:skip
 import datetime
+import environ
+
+env = environ.Env(
+    #set casting, default value
+    DEBUG = (bool, False)
+)
+
+# reading .env file
+environ.Env.read_env()
 
 gettext = lambda s: s
 DATA_DIR = os.path.dirname(os.path.dirname(__file__))
@@ -24,16 +33,15 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'oyxb8b(f@r*7bj6+3of@-(8y^lm-o#_e)umxq2)^1#275=!m8*'
-# SECRET_KEY = os.environ.get("SECRET_KEY")
+# SECRET_KEY = 'oyxb8b(f@r*7bj6+3of@-(8y^lm-o#_e)umxq2)^1#275=!m8*'
+SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-# DEBUG = int(os.environ.get("DEBUG", default=0))
+# DEBUG = True
+DEBUG = env('DEBUG')
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '13.211.252.207', 'pulse.projectai.com']
-# print(os.environ.get("DJANGO_ALLOWED_HOSTS"))
-#ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
+# ALLOWED_HOSTS = ['localhost', '127.0.0.1', '13.211.252.207', 'pulse.projectai.com']
+ALLOWED_HOSTS = env('ALLOWED_HOSTS').split(" ")
 
 # Application definition
 ROOT_URLCONF = 'mysite.urls'
@@ -63,8 +71,8 @@ STATICFILES_DIRS = (
 
 # 1: local 2: prod mode
 SITE_ID = 2
-SITE_URL = 'http://13.211.252.207:3031'
-# SITE_URL = 'http://pulse.projectai.com'
+# SITE_URL = 'http://13.211.252.207:3031'
+SITE_URL = 'https://pulse.projectai.com'
 
 TEMPLATES = [
     {
@@ -206,12 +214,12 @@ CMS_PERMISSION = True
 CMS_PLACEHOLDER_CONF = {}
 DATABASES = {
     'default': {
-        'ENGINE': os.environ.get("SQL_ENGINE", 'django.db.backends.postgresql'),
-        'NAME': os.environ.get("SQL_DATABASE", 'pulse'),
-        'USER': os.environ.get("SQL_USER", "fullstack412"),
-        'PASSWORD': os.environ.get("SQL_PASSWORD", "piggy41294"),
-        'HOST': os.environ.get("SQL_HOST", 'localhost'),
-        'PORT': os.environ.get("SQL_PORT", '5432'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'pulse',
+        'USER': "fullstack412",
+        'PASSWORD': "piggy41294",
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
