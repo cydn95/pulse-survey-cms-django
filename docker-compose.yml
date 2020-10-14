@@ -9,5 +9,17 @@ services:
     ports:
       - 8000:8000
     env_file:
-      - ./.env
+      - ./mysite/.env
+    depends_on:
+      - db
+  db:
+    image: postgres:9.5.23-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=fullstack412
+      - POSTGRES_PASSWORD=piggy41294
+      - POSTGRES_DB=pulse
 
+volumes:
+  postgres_data:

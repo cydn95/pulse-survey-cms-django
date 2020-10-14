@@ -41,18 +41,18 @@ SECRET_KEY = env('SECRET_KEY')
 DEBUG = env('DEBUG')
 
 # ALLOWED_HOSTS = ['localhost', '127.0.0.1', '13.211.252.207', 'pulse.projectai.com']
-ALLOWED_HOSTS = env('ALLOWED_HOSTS').split(" ")
+ALLOWED_HOSTS = env('DJANGO_ALLOWED_HOSTS').split(" ")
 
 # Application definition
 ROOT_URLCONF = 'mysite.urls'
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
-LANGUAGE_CODE = 'en'
-# LANGUAGE_CODE = os.environ.get("LANGUAGE_CODE")
+# LANGUAGE_CODE = 'en'
+LANGUAGE_CODE = env("LANGUAGE_CODE")
 
-TIME_ZONE = 'Australia/Perth'
-# TIME_ZONE = os.environ.get("TIME_ZONE")
+# TIME_ZONE = 'Australia/Perth'
+TIME_ZONE = env("TIME_ZONE")
 
 USE_I18N = True
 USE_L10N = True
@@ -66,13 +66,14 @@ MEDIA_ROOT = os.path.join(DATA_DIR, 'media')
 STATIC_ROOT = os.path.join(DATA_DIR, 'static')
 
 STATICFILES_DIRS = (
+    # os.path.join(BASE_DIR, 'mysite', 'static'),
     os.path.join(BASE_DIR, 'mysite', 'static'),
 )
-
+print(STATIC_ROOT)
 # 1: local 2: prod mode
 SITE_ID = 2
 # SITE_URL = 'http://13.211.252.207:3031'
-SITE_URL = 'https://pulse.projectai.com'
+SITE_URL = env("SITE_URL")
 
 TEMPLATES = [
     {
@@ -214,12 +215,12 @@ CMS_PERMISSION = True
 CMS_PLACEHOLDER_CONF = {}
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'pulse',
-        'USER': "fullstack412",
-        'PASSWORD': "piggy41294",
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'ENGINE': env("SQL_ENGINE"),
+        'NAME': env("SQL_DATABASE"),
+        'USER': env("SQL_USER"),
+        'PASSWORD': env("SQL_PASSWORD"),
+        'HOST': env("SQL_HOST"),
+        'PORT':env("SQL_PORT"),
     }
 }
 

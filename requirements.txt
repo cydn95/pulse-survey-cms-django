@@ -92,6 +92,7 @@ openpyxl==2.4.9
 Pillow==6.2.0
 premailer==3.6.1
 psycopg2==2.8.3
+psycopg2-binary==2.8.6
 pycparser==2.19
 Pygments==2.4.2
 PyJWT==1.7.1
