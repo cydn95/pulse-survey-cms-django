@@ -21,5 +21,6 @@ services:
       - POSTGRES_PASSWORD=piggy41294
       - POSTGRES_DB=pulse
 
+
 volumes:
   postgres_data:
