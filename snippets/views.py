@@ -804,6 +804,79 @@ class SkipOptionViewSet(viewsets.ModelViewSet):
     queryset = SkipOption.objects.all()
     serializer_class = SkipOptionSerializer
 
+class UpdateStakeHolderViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+    queryset = ProjectUser.objects.all()
+    serializer_class = ProjectUserSerializer
+
+    def get_queryset(self):
+        queryset = ProjectUser.objects.all()
+        return queryset
+
+    def update(self, request, *args, **kwargs):
+        ret = super(ProjectUserViewSet, self).update(request, *args, **kwargs)
+
+        projectUser_id = ret.data['id']
+
+        shMyCategories = request.data['shMyCategory']
+        
+        # MyMapLayout.objects.filter(user_id=request.user.id, project_id=request.data['project']).delete()
+        obj = MyMapLayout.objects.get(user_id=request.user.id, project_id=request.data['project'])
+
+        # obj.user_id = request.user.id
+        # obj.project_id = request.data['project']
+        # obj.layout_json = ''   
+
+        # 2020-05-20     added projectUser, subProjectUser
+        # SHMapping.objects.filter(projectUser_id=projectUser_id).delete()
+        myProjectUser_id = request.data['myProjectUser']
+        SHMapping.objects.filter(projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id).delete()
+
+        for i in range(len(shMyCategories)):
+            # new_obj = ProjectUser.objects.get(id=projectUser_id)
+            # obj.projectUser.add(new_obj)
+
+            try:
+                # 2020-05-20
+                # shObj = SHMapping.objects.get(shCategory_id=shMyCategories[i], projectUser_id=projectUser_id)
+                shObj = SHMapping.objects.get(shCategory_id=shMyCategories[i], projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id)
+            except SHMapping.DoesNotExist:
+                # 2020-05-20
+                # mapObj = SHMapping(shCategory_id=shMyCategories[i], projectUser_id=projectUser_id, relationshipStatus="")
+                mapObj = SHMapping(shCategory_id=shMyCategories[i], projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id, relationshipStatus="")
+                mapObj.save()
+        
+        # obj.save()
+
+        shProjectCategories = request.data['shProjectCategory']
+
+        # ProjectMapLayout.objects.filter(user_id=request.user.id, project_id=request.data['project']).delete()
+        obj1 = ProjectMapLayout.objects.get(user_id=request.user.id, project_id=request.data['project'])
+
+        # obj1.user_id = request.user.id
+        # obj1.project_id = request.data['project']
+        # obj1.layout_json = ''
+
+        for j in range(len(shProjectCategories)):
+            # new_obj1 = ProjectUser.objects.get(id=projectUser_id)
+            # obj1.projectUser.add(new_obj1)
+
+            try:
+                # 2020-05-20
+                # shObj1 = SHMapping.objects.get(shCategory_id=shProjectCategories[j], projectUser_id=projectUser_id)
+                shObj1 = SHMapping.objects.get(shCategory_id=shProjectCategories[j], projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id)
+            except SHMapping.DoesNotExist:
+                # 2020-05-20
+                # mapObj1 = SHMapping(shCategory_id=shProjectCategories[j], projectUser_id=projectUser_id, relationshipStatus="")
+                mapObj1 = SHMapping(shCategory_id=shProjectCategories[j], projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id, relationshipStatus="")
+                mapObj1.save()
+        
+        # obj1.save()
+
+        return ret
+
+
+
 class ProjectUserViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
     queryset = ProjectUser.objects.all()
