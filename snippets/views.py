@@ -1424,7 +1424,7 @@ class UpdateStakeHolderViewSet(viewsets.ModelViewSet):
         return queryset
 
     def update(self, request, *args, **kwargs):
-        ret = super(ProjectUserViewSet, self).update(request, *args, **kwargs)
+        ret = super(UpdateStakeHolderViewSet, self).update(request, *args, **kwargs)
 
         projectUser_id = ret.data['id']
 
@@ -1484,7 +1484,7 @@ class UpdateStakeHolderViewSet(viewsets.ModelViewSet):
         # obj1.save()
 
         return ret
-        
+
 class ChangePasswordView(APIView):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
 
