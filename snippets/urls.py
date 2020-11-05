@@ -49,6 +49,8 @@ router.register(r'overallsentimentreport', views.OverallSentimentReportViewSet)
 router.register(r'feedbacksummaryreport', views.AMResponseFeedbackSummaryViewset)
 # router.register(r'sentimentreportbydriver', views.SentimentReportByDriverViewSet)
 
+router.register(r'sentimentreport', views.ProjectUserViewSet)
+
 # The API URLs are now determined automatically by the router.
 urlpatterns = [
     url('', include(router.urls)),
