@@ -2615,3 +2615,242 @@ class ProjectUserv2ViewSet(viewsets.ModelViewSet):
 
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
+class PerceptionRealityViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated,permissions.IsAuthenticatedOrReadOnly]
+    queryset = AOResponse.objects.all()
+    serializer_class = AOResponseSerializer
+
+    def create(self, request, *args, **kwargs):
+        data = request.data.get("items") if 'items' in request.data else request.data
+        many = isinstance(data, list)
+        
+        if many == True:
+            for item in data:
+                defaults = item
+                try:
+                   
+                    obj = AOResponse.objects.get(survey_id=item['survey'], project_id=item['project'], projectUser_id=item['projectUser'], subProjectUser_id=item['subProjectUser'], shCategory_id=item['shCategory'], aoQuestion_id=item['aoQuestion'])
+
+                    if obj.controlType == "TEXT" or obj.controlType == "MULTI_TOPICS":
+                        text = obj.topicValue + " " + obj.commentValue
+
+                        sentimentResult = comprehend.detect_sentiment(Text=text, LanguageCode="en")
+                        obj.integerValue = int(sentimentResult["SentimentScore"]["Positive"] * 100)
+                    else:
+                        obj.integerValue = defaults['integerValue']
+                    obj.topicValue = defaults['topicValue']
+                    obj.commentValue = defaults['commentValue']
+                    obj.skipValue = defaults['skipValue']
+                    obj.topicTags = defaults['topicTags']
+                    obj.commentTags = defaults['commentTags']
+
+                    obj.save()
+
+                except AOResponse.DoesNotExist:
+
+                    if defaults["controlType"] == "TEXT" or defaults["controlType"] == "MULTI_TOPICS":
+                        text = defaults['topicValue'] + " " + defaults['commentValue']
+
+                        sentimentResult = comprehend.detect_sentiment(Text=text, LanguageCode="en")
+                        defaults["integerValue"] = int(sentimentResult["SentimentScore"]["Positive"] * 100)
+
+                    obj = AOResponse(aoQuestion_id=defaults['aoQuestion'],
+                                projectUser_id=defaults['projectUser'], subProjectUser_id=defaults['subProjectUser'],
+                                shCategory_id=defaults['shCategory'],
+                                survey_id=defaults['survey'], project_id=defaults['project'],
+                                controlType=defaults['controlType'], integerValue=defaults['integerValue'],
+                                topicValue=defaults['topicValue'], commentValue=defaults['commentValue'],
+                                skipValue=defaults['skipValue'], topicTags=defaults['topicTags'],
+                                commentTags=defaults['commentTags'])
+                    obj.save()
+        elif many == False:
+            defaults = data
+            try:
+                
+                obj = AOResponse.objects.get(survey_id=item['survey'], project_id=item['project'], projectUser_id=item['projectUser'], subProjectUser_id=item['subProjectUser'], shCategory_id=item['shCategory'], aoQuestion_id=item['aoQuestion'])
+
+                if obj.controlType == "TEXT" or obj.controlType == "MULTI_TOPICS":
+                    text = obj.topicValue + " " + obj.commentValue
+
+                    sentimentResult = comprehend.detect_sentiment(Text=text, LanguageCode="en")
+                    obj.integerValue = int(sentimentResult["SentimentScore"]["Positive"] * 100)
+                else:
+                    obj.integerValue = defaults['integerValue']
+                
+                obj.integerValue = defaults['integerValue']
+                obj.topicValue = defaults['topicValue']
+                obj.commentValue = defaults['commentValue']
+                obj.skipValue = defaults['skipValue']
+                obj.topicTags = defaults['topicTags']
+                obj.commentTags = defaults['commentTags']
+
+                obj.save()
+            except AOResponse.DoesNotExist:
+                if defaults["controlType"] == "TEXT" or defaults["controlType"] == "MULTI_TOPICS":
+                    text = defaults["topicValue"] + " " + defaults["commentValue"]
+
+                    sentimentResult = comprehend.detect_sentiment(Text=text, LanguageCode="en")
+                    defaults["integerValue"] = int(sentimentResult["SentimentScore"]["Positive"] * 100)
+
+                obj = AOResponse(aoQuestion_id=defaults['aoQuestion'],
+                            projectUser_id=defaults['projectUser'], subProjectUser_id=defaults['subProjectUser'],
+                            shCategory_id=defaults['shCategory'],
+                            survey_id=defaults['survey'], project_id=defaults['project'],
+                            controlType=defaults['controlType'], integerValue=defaults['integerValue'],
+                            topicValue=defaults['topicValue'], commentValue=defaults['commentValue'],
+                            skipValue=defaults['skipValue'], topicTags=defaults['topicTags'],
+                            commentTags=defaults['commentTags'])
+                obj.save()
+        
+        # 2020-11-11
+        result = AOResponse.objects.all().values('projectUser', 'subProjectUser', 'shCategory', 'survey', 'project', 'aoQuestion', 'controlType', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags')
+        
+        list_result = [entry for entry in result]
+
+        serializer = self.get_serializer(data=list_result, many=True)
+        serializer.is_valid(raise_exception=True)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+class FetchPerceptionInfoViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+    queryset = AMResponse.objects.all()
+    serializer_class = AMResponseSerializer
+
+    def get_queryset(self):
+        queryset = AMResponse.objects.all()
+
+        survey = self.request.query_params.get('survey', None)
+        if survey is not None:
+            queryset = queryset.filter(survey__id=survey)
+
+        return queryset
+
+    def list(self, request, *args, **kwargs):
+
+        response = super().list(request, *args, **kwargs)
+
+        for i in range(len(response.data)):
+            amquestion_queryset = AMQuestion.objects.filter(id=response.data[i]['amQuestion'])
+            am_serializer = AMQuestionSerializer(amquestion_queryset, many=True)
+            response.data[i]['amQuestionData'] = am_serializer.data
+            response.data[i]['report'] = {
+                "Sentiment": "ERROR",
+                "MixedScore": 0,
+                "NegativeScore": 0,
+                "NeutralScore": 0,
+                "PositiveScore": 0,
+            }
+
+            if response.data[i]['controlType'] == 'TEXT' or response.data[i]['controlType'] == 'MULTI_TOPICS':
+                Text = response.data[i]['topicValue'] + " " + response.data[i]['commentValue']
+
+                if response.data[i]['topicValue'] != "" or response.data[i]['commentValue'] != "":
+                    sentimentData = comprehend.detect_sentiment(Text=Text, LanguageCode="en")
+                    print(sentimentData)
+                    if "Sentiment" in sentimentData:
+                        response.data[i]['report']["Sentiment"] = sentimentData["Sentiment"]
+                    if "SentimentScore" in sentimentData:
+                        if "Mixed" in sentimentData["SentimentScore"]:
+                            response.data[i]['report']["MixedScore"] = sentimentData["SentimentScore"]["Mixed"]
+                        if "Negative" in sentimentData["SentimentScore"]:
+                            response.data[i]['report']["NegativeScore"] = sentimentData["SentimentScore"]["Negative"]
+                        if "Neutral" in sentimentData["SentimentScore"]:
+                            response.data[i]['report']["NeutralScore"] = sentimentData["SentimentScore"]["Neutral"]
+                        if "Positive" in sentimentData["SentimentScore"]:
+                            response.data[i]['report']["PositiveScore"] = sentimentData["SentimentScore"]["Positive"]
+
+        return response
+
+
+class FetchRealityInfoViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+    queryset = ProjectMapLayout.objects.all()
+    serializer_class = ProjectMapLayoutStoreSerializer
+    filterset_fields = ['user', 'project']
+
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+
+        # 2020-05-20
+        myProjectUser_id = self.request.GET.get('myProjectUser')
+
+        for i in range(len(response.data)):
+            response.data[i]['pu_category'] = []
+            for item in response.data[i]['projectUser']:
+                # 2020-05-20
+                # catIDs = SHMapping.objects.filter(projectUser_id=item)
+                catIDs = SHMapping.objects.filter(projectUser_id=myProjectUser_id, subProjectUser_id=item)
+
+                for catID in catIDs:
+                    try:
+                        obj = SHCategory.objects.get(id=catID.shCategory_id, mapType=3)
+                        response.data[i]['pu_category'].append({'projectUser':item, 'category':catID.shCategory_id})
+                    except SHCategory.DoesNotExist:
+                        continue
+
+        return response
+
+    def create(self, request, *args, **kwargs):
+        data = request.data
+        content_type = request.content_type
+
+        # 2020-05-20
+        myProjectUser_id = data['myProjectUser']
+
+        try:
+            obj = ProjectMapLayout.objects.get(user_id=data['user'], project_id=data['project'])
+
+            obj.projectUser.clear()
+
+            if "application/json" in content_type:
+                for item in data["pu_category"]:
+                    new_obj = ProjectUser.objects.get(id=item['projectUser'])
+                    obj.projectUser.add(new_obj)
+
+                    try:
+                        # 2020-05-20
+                        # shObj = SHMapping.objects.get(shCategory_id=item['category'], projectUser_id=item['projectUser'])
+                        shObj = SHMapping.objects.get(shCategory_id=item['category'], projectUser_id=myProjectUser_id, subProjectUser_id=item['projectUser'])
+                    except SHMapping.DoesNotExist:
+                        # 2020-05-20
+                        # mapObj = SHMapping(shCategory_id=item['category'], projectUser_id=item['projectUser'], relationshipStatus="")
+                        mapObj = SHMapping(shCategory_id=item['category'], projectUser_id=myProjectUser_id, subProjectUser_id=item['projectUser'], relationshipStatus="")
+                        mapObj.save()
+            obj.save()
+
+        except ProjectMapLayout.DoesNotExist:
+            obj = ProjectMapLayout.objects.create(user_id=data['user'], project_id=data['project'])
+
+            obj.user_id = data['user']
+            obj.project_id = data['project']
+            obj.layout_json = data['layout_json']
+
+            if "application/json" in content_type:
+                for item in data['pu_category']:
+                    new_obj = ProjectUser.objects.get(id=item['projectUser'])
+                    obj.projectUser.add(new_obj)
+
+                    try:
+                        # 2020-05-20
+                        # shObj = SHMapping.objects.get(shCategory_id=item['category'], projectUser_id=item['projectUser'])
+                        shObj = SHMapping.objects.get(shCategory_id=item['category'], projectUser_id=myProjectUser_id, subProjectUser_id=item['projectUser'])
+                    except SHMapping.DoesNotExist:
+                        # 2020-05-20
+                        # mapObj = SHMapping(shCategory_id=item['category'], projectUser_id=item['projectUser'], relationshipStatus="")
+                        mapObj = SHMapping(shCategory_id=item['category'], projectUser_id=myProjectUser_id, subProjectUser_id=item['projectUser'], relationshipStatus="")
+                        mapObj.save()
+            
+            obj.save()
+
+        result = model_to_dict(ProjectMapLayout.objects.get(user_id=data['user'], project_id=data['project']))
+
+        list_result = result
+        for idx in range(len(result['projectUser'])):
+            list_result['projectUser'][idx] = result['projectUser'][idx].id
+
+        serializer = self.get_serializer(data=list_result)
+        serializer.is_valid(raise_exception=True)
+        headers = self.get_success_headers(serializer.data)
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)

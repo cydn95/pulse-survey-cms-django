@@ -55,6 +55,11 @@ router.register(r'aoresponsereportv2', views.AOResponseReportv2ViewSet)
 router.register(r'feedbacksummaryreportv2', views.AMResponseFeedbackSummaryv2Viewset)
 router.register(r'userbysurveyv2', views.UserBySurveyv2ViewSet)
 
+# Engagement reports
+router.register(r'perceptionreality', views.PerceptionRealityViewSet)
+router.register(r'fetchperceptioninfo', views.FetchPerceptionInfoViewSet)
+router.register(r'fetchRealityInfo', views.FetchRealityInfoViewSet)
+
 # The API URLs are now determined automatically by the router.
 urlpatterns = [
     url('', include(router.urls)),
