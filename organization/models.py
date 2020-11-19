@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
 #from gremlin import addVertex
@@ -49,6 +49,19 @@ class UserGuideMode(models.Model):
     
     def save(self, *args, **kwargs):
         super(UserGuideMode, self).save(*args, **kwargs)
+
+@receiver(pre_save, sender=User)
+def check_email(sender, instance, **kwargs):
+    instance.username = instance.email
+
+    try:
+        usr = User.objects.get(email=instance.email)
+        if usr.username == instance.username:
+            pass
+        else:
+            raise Exception('EmailExists')
+    except User.DoesNotExist:
+        pass
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):

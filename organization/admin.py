@@ -48,6 +48,7 @@ class EmailRequiredMixin(object):
     def __init__(self, *args, **kwargs):
         super(EmailRequiredMixin, self).__init__(*args, **kwargs)
         # make user email field required
+
         self.fields['email'].required = True
 
 class MyUserCreationForm(EmailRequiredMixin, UserCreationForm):
@@ -61,9 +62,11 @@ class UserAdmin(BaseUserAdmin):
     add_form = MyUserCreationForm
     list_per_page = 10
     
+    BaseUserAdmin.exclude = ('username',)
     BaseUserAdmin.list_display = ('email', 'first_name', 'last_name', 'is_active', 'date_joined', 'is_staff')
     BaseUserAdmin.fieldsets = (
-        (None, {'fields': ('username', 'email', 'password')}),
+        # (None, {'fields': ('username', 'email', 'password')}),
+        (None, {'fields': ('email', 'password')}),
         (_('Personal info'), {'fields': ('first_name', 'last_name')}),
         (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser',
                                        'groups', 'user_permissions')}),
@@ -72,9 +75,10 @@ class UserAdmin(BaseUserAdmin):
     BaseUserAdmin.add_fieldsets = (
         (None, {
             'description': (
-                "Enter the new user's name and email address and click save."
+                "Enter the new user's email address and click save."
             ),
-            'fields': ('email', 'username', 'password1', 'password2'),
+            # 'fields': ('email', 'username', 'password1', 'password2'),
+            'fields': ('email', 'password1', 'password2'),
         }),
         # ('Password', {
         #     'description': "Optionally, you may set the user's password here.",
