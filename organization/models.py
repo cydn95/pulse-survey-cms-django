@@ -52,18 +52,18 @@ class UserGuideMode(models.Model):
     def save(self, *args, **kwargs):
         super(UserGuideMode, self).save(*args, **kwargs)
 
-@receiver(pre_save, sender=User)
-def check_email(sender, instance, **kwargs):
-    instance.username = instance.email
+# @receiver(pre_save, sender=User)
+# def check_email(sender, instance, **kwargs):
+#     instance.username = instance.email
 
-    try:
-        usr = User.objects.get(email=instance.email)
-        if usr.username == instance.username:
-            raise Exception('Email exists')
-        else:
-            pass
-    except User.DoesNotExist:
-        pass
+#     try:
+#         usr = User.objects.get(email=instance.email)
+#         if usr.username == instance.username:
+#             raise Exception('Email exists')
+#         else:
+#             pass
+#     except User.DoesNotExist:
+#         pass
 
 
 @receiver(post_save, sender=User)
