@@ -4,6 +4,8 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext, ugettext_lazy as _
 from django.contrib.auth.forms import UserChangeForm, UserCreationForm
+from django.contrib import messages
+from django.shortcuts import redirect
 
 from django import forms
 from django.core.files.images import get_image_dimensions
@@ -63,7 +65,7 @@ class UserAdmin(BaseUserAdmin):
     list_per_page = 10
     
     BaseUserAdmin.exclude = ('username',)
-    BaseUserAdmin.list_display = ('email', 'first_name', 'last_name', 'is_active', 'date_joined', 'is_staff')
+    BaseUserAdmin.list_display = ('email', 'first_name', 'last_name', 'is_active', 'date_joined', 'is_staff', 'is_superuser')
     BaseUserAdmin.fieldsets = (
         # (None, {'fields': ('username', 'email', 'password')}),
         (None, {'fields': ('email', 'password')}),
@@ -88,6 +90,13 @@ class UserAdmin(BaseUserAdmin):
     )
     # inlines = (OrganizationInline, UserAvatarInline, UserTitleInline, UserTeamInline, UserGuideModeInline)
     inlines = (OrganizationInline, UserAvatarInline, UserTitleInline, UserTeamInline)
+
+    def save_model(self, request, obj, form, change):
+        # try:
+        super(UserAdmin, self).save_model(request, obj, form, change)
+        # except Exception:
+        #     messages.error(request, "Email already exist")
+        #     redirect('/')
 
 # Register your models here.
 admin.site.unregister(User)

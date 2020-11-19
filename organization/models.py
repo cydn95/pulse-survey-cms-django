@@ -3,6 +3,8 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
+from django.contrib import messages
+
 #from gremlin import addVertex
 
 class UserAvatar(models.Model):
@@ -57,11 +59,12 @@ def check_email(sender, instance, **kwargs):
     try:
         usr = User.objects.get(email=instance.email)
         if usr.username == instance.username:
-            pass
+            raise Exception('Email exists')
         else:
-            raise Exception('EmailExists')
+            pass
     except User.DoesNotExist:
         pass
+
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
