@@ -10,6 +10,7 @@ from django.shortcuts import redirect
 from django import forms
 from django.core.files.images import get_image_dimensions
 
+
 class UserAvatarInline(admin.StackedInline):
     model = UserAvatar
     can_delete = False
@@ -90,13 +91,6 @@ class UserAdmin(BaseUserAdmin):
     )
     # inlines = (OrganizationInline, UserAvatarInline, UserTitleInline, UserTeamInline, UserGuideModeInline)
     inlines = (OrganizationInline, UserAvatarInline, UserTitleInline, UserTeamInline)
-
-    def save_model(self, request, obj, form, change):
-        # try:
-        super(UserAdmin, self).save_model(request, obj, form, change)
-        # except Exception:
-        #     messages.error(request, "Email already exist")
-        #     redirect('/')
 
 # Register your models here.
 admin.site.unregister(User)
