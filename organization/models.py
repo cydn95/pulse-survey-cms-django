@@ -7,6 +7,7 @@ from django.contrib import messages
 
 #from gremlin import addVertex
 
+User._meta.get_field('email')._unique = True
 class UserAvatar(models.Model):
     user = models.OneToOneField(User, unique=True, related_name='avatar', on_delete=models.CASCADE)
     name = models.ImageField(upload_to='uploads/user', verbose_name='Avatar', blank=True)
