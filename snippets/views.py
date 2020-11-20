@@ -30,6 +30,8 @@ from django.db.models import Q
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 from rest_framework import filters
+from django.http import HttpResponse
+from django.middleware import csrf
 
 from drf_renderer_xlsx.mixins import XLSXFileMixin
 from drf_renderer_xlsx.renderers import XLSXRenderer
@@ -43,9 +45,12 @@ import json
 #initialize comprehend module
 comprehend = boto3.client(service_name='comprehend', region_name='us-east-2')
 
+def get_csrf(request):
+    return HttpResponse("{0}".format(csrf.get_token(request)), content_type="text/plain")
+
 class CustomAuthToken(ObtainAuthToken):
     permission_classes = [permissions.AllowAny]
-    
+
     def post(self, request, *args, **kwargs):
         response = super(CustomAuthToken, self).post(request, *args, **kwargs)
         token = Token.objects.get(key=response.data['token'])

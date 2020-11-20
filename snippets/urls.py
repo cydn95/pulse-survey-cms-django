@@ -71,6 +71,7 @@ urlpatterns = [
     url(r'^reset/done/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
     url(r'^api-token-auth/', CustomAuthToken.as_view()),
     url(r'^account/', include('allauth.urls')),
+    url(r'^get_csrf/?$', views.get_csrf, name="get_csrf"),
     #url('accounts-rest/registration/account-confirm-email/(?P<key>.+)/$', confirm_email, name='account_confirm_email'),
     # url('', include('django_rest_passwordreset.urls', namespace='password_reset')),
 ]
