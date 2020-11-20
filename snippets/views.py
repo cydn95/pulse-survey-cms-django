@@ -44,6 +44,8 @@ import json
 comprehend = boto3.client(service_name='comprehend', region_name='us-east-2')
 
 class CustomAuthToken(ObtainAuthToken):
+    permission_classes = [permissions.AllowAny]
+    
     def post(self, request, *args, **kwargs):
         response = super(CustomAuthToken, self).post(request, *args, **kwargs)
         token = Token.objects.get(key=response.data['token'])
