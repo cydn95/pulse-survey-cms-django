@@ -819,6 +819,13 @@ class TemoraryTestForProjectUser(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = ProjectUser.objects.all()
         return queryset
+
+    def update(self, request, *args, **kwargs):
+        ret = super(ProjectUserViewSet, self).update(request, *args, **kwargs)
+
+        print(ret)
+
+        return ret
         
 class ProjectUserViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
