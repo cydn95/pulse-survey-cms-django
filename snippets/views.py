@@ -811,6 +811,15 @@ class SkipOptionViewSet(viewsets.ModelViewSet):
     queryset = SkipOption.objects.all()
     serializer_class = SkipOptionSerializer
 
+class TemoraryTestForProjectUser(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+    queryset = ProjectUser.objects.all()
+    serializer_class = ProjectUserSerializer
+
+    def get_queryset(self):
+        queryset = ProjectUser.objects.all()
+        return queryset
+        
 class ProjectUserViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
     queryset = ProjectUser.objects.all()
