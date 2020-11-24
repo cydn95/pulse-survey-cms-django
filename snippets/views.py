@@ -916,7 +916,7 @@ class ProjectUserViewSet(viewsets.ModelViewSet):
             obj = MyMapLayout.objects.get(user_id=request.user.id, project_id=data['project'])
             
             # 2020-11-24 added
-            obj.projectUser.clear()
+            # obj.projectUser.clear()
             new_obj = ProjectUser.objects.get(id=projectUser_id)
             obj.projectUser.add(new_obj)
             
@@ -970,7 +970,7 @@ class ProjectUserViewSet(viewsets.ModelViewSet):
             obj1 = ProjectMapLayout.objects.get(user_id=request.user.id, project_id=data['project'])
 
             # 2020-11-24 added
-            obj1.projectUser.clear()
+            # obj1.projectUser.clear()
             new_obj1 = ProjectUser.objects.get(id=projectUser_id)
             obj1.projectUser.add(new_obj1)
 
