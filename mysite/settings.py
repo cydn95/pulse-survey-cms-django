@@ -1,7 +1,9 @@
 import os  # isort:skip
 import datetime
 import environ
-from django.conf.locale.es import formats as es_formats
+from django.conf.locale.en import formats as en_formats
+
+en_formats.DATETIME_FORMAT = "F j, Y, H:i:s A"
 
 env = environ.Env(
     #set casting, default value
