@@ -8,6 +8,7 @@ from django.contrib import messages
 #from gremlin import addVertex
 
 User._meta.get_field('email')._unique = True
+
 class UserAvatar(models.Model):
     user = models.OneToOneField(User, unique=True, related_name='avatar', on_delete=models.CASCADE)
     name = models.ImageField(upload_to='uploads/user', verbose_name='Avatar', blank=True)
@@ -55,7 +56,8 @@ class UserGuideMode(models.Model):
 
 @receiver(pre_save, sender=User)
 def check_email(sender, instance, **kwargs):
-    instance.username = instance.email
+    instance.username = instance.email.lower()
+    instance.email = instance.email.lower()
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):

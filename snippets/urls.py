@@ -46,7 +46,9 @@ router.register(r'tooltipguide', views.ToolTipGuideViewSet)
 router.register(r'amresponsereport', views.AMResponseReportViewSet)
 router.register(r'aoresponsereport', views.AOResponseReportViewSet)
 router.register(r'overallsentimentreport', views.OverallSentimentReportViewSet)
-router.register(r'feedbacksummaryreport', views.AMResponseFeedbackSummaryViewset)
+# router.register(r'feedbacksummaryreport', views.AMResponseFeedbackSummaryViewset)
+router.register(r'feedbacksummaryreport', views.AOResponseFeedbackSummaryViewset)
+
 # router.register(r'sentimentreportbydriver', views.SentimentReportByDriverViewSet)
 
 # sentiment reports

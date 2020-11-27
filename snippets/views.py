@@ -408,6 +408,58 @@ class AMResponseReportViewSet(viewsets.ModelViewSet):
 
         return response
 
+class AOResponseFeedbackSummaryViewset(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+    queryset = AOResponse.objects.all()
+    serializer_class = AOResponseSerializer
+
+    def get_queryset(self):
+        queryset = AOResponse.objects.all()
+
+        survey = self.request.query_params.get('survey', None)
+        if survey is not None:
+            queryset = queryset.filter(survey__id=survey)
+
+        return queryset
+
+    def list(self, request, *args, **kwargs):
+
+        response = super().list(request, *args, **kwargs)
+        # print(response.data)
+        for i in range(len(response.data)):
+            aoquestion_queryset = AOQuestion.objects.filter(id=response.data[i]['amQuestion'])
+            ao_serializer = AOQuestionSerializer(aoquestion_queryset, many=True)
+            response.data[i]['aoQuestionData'] = ao_serializer.data
+            # response.data[i]['amQuestionData'] = AMQuestion.objects.filter(id=response.data[i]['amQuestion']).values()[0]
+            # response.data[i]['shGroups'] = AMQuestionSHGroup.objects.filter(amQuestion=response.data[i]['amQuestion']).values_list('shGroup')
+            response.data[i]['report'] = {
+                "Sentiment": "ERROR",
+                "MixedScore": 0,
+                "NegativeScore": 0,
+                "NeutralScore": 0,
+                "PositiveScore": 0,
+            }
+
+            if response.data[i]['controlType'] == 'TEXT' or response.data[i]['controlType'] == 'MULTI_TOPICS':
+                Text = response.data[i]['topicValue'] + " " + response.data[i]['commentValue']
+
+                if response.data[i]['topicValue'] != "" or response.data[i]['commentValue'] != "":
+                    sentimentData = comprehend.detect_sentiment(Text=Text, LanguageCode="en")
+                    print(sentimentData)
+                    if "Sentiment" in sentimentData:
+                        response.data[i]['report']["Sentiment"] = sentimentData["Sentiment"]
+                    if "SentimentScore" in sentimentData:
+                        if "Mixed" in sentimentData["SentimentScore"]:
+                            response.data[i]['report']["MixedScore"] = sentimentData["SentimentScore"]["Mixed"]
+                        if "Negative" in sentimentData["SentimentScore"]:
+                            response.data[i]['report']["NegativeScore"] = sentimentData["SentimentScore"]["Negative"]
+                        if "Neutral" in sentimentData["SentimentScore"]:
+                            response.data[i]['report']["NeutralScore"] = sentimentData["SentimentScore"]["Neutral"]
+                        if "Positive" in sentimentData["SentimentScore"]:
+                            response.data[i]['report']["PositiveScore"] = sentimentData["SentimentScore"]["Positive"]
+
+        return response
+
 class AMResponseFeedbackSummaryViewset(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
     queryset = AMResponse.objects.all()
