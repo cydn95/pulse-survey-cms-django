@@ -1803,7 +1803,10 @@ class OverallSentimentReportViewSet(viewsets.ModelViewSet):
         for i in range(len(response.data)):
             total = total + response.data[i]['integerValue']
         cnt = len(response.data)
-        percentage = total / cnt
+
+        percentage = 0
+        if (cnt > 0):
+            percentage = total / cnt
 
         response.data = []
         if percentage < 40:
