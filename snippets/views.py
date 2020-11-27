@@ -427,7 +427,7 @@ class AOResponseFeedbackSummaryViewset(viewsets.ModelViewSet):
         response = super().list(request, *args, **kwargs)
         # print(response.data)
         for i in range(len(response.data)):
-            aoquestion_queryset = AOQuestion.objects.filter(id=response.data[i]['amQuestion'])
+            aoquestion_queryset = AOQuestion.objects.filter(id=response.data[i]['aoQuestion'])
             ao_serializer = AOQuestionSerializer(aoquestion_queryset, many=True)
             response.data[i]['aoQuestionData'] = ao_serializer.data
             # response.data[i]['amQuestionData'] = AMQuestion.objects.filter(id=response.data[i]['amQuestion']).values()[0]
