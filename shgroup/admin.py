@@ -4,6 +4,9 @@ from jet.admin import CompactInline
 #from gremlin import deleteVertex
 from django.forms import CheckboxSelectMultiple
 from django.contrib import messages
+import json
+from django.conf.urls import include, url
+from django.core.serializers import serialize
 
 class SHGroupAdmin(admin.ModelAdmin):
     fieldset = [
@@ -90,6 +93,24 @@ class ProjectUserAdmin(admin.ModelAdmin):
 
     # def get_changelist_form(self, request, **kwargs):
     #     return ProjectUserForm
+    def get_urls(self):
+        urls = super().get_urls()
+        my_urls = [
+            url(r'shgroup_for_survey', self.shgroups_for_survey),
+        ]
+        return my_urls + urls
+    
+    def shgroups_for_survey(self, request):
+        if request.GET and 'survey_id' in request.GET:
+            data = serialize('json', SHGroup.objects.filter(survey=request.GET['survey_id']))
+
+            return HttpResponse(data, content_type="text/plain")
+        else:
+            return JsonResponse({'error': 'Not Ajax or no GET'})
+    
+    class Media:
+        js = ('//ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js', '/static/admin/js/fill_shgroup.js',)
+
     def get_form(self, request, obj=None, **kwargs):
         form = super().get_form(request, obj, **kwargs)
         team = form.base_fields['team']
