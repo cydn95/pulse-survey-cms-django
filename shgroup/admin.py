@@ -7,6 +7,8 @@ from django.contrib import messages
 import json
 from django.conf.urls import include, url
 from django.core.serializers import serialize
+from django.http import HttpResponse
+from django.http.response import JsonResponse
 
 class SHGroupAdmin(admin.ModelAdmin):
     fieldset = [
@@ -96,16 +98,21 @@ class ProjectUserAdmin(admin.ModelAdmin):
     def get_urls(self):
         urls = super().get_urls()
         my_urls = [
-            url(r'shgroup_for_survey', self.shgroups_for_survey),
+            url(r'shgroups_for_survey', self.shgroups_for_survey),
         ]
+
+        print(my_urls + urls)
         return my_urls + urls
     
     def shgroups_for_survey(self, request):
+        print(request)
         if request.GET and 'survey_id' in request.GET:
+            
             data = serialize('json', SHGroup.objects.filter(survey=request.GET['survey_id']))
-
+            print(data)
             return HttpResponse(data, content_type="text/plain")
         else:
+            print('error')
             return JsonResponse({'error': 'Not Ajax or no GET'})
     
     class Media:

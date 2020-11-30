@@ -1,12 +1,15 @@
 var response_cache = {};
 
 function fill_shgroups(survey_id) {
+    console.log("survey_id => ", survey_id);
     if (response_cache[survey_id]) {
+        console.log("response cache");
         $("#id_shGroup").html(response_cache[survey_id]);
     } else {
-
+        console.log("no response cache");
         jQuery.getJSON(window.location.href + "shgroups_for_survey/", {survey_id: survey_id},
             function(ret, textStatus) {
+                console.log(ret);
                 //console.log(ret); return;
                 var options = '<option value="" selected="selected">--------</option>';
                 for (var i in ret) {
