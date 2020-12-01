@@ -417,8 +417,14 @@ class AOResponseFeedbackSummaryViewset(viewsets.ModelViewSet):
         queryset = AOResponse.objects.all()
 
         survey = self.request.query_params.get('survey', None)
-        if survey is not None:
-            queryset = queryset.filter(survey__id=survey)
+        subProjectUser = self.request.query_params.get('subProjectUser', None)
+        
+        if (survey is not None) & (subProjectUser is not None):
+            queryset = queryset.filter(survey_id=survey, subProjectUser_id=subProjectUser)
+        elif survey is not None:
+            queryset = queryset.filter(survey_id=survey)
+        elif subProjectUser is not None:
+            queryset = queryset.filter(subProjectUser_id=subProjectUser)
 
         return queryset
 
