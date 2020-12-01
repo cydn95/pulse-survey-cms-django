@@ -48,7 +48,7 @@ class AMQuestionAdmin(SortableAdminMixin, admin.ModelAdmin):
             url(r'drivers_for_survey/', self.drivers_for_survey),
         ]
 
-        print(my_urls + urls)
+        # print(my_urls + urls)
         return my_urls + urls
 
     def drivers_for_survey(self, request):

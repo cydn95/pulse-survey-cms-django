@@ -1,13 +1,20 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.db.models.signals import post_save, pre_save
+from django.db.models.signals import post_save, pre_save, post_init
 from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
 from django.contrib import messages
+from django.core.exceptions import ValidationError
 
 #from gremlin import addVertex
 
+def email_validator(email):
+    print('email validation')
+    if User.objects.filter(email=email.lower()).exists():
+        raise ValidationError("Email already exists ya", code='invalid')
+
 User._meta.get_field('email')._unique = True
+User._meta.get_field('email')._validators = [email_validator]
 
 class UserAvatar(models.Model):
     user = models.OneToOneField(User, unique=True, related_name='avatar', on_delete=models.CASCADE)
@@ -54,10 +61,19 @@ class UserGuideMode(models.Model):
     def save(self, *args, **kwargs):
         super(UserGuideMode, self).save(*args, **kwargs)
 
+# @receiver(post_init, sender=User)
+# def validation_email(sender, instance, **kwargs):
+#     print("POST_INIT", instance)
+#     instance.email = instance.email.lower()
+
 @receiver(pre_save, sender=User)
 def check_email(sender, instance, **kwargs):
+    instance.full_clean()
     instance.username = instance.email.lower()
     instance.email = instance.email.lower()
+
+    if User.objects.filter(email=instance.email.lower()).count():
+        raise ValidationError('Duplicate email', code='invalid')
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):

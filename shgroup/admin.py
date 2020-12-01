@@ -101,7 +101,7 @@ class ProjectUserAdmin(admin.ModelAdmin):
             url(r'shgroups_for_survey', self.shgroups_for_survey),
         ]
 
-        print(my_urls + urls)
+        # print(my_urls + urls)
         return my_urls + urls
     
     def shgroups_for_survey(self, request):
