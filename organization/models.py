@@ -14,7 +14,7 @@ def email_validator(email):
         raise ValidationError("Email already exists ya", code='invalid')
 
 User._meta.get_field('email')._unique = True
-User._meta.get_field('email')._validators = [email_validator]
+# User._meta.get_field('email')._validators = [email_validator]
 
 class UserAvatar(models.Model):
     user = models.OneToOneField(User, unique=True, related_name='avatar', on_delete=models.CASCADE)
@@ -72,8 +72,8 @@ def check_email(sender, instance, **kwargs):
     instance.username = instance.email.lower()
     instance.email = instance.email.lower()
 
-    if User.objects.filter(email=instance.email.lower()).count():
-        raise ValidationError('Duplicate email', code='invalid')
+    # if User.objects.filter(email=instance.email.lower()).count():
+    #     raise ValidationError('Duplicate email', code='invalid')
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):

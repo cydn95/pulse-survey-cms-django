@@ -6,6 +6,7 @@ from django.utils.translation import ugettext, ugettext_lazy as _
 from django.contrib.auth.forms import UserChangeForm, UserCreationForm
 from django.contrib import messages
 from django.shortcuts import redirect
+from django.core.exceptions import ValidationError
 
 from django import forms
 from django.core.files.images import get_image_dimensions
@@ -55,8 +56,15 @@ class EmailRequiredMixin(object):
         self.fields['email'].required = True
 
 class MyUserCreationForm(EmailRequiredMixin, UserCreationForm):
-    pass
+    def clean_email(self):
+
+        email = self.cleaned_data['email']
+
+        if User.objects.filter(email=email.lower()).exists():
+            raise ValidationError("Email already exists ya", code='invalid')
         
+        return email
+
 class MyUserChangeForm(EmailRequiredMixin, UserChangeForm):
     pass
 
