@@ -138,7 +138,7 @@ class AMResponseAdmin(ImportExportModelAdmin):
     fields = ['projectUser', 'subProjectUser', 'survey', 'project', 'amQuestion', 'controlType', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags']
     readonly_fields = ['projectUser', 'subProjectUser', 'survey', 'project', 'amQuestion', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags']
     
-    search_fields = ['amQuestion']
+    search_fields = ['amQuestion__questionText']
     list_filter = ['projectUser', 'project', 'survey']
     list_per_page = 10
     

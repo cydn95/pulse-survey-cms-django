@@ -137,7 +137,7 @@ class AOResponseAdmin(ImportExportModelAdmin):
     fileds = ['projectUser', 'subProjectUser', 'shCategory', 'survey', 'project', 'aoQuestion', 'controlType', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags']
     readonly_fields = ['projectUser', 'subProjectUser', 'shCategory', 'survey', 'project', 'aoQuestion', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags']
     
-    search_fields = ['aoQuestion']
+    search_fields = ['aoQuestion__questionText']
     list_filter = ['projectUser', 'subProjectUser', 'shCategory', 'project', 'survey']
     list_per_page = 10
     
