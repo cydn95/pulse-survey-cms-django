@@ -83,7 +83,7 @@ class ProjectUserAdmin(admin.ModelAdmin):
     # Search
     # 2020-05-27
     # search_fields = ['user', 'projectUserTitle', 'project', 'team', 'shGroup']
-    search_fields = ['user', 'projectUserTitle', 'survey', 'team', 'shGroup']
+    search_fields = ['user__email', 'projectUserTitle', 'survey__surveyTitle', 'team__name', 'shGroup__SHGroupName']
 
     # Filter
     # 2020-05-27

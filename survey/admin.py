@@ -27,7 +27,7 @@ from django.db.models import Q
 class ProjectAdmin(admin.ModelAdmin):
 
     # Search
-    search_fields = ['client', 'projectName']
+    search_fields = ['client__clientName', 'projectName']
     # Filter
     list_filter = ['client', 'projectName']
     # list
