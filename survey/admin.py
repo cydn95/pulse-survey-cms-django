@@ -249,7 +249,7 @@ class AODriverForm(forms.Form):
 # class SurveyAdmin(AdminBooleanMixin, admin.ModelAdmin):
 class SurveyAdmin(admin.ModelAdmin):
     list_display = ['surveyTitle', 'get_client', 'project', 'survey_status']
-    search_fields = ['surveyTitle', 'project']
+    search_fields = ['surveyTitle', 'project__projectName']
     list_filter = ['project']
     exclude = ['isStandard', 'isActive']
     list_per_page = 10

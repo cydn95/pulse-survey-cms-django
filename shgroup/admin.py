@@ -158,7 +158,7 @@ class SHMappingAdmin(admin.ModelAdmin):
     list_display = ('shCategory', 'projectUser', 'subProjectUser', 'relationshipStatus')
 
     # Search
-    search_fields = ['shCategory', 'projectUser', 'subProjectUser']
+    search_fields = ['shCategory__SHCategoryName', 'projectUser__projectUserTitle', 'subProjectUser__projectUserTitle']
     # Filter
     list_filter = ['shCategory', 'projectUser', 'subProjectUser']
     list_per_page = 10

@@ -5,7 +5,7 @@ from .models import Team
 class TeamAdmin(admin.ModelAdmin):
 
     # Search
-    search_fields = ['project', 'name']
+    search_fields = ['project__projectName', 'name']
     # Filter
     list_filter = ['project', 'name']
     # list
