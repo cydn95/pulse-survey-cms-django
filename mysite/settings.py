@@ -118,7 +118,8 @@ MIDDLEWARE = [
     'cms.middleware.user.CurrentUserMiddleware',
     'cms.middleware.page.CurrentPageMiddleware',
     'cms.middleware.toolbar.ToolbarMiddleware',
-    'cms.middleware.language.LanguageCookieMiddleware'
+    'cms.middleware.language.LanguageCookieMiddleware',
+    'preventconcurrentlogins.middleware.PreventConcurrentLoginsMiddleware',
 ]
 
 INSTALLED_APPS = [
@@ -180,6 +181,7 @@ INSTALLED_APPS = [
     'rest_framework_swagger',
     'django_inlinecss',
     'django_rest_passwordreset',
+    'preventconcurrentlogins',
 ]
 
 AUTH_PASSWORD_VALIDATORS = [
