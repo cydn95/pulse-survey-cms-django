@@ -61,7 +61,7 @@ class MyUserCreationForm(EmailRequiredMixin, UserCreationForm):
         email = self.cleaned_data['email']
 
         if User.objects.filter(email=email.lower()).exists():
-            raise ValidationError("Email already exists ya", code='invalid')
+            raise ValidationError("This Email already exists", code='invalid')
         
         return email
 
