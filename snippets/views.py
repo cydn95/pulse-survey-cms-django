@@ -2872,6 +2872,7 @@ class FetchPerceptionInfoViewSet(viewsets.ModelViewSet):
 
 
 class FetchRealityInfoViewSet(viewsets.ModelViewSet):
+
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
     queryset = ProjectMapLayout.objects.all()
     serializer_class = ProjectMapLayoutStoreSerializer
@@ -2952,6 +2953,185 @@ class FetchRealityInfoViewSet(viewsets.ModelViewSet):
             obj.save()
 
         result = model_to_dict(ProjectMapLayout.objects.get(user_id=data['user'], project_id=data['project']))
+
+        list_result = result
+        for idx in range(len(result['projectUser'])):
+            list_result['projectUser'][idx] = result['projectUser'][idx].id
+
+        serializer = self.get_serializer(data=list_result)
+        serializer.is_valid(raise_exception=True)
+        headers = self.get_success_headers(serializer.data)
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+## Temp
+class UserBySurveyV2ViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+    queryset = ProjectUser.objects.all()
+    serializer_class = UserBySurveySerializer
+
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+
+        myProjectUser_id = self.request.GET.get('myProjectUser')
+        survey = self.request.GET.get('survey')
+
+        for i in range(len(response.data)):
+            filters = ~Q(shGroup=None)
+            if response.data[i]['user']['last_login'] is not None:
+                response.data[i]['accept_status'] = True
+            else:
+                response.data[i]['accept_status'] = False
+
+            response.data[i]['am_total'] = AMQuestion.objects.filter(filters).filter(survey__id=survey).count()
+            response.data[i]['am_response'] = []
+
+            # for item1 in AMResponse.objects.filter(user_id=response.data[i]['user']['id'], project_id=response.data[i]['project']['id']).values('amQuestion'):
+            #     response.data[i]['am_response'].append(item1['amQuestion']) 
+            # response.data[i]['am_answered'] = AMResponse.objects.filter(user_id=response.data[i]['user']['id'], project_id=response.data[i]['project']['id']).count()
+            # response.data[i]['ao_total'] = AOQuestion.objects.count()
+            # response.data[i]['ao_response'] = []
+            # for item2 in AOResponse.objects.filter(subjectUser_id=response.data[i]['user']['id'], project_id=response.data[i]['project']['id']).values('aoQuestion'):
+            #     response.data[i]['ao_response'].append(item2['aoQuestion']) 
+            # response.data[i]['ao_answered'] = AOResponse.objects.filter(subjectUser_id=response.data[i]['user']['id'], project_id=response.data[i]['project']['id']).count()
+            for item1 in AMResponse.objects.filter(projectUser_id=response.data[i]['id']).values('amQuestion'):
+                response.data[i]['am_response'].append(item1['amQuestion']) 
+            response.data[i]['am_answered'] = AMResponse.objects.filter(projectUser_id=response.data[i]['id']).count()
+            response.data[i]['ao_total'] = AOQuestion.objects.filter(filters).filter(survey__id=survey).count()
+            response.data[i]['ao_response'] = []
+            for item2 in AOResponse.objects.filter(subProjectUser_id=response.data[i]['id']).values('aoQuestion'):
+                response.data[i]['ao_response'].append(item2['aoQuestion']) 
+            response.data[i]['ao_answered'] = AOResponse.objects.filter(subProjectUser_id=response.data[i]['id']).count()
+
+            response.data[i]['shCategory'] = []
+            # for item3 in SHMapping.objects.filter(projectUser_id=response.data[i]['id']).values('shCategory'):
+            for item3 in SHMapping.objects.filter(projectUser_id=myProjectUser_id, subProjectUser_id=response.data[i]['id']).values('shCategory'):
+                response.data[i]['shCategory'].append(item3['shCategory'])
+
+        return response
+
+    def get_queryset(self):
+        queryset = ProjectUser.objects.all()
+
+        survey = self.request.query_params.get('survey', None)
+        user = self.request.query_params.get('user', None)
+        
+        if (survey is not None) & (user is not None):
+            # queryset = queryset.filter(survey__id=survey, user__id=user).exclude(user__id=self.request.user.id)
+            queryset = queryset.filter(survey__id=survey, user__id=user)
+        elif survey is not None:
+            # queryset = queryset.filter(survey__id=survey).exclude(user__id=self.request.user.id)
+            queryset = queryset.filter(survey__id=survey)   
+        elif user is not None:
+            # queryset = queryset.filter(user__id=user).exclude(user__id=self.request.user.id)
+            queryset = queryset.filter(user__id=user)
+
+        return queryset
+
+class DriverV2ViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+    queryset = Driver.objects.all()
+    serializer_class = DriverSerializer
+
+    def get_queryset(self):
+        queryset = Driver.objects.all()
+        survey = self.request.query_params.get('survey', None)
+
+        if survey is not None:
+            queryset = queryset.filter(survey__id=survey)
+
+        return queryset
+
+class MyMapLayoutV2ViewSet(viewsets.ModelViewSet):
+
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+    queryset = MyMapLayout.objects.all()
+    serializer_class = MyMapLayoutStoreSerializer
+    filterset_fields = ['user', 'project']
+
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+
+        myProjectUser_id = self.request.GET.get('myProjectUser')
+        
+        for i in range(len(response.data)):
+            response.data[i]['pu_category'] = []
+            for item in response.data[i]['projectUser']:
+                # 2020-05-20
+                # catIDs = SHMapping.objects.filter(projectUser_id=item)
+                catIDs = SHMapping.objects.filter(projectUser_id=myProjectUser_id, subProjectUser_id=item)
+
+                for catID in catIDs:
+                    try:
+                        obj = SHCategory.objects.get(id=catID.shCategory_id, mapType=2)
+                        response.data[i]['pu_category'].append({'projectUser':item, 'category':catID.shCategory_id})
+                    except SHCategory.DoesNotExist:
+                        continue
+        return response
+
+    def create(self, request, *args, **kwargs):
+        data = request.data
+        content_type = request.content_type
+        # 2020-05-20
+        myProjectUser_id = data['myProjectUser']
+
+        try:
+            obj = MyMapLayout.objects.get(user_id=data['user'], project_id=data['project'])
+
+            obj.projectUser.clear()
+            
+            if "application/json" in content_type:
+                
+                for item in data['pu_category']:
+                    new_obj = ProjectUser.objects.get(id=item['projectUser'])
+                    obj.projectUser.add(new_obj)
+
+                    try:
+                        # 2020-05-20
+                        # shObj = SHMapping.objects.get(shCategory_id=item['category'], projectUser_id=item['projectUser'])
+                        shObj = SHMapping.objects.get(shCategory_id=item['category'], projectUser_id=myProjectUser_id, subProjectUser_id=item['projectUser'])
+                    except SHMapping.DoesNotExist:
+                        # 2020-05-20
+                        # mapObj = SHMapping(shCategory_id=item['category'], projectUser_id=item['projectUser'], relationshipStatus="")
+                        mapObj = SHMapping(shCategory_id=item['category'], projectUser_id=myProjectUser_id, subProjectUser_id=item['projectUser'], relationshipStatus="")
+                        mapObj.save()
+
+            # else:
+            #     for item in data.getlist('pu_category'):
+            #         new_obj = ProjectUser.objects.get(id=item.projectUser)
+            #         obj.projectUser.add(new_obj)
+
+            obj.save()
+
+        except MyMapLayout.DoesNotExist:
+            obj = MyMapLayout.objects.create(user_id=data['user'], project_id=data['project'])
+
+            obj.user_id = data['user']
+            obj.project_id = data['project']
+            obj.layout_json = data['layout_json']
+
+            if "application/json" in content_type:
+                for item in data['pu_category']:
+                    new_obj = ProjectUser.objects.get(id=item['projectUser'])
+                    obj.projectUser.add(new_obj)
+
+                    try:
+                        # 2020-05-20
+                        # shObj = SHMapping.objects.get(shCategory_id=item['category'], projectUser_id=item['projectUser'])
+                        shObj = SHMapping.objects.get(shCategory_id=item['category'], projectUser_id=myProjectUser_id, subProjectUser_id=item['projectUser'])
+                    except SHMapping.DoesNotExist:
+                        # 2020-05-20
+                        # mapObj = SHMapping(shCategory_id=item['category'], projectUser_id=item['projectUser'], relationshipStatus="")
+                        mapObj = SHMapping(shCategory_id=item['category'], projectUser_id=myProjectUser_id, subProjectUser_id=item['projectUser'], relationshipStatus="")
+                        mapObj.save()
+            # else:
+            #     for item in data.getlist('projectUser'):
+            #         new_obj = ProjectUser.objects.get(id=item)
+            #         obj.projectUser.add(new_obj)
+
+            obj.save()
+
+        result = model_to_dict(MyMapLayout.objects.get(user_id=data['user'], project_id=data['project']))
 
         list_result = result
         for idx in range(len(result['projectUser'])):
