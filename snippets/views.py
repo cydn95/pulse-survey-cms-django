@@ -56,7 +56,6 @@ class CustomAuthToken(ObtainAuthToken):
         token = Token.objects.get(key=response.data['token'])
         return Response({'token': token.key, 'id': token.user_id})
  
-#class UserViewSet(viewsets.ReadOnlyModelViewSet):
 class UserViewSet(viewsets.ModelViewSet):
     """
     This viewset automatically provides `list` and `detail` actions.
@@ -85,25 +84,6 @@ class UserViewSet(viewsets.ModelViewSet):
             response.data['guide'] = response.data['guidemode']['name']
 
         return response
-        
-# class SnippetViewSet(viewsets.ModelViewSet):
-#     """
-#     This viewset automatically provides `list`, `create`, `retrieve`,
-#     `update` and `destroy` actions.
-
-#     Additionally we also provide an extra `highlight` action.
-#     """
-#     queryset = Snippet.objects.all()
-#     serializer_class = SnippetSerializer
-#     permission_classes = [permissions.IsAuthenticated,permissions.IsAuthenticatedOrReadOnly]
-    
-#     @action(detail=True, renderer_classes=[renderers.StaticHTMLRenderer])
-#     def highlight(self, request, *args, **kwargs):
-#         snippet = self.get_object()
-#         return Response(snippet.highlighted)
-
-#     def perform_create(self, serializer):
-#         serializer.save(owner=self.request.user)
 
 class PageSettingViewSet(viewsets.ReadOnlyModelViewSet):
     """
@@ -1789,7 +1769,7 @@ class SentimentReportByDriverViewSet(viewsets.ModelViewSet):
         # else:
         #     response.data.append({'emojiType': 'green', 'value': percentage})
 
-        return response
+        # return response
 
 class OverallSentimentReportViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
