@@ -652,7 +652,9 @@ class AOResponseViewSet(viewsets.ModelViewSet):
                 try:
                     # 2020-05-20
                     # obj = AOResponse.objects.get(survey_id=item['survey'], project_id=item['project'], user_id=item['user'], subjectUser_id=item['subjectUser'], aoQuestion_id=item['aoQuestion'])
-                    obj = AOResponse.objects.get(survey_id=item['survey'], project_id=item['project'], projectUser_id=item['projectUser'], subProjectUser_id=item['subProjectUser'], shCategory_id=item['shCategory'], aoQuestion_id=item['aoQuestion'])
+                    # 2020-12-17
+                    # obj = AOResponse.objects.get(survey_id=item['survey'], project_id=item['project'], projectUser_id=item['projectUser'], subProjectUser_id=item['subProjectUser'], shCategory_id=item['shCategory'], aoQuestion_id=item['aoQuestion'])
+                    obj = AOResponse.objects.get(survey_id=item['survey'], project_id=item['project'], projectUser_id=item['projectUser'], subProjectUser_id=item['subProjectUser'], aoQuestion_id=item['aoQuestion'])
 
                     if obj.controlType == "TEXT" or obj.controlType == "MULTI_TOPICS":
                         text = obj.topicValue + " " + obj.commentValue
@@ -699,7 +701,8 @@ class AOResponseViewSet(viewsets.ModelViewSet):
             try:
                 # 2020-05-20
                 # obj = AOResponse.objects.get(survey_id=item['survey'], project_id=item['project'], user_id=item['user'], subjectUser_id=item['subjectUser'], aoQuestion_id=item['aoQuestion'])
-                obj = AOResponse.objects.get(survey_id=item['survey'], project_id=item['project'], projectUser_id=item['projectUser'], subProjectUser_id=item['subProjectUser'], shCategory_id=item['shCategory'], aoQuestion_id=item['aoQuestion'])
+                # obj = AOResponse.objects.get(survey_id=item['survey'], project_id=item['project'], projectUser_id=item['projectUser'], subProjectUser_id=item['subProjectUser'], shCategory_id=item['shCategory'], aoQuestion_id=item['aoQuestion'])
+                obj = AOResponse.objects.get(survey_id=item['survey'], project_id=item['project'], projectUser_id=item['projectUser'], subProjectUser_id=item['subProjectUser'], aoQuestion_id=item['aoQuestion'])
 
                 if obj.controlType == "TEXT" or obj.controlType == "MULTI_TOPICS":
                     text = obj.topicValue + " " + obj.commentValue
@@ -2072,75 +2075,75 @@ class UserBySurveyv2ViewSet(viewsets.ModelViewSet):
 
         return queryset
         
-class ReportByProjectViewSet(viewsets.ModelViewSet):
-    permission_classes = [permissions.IsAuthenticated,permissions.IsAuthenticatedOrReadOnly]
-    queryset = AOResponse.objects.all()
-    serializer_class = AOResponseSerializer
+# class ReportByProjectViewSet(viewsets.ModelViewSet):
+#     permission_classes = [permissions.IsAuthenticated,permissions.IsAuthenticatedOrReadOnly]
+#     queryset = AOResponse.objects.all()
+#     serializer_class = AOResponseSerializer
 
-    def create(self, request, *args, **kwargs):
-        data = request.data.get("items") if 'items' in request.data else request.data
-        many = isinstance(data, list)
+#     def create(self, request, *args, **kwargs):
+#         data = request.data.get("items") if 'items' in request.data else request.data
+#         many = isinstance(data, list)
         
-        if many == True:
-            for item in data:
-                defaults = item
-                try:
-                    obj = AOResponse.objects.get(survey_id=item['survey'], project_id=item['project'], projectUser_id=item['projectUser'], subProjectUser_id=item['subProjectUser'], shCategory_id=item['shCategory'], aoQuestion_id=item['aoQuestion'])
+#         if many == True:
+#             for item in data:
+#                 defaults = item
+#                 try:
+#                     obj = AOResponse.objects.get(survey_id=item['survey'], project_id=item['project'], projectUser_id=item['projectUser'], subProjectUser_id=item['subProjectUser'], shCategory_id=item['shCategory'], aoQuestion_id=item['aoQuestion'])
 
-                    obj.integerValue = defaults['integerValue']
-                    obj.topicValue = defaults['topicValue']
-                    obj.commentValue = defaults['commentValue']
-                    obj.skipValue = defaults['skipValue']
-                    obj.topicTags = defaults['topicTags']
-                    obj.commentTags = defaults['commentTags']
+#                     obj.integerValue = defaults['integerValue']
+#                     obj.topicValue = defaults['topicValue']
+#                     obj.commentValue = defaults['commentValue']
+#                     obj.skipValue = defaults['skipValue']
+#                     obj.topicTags = defaults['topicTags']
+#                     obj.commentTags = defaults['commentTags']
 
-                    obj.save()
+#                     obj.save()
 
-                except AOResponse.DoesNotExist:
-                    obj = AOResponse(aoQuestion_id=defaults['aoQuestion'],
-                                projectUser_id=defaults['projectUser'], subProjectUser_id=defaults['subProjectUser'],
-                                shCategory_id=defaults['shCategory'],
-                                survey_id=defaults['survey'], project_id=defaults['project'],
-                                controlType=defaults['controlType'], integerValue=defaults['integerValue'],
-                                topicValue=defaults['topicValue'], commentValue=defaults['commentValue'],
-                                skipValue=defaults['skipValue'], topicTags=defaults['topicTags'],
-                                commentTags=defaults['commentTags'])
-                    obj.save()
-        elif many == False:
-            defaults = data
-            try:
+#                 except AOResponse.DoesNotExist:
+#                     obj = AOResponse(aoQuestion_id=defaults['aoQuestion'],
+#                                 projectUser_id=defaults['projectUser'], subProjectUser_id=defaults['subProjectUser'],
+#                                 shCategory_id=defaults['shCategory'],
+#                                 survey_id=defaults['survey'], project_id=defaults['project'],
+#                                 controlType=defaults['controlType'], integerValue=defaults['integerValue'],
+#                                 topicValue=defaults['topicValue'], commentValue=defaults['commentValue'],
+#                                 skipValue=defaults['skipValue'], topicTags=defaults['topicTags'],
+#                                 commentTags=defaults['commentTags'])
+#                     obj.save()
+#         elif many == False:
+#             defaults = data
+#             try:
                
-                obj = AOResponse.objects.get(survey_id=item['survey'], project_id=item['project'], projectUser_id=item['projectUser'], subProjectUser_id=item['subProjectUser'], shCategory_id=item['shCategory'], aoQuestion_id=item['aoQuestion'])
+#                 obj = AOResponse.objects.get(survey_id=item['survey'], project_id=item['project'], projectUser_id=item['projectUser'], subProjectUser_id=item['subProjectUser'], shCategory_id=item['shCategory'], aoQuestion_id=item['aoQuestion'])
 
-                obj.integerValue = defaults['integerValue']
-                obj.topicValue = defaults['topicValue']
-                obj.commentValue = defaults['commentValue']
-                obj.skipValue = defaults['skipValue']
-                obj.topicTags = defaults['topicTags']
-                obj.commentTags = defaults['commentTags']
+#                 obj.integerValue = defaults['integerValue']
+#                 obj.topicValue = defaults['topicValue']
+#                 obj.commentValue = defaults['commentValue']
+#                 obj.skipValue = defaults['skipValue']
+#                 obj.topicTags = defaults['topicTags']
+#                 obj.commentTags = defaults['commentTags']
 
-                obj.save()
-            except AOResponse.DoesNotExist:
+#                 obj.save()
+#             except AOResponse.DoesNotExist:
                 
-                obj = AOResponse(aoQuestion_id=defaults['aoQuestion'],
-                            projectUser_id=defaults['projectUser'], subProjectUser_id=defaults['subProjectUser'],
-                            shCategory_id=defaults['shCategory'],
-                            survey_id=defaults['survey'], project_id=defaults['project'],
-                            controlType=defaults['controlType'], integerValue=defaults['integerValue'],
-                            topicValue=defaults['topicValue'], commentValue=defaults['commentValue'],
-                            skipValue=defaults['skipValue'], topicTags=defaults['topicTags'],
-                            commentTags=defaults['commentTags'])
-                obj.save()
+#                 obj = AOResponse(aoQuestion_id=defaults['aoQuestion'],
+#                             projectUser_id=defaults['projectUser'], subProjectUser_id=defaults['subProjectUser'],
+#                             shCategory_id=defaults['shCategory'],
+#                             survey_id=defaults['survey'], project_id=defaults['project'],
+#                             controlType=defaults['controlType'], integerValue=defaults['integerValue'],
+#                             topicValue=defaults['topicValue'], commentValue=defaults['commentValue'],
+#                             skipValue=defaults['skipValue'], topicTags=defaults['topicTags'],
+#                             commentTags=defaults['commentTags'])
+#                 obj.save()
         
         
-        result = AOResponse.objects.all().values('projectUser', 'subProjectUser', 'shCategory', 'survey', 'project', 'aoQuestion', 'controlType', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags')
+#         result = AOResponse.objects.all().values('projectUser', 'subProjectUser', 'shCategory', 'survey', 'project', 'aoQuestion', 'controlType', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags')
         
-        list_result = [entry for entry in result]
+#         list_result = [entry for entry in result]
 
-        serializer = self.get_serializer(data=list_result, many=True)
-        serializer.is_valid(raise_exception=True)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+#         serializer = self.get_serializer(data=list_result, many=True)
+#         serializer.is_valid(raise_exception=True)
+#         headers = self.get_success_headers(serializer.data)
+#         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 # temporary test
 class DashboardViewSet(viewsets.ReadOnlyModelViewSet):
