@@ -97,17 +97,6 @@ class DriverInline(SortableInlineAdminMixin, admin.TabularInline):
     exclude = ['isStandard']
     template = "admin/survey/edit_inline/driver_tabular.html"
 
-# class InlineChangeList(object):
-#     can_show_all = True
-#     multi_page = True
-#     get_query_string = ChangeList.__dict__['get_query_string']
-
-#     def __init__(self, request, page_num, paginator):
-#         self.show_all = 'all' in request.GET
-#         self.page_num = page_num
-#         self.paginator = paginator
-#         self.result_count = paginator.count
-#         self.params = dict(request.GET.items())
         
 class AMQuestionInline(SortableInlineAdminMixin, admin.TabularInline):
     model = AMQuestion
@@ -116,39 +105,6 @@ class AMQuestionInline(SortableInlineAdminMixin, admin.TabularInline):
     exclude = ['isStandard']
     per_page = 10
     template = "admin/survey/edit_inline/amq_tabular.html"
-
-    # def get_formset(self, request, obj=None, **kwargs):
-    #     formset_class = super(AMQuestionInline, self).get_formset(request, obj, **kwargs)
-    #     class AMQuestionFormSet(formset_class):
-    #         def __init__(self, *args, **kwargs):
-    #             super(AMQuestionFormSet, self).__init__(*args, **kwargs)
-
-    #             qs = self.queryset
-    #             paginator = Paginator(qs, self.per_page)
-    #             try:
-    #                 page_num = int(request.GET.get('p', '0'))
-    #             except ValueError:
-    #                 page_num = 0
-
-    #             try:
-    #                 page = paginator.page(page_num + 1)
-    #             except (EmptyPage, InvalidPage):
-    #                 page = paginator.page(paginator.num_pages)
-
-    #             self.cl = InlineChangeList(request, page_num, paginator)
-    #             self.paginator = paginator
-
-    #             if self.cl.show_all:
-    #                 self._queryset = qs
-    #             else:
-    #                 self._queryset = page.object_list
-
-    #             print("Test")
-    #             print(page.object_list)
-
-    #     AMQuestionFormSet.per_page = self.per_page
-        
-    #     return AMQuestionFormSet
 
     def formfield_for_dbfield(self, db_field, request, **kwargs):
         formfield = super(AMQuestionInline, self).formfield_for_dbfield(db_field, request, **kwargs)
@@ -396,66 +352,6 @@ class SurveyAdmin(admin.ModelAdmin):
                                 survey_id=current_survey.id,
                                 isStandard=True)
                         obj.save()
-
-                        # driver_id = obj.id
-
-                        # std_amq = AMQuestion.objects.filter(survey_id=std_survey.id, driver_id=std_driver[i]['id'])
-
-                        # for j in range(len(std_amq)):
-                        #     amq_obj = AMQuestion(survey=current_survey, driver=obj, 
-                        #                     subdriver=std_amq[j].subdriver,
-                        #                     questionText=std_amq[j].questionText,
-                        #                     controlType_id=std_amq[j].controlType_id,
-                        #                     questionSequence=std_amq[j].questionSequence,
-                        #                     sliderTextLeft=std_amq[j].sliderTextLeft,
-                        #                     sliderTextRight=std_amq[j].sliderTextRight,
-                        #                     skipOptionYN=std_amq[j].skipOptionYN,
-                        #                     topicPrompt=std_amq[j].topicPrompt,
-                        #                     commentPrompt=std_amq[j].commentPrompt,
-                        #                     #shGroup=std_amq[j].shGroup,
-                        #                     #option=std_amq[j].option,
-                        #                     #skipOption=std_amq[j].skipOption,
-                        #                     amqOrder=std_amq[j].amqOrder,
-                        #                     shortForm=std_amq[j].shortForm,
-                        #                     longForm=std_amq[j].longForm,
-                        #                     isStandard=True)
-                        #     amq_obj.save()
-                        #     stdamq_shgroup = std_amq[j].shGroup.all()
-                        #     for a in range(len(stdamq_shgroup)):
-                        #         amq_obj.shGroup.add(stdamq_shgroup[a])
-                        #     stdamq_option = std_amq[j].option.all()
-                        #     for b in range(len(stdamq_option)):
-                        #         amq_obj.option.add(stdamq_option[b])
-                        #     stdamq_skipoption = std_amq[j].skipOption.all()
-                        #     for c in range(len(stdamq_skipoption)):
-                        #         amq_obj.skipOption.add(stdamq_skipoption[c])
-
-                        # std_aoq = AOQuestion.objects.filter(survey_id=std_survey.id, driver_id=std_driver[i]['id'])
-                        # for k in range(len(std_aoq)):
-                        #     aoq_obj = AOQuestion(survey=current_survey, driver=obj, 
-                        #                     subdriver=std_aoq[k].subdriver,
-                        #                     questionText=std_aoq[k].questionText,
-                        #                     controlType_id=std_aoq[k].controlType_id,
-                        #                     questionSequence=std_aoq[k].questionSequence,
-                        #                     sliderTextLeft=std_aoq[k].sliderTextLeft,
-                        #                     sliderTextRight=std_aoq[k].sliderTextRight,
-                        #                     skipOptionYN=std_aoq[k].skipOptionYN,
-                        #                     topicPrompt=std_aoq[k].topicPrompt,
-                        #                     commentPrompt=std_aoq[k].commentPrompt,
-                        #                     aoqOrder=std_aoq[k].aoqOrder,
-                        #                     shortForm=std_aoq[k].shortForm,
-                        #                     longForm=std_aoq[k].longForm,
-                        #                     isStandard=True)
-                        #     aoq_obj.save()
-                        #     stdaoq_shgroup = std_aoq[k].shGroup.all()
-                        #     for a in range(len(stdaoq_shgroup)):
-                        #         aoq_obj.shGroup.add(stdaoq_shgroup[a])
-                        #     stdaoq_option = std_aoq[k].option.all()
-                        #     for b in range(len(stdaoq_option)):
-                        #         aoq_obj.option.add(stdaoq_option[b])
-                        #     stdaoq_skipoption = std_aoq[k].skipOption.all()
-                        #     for c in range(len(stdaoq_skipoption)):
-                        #         aoq_obj.skipOption.add(stdaoq_skipoption[c])
                         
                 else:
                     messages.info(request, 'This is the standard survey.')
@@ -958,17 +854,6 @@ class ClientAdmin(admin.ModelAdmin):
     list_display = ['clientName']
     model = Client
     list_per_page = 10
-
-    # def get_queryset(self, request):
-    #     self.full_path = request.get_full_path()
-    #     return super(ClientAdmin, self).get_queryset(request)
-
-    # def client_actions(self, obj):
-    #     return format_html(
-    #         mark_safe('<a class="button" href="{}add">Add Project</a><a class="button" href="{}"></a>'.format(self.full_path)),
-    #     )
-    #     client_actions.short_description = 'Client Actions'
-    #     client_actions.allow_tags = True
 
 class NikelMobilePageAdmin(SortableAdminMixin, admin.ModelAdmin):
     list_display = ['pageOrder', 'survey', 'pageName', 'pageText', 'img']
