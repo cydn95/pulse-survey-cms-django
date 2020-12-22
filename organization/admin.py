@@ -101,5 +101,5 @@ class UserAdmin(BaseUserAdmin):
     inlines = (OrganizationInline, UserAvatarInline, UserTitleInline, UserTeamInline)
 
 # Register your models here.
-admin.site.unregister(User)
+admin.site.unregister(User) 
 admin.site.register(User, UserAdmin)
