@@ -292,6 +292,7 @@ class StakeHolderSerializer(serializers.ModelSerializer):
         user = StakeHolderUserSerializer.create(StakeHolderUserSerializer(), validated_data=user_data)
         #Token.objects.create(user=user)
         stakeHolder, created = Organization.objects.update_or_create(user=user, name=validated_data.pop('name'))
+        
         return stakeHolder
 
 class SHMappingSerializer(serializers.ModelSerializer):
