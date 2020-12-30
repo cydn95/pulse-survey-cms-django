@@ -3091,3 +3091,153 @@ class AcknowledgeDetailViewSet(viewsets.ModelViewSet):
             response.data.append(item)
 
         return response
+
+class ProjectMapLayoutViewSet(viewsets.ModelViewSet):
+    '''
+    List: GET all project layouts
+    Detail: GET project layout with an id
+    Create: POST a layout to be stored against a projectUser id and project id
+    Update: PUT a layout to be stored against a projectUser id and project id
+    Delete: DELETE a layout with a given id
+    Filter: GET a layout matching a projectUser id and project id. Filter on query params.
+    (projectUser id, project id) combinations are unique
+    '''
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+    queryset = ProjectMapLayout.objects.all()
+    serializer_class = ProjectMapLayoutStoreSerializer
+    filterset_fields = ['user', 'project']
+
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+
+        # 2020-05-20
+        myProjectUser_id = self.request.GET.get('myProjectUser')
+
+        for i in range(len(response.data)):
+            response.data[i]['pu_category'] = []
+            for item in response.data[i]['projectUser']:
+                # 2020-05-20
+                # catIDs = SHMapping.objects.filter(projectUser_id=item)
+                catIDs = SHMapping.objects.filter(projectUser_id=myProjectUser_id, subProjectUser_id=item)
+
+                for catID in catIDs:
+                    try:
+                        obj = SHCategory.objects.get(id=catID.shCategory_id, mapType=3)
+                        response.data[i]['pu_category'].append({'projectUser':item, 'category':catID.shCategory_id})
+                    except SHCategory.DoesNotExist:
+                        continue
+
+        return response
+
+    def create(self, request, *args, **kwargs):
+        data = request.data
+        content_type = request.content_type
+
+        # 2020-05-20
+        myProjectUser_id = data['myProjectUser']
+
+        try:
+            obj = ProjectMapLayout.objects.get(user_id=data['user'], project_id=data['project'])
+
+            obj.projectUser.clear()
+
+            if "application/json" in content_type:
+                for item in data["pu_category"]:
+                    new_obj = ProjectUser.objects.get(id=item['projectUser'])
+                    obj.projectUser.add(new_obj)
+
+                    try:
+                        # 2020-05-20
+                        # shObj = SHMapping.objects.get(shCategory_id=item['category'], projectUser_id=item['projectUser'])
+                        shObj = SHMapping.objects.get(shCategory_id=item['category'], projectUser_id=myProjectUser_id, subProjectUser_id=item['projectUser'])
+                    except SHMapping.DoesNotExist:
+                        # 2020-05-20
+                        # mapObj = SHMapping(shCategory_id=item['category'], projectUser_id=item['projectUser'], relationshipStatus="")
+                        mapObj = SHMapping(shCategory_id=item['category'], projectUser_id=myProjectUser_id, subProjectUser_id=item['projectUser'], relationshipStatus="")
+                        mapObj.save()
+            obj.save()
+
+        except ProjectMapLayout.DoesNotExist:
+            obj = ProjectMapLayout.objects.create(user_id=data['user'], project_id=data['project'])
+
+            obj.user_id = data['user']
+            obj.project_id = data['project']
+            obj.layout_json = data['layout_json']
+
+            if "application/json" in content_type:
+                for item in data['pu_category']:
+                    new_obj = ProjectUser.objects.get(id=item['projectUser'])
+                    obj.projectUser.add(new_obj)
+
+                    try:
+                        # 2020-05-20
+                        # shObj = SHMapping.objects.get(shCategory_id=item['category'], projectUser_id=item['projectUser'])
+                        shObj = SHMapping.objects.get(shCategory_id=item['category'], projectUser_id=myProjectUser_id, subProjectUser_id=item['projectUser'])
+                    except SHMapping.DoesNotExist:
+                        # 2020-05-20
+                        # mapObj = SHMapping(shCategory_id=item['category'], projectUser_id=item['projectUser'], relationshipStatus="")
+                        mapObj = SHMapping(shCategory_id=item['category'], projectUser_id=myProjectUser_id, subProjectUser_id=item['projectUser'], relationshipStatus="")
+                        mapObj.save()
+            
+            obj.save()
+
+        result = model_to_dict(ProjectMapLayout.objects.get(user_id=data['user'], project_id=data['project']))
+
+        list_result = result
+        for idx in range(len(result['projectUser'])):
+            list_result['projectUser'][idx] = result['projectUser'][idx].id
+
+        serializer = self.get_serializer(data=list_result)
+        serializer.is_valid(raise_exception=True)
+        headers = self.get_success_headers(serializer.data)
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+class SHCategoryForAcknowledgeViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+    queryset = SHCategory.objects.all()
+    serializer_class = SHCategorySerializer
+    filterset_fields = ['mapType', 'survey']
+
+    def get_queryset(self):
+        queryset = SHCategory.objects.all()
+        mapType = self.request.query_params.get('mapType', None)
+        if mapType is not None:
+            # mapType = 2 : mymap
+            # mapType = 3 : projectmap
+            queryset = queryset.filter(mapType__id=mapType)
+        return queryset
+
+class SHMappingForAcknowledgeViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+    queryset = SHMapping.objects.all()
+    serializer_class = SHMappingSerializer
+    filterset_fields = ['shCategory']
+
+# class SetPasswordView(APIView):
+#     permission_classes = [permissions.AllowAny]
+
+#     @classmethod
+#     def get_extra_actions(cls):
+#         return []
+
+#     def post(self, request):
+#         password = request.data['password']
+#         email = request.data['email']
+        
+#         try:
+#             token = Token.objects.get(key=request.data['token'])
+#             user = User.objects.get(id=token.user_id)
+
+#             if (email == user.email):
+#                 user.set_password(password)
+#                 user.save()
+
+#                 return Response('success', status=status.HTTP_201_CREATED) 
+
+#             return Response("Invaid Email", status=status.HTTP_400_BAD_REQUEST)
+
+#         except Token.DoesNotExist:
+#             token = None
+
+#             return Response("Invaid Token", status=status.HTTP_400_BAD_REQUEST)
