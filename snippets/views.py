@@ -3201,30 +3201,3 @@ class SHMappingForAcknowledgeViewSet(viewsets.ModelViewSet):
     serializer_class = SHMappingSerializer
     filterset_fields = ['shCategory']
 
-# class SetPasswordView(APIView):
-#     permission_classes = [permissions.AllowAny]
-
-#     @classmethod
-#     def get_extra_actions(cls):
-#         return []
-
-#     def post(self, request):
-#         password = request.data['password']
-#         email = request.data['email']
-        
-#         try:
-#             token = Token.objects.get(key=request.data['token'])
-#             user = User.objects.get(id=token.user_id)
-
-#             if (email == user.email):
-#                 user.set_password(password)
-#                 user.save()
-
-#                 return Response('success', status=status.HTTP_201_CREATED) 
-
-#             return Response("Invaid Email", status=status.HTTP_400_BAD_REQUEST)
-
-#         except Token.DoesNotExist:
-#             token = None
-
-#             return Response("Invaid Token", status=status.HTTP_400_BAD_REQUEST)
