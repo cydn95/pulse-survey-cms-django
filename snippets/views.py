@@ -3093,15 +3093,7 @@ class AcknowledgeDetailViewSet(viewsets.ModelViewSet):
         return response
 
 class ProjectMapLayoutViewSet(viewsets.ModelViewSet):
-    '''
-    List: GET all project layouts
-    Detail: GET project layout with an id
-    Create: POST a layout to be stored against a projectUser id and project id
-    Update: PUT a layout to be stored against a projectUser id and project id
-    Delete: DELETE a layout with a given id
-    Filter: GET a layout matching a projectUser id and project id. Filter on query params.
-    (projectUser id, project id) combinations are unique
-    '''
+
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
     queryset = ProjectMapLayout.objects.all()
     serializer_class = ProjectMapLayoutStoreSerializer
@@ -3110,14 +3102,12 @@ class ProjectMapLayoutViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
 
-        # 2020-05-20
         myProjectUser_id = self.request.GET.get('myProjectUser')
 
         for i in range(len(response.data)):
             response.data[i]['pu_category'] = []
             for item in response.data[i]['projectUser']:
-                # 2020-05-20
-                # catIDs = SHMapping.objects.filter(projectUser_id=item)
+                
                 catIDs = SHMapping.objects.filter(projectUser_id=myProjectUser_id, subProjectUser_id=item)
 
                 for catID in catIDs:
@@ -3133,7 +3123,6 @@ class ProjectMapLayoutViewSet(viewsets.ModelViewSet):
         data = request.data
         content_type = request.content_type
 
-        # 2020-05-20
         myProjectUser_id = data['myProjectUser']
 
         try:
@@ -3147,12 +3136,10 @@ class ProjectMapLayoutViewSet(viewsets.ModelViewSet):
                     obj.projectUser.add(new_obj)
 
                     try:
-                        # 2020-05-20
-                        # shObj = SHMapping.objects.get(shCategory_id=item['category'], projectUser_id=item['projectUser'])
+                    
                         shObj = SHMapping.objects.get(shCategory_id=item['category'], projectUser_id=myProjectUser_id, subProjectUser_id=item['projectUser'])
                     except SHMapping.DoesNotExist:
-                        # 2020-05-20
-                        # mapObj = SHMapping(shCategory_id=item['category'], projectUser_id=item['projectUser'], relationshipStatus="")
+                    
                         mapObj = SHMapping(shCategory_id=item['category'], projectUser_id=myProjectUser_id, subProjectUser_id=item['projectUser'], relationshipStatus="")
                         mapObj.save()
             obj.save()
