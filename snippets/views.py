@@ -2461,8 +2461,6 @@ class FreshChatGraphViewSet(viewsets.ModelViewSet):
             for item in data:
                 defaults = item
                 try:
-                    # 2020-05-20
-                    # obj = AOResponse.objects.get(survey_id=item['survey'], project_id=item['project'], user_id=item['user'], subjectUser_id=item['subjectUser'], aoQuestion_id=item['aoQuestion'])
                     obj = AOResponse.objects.get(survey_id=item['survey'], project_id=item['project'], projectUser_id=item['projectUser'], subProjectUser_id=item['subProjectUser'], shCategory_id=item['shCategory'], aoQuestion_id=item['aoQuestion'])
 
                     obj.integerValue = defaults['integerValue']
@@ -2475,14 +2473,6 @@ class FreshChatGraphViewSet(viewsets.ModelViewSet):
                     obj.save()
 
                 except AOResponse.DoesNotExist:
-                    # 2020-05-20
-                    # obj = AOResponse(aoQuestion_id=defaults['aoQuestion'],
-                    #             user_id=defaults['user'], subjectUser_id=defaults['subjectUser'],
-                    #             survey_id=defaults['survey'], project_id=defaults['project'],
-                    #             controlType=defaults['controlType'], integerValue=defaults['integerValue'],
-                    #             topicValue=defaults['topicValue'], commentValue=defaults['commentValue'],
-                    #             skipValue=defaults['skipValue'], topicTags=defaults['topicTags'],
-                    #             commentTags=defaults['commentTags'])
                     obj = AOResponse(aoQuestion_id=defaults['aoQuestion'],
                                 projectUser_id=defaults['projectUser'], subProjectUser_id=defaults['subProjectUser'],
                                 shCategory_id=defaults['shCategory'],
@@ -2495,8 +2485,6 @@ class FreshChatGraphViewSet(viewsets.ModelViewSet):
         elif many == False:
             defaults = data
             try:
-                # 2020-05-20
-                # obj = AOResponse.objects.get(survey_id=item['survey'], project_id=item['project'], user_id=item['user'], subjectUser_id=item['subjectUser'], aoQuestion_id=item['aoQuestion'])
                 obj = AOResponse.objects.get(survey_id=item['survey'], project_id=item['project'], projectUser_id=item['projectUser'], subProjectUser_id=item['subProjectUser'], shCategory_id=item['shCategory'], aoQuestion_id=item['aoQuestion'])
 
                 obj.integerValue = defaults['integerValue']
@@ -2508,14 +2496,6 @@ class FreshChatGraphViewSet(viewsets.ModelViewSet):
 
                 obj.save()
             except AOResponse.DoesNotExist:
-                # 2020-05-20
-                # obj = AOResponse(aoQuestion_id=defaults['aoQuestion'],
-                #             user_id=defaults['user'], subjectUser_id=defaults['subjectUser'],
-                #             survey_id=defaults['survey'], project_id=defaults['project'],
-                #             controlType=defaults['controlType'], integerValue=defaults['integerValue'],
-                #             topicValue=defaults['topicValue'], commentValue=defaults['commentValue'],
-                #             skipValue=defaults['skipValue'], topicTags=defaults['topicTags'],
-                #             commentTags=defaults['commentTags'])
                 obj = AOResponse(aoQuestion_id=defaults['aoQuestion'],
                             projectUser_id=defaults['projectUser'], subProjectUser_id=defaults['subProjectUser'],
                             shCategory_id=defaults['shCategory'],
@@ -2526,8 +2506,6 @@ class FreshChatGraphViewSet(viewsets.ModelViewSet):
                             commentTags=defaults['commentTags'])
                 obj.save()
         
-        # 2020-05-20
-        # result = AOResponse.objects.all().values('user', 'subjectUser', 'survey', 'project', 'aoQuestion', 'controlType', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags')
         result = AOResponse.objects.all().values('projectUser', 'subProjectUser', 'shCategory', 'survey', 'project', 'aoQuestion', 'controlType', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags')
         
         list_result = [entry for entry in result]
@@ -2553,58 +2531,35 @@ class ProjectUserv2ViewSet(viewsets.ModelViewSet):
 
         shMyCategories = request.data['shMyCategory']
         
-        # MyMapLayout.objects.filter(user_id=request.user.id, project_id=request.data['project']).delete()
         obj = MyMapLayout.objects.get(user_id=request.user.id, project_id=request.data['project'])
 
-        # obj.user_id = request.user.id
-        # obj.project_id = request.data['project']
-        # obj.layout_json = ''   
-
-        # 2020-05-20     added projectUser, subProjectUser
-        # SHMapping.objects.filter(projectUser_id=projectUser_id).delete()
         myProjectUser_id = request.data['myProjectUser']
         SHMapping.objects.filter(projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id).delete()
 
         for i in range(len(shMyCategories)):
-            # new_obj = ProjectUser.objects.get(id=projectUser_id)
-            # obj.projectUser.add(new_obj)
-
+            
             try:
-                # 2020-05-20
-                # shObj = SHMapping.objects.get(shCategory_id=shMyCategories[i], projectUser_id=projectUser_id)
+                
                 shObj = SHMapping.objects.get(shCategory_id=shMyCategories[i], projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id)
             except SHMapping.DoesNotExist:
-                # 2020-05-20
-                # mapObj = SHMapping(shCategory_id=shMyCategories[i], projectUser_id=projectUser_id, relationshipStatus="")
+                
                 mapObj = SHMapping(shCategory_id=shMyCategories[i], projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id, relationshipStatus="")
                 mapObj.save()
         
-        # obj.save()
-
         shProjectCategories = request.data['shProjectCategory']
 
-        # ProjectMapLayout.objects.filter(user_id=request.user.id, project_id=request.data['project']).delete()
+        
         obj1 = ProjectMapLayout.objects.get(user_id=request.user.id, project_id=request.data['project'])
 
-        # obj1.user_id = request.user.id
-        # obj1.project_id = request.data['project']
-        # obj1.layout_json = ''
-
         for j in range(len(shProjectCategories)):
-            # new_obj1 = ProjectUser.objects.get(id=projectUser_id)
-            # obj1.projectUser.add(new_obj1)
 
             try:
-                # 2020-05-20
-                # shObj1 = SHMapping.objects.get(shCategory_id=shProjectCategories[j], projectUser_id=projectUser_id)
+                
                 shObj1 = SHMapping.objects.get(shCategory_id=shProjectCategories[j], projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id)
             except SHMapping.DoesNotExist:
-                # 2020-05-20
-                # mapObj1 = SHMapping(shCategory_id=shProjectCategories[j], projectUser_id=projectUser_id, relationshipStatus="")
+                
                 mapObj1 = SHMapping(shCategory_id=shProjectCategories[j], projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id, relationshipStatus="")
                 mapObj1.save()
-        
-        # obj1.save()
 
         return ret
 
@@ -2619,23 +2574,15 @@ class ProjectUserv2ViewSet(viewsets.ModelViewSet):
         headers = self.get_success_headers(serializer.data)
         
         shMyCategories = request.data['shMyCategory']
-        # 2020-05-20
         myProjectUser_id = request.data['myProjectUser']
 
         try:
             obj = MyMapLayout.objects.get(user_id=request.user.id, project_id=data['project'])
 
             for i in range(len(shMyCategories)):
-                #new_obj = ProjectUser.objects.get(id=projectUser_id)
-                # obj.projectUser.add(new_obj)
-
                 try:
-                    # 2020-05-20
-                    # shObj = SHMapping.objects.get(shCategory_id=shMyCategories[i], projectUser_id=projectUser_id)
                     shObj = SHMapping.objects.get(shCategory_id=shMyCategories[i], projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id)
                 except SHMapping.DoesNotExist:
-                    # 2020-05-20
-                    # mapObj = SHMapping(shCategory_id=shMyCategories[i], projectUser_id=projectUser_id, relationshipStatus="")
                     mapObj = SHMapping(shCategory_id=shMyCategories[i], projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id, relationshipStatus="")
                     mapObj.save()
 
@@ -2651,12 +2598,8 @@ class ProjectUserv2ViewSet(viewsets.ModelViewSet):
                 obj.projectUser.add(new_obj)
 
                 try:
-                    # 2020-05-20
-                    # shObj = SHMapping.objects.get(shCategory_id=shMyCategories[i], projectUser_id=projectUser_id)
                     shObj = SHMapping.objects.get(shCategory_id=shMyCategories[i], projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id)
                 except SHMapping.DoesNotExist:
-                    # 2020-05-20
-                    # mapObj = SHMapping(shCategory_id=shMyCategories[i], projectUser_id=projectUser_id, relationshipStatus="")
                     mapObj = SHMapping(shCategory_id=shMyCategories[i], projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id, relationshipStatus="")
                     mapObj.save()
 
@@ -2668,16 +2611,12 @@ class ProjectUserv2ViewSet(viewsets.ModelViewSet):
             obj1 = ProjectMapLayout.objects.get(user_id=request.user.id, project_id=data['project'])
 
             for j in range(len(shProjectCategories)):
-                #new_obj1 = ProjectUser.objects.get(id=projectUser_id)
-                #obj1.projectUser.add(new_obj1)
 
                 try:
-                    # 2020-05-20
-                    # shObj1 = SHMapping.objects.get(shCategory_id=shProjectCategories[j], projectUser_id=projectUser_id)
+                    
                     shObj1 = SHMapping.objects.get(shCategory_id=shProjectCategories[j], projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id)
                 except SHMapping.DoesNotExist:
-                    # 2020-05-20
-                    # mapObj1 = SHMapping(shCategory_id=shProjectCategories[j], projectUser_id=projectUser_id, relationshipStatus="")
+                    
                     mapObj1 = SHMapping(shCategory_id=shProjectCategories[j], projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id, relationshipStatus="")
                     mapObj1.save()
 
@@ -2693,12 +2632,10 @@ class ProjectUserv2ViewSet(viewsets.ModelViewSet):
                 obj1.projectUser.add(new_obj1)
 
                 try:
-                    # 2020-05-20
-                    # shObj1 = SHMapping.objects.get(shCategory_id=shProjectCategories[j], projectUser_id=projectUser_id)
+                    
                     shObj1 = SHMapping.objects.get(shCategory_id=shProjectCategories[j], projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id)
                 except SHMapping.DoesNotExist:
-                    # 2020-05-20
-                    # mapObj1 = SHMapping(shCategory_id=shProjectCategories[j], projectUser_id=projectUser_id, relationshipStatus="")
+                    
                     mapObj1 = SHMapping(shCategory_id=shProjectCategories[j], projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id, relationshipStatus="")
                     mapObj1.save()
             
@@ -2864,14 +2801,11 @@ class FetchRealityInfoViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
 
-        # 2020-05-20
         myProjectUser_id = self.request.GET.get('myProjectUser')
 
         for i in range(len(response.data)):
             response.data[i]['pu_category'] = []
             for item in response.data[i]['projectUser']:
-                # 2020-05-20
-                # catIDs = SHMapping.objects.filter(projectUser_id=item)
                 catIDs = SHMapping.objects.filter(projectUser_id=myProjectUser_id, subProjectUser_id=item)
 
                 for catID in catIDs:
@@ -2887,7 +2821,6 @@ class FetchRealityInfoViewSet(viewsets.ModelViewSet):
         data = request.data
         content_type = request.content_type
 
-        # 2020-05-20
         myProjectUser_id = data['myProjectUser']
 
         try:
@@ -2901,12 +2834,8 @@ class FetchRealityInfoViewSet(viewsets.ModelViewSet):
                     obj.projectUser.add(new_obj)
 
                     try:
-                        # 2020-05-20
-                        # shObj = SHMapping.objects.get(shCategory_id=item['category'], projectUser_id=item['projectUser'])
                         shObj = SHMapping.objects.get(shCategory_id=item['category'], projectUser_id=myProjectUser_id, subProjectUser_id=item['projectUser'])
                     except SHMapping.DoesNotExist:
-                        # 2020-05-20
-                        # mapObj = SHMapping(shCategory_id=item['category'], projectUser_id=item['projectUser'], relationshipStatus="")
                         mapObj = SHMapping(shCategory_id=item['category'], projectUser_id=myProjectUser_id, subProjectUser_id=item['projectUser'], relationshipStatus="")
                         mapObj.save()
             obj.save()
@@ -2924,12 +2853,8 @@ class FetchRealityInfoViewSet(viewsets.ModelViewSet):
                     obj.projectUser.add(new_obj)
 
                     try:
-                        # 2020-05-20
-                        # shObj = SHMapping.objects.get(shCategory_id=item['category'], projectUser_id=item['projectUser'])
                         shObj = SHMapping.objects.get(shCategory_id=item['category'], projectUser_id=myProjectUser_id, subProjectUser_id=item['projectUser'])
                     except SHMapping.DoesNotExist:
-                        # 2020-05-20
-                        # mapObj = SHMapping(shCategory_id=item['category'], projectUser_id=item['projectUser'], relationshipStatus="")
                         mapObj = SHMapping(shCategory_id=item['category'], projectUser_id=myProjectUser_id, subProjectUser_id=item['projectUser'], relationshipStatus="")
                         mapObj.save()
             
@@ -2997,74 +2922,6 @@ class AcknowledgeViewSet(viewsets.ModelViewSet):
         return response
 
 class AcknowledgeDetailViewSet(viewsets.ModelViewSet):
-#     permission_classes = [permissions.IsAuthenticated,permissions.IsAuthenticatedOrReadOnly]
-#     queryset = AOResponse.objects.all()
-#     serializer_class = AOResponseSerializer
-
-#     def create(self, request, *args, **kwargs):
-#         data = request.data.get("items") if 'items' in request.data else request.data
-#         many = isinstance(data, list)
-        
-#         if many == True:
-#             for item in data:
-#                 defaults = item
-#                 try:
-#                     obj = AOResponse.objects.get(survey_id=item['survey'], project_id=item['project'], projectUser_id=item['projectUser'], subProjectUser_id=item['subProjectUser'], shCategory_id=item['shCategory'], aoQuestion_id=item['aoQuestion'])
-
-#                     obj.integerValue = defaults['integerValue']
-#                     obj.topicValue = defaults['topicValue']
-#                     obj.commentValue = defaults['commentValue']
-#                     obj.skipValue = defaults['skipValue']
-#                     obj.topicTags = defaults['topicTags']
-#                     obj.commentTags = defaults['commentTags']
-
-#                     obj.save()
-
-#                 except AOResponse.DoesNotExist:
-#                     obj = AOResponse(aoQuestion_id=defaults['aoQuestion'],
-#                                 projectUser_id=defaults['projectUser'], subProjectUser_id=defaults['subProjectUser'],
-#                                 shCategory_id=defaults['shCategory'],
-#                                 survey_id=defaults['survey'], project_id=defaults['project'],
-#                                 controlType=defaults['controlType'], integerValue=defaults['integerValue'],
-#                                 topicValue=defaults['topicValue'], commentValue=defaults['commentValue'],
-#                                 skipValue=defaults['skipValue'], topicTags=defaults['topicTags'],
-#                                 commentTags=defaults['commentTags'])
-#                     obj.save()
-#         elif many == False:
-#             defaults = data
-#             try:
-               
-#                 obj = AOResponse.objects.get(survey_id=item['survey'], project_id=item['project'], projectUser_id=item['projectUser'], subProjectUser_id=item['subProjectUser'], shCategory_id=item['shCategory'], aoQuestion_id=item['aoQuestion'])
-
-#                 obj.integerValue = defaults['integerValue']
-#                 obj.topicValue = defaults['topicValue']
-#                 obj.commentValue = defaults['commentValue']
-#                 obj.skipValue = defaults['skipValue']
-#                 obj.topicTags = defaults['topicTags']
-#                 obj.commentTags = defaults['commentTags']
-
-#                 obj.save()
-#             except AOResponse.DoesNotExist:
-                
-#                 obj = AOResponse(aoQuestion_id=defaults['aoQuestion'],
-#                             projectUser_id=defaults['projectUser'], subProjectUser_id=defaults['subProjectUser'],
-#                             shCategory_id=defaults['shCategory'],
-#                             survey_id=defaults['survey'], project_id=defaults['project'],
-#                             controlType=defaults['controlType'], integerValue=defaults['integerValue'],
-#                             topicValue=defaults['topicValue'], commentValue=defaults['commentValue'],
-#                             skipValue=defaults['skipValue'], topicTags=defaults['topicTags'],
-#                             commentTags=defaults['commentTags'])
-#                 obj.save()
-        
-        
-#         result = AOResponse.objects.all().values('projectUser', 'subProjectUser', 'shCategory', 'survey', 'project', 'aoQuestion', 'controlType', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags')
-        
-#         list_result = [entry for entry in result]
-
-#         serializer = self.get_serializer(data=list_result, many=True)
-#         serializer.is_valid(raise_exception=True)
-#         headers = self.get_success_headers(serializer.data)
-#         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
     queryset = ProjectUser.objects.all()
     serializer_class = SurveyByUserSerializer
@@ -3157,12 +3014,8 @@ class ProjectMapLayoutViewSet(viewsets.ModelViewSet):
                     obj.projectUser.add(new_obj)
 
                     try:
-                        # 2020-05-20
-                        # shObj = SHMapping.objects.get(shCategory_id=item['category'], projectUser_id=item['projectUser'])
                         shObj = SHMapping.objects.get(shCategory_id=item['category'], projectUser_id=myProjectUser_id, subProjectUser_id=item['projectUser'])
                     except SHMapping.DoesNotExist:
-                        # 2020-05-20
-                        # mapObj = SHMapping(shCategory_id=item['category'], projectUser_id=item['projectUser'], relationshipStatus="")
                         mapObj = SHMapping(shCategory_id=item['category'], projectUser_id=myProjectUser_id, subProjectUser_id=item['projectUser'], relationshipStatus="")
                         mapObj.save()
             
