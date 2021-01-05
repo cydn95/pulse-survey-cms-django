@@ -323,9 +323,3 @@ class ToolTipGuideSerializer(serializers.ModelSerializer):
 #     class Meta:
 #         model = AOResponse
 #         fields = ['id', 'controlType', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags', 'created_at', 'updated_at', 'projectUser', 'subProjectUser', 'survey', 'project', 'aoQuestion']
-
-## temp
-class NavigationSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Navigation
-        fields = '__all__'
