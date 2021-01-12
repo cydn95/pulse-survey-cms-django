@@ -64,6 +64,15 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
+    def get_queryset(self):
+        queryset = UserSerializer.objects.all()
+
+        email = self.request.query_params.get('email', None)
+        if email is not None:
+            queryset = queryset.filter(email=email)
+
+        return queryset
+
     def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
 
