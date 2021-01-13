@@ -2073,7 +2073,7 @@ class AMResponseFeedbackSummaryForInterestViewset(viewsets.ModelViewSet):
     serializer_class = AMResponseSerializer
 
     def get_queryset(self):
-        queryset = AMResponse.objects.filter(amQestion__driver__driverName="Interest")
+        queryset = AMResponse.objects.filter(amQuestion__driver__driverName="Interest")
         
         survey = self.request.query_params.get('survey', None)
         startDate = self.request.query_params.get('stdt', None)
@@ -2120,7 +2120,7 @@ class AMResponseFeedbackSummaryForInterestViewset(viewsets.ModelViewSet):
                             response.data[i]['report']["PositiveScore"] = sentimentData["SentimentScore"]["Positive"]
 
         return response
-        
+
 class UserBySurveyv2ViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
     queryset = ProjectUser.objects.all()
