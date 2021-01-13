@@ -2076,11 +2076,14 @@ class AMResponseFeedbackSummaryForInterestViewset(viewsets.ModelViewSet):
         queryset = AMResponse.objects.filter(amQuestion__driver__driverName="Interest")
         
         survey = self.request.query_params.get('survey', None)
-        startDate = self.request.query_params.get('stdt', None)
-        endDate = self.request.query_params.get('eddt', None)
+        # startDate = self.request.query_params.get('stdt', None)
+        # endDate = self.request.query_params.get('eddt', None)
         if survey is not None:
+            # queryset = queryset.filter(
+            #     survey__id=survey, amQuestion__driver__driverName="Interest", updated_at__range=[startDate, endDate]
+            # )
             queryset = queryset.filter(
-                survey__id=survey, amQuestion__driver__driverName="Interest", updated_at__range=[startDate, endDate]
+                survey__id=survey, amQuestion__driver__driverName="Interest"
             )
         
         return queryset
