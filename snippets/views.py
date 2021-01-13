@@ -102,50 +102,6 @@ class PageSettingViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = PageSetting.objects.all()
     serializer_class = PageSettingSerializer
 
-# working now v1
-# class PageViewSet(viewsets.ReadOnlyModelViewSet):
-#     permission_classes = [permissions.IsAuthenticated,permissions.IsAuthenticatedOrReadOnly]
-#     queryset = Page.objects.all()
-#     serializer_class = PageSerializer
-
-#     def list(self, request, *kwargs):
-#         serializer = self.get_serializer(self.get_queryset(), many=True)
-#         temp = serializer.data
-#         drivers = Driver.objects.all().values()
-#         list_drivers = [entry for entry in drivers]
-#         survey_param = ''
-
-#         t_survey_param = self.request.GET.get('survey')
-#         if t_survey_param:
-#             survey_param = int(t_survey_param)
-
-#         for i in range(len(temp)):
-
-#             if temp[i]['pages'] is not None:
-#                 temp[i]['pages'] = {}
-#                 temp[i]['pages']['driver'] = list_drivers
-
-#                 for j in range(len(list_drivers)):
-#                     if survey_param and isinstance(survey_param, int):
-                        
-#                         amquestion = AMQuestion.objects.filter(driver_id=list_drivers[j]['id'], survey_id=survey_param).values()
-#                         list_amquestion = [entry1 for entry1 in amquestion]
-#                         temp[i]['pages']['driver'][j]['amquestion'] = list_amquestion
-
-#                         aoquestion = AOQuestion.objects.filter(driver_id=list_drivers[j]['id'], survey_id=survey_param).values()
-#                         list_aoquestion = [entry2 for entry2 in aoquestion]
-#                         temp[i]['pages']['driver'][j]['aoquestion'] = list_aoquestion
-#                     else:
-#                         amquestion = AMQuestion.objects.filter(driver_id=list_drivers[j]['id']).values()
-#                         list_amquestion = [entry1 for entry1 in amquestion]
-#                         temp[i]['pages']['driver'][j]['amquestion'] = list_amquestion
-
-#                         aoquestion = AOQuestion.objects.filter(driver_id=list_drivers[j]['id']).values()
-#                         list_aoquestion = [entry2 for entry2 in aoquestion]
-#                         temp[i]['pages']['driver'][j]['aoquestion'] = list_aoquestion
-
-#         return Response(temp)
-
 # v2
 class PageViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [permissions.IsAuthenticated,permissions.IsAuthenticatedOrReadOnly]
@@ -1362,15 +1318,6 @@ class MyMapLayoutViewSet(viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 class ProjectMapLayoutViewSet(viewsets.ModelViewSet):
-    '''
-    List: GET all project layouts
-    Detail: GET project layout with an id
-    Create: POST a layout to be stored against a projectUser id and project id
-    Update: PUT a layout to be stored against a projectUser id and project id
-    Delete: DELETE a layout with a given id
-    Filter: GET a layout matching a projectUser id and project id. Filter on query params.
-    (projectUser id, project id) combinations are unique
-    '''
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
     queryset = ProjectMapLayout.objects.all()
     serializer_class = ProjectMapLayoutStoreSerializer
@@ -1751,37 +1698,6 @@ class SentimentReportByDriverViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(survey__id=survey, driverName=driver)
 
         return queryset
-
-    # def list(self, request, *args, **kwargs):
-    #     response = super().list(request, *args, **kwargs)
-
-    #     for i in range(len(response.data)):
-    #         amResponseData = AMResponse.objects.filter(survey_id=response.data[i]['survey'])
-            
-    #         for j in range(len(amResponseData)):
-    #             amResponseData[j].amQuestion.
-    #             response.data[i]['amResponse'] = amResponseData
-        # total = 0
-        # for i in range(len(response.data)):
-        #     total = total + response.data[i]['integerValue']
-        # cnt = len(response.data)
-        # percentage = total / cnt
-
-        # response.data = []
-        # if percentage < 40:
-        #     response.data.append({'emojiType': 'angry', 'value': percentage})
-        # elif percentage < 50:
-        #     response.data.append({'emojiType': 'worried', 'value': percentage})
-        # elif percentage < 60:
-        #     response.data.append({'emojiType': 'flat', 'value': percentage})
-        # elif percentage < 70:
-        #     response.data.append({'emojiType': 'smile', 'value': percentage})
-        # elif percentage < 80:
-        #     response.data.append({'emojiType': 'big', 'value': percentage})
-        # else:
-        #     response.data.append({'emojiType': 'green', 'value': percentage})
-
-        # return response
 
 class OverallSentimentReportViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
@@ -2198,75 +2114,6 @@ class UserBySurveyv2ViewSet(viewsets.ModelViewSet):
 
         return queryset
         
-# class ReportByProjectViewSet(viewsets.ModelViewSet):
-#     permission_classes = [permissions.IsAuthenticated,permissions.IsAuthenticatedOrReadOnly]
-#     queryset = AOResponse.objects.all()
-#     serializer_class = AOResponseSerializer
-
-#     def create(self, request, *args, **kwargs):
-#         data = request.data.get("items") if 'items' in request.data else request.data
-#         many = isinstance(data, list)
-        
-#         if many == True:
-#             for item in data:
-#                 defaults = item
-#                 try:
-#                     obj = AOResponse.objects.get(survey_id=item['survey'], project_id=item['project'], projectUser_id=item['projectUser'], subProjectUser_id=item['subProjectUser'], shCategory_id=item['shCategory'], aoQuestion_id=item['aoQuestion'])
-
-#                     obj.integerValue = defaults['integerValue']
-#                     obj.topicValue = defaults['topicValue']
-#                     obj.commentValue = defaults['commentValue']
-#                     obj.skipValue = defaults['skipValue']
-#                     obj.topicTags = defaults['topicTags']
-#                     obj.commentTags = defaults['commentTags']
-
-#                     obj.save()
-
-#                 except AOResponse.DoesNotExist:
-#                     obj = AOResponse(aoQuestion_id=defaults['aoQuestion'],
-#                                 projectUser_id=defaults['projectUser'], subProjectUser_id=defaults['subProjectUser'],
-#                                 shCategory_id=defaults['shCategory'],
-#                                 survey_id=defaults['survey'], project_id=defaults['project'],
-#                                 controlType=defaults['controlType'], integerValue=defaults['integerValue'],
-#                                 topicValue=defaults['topicValue'], commentValue=defaults['commentValue'],
-#                                 skipValue=defaults['skipValue'], topicTags=defaults['topicTags'],
-#                                 commentTags=defaults['commentTags'])
-#                     obj.save()
-#         elif many == False:
-#             defaults = data
-#             try:
-               
-#                 obj = AOResponse.objects.get(survey_id=item['survey'], project_id=item['project'], projectUser_id=item['projectUser'], subProjectUser_id=item['subProjectUser'], shCategory_id=item['shCategory'], aoQuestion_id=item['aoQuestion'])
-
-#                 obj.integerValue = defaults['integerValue']
-#                 obj.topicValue = defaults['topicValue']
-#                 obj.commentValue = defaults['commentValue']
-#                 obj.skipValue = defaults['skipValue']
-#                 obj.topicTags = defaults['topicTags']
-#                 obj.commentTags = defaults['commentTags']
-
-#                 obj.save()
-#             except AOResponse.DoesNotExist:
-                
-#                 obj = AOResponse(aoQuestion_id=defaults['aoQuestion'],
-#                             projectUser_id=defaults['projectUser'], subProjectUser_id=defaults['subProjectUser'],
-#                             shCategory_id=defaults['shCategory'],
-#                             survey_id=defaults['survey'], project_id=defaults['project'],
-#                             controlType=defaults['controlType'], integerValue=defaults['integerValue'],
-#                             topicValue=defaults['topicValue'], commentValue=defaults['commentValue'],
-#                             skipValue=defaults['skipValue'], topicTags=defaults['topicTags'],
-#                             commentTags=defaults['commentTags'])
-#                 obj.save()
-        
-        
-#         result = AOResponse.objects.all().values('projectUser', 'subProjectUser', 'shCategory', 'survey', 'project', 'aoQuestion', 'controlType', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags')
-        
-#         list_result = [entry for entry in result]
-
-#         serializer = self.get_serializer(data=list_result, many=True)
-#         serializer.is_valid(raise_exception=True)
-#         headers = self.get_success_headers(serializer.data)
-#         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 # temporary test
 class ProjectUserv2ViewSet(viewsets.ModelViewSet):
