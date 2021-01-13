@@ -60,6 +60,11 @@ router.register(r'userbysurveyv2', views.UserBySurveyv2ViewSet)
 # Engagement reports
 router.register(r'engagementtrend',
                 views.AMResponseFeedbackSummaryForEngagementViewset)
+
+# Interest reports
+router.register(r'interestreport',
+                views.AMResponseFeedbackSummaryForInterestViewset)
+                
 # router.register(r'perceptionreality', views.PerceptionRealityViewSet)
 # router.register(r'fetchperceptioninfo', views.FetchPerceptionInfoViewSet)
 # router.register(r'fetchRealityInfo', views.FetchRealityInfoViewSet)
