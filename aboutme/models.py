@@ -82,6 +82,10 @@ class AMResponseAcknowledgement(models.Model):
     survey = models.ForeignKey(Survey, on_delete=models.CASCADE)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     actionText = models.CharField(max_length=10)
+    actionType = models.PositiveIntegerField(default=0, blank=False, null=False)
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
 class AMResponseSentiment(models.Model):
     amResponse = models.ForeignKey(AMResponse, on_delete=models.CASCADE)
