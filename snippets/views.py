@@ -914,7 +914,7 @@ class ProjectUserViewSet(viewsets.ModelViewSet):
         existCheckObj = ProjectUser.objects.filter(survey_id=data['survey'], user_id=data['user'])
 
         if len(existCheckObj) > 0:
-            projectUser_id = existCheckObj.id
+            projectUser_id = existCheckObj[0].id
         else:
             serializer.is_valid(raise_exception=True)
             self.perform_create(serializer)
