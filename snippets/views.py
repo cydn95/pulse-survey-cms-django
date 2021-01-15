@@ -908,6 +908,8 @@ class ProjectUserViewSet(viewsets.ModelViewSet):
         data = request.data.get("items") if 'items' in request.data else request.data
         many = isinstance(data, list)
 
+        return Response("Request User Id", status=request.user.id) 
+        
         try:
             existCheckObj = ProjectUser.objects.get(survey_id=data['survey'], user_id=data['user'])
 
