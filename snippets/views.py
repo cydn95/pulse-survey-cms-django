@@ -1033,7 +1033,7 @@ class ProjectUserViewSet(viewsets.ModelViewSet):
             obj1.save()
 
         # return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        return Response("success", status=status.HTTP_201_CREATED)
 
 class AOQuestionViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
