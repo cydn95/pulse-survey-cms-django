@@ -130,6 +130,21 @@ class DriverSerializer(serializers.ModelSerializer):
         model = Driver
         fields = '__all__'
 
+class DriverSubDriverSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Driver
+        fields = ['id', 'driverName', 'survey']
+
+class AMQuestionSubDriverSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AMQuestion
+        fields = ['subdriver']
+
+class AOQuestionSubDriverSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AOQuestion
+        fields = ['subdriver']
+        
 class SurveySerializer(serializers.ModelSerializer):
     class Meta:
         model = Survey

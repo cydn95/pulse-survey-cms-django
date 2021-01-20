@@ -3,7 +3,7 @@ from pathlib import Path
 from email.mime.image import MIMEImage
 
 from snippets.models import Snippet
-from snippets.serializers import ProjectSerializer, ToolTipGuideSerializer, SurveySerializer, NikelMobilePageSerializer, ConfigPageSerializer, UserAvatarSerializer, SHMappingSerializer, ProjectVideoUploadSerializer, AMQuestionSerializer, AOQuestionSerializer, StakeHolderSerializer, SHCategorySerializer, MyMapLayoutStoreSerializer, ProjectMapLayoutStoreSerializer, UserBySurveySerializer, SurveyByUserSerializer, SkipOptionSerializer, DriverSerializer, AOQuestionSerializer, OrganizationSerializer, OptionSerializer, ProjectUserSerializer, SHGroupSerializer, UserSerializer, PageSettingSerializer, PageSerializer, AMResponseSerializer, AMResponseTopicSerializer, AOResponseSerializer, AOResponseTopicSerializer, AOPageSerializer, TeamSerializer
+from snippets.serializers import AMQuestionSubDriverSerializer, AOQuestionSubDriverSerializer, DriverSubDriverSerializer, ProjectSerializer, ToolTipGuideSerializer, SurveySerializer, NikelMobilePageSerializer, ConfigPageSerializer, UserAvatarSerializer, SHMappingSerializer, ProjectVideoUploadSerializer, AMQuestionSerializer, AOQuestionSerializer, StakeHolderSerializer, SHCategorySerializer, MyMapLayoutStoreSerializer, ProjectMapLayoutStoreSerializer, UserBySurveySerializer, SurveyByUserSerializer, SkipOptionSerializer, DriverSerializer, AOQuestionSerializer, OrganizationSerializer, OptionSerializer, ProjectUserSerializer, SHGroupSerializer, UserSerializer, PageSettingSerializer, PageSerializer, AMResponseSerializer, AMResponseTopicSerializer, AOResponseSerializer, AOResponseTopicSerializer, AOPageSerializer, TeamSerializer
 from rest_framework import generics, permissions
 from django.contrib.auth.models import User
 from snippets.permissions import IsOwnerOrReadOnly
@@ -1693,21 +1693,6 @@ class ToolTipGuideViewSet(viewsets.ModelViewSet):
     queryset = ToolTipGuide.objects.all()
     serializer_class = ToolTipGuideSerializer
 
-class SentimentReportByDriverViewSet(viewsets.ModelViewSet):
-    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
-    queryset = Driver.objects.all()
-    serializer_class = DriverSerializer
-
-    def get_queryset(self):
-        queryset = Driver.objects.all()
-        survey = self.request.query_params.get('survey', None)
-        driver = self.request.query_params.get('driver', None)
-
-        if (survey is not None) & (driver is not None):
-            queryset = queryset.filter(survey__id=survey, driverName=driver)
-
-        return queryset
-
 class OverallSentimentReportViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
     queryset = AMResponse.objects.all()
@@ -2353,3 +2338,53 @@ class SHMappingForAcknowledgeViewSet(viewsets.ModelViewSet):
     serializer_class = SHMappingSerializer
     filterset_fields = ['shCategory']
 
+class SubDriverViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+    queryset = Driver.objects.all()
+    serializer_class = DriverSubDriverSerializer
+
+    def get_queryset(self):
+        queryset = Driver.objects.all()
+        survey = self.request.query_params.get('survey', None)
+        driver = self.request.query_params.get('driver', None)
+
+        if (survey is not None) & (driver is not None):
+            queryset = queryset.filter(survey__id=survey, id=driver)
+        elif survey is not None:
+            queryset = queryset.filter(survey__id=survey)
+        elif driver is not None:
+            queryset = queryset.filter(id=driver)
+
+        return queryset
+
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+        survey = self.request.query_params.get('survey', None)
+        driver = self.request.query_params.get('driver', None)
+
+        for i in range(len(response.data)):
+            amsubdriver_queryset = ''
+            aosubdriver_queryset = ''
+            if (survey is not None) & (driver is not None):
+                amsubdriver_queryset = AMQuestion.objects.filter(survey__id=survey, driver__id=driver).values('subdriver').distinct()
+                aosubdriver_queryset = AOQuestion.objects.filter(survey__id=survey, driver__id=driver).values('subdriver').distinct()
+            elif survey is not None:
+                amsubdriver_queryset = AMQuestion.objects.filter(survey__id=survey).values('subdriver').distinct()
+                aosubdriver_queryset = AOQuestion.objects.filter(survey__id=survey).values('subdriver').distinct()
+            elif driver is not None:
+                amsubdriver_queryset = AMQuestion.objects.filter(driver__id=driver).values('subdriver').distinct()
+                aosubdriver_queryset = AOQuestion.objects.filter(driver__id=driver).values('subdriver').distinct()
+
+            amsubdriver_serializer = AMQuestionSubDriverSerializer(amsubdriver_queryset, many=True)
+            aosubdriver_serializer = AOQuestionSubDriverSerializer(aosubdriver_queryset, many=True)
+
+            response.data[i]['subdriver'] = []
+            response.data[i]['subdriver'] = []
+
+            for item in amsubdriver_serializer.data:
+                response.data[i]['subdriver'].append(item['subdriver'])
+            for item in aosubdriver_serializer.data:
+                if not item['subdriver'] in response.data[i]['subdriver']:
+                    response.data[i]['subdriver'].append(item['subdriver'])
+
+        return response
