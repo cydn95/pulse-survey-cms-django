@@ -288,7 +288,11 @@ class AOResponseReportViewSet(viewsets.ModelViewSet):
 
                 if response.data[i]['topicValue'] != "" or response.data[i]['commentValue'] != "":
                     sentimentData = comprehend.detect_sentiment(Text=Text, LanguageCode="en")
-                    print(sentimentData)
+                    
+                    # new
+                    response.data[i]['integerValue'] = int(
+                        abs(sentimentData["SentimentScore"]["Positive"] * 100))
+
                     if "Sentiment" in sentimentData:
                         response.data[i]['report']["Sentiment"] = sentimentData["Sentiment"]
                     if "SentimentScore" in sentimentData:
@@ -338,7 +342,11 @@ class AMResponseReportViewSet(viewsets.ModelViewSet):
 
                 if response.data[i]['topicValue'] != "" or response.data[i]['commentValue'] != "":
                     sentimentData = comprehend.detect_sentiment(Text=Text, LanguageCode="en")
-                    print(sentimentData)
+                    
+                    # new
+                    response.data[i]['integerValue'] = int(
+                        abs(sentimentData["SentimentScore"]["Positive"] * 100))
+                        
                     if "Sentiment" in sentimentData:
                         response.data[i]['report']["Sentiment"] = sentimentData["Sentiment"]
                     if "SentimentScore" in sentimentData:
@@ -396,7 +404,11 @@ class AOResponseFeedbackSummaryViewset(viewsets.ModelViewSet):
 
                 if response.data[i]['topicValue'] != "" or response.data[i]['commentValue'] != "":
                     sentimentData = comprehend.detect_sentiment(Text=Text, LanguageCode="en")
-                    print(sentimentData)
+                    
+                    # new
+                    response.data[i]['integerValue'] = int(
+                        abs(sentimentData["SentimentScore"]["Positive"] * 100))
+
                     if "Sentiment" in sentimentData:
                         response.data[i]['report']["Sentiment"] = sentimentData["Sentiment"]
                     if "SentimentScore" in sentimentData:
@@ -449,6 +461,11 @@ class AMResponseFeedbackSummaryViewset(viewsets.ModelViewSet):
                 if response.data[i]['topicValue'] != "" or response.data[i]['commentValue'] != "":
                     sentimentData = comprehend.detect_sentiment(Text=Text, LanguageCode="en")
                     print(sentimentData)
+
+                    # new
+                    response.data[i]['integerValue'] = int(
+                        abs(sentimentData["SentimentScore"]["Positive"] * 100))
+
                     if "Sentiment" in sentimentData:
                         response.data[i]['report']["Sentiment"] = sentimentData["Sentiment"]
                     if "SentimentScore" in sentimentData:
@@ -484,7 +501,7 @@ class AMResponseViewSet(viewsets.ModelViewSet):
                         text = obj.topicValue + " " + obj.commentValue
 
                         sentimentResult = comprehend.detect_sentiment(Text=text, LanguageCode="en")
-                        obj.integerValue = int(sentimentResult["SentimentScore"]["Positive"] * 100)
+                        obj.integerValue = int(abs(sentimentResult["SentimentScore"]["Positive"] * 100))
                     else:                   
                         obj.integerValue = defaults['integerValue']
                     obj.topicValue = defaults['topicValue']
@@ -510,7 +527,7 @@ class AMResponseViewSet(viewsets.ModelViewSet):
                         text = defaults['topicValue'] + " " + defaults['commentValue']
 
                         sentimentResult = comprehend.detect_sentiment(Text=text, LanguageCode="en")
-                        defaults["integerValue"] = int(sentimentResult["SentimentScore"]["Positive"] * 100)
+                        defaults["integerValue"] = int(abs(sentimentResult["SentimentScore"]["Positive"] * 100))
 
                     obj = AMResponse(amQuestion_id=defaults['amQuestion'], 
                                 projectUser_id=defaults['projectUser'], subProjectUser_id=defaults['subProjectUser'], 
@@ -533,7 +550,7 @@ class AMResponseViewSet(viewsets.ModelViewSet):
                     text = obj.topicValue + " " + obj.commentValue
 
                     sentimentResult = comprehend.detect_sentiment(Text=text, LanguageCode="en")
-                    obj.integerValue = int(sentimentResult["SentimentScore"]["Positive"] * 100)
+                    obj.integerValue = int(abs(sentimentResult["SentimentScore"]["Positive"] * 100))
                 else:                   
                     obj.integerValue = defaults['integerValue']
 
@@ -558,7 +575,7 @@ class AMResponseViewSet(viewsets.ModelViewSet):
                     text = data['topicValue'] + " " + data['commentValue']
 
                     sentimentResult = comprehend.detect_sentiment(Text=text, LanguageCode="en")
-                    data["integerValue"] = int(sentimentResult["SentimentScore"]["Positive"] * 100)
+                    data["integerValue"] = int(abs(sentimentResult["SentimentScore"]["Positive"] * 100))
 
                 obj = AMResponse(amQuestion_id=data['amQuestion'], 
                                 projectUser_id=data['projectUser'], subProjectUser_id=data['subProjectUser'], 
@@ -625,7 +642,7 @@ class AOResponseViewSet(viewsets.ModelViewSet):
                         text = obj.topicValue + " " + obj.commentValue
 
                         sentimentResult = comprehend.detect_sentiment(Text=text, LanguageCode="en")
-                        obj.integerValue = int(sentimentResult["SentimentScore"]["Positive"] * 100)
+                        obj.integerValue = int(abs(sentimentResult["SentimentScore"]["Positive"] * 100))
                     else:
                         obj.integerValue = defaults['integerValue']
                     obj.topicValue = defaults['topicValue']
@@ -650,7 +667,7 @@ class AOResponseViewSet(viewsets.ModelViewSet):
                         text = defaults['topicValue'] + " " + defaults['commentValue']
 
                         sentimentResult = comprehend.detect_sentiment(Text=text, LanguageCode="en")
-                        defaults["integerValue"] = int(sentimentResult["SentimentScore"]["Positive"] * 100)
+                        defaults["integerValue"] = int(abs(sentimentResult["SentimentScore"]["Positive"] * 100))
 
                     obj = AOResponse(aoQuestion_id=defaults['aoQuestion'],
                                 projectUser_id=defaults['projectUser'], subProjectUser_id=defaults['subProjectUser'],
@@ -673,7 +690,7 @@ class AOResponseViewSet(viewsets.ModelViewSet):
                     text = obj.topicValue + " " + obj.commentValue
 
                     sentimentResult = comprehend.detect_sentiment(Text=text, LanguageCode="en")
-                    obj.integerValue = int(sentimentResult["SentimentScore"]["Positive"] * 100)
+                    obj.integerValue = int(abs(sentimentResult["SentimentScore"]["Positive"] * 100))
                 else:
                     obj.integerValue = defaults['integerValue']
                 
@@ -699,7 +716,7 @@ class AOResponseViewSet(viewsets.ModelViewSet):
                     text = defaults["topicValue"] + " " + defaults["commentValue"]
 
                     sentimentResult = comprehend.detect_sentiment(Text=text, LanguageCode="en")
-                    defaults["integerValue"] = int(sentimentResult["SentimentScore"]["Positive"] * 100)
+                    defaults["integerValue"] = int(abs(sentimentResult["SentimentScore"]["Positive"] * 100))
 
                 obj = AOResponse(aoQuestion_id=defaults['aoQuestion'],
                             projectUser_id=defaults['projectUser'], subProjectUser_id=defaults['subProjectUser'],
@@ -1853,6 +1870,11 @@ class AOResponseReportv2ViewSet(viewsets.ModelViewSet):
 
                 if response.data[i]['topicValue'] != "" or response.data[i]['commentValue'] != "":
                     sentimentData = comprehend.detect_sentiment(Text=Text, LanguageCode="en")
+
+                    # new
+                    response.data[i]['integerValue'] = int(
+                        abs(sentimentData["SentimentScore"]["Positive"] * 100))
+
                     print(sentimentData)
                     if "Sentiment" in sentimentData:
                         response.data[i]['report']["Sentiment"] = sentimentData["Sentiment"]
@@ -1906,6 +1928,11 @@ class AMResponseFeedbackSummaryv2Viewset(viewsets.ModelViewSet):
                 if response.data[i]['topicValue'] != "" or response.data[i]['commentValue'] != "":
                     sentimentData = comprehend.detect_sentiment(Text=Text, LanguageCode="en")
                     print(sentimentData)
+
+                    # new
+                    response.data[i]['integerValue'] = int(
+                        abs(sentimentData["SentimentScore"]["Positive"] * 100))
+
                     if "Sentiment" in sentimentData:
                         response.data[i]['report']["Sentiment"] = sentimentData["Sentiment"]
                     if "SentimentScore" in sentimentData:
@@ -1962,6 +1989,10 @@ class AMResponseFeedbackSummaryForEngagementViewset(viewsets.ModelViewSet):
                 if response.data[i]['topicValue'] != "" or response.data[i]['commentValue'] != "":
                     sentimentData = comprehend.detect_sentiment(Text=Text, LanguageCode="en")
                     
+                    # new
+                    response.data[i]['integerValue'] = int(
+                        abs(sentimentData["SentimentScore"]["Positive"] * 100))
+
                     if "Sentiment" in sentimentData:
                         response.data[i]['report']["Sentiment"] = sentimentData["Sentiment"]
                     if "SentimentScore" in sentimentData:
@@ -2019,6 +2050,10 @@ class AMResponseFeedbackSummaryForInterestViewset(viewsets.ModelViewSet):
 
                 if response.data[i]['topicValue'] != "" or response.data[i]['commentValue'] != "":
                     sentimentData = comprehend.detect_sentiment(Text=Text, LanguageCode="en")
+                    
+                    # new
+                    response.data[i]['integerValue'] = int(
+                        abs(sentimentData["SentimentScore"]["Positive"] * 100))
 
                     if "Sentiment" in sentimentData:
                         response.data[i]['report']["Sentiment"] = sentimentData["Sentiment"]
@@ -2274,6 +2309,11 @@ class AcknowledgeViewSet(viewsets.ModelViewSet):
                 if response.data[i]['topicValue'] != "" or response.data[i]['commentValue'] != "":
                     sentimentData = comprehend.detect_sentiment(Text=Text, LanguageCode="en")
                     print(sentimentData)
+
+                    # new
+                    response.data[i]['integerValue'] = int(
+                        abs(sentimentData["SentimentScore"]["Positive"] * 100))
+
                     if "Sentiment" in sentimentData:
                         response.data[i]['report']["Sentiment"] = sentimentData["Sentiment"]
                     if "SentimentScore" in sentimentData:
@@ -2377,7 +2417,7 @@ class SubDriverViewSet(viewsets.ModelViewSet):
             else:
                 amsubdriver_queryset = AMQuestion.objects.all().values('subdriver').distinct()
                 aosubdriver_queryset = AOQuestion.objects.all().values('subdriver').distinct()
-                
+
             amsubdriver_serializer = AMQuestionSubDriverSerializer(amsubdriver_queryset, many=True)
             aosubdriver_serializer = AOQuestionSubDriverSerializer(aosubdriver_queryset, many=True)
 
