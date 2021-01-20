@@ -2374,7 +2374,10 @@ class SubDriverViewSet(viewsets.ModelViewSet):
             elif driver is not None:
                 amsubdriver_queryset = AMQuestion.objects.filter(driver__id=driver).values('subdriver').distinct()
                 aosubdriver_queryset = AOQuestion.objects.filter(driver__id=driver).values('subdriver').distinct()
-
+            else:
+                amsubdriver_queryset = AMQuestion.objects.all().values('subdriver').distinct()
+                aosubdriver_queryset = AOQuestion.objects.all().values('subdriver').distinct()
+                
             amsubdriver_serializer = AMQuestionSubDriverSerializer(amsubdriver_queryset, many=True)
             aosubdriver_serializer = AOQuestionSubDriverSerializer(aosubdriver_queryset, many=True)
 
