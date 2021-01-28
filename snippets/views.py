@@ -2378,6 +2378,60 @@ class SHMappingForAcknowledgeViewSet(viewsets.ModelViewSet):
     serializer_class = SHMappingSerializer
     filterset_fields = ['shCategory']
 
+class WordCloudView(APIView):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+
+    @classmethod
+    def get_extra_actions(cls):
+        return []
+
+    def wordListToFreqDict(wordlist):
+        wordfreq = [wordlist.count(p) for p in wordlist]
+        
+        return dict(list(zip(wordlist, wordfreq)))
+
+    def sortFreqDict(freqdict):
+        aux = [(freqdict[key], key) for key in freqdict]
+        aux.sort()
+        aux.reverse()
+
+        return aux
+
+    def removeStopwords(wordlist, stopwords):
+        return [w for w in wordlist if w not in stopwords]
+
+    def get(self, format=None):
+        amqueryset = AMResponse.objects.all()
+        amserializer = AMResponseSerializer(amqueryset, many=True)
+
+        aoqueryset = AOResponse.objects.all()
+        aoserializer = AOResponseSerializer(aoqueryset, many=True)
+
+        res = amserializer.data + aoserializer.data
+
+        wordstring = ''
+        for i in range(len(res)):
+            if res[i]['topicValue'] != "":
+                wordstring += ' ' + res[i]['topicValue']
+            if res[i]['commentValue'] != "":
+                wordstring += ' ' + res[i]['commentValue']
+            if res[i]['skipValue'] != "":
+                wordstring += ' ' + res[i]['skipValue']
+            if res[i]['topicTags'] != "":
+                wordstring += ' ' + res[i]['topicTags']
+            if res[i]['commentTags'] != "":
+                wordstring += ' ' + res[i]['commentTags']
+
+        wordList = wordstring.split()
+        wordfreq = [wordList.count(p) for p in wordList]
+        dictionary = dict(list(zip(wordList, wordfreq)))
+
+        aux = [(dictionary[key], key) for key in dictionary]
+        aux.sort()
+        aux.reverse()
+        
+        return Response(aux)
+
 class SubDriverViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
     queryset = Driver.objects.all()

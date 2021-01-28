@@ -92,4 +92,6 @@ urlpatterns += format_suffix_patterns([
     url(r'changepassword', views.ChangePasswordView.as_view()),
     url(r'userprofile', views.UserProfileView.as_view()),
     url(r'userguidemode', views.UserGuideModeView.as_view()),
+    # word cloud map api
+    url(r'wordcloud', views.WordCloudView.as_view()),
 ])
