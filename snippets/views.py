@@ -2476,7 +2476,7 @@ class WordCloudView(APIView):
                 wordstring += ' ' + res[i]['commentTags']
 
         # wordList = wordstring.split()
-        wordList = re.findall(r"[\w\']+", wordstring)
+        wordList = re.findall(r"[\w\']+", wordstring.lower())
         filteredWordList = [w for w in wordList if w not in stopwords]
         wordfreq = [filteredWordList.count(p) for p in filteredWordList]
         dictionary = dict(list(zip(filteredWordList, wordfreq)))
