@@ -1,4 +1,5 @@
 import os
+import re
 from pathlib import Path
 from email.mime.image import MIMEImage
 
@@ -2422,7 +2423,8 @@ class WordCloudView(APIView):
             if res[i]['commentTags'] != "":
                 wordstring += ' ' + res[i]['commentTags']
 
-        wordList = wordstring.split()
+        # wordList = wordstring.split()
+        wordList = re.findall(r"[\w\']+", wordstring)
         wordfreq = [wordList.count(p) for p in wordList]
         dictionary = dict(list(zip(wordList, wordfreq)))
 
