@@ -2394,14 +2394,14 @@ class WordCloudView(APIView):
         projectUser = self.request.query_params.get('projectUser', None)
 
         if (survey is not None) & (projectUser is not None):
-            amserializer = amserializer.filter(survey__id=survey, subProjectUser__id=projectUser)
-            aoserializer = aoserializer.filter(survey__id=survey, subProjectUser__id=projectUser)
+            amqueryset = amqueryset.filter(survey__id=survey, subProjectUser__id=projectUser)
+            aoqueryset = aoqueryset.filter(survey__id=survey, subProjectUser__id=projectUser)
         elif survey is not None:
-            amserializer = amserializer.filter(survey__id=survey)
-            aoserializer = aoserializer.filter(survey__id=survey)
+            amqueryset = amqueryset.filter(survey__id=survey)
+            aoqueryset = aoqueryset.filter(survey__id=survey)
         elif projectUser is not None:
-            amserializer = amserializer.filter(subProjectUser__id=projectUser)
-            aoserializer = aoserializer.filter(subProjectUser__id=projectUser)
+            amqueryset = amqueryset.filter(subProjectUser__id=projectUser)
+            aoqueryset = aoqueryset.filter(subProjectUser__id=projectUser)
         
         amserializer = AMResponseSerializer(amqueryset, many=True)
         aoserializer = AOResponseSerializer(aoqueryset, many=True)
