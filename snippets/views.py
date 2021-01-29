@@ -2386,26 +2386,24 @@ class WordCloudView(APIView):
     def get_extra_actions(cls):
         return []
 
-    def wordListToFreqDict(wordlist):
-        wordfreq = [wordlist.count(p) for p in wordlist]
-        
-        return dict(list(zip(wordlist, wordfreq)))
-
-    def sortFreqDict(freqdict):
-        aux = [(freqdict[key], key) for key in freqdict]
-        aux.sort()
-        aux.reverse()
-
-        return aux
-
-    def removeStopwords(wordlist, stopwords):
-        return [w for w in wordlist if w not in stopwords]
-
     def get(self, format=None):
         amqueryset = AMResponse.objects.all()
-        amserializer = AMResponseSerializer(amqueryset, many=True)
-
         aoqueryset = AOResponse.objects.all()
+
+        survey = self.request.query_params.get('survey', None)
+        projectUser = self.request.query_params.get('projectUser', None)
+
+        if (survey is not None) & (projectUser is not None):
+            amserializer = amserializer.filter(survey__id=survey, subProjectUser__id=projectUser)
+            aoserializer = aoserializer.filter(survey__id=survey, subProjectUser__id=projectUser)
+        elif survey is not None:
+            amserializer = amserializer.filter(survey__id=survey)
+            aoserializer = aoserializer.filter(survey__id=survey)
+        elif projectUser is not None:
+            amserializer = amserializer.filter(subProjectUser__id=projectUser)
+            aoserializer = aoserializer.filter(subProjectUser__id=projectUser)
+        
+        amserializer = AMResponseSerializer(amqueryset, many=True)
         aoserializer = AOResponseSerializer(aoqueryset, many=True)
 
         res = amserializer.data + aoserializer.data
