@@ -632,9 +632,14 @@ class AMResponseFeedbackSummaryForSentimentViewSet(viewsets.ModelViewSet):
         survey = self.request.query_params.get('survey', None)
         startDate = self.request.query_params.get('stdt', None)
         endDate = self.request.query_params.get('eddt', None)
-        if survey is not None:
+        if (survey is not None) & (startDate is not None) & (endDate is not None):
             queryset = queryset.filter(survey__id=survey, amQuestion__driver__driverName="Sentiment", updated_at__range=[startDate, endDate])
-
+        elif survey is not None:
+            queryset = queryset.filter(survey__id=survey, amQuestion__driver__driverName="Sentiment")
+        elif (startDate is not None) & (endDate is not None):
+            queryset = queryset.filter(
+                amQuestion__driver__driverName="Sentiment", updated_at__range=[startDate, endDate])
+                
         return queryset
 
     def list(self, request, *args, **kwargs):
@@ -674,7 +679,7 @@ class AMResponseFeedbackSummaryForSentimentViewSet(viewsets.ModelViewSet):
                             response.data[i]['report']["PositiveScore"] = sentimentData["SentimentScore"]["Positive"]
 
         return response
-        
+
 class AOResponseViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated,permissions.IsAuthenticatedOrReadOnly]
     queryset = AOResponse.objects.all()
