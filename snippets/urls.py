@@ -58,6 +58,9 @@ router.register(r'aoresponsereportv2', views.AOResponseReportv2ViewSet)
 router.register(r'feedbacksummaryreportv2', views.AMResponseFeedbackSummaryv2Viewset)
 router.register(r'userbysurveyv2', views.UserBySurveyv2ViewSet)
 
+# Sentiment reports
+router.register(r'sentimentreport',
+                views.AMResponseFeedbackSummaryForSentimentViewSet)
 # Engagement reports
 router.register(r'engagementtrend',
                 views.AMResponseFeedbackSummaryForEngagementViewset)
