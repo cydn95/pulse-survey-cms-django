@@ -639,7 +639,7 @@ class AMResponseFeedbackSummaryForSentimentViewSet(viewsets.ModelViewSet):
         elif (startDate is not None) & (endDate is not None):
             queryset = queryset.filter(
                 amQuestion__driver__driverName="Sentiment", updated_at__range=[startDate, endDate])
-                
+
         return queryset
 
     def list(self, request, *args, **kwargs):
@@ -2618,6 +2618,20 @@ class WordCloudView(APIView):
         
         return Response(aux)
 
+class BubbleChartView(APIView):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+
+    @classmethod
+    def get_extra_actions(cls):
+        return []
+    
+    def get(self, format=None):
+        amqueryset = AMResponse.objects.all()
+        aoqueryset = AOResponse.objects.all()
+
+        survey = self.request.query_params.get('survey', None)
+        projectUser = self.request.query_params.get('projectUser', None)
+        
 class SubDriverViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
     queryset = Driver.objects.all()
