@@ -2631,7 +2631,44 @@ class BubbleChartView(APIView):
 
         survey = self.request.query_params.get('survey', None)
         projectUser = self.request.query_params.get('projectUser', None)
-        
+    
+    ### t
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+        survey = self.request.query_params.get('survey', None)
+        driver = self.request.query_params.get('driver', None)
+
+        for i in range(len(response.data)):
+            amsubdriver_queryset = ''
+            aosubdriver_queryset = ''
+            if (survey is not None) & (driver is not None):
+                amsubdriver_queryset = AMQuestion.objects.filter(survey__id=survey, driver__id=driver).values('subdriver').distinct()
+                aosubdriver_queryset = AOQuestion.objects.filter(survey__id=survey, driver__id=driver).values('subdriver').distinct()
+            elif survey is not None:
+                amsubdriver_queryset = AMQuestion.objects.filter(survey__id=survey).values('subdriver').distinct()
+                aosubdriver_queryset = AOQuestion.objects.filter(survey__id=survey).values('subdriver').distinct()
+            elif driver is not None:
+                amsubdriver_queryset = AMQuestion.objects.filter(driver__id=driver).values('subdriver').distinct()
+                aosubdriver_queryset = AOQuestion.objects.filter(driver__id=driver).values('subdriver').distinct()
+            else:
+                amsubdriver_queryset = AMQuestion.objects.all().values('subdriver').distinct()
+                aosubdriver_queryset = AOQuestion.objects.all().values('subdriver').distinct()
+
+            amsubdriver_serializer = AMQuestionSubDriverSerializer(amsubdriver_queryset, many=True)
+            aosubdriver_serializer = AOQuestionSubDriverSerializer(aosubdriver_queryset, many=True)
+
+            response.data[i]['subdriver'] = []
+            response.data[i]['subdriver'] = []
+
+            for item in amsubdriver_serializer.data:
+                response.data[i]['subdriver'].append(item['subdriver'])
+            for item in aosubdriver_serializer.data:
+                if not item['subdriver'] in response.data[i]['subdriver']:
+                    response.data[i]['subdriver'].append(item['subdriver'])
+
+        return response
+    ### t
+    
 class SubDriverViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
     queryset = Driver.objects.all()
