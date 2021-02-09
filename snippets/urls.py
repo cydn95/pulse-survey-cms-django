@@ -35,7 +35,6 @@ router.register(r'skipoption', views.SkipOptionViewSet)
 router.register(r'surveybyproject', views.SurveyViewSet)
 router.register(r'shcategory', views.SHCategoryViewSet)
 router.register(r'subdriver', views.SubDriverViewSet)
-router.register(r'sentimentreport', views.AMResponseFeedbackSummaryForSentimentViewSet)
 router.register(r'team', views.TeamViewSet)
 router.register(r'tooltipguide', views.ToolTipGuideViewSet)
 router.register(r'users', views.UserViewSet)
@@ -80,3 +79,4 @@ urlpatterns += format_suffix_patterns([
 # router.register(r'aopage', views.AOPageViewSet)         # deprecated
 # router.register(r'pagesettings', views.PageSettingViewSet)      # deprecated
 # router.register(r'shmapping', views.SHMappingViewSet)         # deprecated
+# router.register(r'sentimentreport', views.AMResponseFeedbackSummaryForSentimentViewSet)       # deprecated
