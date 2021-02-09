@@ -1995,6 +1995,11 @@ class PerceptionRealityView(APIView):
         survey = self.request.query_params.get('survey', None)
         projectUser = self.request.query_params.get('projectUser', None)
 
+        if survey is None:
+            return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
+        if projectUser is None:
+            return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
+            
         amqueryset = AMResponse.objects.filter(survey__id=survey, subProjectUser__id=projectUser)
         aoqueryset = AOResponse.objects.filter(survey__id=survey, subProjectUser__id=projectUser)
 
