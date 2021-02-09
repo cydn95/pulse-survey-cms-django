@@ -1967,6 +1967,7 @@ class WordCloudView(APIView):
         
         return Response(aux)
 
+
 # WIP
 class BubbleChartView(APIView):
     permission_classes = [permissions.IsAuthenticated,
@@ -1982,3 +1983,40 @@ class BubbleChartView(APIView):
 
         survey = self.request.query_params.get('survey', None)
         projectUser = self.request.query_params.get('projectUser', None)
+
+class PerceptionRealityView(APIView):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+
+    @classmethod
+    def get_extra_actions(cls):
+        return []
+
+    def get(self, format=None):
+        survey = self.request.query_params.get('survey', None)
+        projectUser = self.request.query_params.get('projectUser', None)
+
+        amqueryset = AMResponse.objects.filter(survey__id=survey, subProjectUser__id=projectUser)
+        aoqueryset = AOResponse.objects.filter(survey__id=survey, subProjectUser__id=projectUser)
+
+        amserializer = AMResponseSerializer(amqueryset, many=True)
+        aoserializer = AOResponseSerializer(aoqueryset, many=True)
+
+        perception = 0
+        perceptionTotal = 0
+        reality = 0
+        realityTotal = 0
+        for i in range(len(amserializer.data)):
+            perceptionTotal = perceptionTotal + amserializer.data[i]['integerValue']
+        for j in range(len(aoserializer.data)):
+            realityTotal = realityTotal + aoserializer.data[j]['integerValue']
+
+        if perceptionTotal > 0:
+            perception = perceptionTotal / len(amserializer.data)
+
+        if realityTotal > 0:
+            reality = realityTotal / len(aoserializer.data)
+
+        response['perception'] = perception
+        response['reality'] = reality
+
+        return response

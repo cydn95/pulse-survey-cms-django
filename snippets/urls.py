@@ -40,7 +40,6 @@ router.register(r'users', views.UserViewSet)
 router.register(r'updatestakeholder', views.UpdateStakeHolderViewSet)
 router.register(r'userbysurvey', views.UserBySurveyViewSet)
 router.register(r'useravatar', views.UserAvatarViewSet)
-# router.register(r'perceptionreality', views.PerceptionRealityViewSet)     # WIP
 
 # The API URLs are now determined automatically by the router.
 urlpatterns = [
@@ -58,6 +57,7 @@ urlpatterns = [
 
 urlpatterns += format_suffix_patterns([
     url(r'changepassword', views.ChangePasswordView.as_view()),
+    url(r'perceptionreality', views.PerceptionRealityView.as_view()),
     url(r'stakeholder', views.StakeHolderUserView.as_view()),
     url(r'setpassword', views.SetPasswordView.as_view()),
     url(r'userprofile', views.UserProfileView.as_view()),
