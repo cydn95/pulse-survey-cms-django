@@ -2016,6 +2016,7 @@ class PerceptionRealityView(APIView):
         if realityTotal > 0:
             reality = realityTotal / len(aoserializer.data)
 
+        response = ''
         response['perception'] = perception
         response['reality'] = reality
 
