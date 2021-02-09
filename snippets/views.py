@@ -1645,65 +1645,6 @@ class OverallSentimentReportViewSet(viewsets.ModelViewSet):
 
         return response
 
-class AMResponseFeedbackSummaryForEngagementViewset(viewsets.ModelViewSet):
-    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
-    queryset = AMResponse.objects.all()
-    serializer_class = AMResponseSerializer
-
-    def get_queryset(self):
-        queryset = AMResponse.objects.filter(amQuestion__driver__driverName="Engagement")
-
-        survey = self.request.query_params.get('survey', None)
-        startDate = self.request.query_params.get('stdt', None)
-        endDate = self.request.query_params.get('eddt', None)
-        if survey is not None:
-            queryset = queryset.filter(
-                survey__id=survey, amQuestion__driver__driverName="Engagement", updated_at__range=[startDate, endDate])
-
-        return queryset
-
-    def list(self, request, *args, **kwargs):
-
-        response = super().list(request, *args, **kwargs)
-        # print(response.data)
-        for i in range(len(response.data)):
-            amquestion_queryset = AMQuestion.objects.filter(id=response.data[i]['amQuestion'])
-            am_serializer = AMQuestionSerializer(amquestion_queryset, many=True)
-            response.data[i]['amQuestionData'] = am_serializer.data
-            # response.data[i]['amQuestionData'] = AMQuestion.objects.filter(id=response.data[i]['amQuestion']).values()[0]
-            # response.data[i]['shGroups'] = AMQuestionSHGroup.objects.filter(amQuestion=response.data[i]['amQuestion']).values_list('shGroup')
-            response.data[i]['report'] = {
-                "Sentiment": "ERROR",
-                "MixedScore": 0,
-                "NegativeScore": 0,
-                "NeutralScore": 0,
-                "PositiveScore": 0,
-            }
-
-            if response.data[i]['controlType'] == 'TEXT' or response.data[i]['controlType'] == 'MULTI_TOPICS':
-                Text = response.data[i]['topicValue'] + " " + response.data[i]['commentValue']
-
-                if response.data[i]['topicValue'] != "" or response.data[i]['commentValue'] != "":
-                    sentimentData = comprehend.detect_sentiment(Text=Text, LanguageCode="en")
-                    
-                    # new
-                    response.data[i]['integerValue'] = int(
-                        abs(sentimentData["SentimentScore"]["Positive"] * 100))
-
-                    if "Sentiment" in sentimentData:
-                        response.data[i]['report']["Sentiment"] = sentimentData["Sentiment"]
-                    if "SentimentScore" in sentimentData:
-                        if "Mixed" in sentimentData["SentimentScore"]:
-                            response.data[i]['report']["MixedScore"] = sentimentData["SentimentScore"]["Mixed"]
-                        if "Negative" in sentimentData["SentimentScore"]:
-                            response.data[i]['report']["NegativeScore"] = sentimentData["SentimentScore"]["Negative"]
-                        if "Neutral" in sentimentData["SentimentScore"]:
-                            response.data[i]['report']["NeutralScore"] = sentimentData["SentimentScore"]["Neutral"]
-                        if "Positive" in sentimentData["SentimentScore"]:
-                            response.data[i]['report']["PositiveScore"] = sentimentData["SentimentScore"]["Positive"]
-
-        return response
-
 class WordCloudView(APIView):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
 

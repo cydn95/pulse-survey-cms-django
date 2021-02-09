@@ -19,7 +19,6 @@ router.register(r'amresponsereport', views.AMResponseReportViewSet)
 router.register(r'aoresponsereport', views.AOResponseReportViewSet)
 router.register(r'configpage', views.ConfigPageViewSet)
 router.register(r'driver', views.DriverViewSet)
-router.register(r'engagementtrend', views.AMResponseFeedbackSummaryForEngagementViewset)
 router.register(r'feedbacksummaryreport', views.AOResponseFeedbackSummaryViewset)
 router.register(r'mymaplayouts', views.MyMapLayoutViewSet)
 router.register(r'nikelmobilepage', views.NikelMobilePageViewSet)
@@ -80,3 +79,4 @@ urlpatterns += format_suffix_patterns([
 # router.register(r'pagesettings', views.PageSettingViewSet)      # deprecated
 # router.register(r'shmapping', views.SHMappingViewSet)         # deprecated
 # router.register(r'sentimentreport', views.AMResponseFeedbackSummaryForSentimentViewSet)       # deprecated
+# router.register(r'engagementtrend', views.AMResponseFeedbackSummaryForEngagementViewset)      # deprecated
