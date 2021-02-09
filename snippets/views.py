@@ -3,11 +3,9 @@ import re
 from pathlib import Path
 from email.mime.image import MIMEImage
 
-from snippets.models import Snippet
 from snippets.serializers import AMQuestionSubDriverSerializer, AOQuestionSubDriverSerializer, DriverSubDriverSerializer, ProjectSerializer, ToolTipGuideSerializer, SurveySerializer, NikelMobilePageSerializer, ConfigPageSerializer, UserAvatarSerializer, SHMappingSerializer, ProjectVideoUploadSerializer, AMQuestionSerializer, AOQuestionSerializer, StakeHolderSerializer, SHCategorySerializer, MyMapLayoutStoreSerializer, ProjectMapLayoutStoreSerializer, UserBySurveySerializer, SurveyByUserSerializer, SkipOptionSerializer, DriverSerializer, AOQuestionSerializer, OrganizationSerializer, OptionSerializer, ProjectUserSerializer, SHGroupSerializer, UserSerializer, PageSettingSerializer, PageSerializer, AMResponseSerializer, AMResponseTopicSerializer, AOResponseSerializer, AOResponseTopicSerializer, AOPageSerializer, TeamSerializer
 from rest_framework import generics, permissions
 from django.contrib.auth.models import User
-from snippets.permissions import IsOwnerOrReadOnly
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
@@ -46,55 +44,718 @@ import json
 #initialize comprehend module
 comprehend = boto3.client(service_name='comprehend', region_name='us-east-2')
 
-def get_csrf(request):
-    return HttpResponse("{0}".format(csrf.get_token(request)), content_type="text/plain")
+# amresponse api
+class AMResponseViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated,
+                          permissions.IsAuthenticatedOrReadOnly]
+    queryset = AMResponse.objects.all()
+    serializer_class = AMResponseSerializer
 
-class CustomAuthToken(ObtainAuthToken):
-    permission_classes = [permissions.AllowAny]
+    def create(self, request, *args, **kwargs):
+        data = request.data.get(
+            "items") if 'items' in request.data else request.data
+        many = isinstance(data, list)
 
-    def post(self, request, *args, **kwargs):
-        response = super(CustomAuthToken, self).post(request, *args, **kwargs)
-        token = Token.objects.get(key=response.data['token'])
-        return Response({'token': token.key, 'id': token.user_id})
- 
-class UserViewSet(viewsets.ModelViewSet):
-    """
-    This viewset automatically provides `list` and `detail` actions.
-    """
+        if many == True:
+            for item in data:
+                defaults = item
+                try:
+                    # 2020-05-20
+                    # obj = AMResponse.objects.get(survey_id=item['survey'], project_id=item['project'], user_id=item['user'], amQuestion_id=item['amQuestion'])
+                    obj = AMResponse.objects.get(
+                        survey_id=item['survey'], project_id=item['project'], projectUser_id=item['projectUser'], amQuestion_id=item['amQuestion'])
+
+                    if obj.controlType == "TEXT" or obj.controlType == "MULTI_TOPICS":
+                        text = obj.topicValue + " " + obj.commentValue
+
+                        sentimentResult = comprehend.detect_sentiment(
+                            Text=text, LanguageCode="en")
+                        obj.integerValue = int(
+                            abs(sentimentResult["SentimentScore"]["Positive"] * 100))
+                    else:
+                        obj.integerValue = defaults['integerValue']
+                    obj.topicValue = defaults['topicValue']
+                    obj.commentValue = defaults['commentValue']
+                    obj.skipValue = defaults['skipValue']
+                    obj.topicTags = defaults['topicTags']
+                    obj.commentTags = defaults['commentTags']
+
+                    obj.save()
+
+                except AMResponse.DoesNotExist:
+                    # 2020-05-20
+                    # obj = AMResponse(amQuestion_id=defaults['amQuestion'],
+                    #             user_id=defaults['user'], subjectUser_id=defaults['subjectUser'],
+                    #             survey_id=defaults['survey'], project_id=defaults['project'],
+                    #             controlType=defaults['controlType'], integerValue=defaults['integerValue'],
+                    #             topicValue=defaults['topicValue'], commentValue=defaults['commentValue'],
+                    #             skipValue=defaults['skipValue'], topicTags=defaults['topicTags'],
+                    #             commentTags=defaults['commentTags'])
+
+                    if defaults["controlType"] == "TEXT" or defaults["controlType"] == "MULTI_TOPICS":
+                        text = defaults['topicValue'] + \
+                            " " + defaults['commentValue']
+
+                        sentimentResult = comprehend.detect_sentiment(
+                            Text=text, LanguageCode="en")
+                        defaults["integerValue"] = int(
+                            abs(sentimentResult["SentimentScore"]["Positive"] * 100))
+
+                    obj = AMResponse(amQuestion_id=defaults['amQuestion'],
+                                     projectUser_id=defaults['projectUser'], subProjectUser_id=defaults['subProjectUser'],
+                                     survey_id=defaults['survey'], project_id=defaults['project'],
+                                     controlType=defaults['controlType'], integerValue=defaults['integerValue'],
+                                     topicValue=defaults['topicValue'], commentValue=defaults['commentValue'],
+                                     skipValue=defaults['skipValue'], topicTags=defaults['topicTags'],
+                                     commentTags=defaults['commentTags'])
+
+                    obj.save()
+
+        elif many == False:
+            defaults = data
+            try:
+                # 2020-05-20
+                # obj = AMResponse.objects.get(survey_id=defaults['survey'], project_id=defaults['project'], user_id=defaults['user'], amQuestion_id=defaults['amQuestion'])
+                obj = AMResponse.objects.get(survey_id=defaults['survey'], project_id=defaults['project'],
+                                             projectUser_id=defaults['projectUser'], amQuestion_id=defaults['amQuestion'])
+
+                if obj.controlType == "TEXT" or obj.controlType == "MULTI_TOPICS":
+                    text = obj.topicValue + " " + obj.commentValue
+
+                    sentimentResult = comprehend.detect_sentiment(
+                        Text=text, LanguageCode="en")
+                    obj.integerValue = int(
+                        abs(sentimentResult["SentimentScore"]["Positive"] * 100))
+                else:
+                    obj.integerValue = defaults['integerValue']
+
+                obj.topicValue = defaults['topicValue']
+                obj.commentValue = defaults['commentValue']
+                obj.skipValue = defaults['skipValue']
+                obj.topicTags = defaults['topicTags']
+                obj.commentTags = defaults['commentTags']
+
+                obj.save()
+            except AMResponse.DoesNotExist:
+
+                # 2020-05-20
+                # obj = AMResponse(amQuestion_id=data['amQuestion'],
+                #                 user_id=data['user'], subjectUser_id=data['subjectUser'],
+                #                 survey_id=data['survey'], project_id=data['project'],
+                #                 controlType=data['controlType'], integerValue=data['integerValue'],
+                #                 topicValue=data['topicValue'], commentValue=data['commentValue'],
+                #                 skipValue=data['skipValue'], topicTags=data['topicTags'],
+                #                 commentTags=data['commentTags'])
+                if data["controlType"] == "TEXT" or data["controlType"] == "MULTI_TOPICS":
+                    text = data['topicValue'] + " " + data['commentValue']
+
+                    sentimentResult = comprehend.detect_sentiment(
+                        Text=text, LanguageCode="en")
+                    data["integerValue"] = int(
+                        abs(sentimentResult["SentimentScore"]["Positive"] * 100))
+
+                obj = AMResponse(amQuestion_id=data['amQuestion'],
+                                 projectUser_id=data['projectUser'], subProjectUser_id=data['subProjectUser'],
+                                 survey_id=data['survey'], project_id=data['project'],
+                                 controlType=data['controlType'], integerValue=data['integerValue'],
+                                 topicValue=data['topicValue'], commentValue=data['commentValue'],
+                                 skipValue=data['skipValue'], topicTags=data['topicTags'],
+                                 commentTags=data['commentTags'])
+
+                obj.save()
+
+        # 2020-05-20
+        # result = AMResponse.objects.all().values('user', 'subjectUser', 'survey', 'project', 'amQuestion', 'controlType', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags')
+        result = AMResponse.objects.all().values('projectUser', 'subProjectUser', 'survey', 'project', 'amQuestion',
+                                                 'controlType', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags')
+
+        list_result = [entry for entry in result]
+
+        serializer = self.get_serializer(data=list_result, many=True)
+        serializer.is_valid(raise_exception=True)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+# amresponsetopic api
+class AMResponseTopicViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated,permissions.IsAuthenticatedOrReadOnly]
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+    queryset = AMResponseTopic.objects.all()
+    serializer_class = AMResponseTopicSerializer
+    
+    def create(self, request, *args, **kwargs):
+        data = request.data.get("items") if 'items' in request.data else request.data
+        many = isinstance(data, list)
+        serializer = self.get_serializer(data=data, many=many)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+# aoresponse api
+class AOResponseViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated,permissions.IsAuthenticatedOrReadOnly]
+    queryset = AOResponse.objects.all()
+    serializer_class = AOResponseSerializer
+
+    def create(self, request, *args, **kwargs):
+        data = request.data.get("items") if 'items' in request.data else request.data
+        many = isinstance(data, list)
+        
+        if many == True:
+            for item in data:
+                defaults = item
+                try:
+                    # 2020-05-20
+                    # obj = AOResponse.objects.get(survey_id=item['survey'], project_id=item['project'], user_id=item['user'], subjectUser_id=item['subjectUser'], aoQuestion_id=item['aoQuestion'])
+                    # 2020-12-17
+                    # obj = AOResponse.objects.get(survey_id=item['survey'], project_id=item['project'], projectUser_id=item['projectUser'], subProjectUser_id=item['subProjectUser'], shCategory_id=item['shCategory'], aoQuestion_id=item['aoQuestion'])
+                    obj = AOResponse.objects.get(survey_id=item['survey'], project_id=item['project'], projectUser_id=item['projectUser'], subProjectUser_id=item['subProjectUser'], aoQuestion_id=item['aoQuestion'])
+
+                    if obj.controlType == "TEXT" or obj.controlType == "MULTI_TOPICS":
+                        text = obj.topicValue + " " + obj.commentValue
+
+                        sentimentResult = comprehend.detect_sentiment(Text=text, LanguageCode="en")
+                        obj.integerValue = int(abs(sentimentResult["SentimentScore"]["Positive"] * 100))
+                    else:
+                        obj.integerValue = defaults['integerValue']
+                    obj.topicValue = defaults['topicValue']
+                    obj.commentValue = defaults['commentValue']
+                    obj.skipValue = defaults['skipValue']
+                    obj.topicTags = defaults['topicTags']
+                    obj.commentTags = defaults['commentTags']
+
+                    obj.save()
+
+                except AOResponse.DoesNotExist:
+                    # 2020-05-20
+                    # obj = AOResponse(aoQuestion_id=defaults['aoQuestion'],
+                    #             user_id=defaults['user'], subjectUser_id=defaults['subjectUser'],
+                    #             survey_id=defaults['survey'], project_id=defaults['project'],
+                    #             controlType=defaults['controlType'], integerValue=defaults['integerValue'],
+                    #             topicValue=defaults['topicValue'], commentValue=defaults['commentValue'],
+                    #             skipValue=defaults['skipValue'], topicTags=defaults['topicTags'],
+                    #             commentTags=defaults['commentTags'])
+                    
+                    if defaults["controlType"] == "TEXT" or defaults["controlType"] == "MULTI_TOPICS":
+                        text = defaults['topicValue'] + " " + defaults['commentValue']
+
+                        sentimentResult = comprehend.detect_sentiment(Text=text, LanguageCode="en")
+                        defaults["integerValue"] = int(abs(sentimentResult["SentimentScore"]["Positive"] * 100))
+
+                    obj = AOResponse(aoQuestion_id=defaults['aoQuestion'],
+                                projectUser_id=defaults['projectUser'], subProjectUser_id=defaults['subProjectUser'],
+                                shCategory_id=defaults['shCategory'],
+                                survey_id=defaults['survey'], project_id=defaults['project'],
+                                controlType=defaults['controlType'], integerValue=defaults['integerValue'],
+                                topicValue=defaults['topicValue'], commentValue=defaults['commentValue'],
+                                skipValue=defaults['skipValue'], topicTags=defaults['topicTags'],
+                                commentTags=defaults['commentTags'])
+                    obj.save()
+        elif many == False:
+            defaults = data
+            try:
+                # 2020-05-20
+                # obj = AOResponse.objects.get(survey_id=item['survey'], project_id=item['project'], user_id=item['user'], subjectUser_id=item['subjectUser'], aoQuestion_id=item['aoQuestion'])
+                # obj = AOResponse.objects.get(survey_id=item['survey'], project_id=item['project'], projectUser_id=item['projectUser'], subProjectUser_id=item['subProjectUser'], shCategory_id=item['shCategory'], aoQuestion_id=item['aoQuestion'])
+                obj = AOResponse.objects.get(survey_id=item['survey'], project_id=item['project'], projectUser_id=item['projectUser'], subProjectUser_id=item['subProjectUser'], aoQuestion_id=item['aoQuestion'])
+
+                if obj.controlType == "TEXT" or obj.controlType == "MULTI_TOPICS":
+                    text = obj.topicValue + " " + obj.commentValue
+
+                    sentimentResult = comprehend.detect_sentiment(Text=text, LanguageCode="en")
+                    obj.integerValue = int(abs(sentimentResult["SentimentScore"]["Positive"] * 100))
+                else:
+                    obj.integerValue = defaults['integerValue']
+                
+                obj.integerValue = defaults['integerValue']
+                obj.topicValue = defaults['topicValue']
+                obj.commentValue = defaults['commentValue']
+                obj.skipValue = defaults['skipValue']
+                obj.topicTags = defaults['topicTags']
+                obj.commentTags = defaults['commentTags']
+
+                obj.save()
+            except AOResponse.DoesNotExist:
+                # 2020-05-20
+                # obj = AOResponse(aoQuestion_id=defaults['aoQuestion'],
+                #             user_id=defaults['user'], subjectUser_id=defaults['subjectUser'],
+                #             survey_id=defaults['survey'], project_id=defaults['project'],
+                #             controlType=defaults['controlType'], integerValue=defaults['integerValue'],
+                #             topicValue=defaults['topicValue'], commentValue=defaults['commentValue'],
+                #             skipValue=defaults['skipValue'], topicTags=defaults['topicTags'],
+                #             commentTags=defaults['commentTags'])
+
+                if defaults["controlType"] == "TEXT" or defaults["controlType"] == "MULTI_TOPICS":
+                    text = defaults["topicValue"] + " " + defaults["commentValue"]
+
+                    sentimentResult = comprehend.detect_sentiment(Text=text, LanguageCode="en")
+                    defaults["integerValue"] = int(abs(sentimentResult["SentimentScore"]["Positive"] * 100))
+
+                obj = AOResponse(aoQuestion_id=defaults['aoQuestion'],
+                            projectUser_id=defaults['projectUser'], subProjectUser_id=defaults['subProjectUser'],
+                            shCategory_id=defaults['shCategory'],
+                            survey_id=defaults['survey'], project_id=defaults['project'],
+                            controlType=defaults['controlType'], integerValue=defaults['integerValue'],
+                            topicValue=defaults['topicValue'], commentValue=defaults['commentValue'],
+                            skipValue=defaults['skipValue'], topicTags=defaults['topicTags'],
+                            commentTags=defaults['commentTags'])
+                obj.save()
+        
+        # 2020-05-20
+        # result = AOResponse.objects.all().values('user', 'subjectUser', 'survey', 'project', 'aoQuestion', 'controlType', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags')
+        result = AOResponse.objects.all().values('projectUser', 'subProjectUser', 'shCategory', 'survey', 'project', 'aoQuestion', 'controlType', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags')
+        
+        list_result = [entry for entry in result]
+
+        serializer = self.get_serializer(data=list_result, many=True)
+        serializer.is_valid(raise_exception=True)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+# aoresponsetopic api
+class AOResponseTopicViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated,permissions.IsAuthenticatedOrReadOnly]
+    queryset = AOResponseTopic.objects.all()
+    serializer_class = AOResponseTopicSerializer
+
+    def create(self, request, *args, **kwargs):
+        data = request.data.get("items") if 'items' in request.data else request.data
+        many = isinstance(data, list)
+        serializer = self.get_serializer(data=data, many=many)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+# amresponseexcel api
+class AMResponseExcelViewSet(XLSXFileMixin, viewsets.ReadOnlyModelViewSet):
+    permission_classes = [permissions.IsAuthenticated,permissions.IsAuthenticatedOrReadOnly]
+    queryset = AMResponse.objects.all()
+    serializer_class = AMResponseSerializer
+    renderer_classes = (XLSXRenderer,)
+    filename = 'amresponse_export.xlsx'
+
+# aoresponseexcel api
+class AOResponseExcelViewSet(XLSXFileMixin, viewsets.ReadOnlyModelViewSet):
+    permission_classes = [permissions.IsAuthenticated,permissions.IsAuthenticatedOrReadOnly]
+    queryset = AOResponse.objects.all()
+    serializer_class = AOResponseSerializer
+    renderer_classes = (XLSXRenderer,)
+    filename = 'aoresponse_export.xlsx'
+
+# amresponsereport api
+class AMResponseReportViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated,
+                          permissions.IsAuthenticatedOrReadOnly]
+    queryset = AMResponse.objects.all()
+    serializer_class = AMResponseSerializer
 
     def get_queryset(self):
-        queryset = User.objects.all()
+        queryset = AMResponse.objects.all()
 
-        email = self.request.query_params.get('email', None)
-        if email is not None:
-            queryset = queryset.filter(email=email)
+        survey = self.request.query_params.get('survey', None)
+        driver = self.request.query_params.get('driver', None)
+        startDate = self.request.query_params.get('stdt', None)
+        endDate = self.request.query_params.get('eddt', None)
+
+        if (survey is not None) & (driver is not None) & (startDate is not None) & (endDate is not None):
+            queryset = queryset.filter(
+                survey__id=survey, amQuestion__driver__driverName=driver, updated_at__range=[startDate, endDate])
+        elif (survey is not None) & (driver is not None):
+            queryset = queryset.filter(
+                survey__id=survey, amQuestion__driver__driverName=driver)
+        elif (survey is not None) & (startDate is not None) & (endDate is not None):
+            queryset = queryset.filter(
+                survey__id=survey, updated_at__range=[startDate, endDate])
+        elif (driver is not None) & (startDate is not None) & (endDate is not None):
+            queryset = queryset.filter(
+                amQuestion__driver__driverName=driver, updated_at__range=[startDate, endDate])
+        elif survey is not None:
+            queryset = queryset.filter(survey__id=survey)
+        elif driver is not None:
+            queryset = queryset.filter(amQuestion__driver__driverName=driver)
+        elif (startDate is not None) & (endDate is not None):
+            queryset = queryset.filter(updated_at__range=[startDate, endDate])
 
         return queryset
 
     def list(self, request, *args, **kwargs):
+
         response = super().list(request, *args, **kwargs)
 
         for i in range(len(response.data)):
-            if response.data[i]['guidemode'] is None:
-                response.data[i]['guide'] = True
-            else:
-                response.data[i]['guide'] = response.data[i]['guidemode']['name']
+            amquestion_queryset = AMQuestion.objects.filter(
+                id=response.data[i]['amQuestion'])
+            am_serializer = AMQuestionSerializer(
+                amquestion_queryset, many=True)
+            response.data[i]['amQuestionData'] = am_serializer.data
+            response.data[i]['report'] = {
+                "Sentiment": "ERROR",
+                "MixedScore": 0,
+                "NegativeScore": 0,
+                "NeutralScore": 0,
+                "PositiveScore": 0,
+            }
+
+            if response.data[i]['controlType'] == 'TEXT' or response.data[i]['controlType'] == 'MULTI_TOPICS':
+                Text = response.data[i]['topicValue'] + \
+                    " " + response.data[i]['commentValue']
+
+                if response.data[i]['topicValue'] != "" or response.data[i]['commentValue'] != "":
+                    sentimentData = comprehend.detect_sentiment(
+                        Text=Text, LanguageCode="en")
+
+                    # new
+                    response.data[i]['integerValue'] = int(
+                        abs(sentimentData["SentimentScore"]["Positive"] * 100))
+
+                    if "Sentiment" in sentimentData:
+                        response.data[i]['report']["Sentiment"] = sentimentData["Sentiment"]
+                    if "SentimentScore" in sentimentData:
+                        if "Mixed" in sentimentData["SentimentScore"]:
+                            response.data[i]['report']["MixedScore"] = sentimentData["SentimentScore"]["Mixed"]
+                        if "Negative" in sentimentData["SentimentScore"]:
+                            response.data[i]['report']["NegativeScore"] = sentimentData["SentimentScore"]["Negative"]
+                        if "Neutral" in sentimentData["SentimentScore"]:
+                            response.data[i]['report']["NeutralScore"] = sentimentData["SentimentScore"]["Neutral"]
+                        if "Positive" in sentimentData["SentimentScore"]:
+                            response.data[i]['report']["PositiveScore"] = sentimentData["SentimentScore"]["Positive"]
 
         return response
 
-    def retrieve(self, request, pk=None):
-        response = super().retrieve(request, pk)
+# aoresponsereport api
+class AOResponseReportViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+    queryset = AOResponse.objects.all()
+    serializer_class = AOResponseSerializer
+
+    def get_queryset(self):
+        queryset = AOResponse.objects.all()
+
+        survey = self.request.query_params.get('survey', None)
+        driver = self.request.query_params.get('driver', None)
+        startDate = self.request.query_params.get('stdt', None)
+        endDate = self.request.query_params.get('eddt', None)
+
+        if (survey is not None) & (driver is not None) & (startDate is not None) & (endDate is not None):
+            queryset = queryset.filter(survey__id=survey, aoQuestion__driver__driverName=driver, updated_at__range=[startDate, endDate])
+        elif (survey is not None) & (driver is not None):
+            queryset = queryset.filter(survey__id=survey, aoQuestion__driver__driverName=driver)
+        elif (survey is not None) & (startDate is not None) & (endDate is not None):
+            queryset = queryset.filter(survey__id=survey, updated_at__range=[startDate, endDate])
+        elif (driver is not None) & (startDate is not None) & (endDate is not None):
+            queryset = queryset.filter(aoQuestion__driver__driverName=driver, updated_at__range=[startDate, endDate])
+        elif survey is not None:
+            queryset = queryset.filter(survey__id=survey)
+        elif driver is not None:
+            queryset = queryset.filter(aoQuestion__driver__driverName=driver)
+        elif (startDate is not None) & (endDate is not None):
+            queryset = queryset.filter(updated_at__range=[startDate, endDate])
+
+        return queryset
+
+    def list(self, request, *args, **kwargs):
+
+        response = super().list(request, *args, **kwargs)
+        for i in range(len(response.data)):
+            aoquestion_queryset = AOQuestion.objects.filter(id=response.data[i]['aoQuestion'])
+            ao_serializer = AOQuestionSerializer(aoquestion_queryset, many=True)
+            response.data[i]['aoQuestionData'] = ao_serializer.data
+            response.data[i]['report'] = {
+                "Sentiment": "ERROR",
+                "MixedScore": 0,
+                "NegativeScore": 0,
+                "NeutralScore": 0,
+                "PositiveScore": 0,
+            }
+
+            if response.data[i]['controlType'] == 'TEXT' or response.data[i]['controlType'] == 'MULTI_TOPICS':
+                Text = response.data[i]['topicValue'] + " " + response.data[i]['commentValue']
+
+                if response.data[i]['topicValue'] != "" or response.data[i]['commentValue'] != "":
+                    sentimentData = comprehend.detect_sentiment(Text=Text, LanguageCode="en")
+                    
+                    # new
+                    response.data[i]['integerValue'] = int(
+                        abs(sentimentData["SentimentScore"]["Positive"] * 100))
+
+                    if "Sentiment" in sentimentData:
+                        response.data[i]['report']["Sentiment"] = sentimentData["Sentiment"]
+                    if "SentimentScore" in sentimentData:
+                        if "Mixed" in sentimentData["SentimentScore"]:
+                            response.data[i]['report']["MixedScore"] = sentimentData["SentimentScore"]["Mixed"]
+                        if "Negative" in sentimentData["SentimentScore"]:
+                            response.data[i]['report']["NegativeScore"] = sentimentData["SentimentScore"]["Negative"]
+                        if "Neutral" in sentimentData["SentimentScore"]:
+                            response.data[i]['report']["NeutralScore"] = sentimentData["SentimentScore"]["Neutral"]
+                        if "Positive" in sentimentData["SentimentScore"]:
+                            response.data[i]['report']["PositiveScore"] = sentimentData["SentimentScore"]["Positive"]
+
+        return response
+
+# configpage api
+class ConfigPageViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+    queryset = ConfigPage.objects.all()
+    serializer_class = ConfigPageSerializer
+
+    def get_queryset(self):
+        queryset = ConfigPage.objects.all()
+        survey = self.request.query_params.get('survey', None)
+        if survey is not None:
+            queryset = queryset.filter(survey__id=survey)
+        return queryset
+
+# driver api
+class DriverViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated,
+                          permissions.IsAuthenticatedOrReadOnly]
+    queryset = Driver.objects.all()
+    serializer_class = DriverSerializer
+
+    # added survey to the driver table     2020-05-20
+    def get_queryset(self):
+        queryset = Driver.objects.all()
+        survey = self.request.query_params.get('survey', None)
+
+        if survey is not None:
+            queryset = queryset.filter(survey__id=survey)
+
+        return queryset
+
+# feedbacksummaryreport api
+# need to consider
+class AOResponseFeedbackSummaryViewset(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated,
+                          permissions.IsAuthenticatedOrReadOnly]
+    queryset = AOResponse.objects.all()
+    serializer_class = AOResponseSerializer
+
+    def get_queryset(self):
+        queryset = AOResponse.objects.all()
+
+        survey = self.request.query_params.get('survey', None)
+        subProjectUser = self.request.query_params.get('subProjectUser', None)
+
+        if (survey is not None) & (subProjectUser is not None):
+            queryset = queryset.filter(
+                survey_id=survey, subProjectUser_id=subProjectUser)
+        elif survey is not None:
+            queryset = queryset.filter(survey_id=survey)
+        elif subProjectUser is not None:
+            queryset = queryset.filter(subProjectUser_id=subProjectUser)
+
+        return queryset
+
+    def list(self, request, *args, **kwargs):
+
+        response = super().list(request, *args, **kwargs)
+        # print(response.data)
+        for i in range(len(response.data)):
+            aoquestion_queryset = AOQuestion.objects.filter(
+                id=response.data[i]['aoQuestion'])
+            ao_serializer = AOQuestionSerializer(
+                aoquestion_queryset, many=True)
+            response.data[i]['aoQuestionData'] = ao_serializer.data
+            # response.data[i]['amQuestionData'] = AMQuestion.objects.filter(id=response.data[i]['amQuestion']).values()[0]
+            # response.data[i]['shGroups'] = AMQuestionSHGroup.objects.filter(amQuestion=response.data[i]['amQuestion']).values_list('shGroup')
+            response.data[i]['report'] = {
+                "Sentiment": "ERROR",
+                "MixedScore": 0,
+                "NegativeScore": 0,
+                "NeutralScore": 0,
+                "PositiveScore": 0,
+            }
+
+            if response.data[i]['controlType'] == 'TEXT' or response.data[i]['controlType'] == 'MULTI_TOPICS':
+                Text = response.data[i]['topicValue'] + \
+                    " " + response.data[i]['commentValue']
+
+                if response.data[i]['topicValue'] != "" or response.data[i]['commentValue'] != "":
+                    sentimentData = comprehend.detect_sentiment(
+                        Text=Text, LanguageCode="en")
+
+                    # new
+                    response.data[i]['integerValue'] = int(
+                        abs(sentimentData["SentimentScore"]["Positive"] * 100))
+
+                    if "Sentiment" in sentimentData:
+                        response.data[i]['report']["Sentiment"] = sentimentData["Sentiment"]
+                    if "SentimentScore" in sentimentData:
+                        if "Mixed" in sentimentData["SentimentScore"]:
+                            response.data[i]['report']["MixedScore"] = sentimentData["SentimentScore"]["Mixed"]
+                        if "Negative" in sentimentData["SentimentScore"]:
+                            response.data[i]['report']["NegativeScore"] = sentimentData["SentimentScore"]["Negative"]
+                        if "Neutral" in sentimentData["SentimentScore"]:
+                            response.data[i]['report']["NeutralScore"] = sentimentData["SentimentScore"]["Neutral"]
+                        if "Positive" in sentimentData["SentimentScore"]:
+                            response.data[i]['report']["PositiveScore"] = sentimentData["SentimentScore"]["Positive"]
+
+        return response
+
+# mymaplayouts api
+class MyMapLayoutViewSet(viewsets.ModelViewSet):
+
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+    queryset = MyMapLayout.objects.all()
+    serializer_class = MyMapLayoutStoreSerializer
+    filterset_fields = ['user', 'project']
+
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+
+        # 2020-05-20
+        myProjectUser_id = self.request.GET.get('myProjectUser')
         
-        if response.data['guidemode'] is None:
-            response.data['guide'] = True
+        for i in range(len(response.data)):
+            response.data[i]['pu_category'] = []
+            for item in response.data[i]['projectUser']:
+                # 2020-05-20
+                # catIDs = SHMapping.objects.filter(projectUser_id=item)
+                catIDs = SHMapping.objects.filter(projectUser_id=myProjectUser_id, subProjectUser_id=item)
+
+                for catID in catIDs:
+                    try:
+                        obj = SHCategory.objects.get(id=catID.shCategory_id, mapType=2)
+                        response.data[i]['pu_category'].append({'projectUser':item, 'category':catID.shCategory_id})
+                    except SHCategory.DoesNotExist:
+                        continue
+        return response
+
+    def create(self, request, *args, **kwargs):
+        data = request.data
+        content_type = request.content_type
+        # 2020-05-20
+        myProjectUser_id = data['myProjectUser']
+
+        try:
+            obj = MyMapLayout.objects.get(user_id=data['user'], project_id=data['project'])
+
+            obj.projectUser.clear()
+            
+            if "application/json" in content_type:
+                
+                for item in data['pu_category']:
+                    new_obj = ProjectUser.objects.get(id=item['projectUser'])
+                    obj.projectUser.add(new_obj)
+
+                    try:
+                        # 2020-05-20
+                        # shObj = SHMapping.objects.get(shCategory_id=item['category'], projectUser_id=item['projectUser'])
+                        shObj = SHMapping.objects.get(shCategory_id=item['category'], projectUser_id=myProjectUser_id, subProjectUser_id=item['projectUser'])
+                    except SHMapping.DoesNotExist:
+                        # 2020-05-20
+                        # mapObj = SHMapping(shCategory_id=item['category'], projectUser_id=item['projectUser'], relationshipStatus="")
+                        mapObj = SHMapping(shCategory_id=item['category'], projectUser_id=myProjectUser_id, subProjectUser_id=item['projectUser'], relationshipStatus="")
+                        mapObj.save()
+
+            # else:
+            #     for item in data.getlist('pu_category'):
+            #         new_obj = ProjectUser.objects.get(id=item.projectUser)
+            #         obj.projectUser.add(new_obj)
+
+            obj.save()
+
+        except MyMapLayout.DoesNotExist:
+            obj = MyMapLayout.objects.create(user_id=data['user'], project_id=data['project'])
+
+            obj.user_id = data['user']
+            obj.project_id = data['project']
+            obj.layout_json = data['layout_json']
+
+            if "application/json" in content_type:
+                for item in data['pu_category']:
+                    new_obj = ProjectUser.objects.get(id=item['projectUser'])
+                    obj.projectUser.add(new_obj)
+
+                    try:
+                        # 2020-05-20
+                        # shObj = SHMapping.objects.get(shCategory_id=item['category'], projectUser_id=item['projectUser'])
+                        shObj = SHMapping.objects.get(shCategory_id=item['category'], projectUser_id=myProjectUser_id, subProjectUser_id=item['projectUser'])
+                    except SHMapping.DoesNotExist:
+                        # 2020-05-20
+                        # mapObj = SHMapping(shCategory_id=item['category'], projectUser_id=item['projectUser'], relationshipStatus="")
+                        mapObj = SHMapping(shCategory_id=item['category'], projectUser_id=myProjectUser_id, subProjectUser_id=item['projectUser'], relationshipStatus="")
+                        mapObj.save()
+            # else:
+            #     for item in data.getlist('projectUser'):
+            #         new_obj = ProjectUser.objects.get(id=item)
+            #         obj.projectUser.add(new_obj)
+
+            obj.save()
+
+        result = model_to_dict(MyMapLayout.objects.get(user_id=data['user'], project_id=data['project']))
+
+        list_result = result
+        for idx in range(len(result['projectUser'])):
+            list_result['projectUser'][idx] = result['projectUser'][idx].id
+
+        serializer = self.get_serializer(data=list_result)
+        serializer.is_valid(raise_exception=True)
+        headers = self.get_success_headers(serializer.data)
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+# nikelmobilepage api
+class NikelMobilePageViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+    queryset = NikelMobilePage.objects.all()
+    serializer_class = NikelMobilePageSerializer
+
+    def get_queryset(self):
+        queryset = NikelMobilePage.objects.all()
+        survey = self.request.query_params.get('survey', None)
+        if survey is not None:
+            queryset = queryset.filter(survey__id=survey)
+        return queryset
+
+# option api
+class OptionViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+    queryset = Option.objects.all()
+    serializer_class = OptionSerializer
+
+# overallsentimentreport api
+class OverallSentimentReportViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+    queryset = AMResponse.objects.all()
+    serializer_class = AMResponseSerializer
+
+    def get_queryset(self):
+        queryset = AMResponse.objects.all()
+        survey = self.request.query_params.get('survey', None)
+        if survey is not None:
+            queryset = queryset.filter(survey__id=survey)
+        return queryset
+
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+        total = 0
+        for i in range(len(response.data)):
+            total = total + response.data[i]['integerValue']
+        cnt = len(response.data)
+
+        percentage = 0
+        if (cnt > 0):
+            percentage = total / cnt
+
+        response.data = []
+        if percentage < 40:
+            response.data.append({'emojiType': 'angry', 'value': percentage})
+        elif percentage < 50:
+            response.data.append({'emojiType': 'worried', 'value': percentage})
+        elif percentage < 60:
+            response.data.append({'emojiType': 'flat', 'value': percentage})
+        elif percentage < 70:
+            response.data.append({'emojiType': 'smile', 'value': percentage})
+        elif percentage < 80:
+            response.data.append({'emojiType': 'big', 'value': percentage})
         else:
-            response.data['guide'] = response.data['guidemode']['name']
+            response.data.append({'emojiType': 'green', 'value': percentage})
 
         return response
 
+# pages api
 class PageViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [permissions.IsAuthenticated,permissions.IsAuthenticatedOrReadOnly]
     queryset = Driver.objects.all()
@@ -246,550 +907,16 @@ class PageViewSet(viewsets.ReadOnlyModelViewSet):
 
         return Response(list_drivers)
 
-class AOResponseReportViewSet(viewsets.ModelViewSet):
+# project api
+class ProjectViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
-    queryset = AOResponse.objects.all()
-    serializer_class = AOResponseSerializer
+    queryset = Project.objects.all()
+    serializer_class = ProjectSerializer
 
-    def get_queryset(self):
-        queryset = AOResponse.objects.all()
-
-        survey = self.request.query_params.get('survey', None)
-        driver = self.request.query_params.get('driver', None)
-        startDate = self.request.query_params.get('stdt', None)
-        endDate = self.request.query_params.get('eddt', None)
-
-        if (survey is not None) & (driver is not None) & (startDate is not None) & (endDate is not None):
-            queryset = queryset.filter(survey__id=survey, aoQuestion__driver__driverName=driver, updated_at__range=[startDate, endDate])
-        elif (survey is not None) & (driver is not None):
-            queryset = queryset.filter(survey__id=survey, aoQuestion__driver__driverName=driver)
-        elif (survey is not None) & (startDate is not None) & (endDate is not None):
-            queryset = queryset.filter(survey__id=survey, updated_at__range=[startDate, endDate])
-        elif (driver is not None) & (startDate is not None) & (endDate is not None):
-            queryset = queryset.filter(aoQuestion__driver__driverName=driver, updated_at__range=[startDate, endDate])
-        elif survey is not None:
-            queryset = queryset.filter(survey__id=survey)
-        elif driver is not None:
-            queryset = queryset.filter(aoQuestion__driver__driverName=driver)
-        elif (startDate is not None) & (endDate is not None):
-            queryset = queryset.filter(updated_at__range=[startDate, endDate])
-
-        return queryset
-
-    def list(self, request, *args, **kwargs):
-
-        response = super().list(request, *args, **kwargs)
-        for i in range(len(response.data)):
-            aoquestion_queryset = AOQuestion.objects.filter(id=response.data[i]['aoQuestion'])
-            ao_serializer = AOQuestionSerializer(aoquestion_queryset, many=True)
-            response.data[i]['aoQuestionData'] = ao_serializer.data
-            response.data[i]['report'] = {
-                "Sentiment": "ERROR",
-                "MixedScore": 0,
-                "NegativeScore": 0,
-                "NeutralScore": 0,
-                "PositiveScore": 0,
-            }
-
-            if response.data[i]['controlType'] == 'TEXT' or response.data[i]['controlType'] == 'MULTI_TOPICS':
-                Text = response.data[i]['topicValue'] + " " + response.data[i]['commentValue']
-
-                if response.data[i]['topicValue'] != "" or response.data[i]['commentValue'] != "":
-                    sentimentData = comprehend.detect_sentiment(Text=Text, LanguageCode="en")
-                    
-                    # new
-                    response.data[i]['integerValue'] = int(
-                        abs(sentimentData["SentimentScore"]["Positive"] * 100))
-
-                    if "Sentiment" in sentimentData:
-                        response.data[i]['report']["Sentiment"] = sentimentData["Sentiment"]
-                    if "SentimentScore" in sentimentData:
-                        if "Mixed" in sentimentData["SentimentScore"]:
-                            response.data[i]['report']["MixedScore"] = sentimentData["SentimentScore"]["Mixed"]
-                        if "Negative" in sentimentData["SentimentScore"]:
-                            response.data[i]['report']["NegativeScore"] = sentimentData["SentimentScore"]["Negative"]
-                        if "Neutral" in sentimentData["SentimentScore"]:
-                            response.data[i]['report']["NeutralScore"] = sentimentData["SentimentScore"]["Neutral"]
-                        if "Positive" in sentimentData["SentimentScore"]:
-                            response.data[i]['report']["PositiveScore"] = sentimentData["SentimentScore"]["Positive"]
-
-        return response
-
-class AMResponseReportViewSet(viewsets.ModelViewSet):
-    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
-    queryset = AMResponse.objects.all()
-    serializer_class = AMResponseSerializer
-
-    def get_queryset(self):
-        queryset = AMResponse.objects.all()
-
-        survey = self.request.query_params.get('survey', None)
-        driver = self.request.query_params.get('driver', None)
-        startDate = self.request.query_params.get('stdt', None)
-        endDate = self.request.query_params.get('eddt', None)
-
-        if (survey is not None) & (driver is not None) & (startDate is not None) & (endDate is not None):
-            queryset = queryset.filter(survey__id=survey, amQuestion__driver__driverName=driver, updated_at__range=[startDate, endDate])
-        elif (survey is not None) & (driver is not None):
-            queryset = queryset.filter(survey__id=survey, amQuestion__driver__driverName=driver)
-        elif (survey is not None) & (startDate is not None) & (endDate is not None):
-            queryset = queryset.filter(survey__id=survey, updated_at__range=[startDate, endDate])
-        elif (driver is not None) & (startDate is not None) & (endDate is not None):
-            queryset = queryset.filter(amQuestion__driver__driverName=driver, updated_at__range=[startDate, endDate])
-        elif survey is not None:
-            queryset = queryset.filter(survey__id=survey)
-        elif driver is not None:
-            queryset = queryset.filter(amQuestion__driver__driverName=driver)
-        elif (startDate is not None) & (endDate is not None):
-            queryset = queryset.filter(updated_at__range=[startDate, endDate])
-
-        return queryset
-
-    def list(self, request, *args, **kwargs):
-
-        response = super().list(request, *args, **kwargs)
-
-        for i in range(len(response.data)):
-            amquestion_queryset = AMQuestion.objects.filter(id=response.data[i]['amQuestion'])
-            am_serializer = AMQuestionSerializer(amquestion_queryset, many=True)
-            response.data[i]['amQuestionData'] = am_serializer.data
-            response.data[i]['report'] = {
-                "Sentiment": "ERROR",
-                "MixedScore": 0,
-                "NegativeScore": 0,
-                "NeutralScore": 0,
-                "PositiveScore": 0,
-            }
-
-            if response.data[i]['controlType'] == 'TEXT' or response.data[i]['controlType'] == 'MULTI_TOPICS':
-                Text = response.data[i]['topicValue'] + " " + response.data[i]['commentValue']
-
-                if response.data[i]['topicValue'] != "" or response.data[i]['commentValue'] != "":
-                    sentimentData = comprehend.detect_sentiment(Text=Text, LanguageCode="en")
-                    
-                    # new
-                    response.data[i]['integerValue'] = int(
-                        abs(sentimentData["SentimentScore"]["Positive"] * 100))
-                        
-                    if "Sentiment" in sentimentData:
-                        response.data[i]['report']["Sentiment"] = sentimentData["Sentiment"]
-                    if "SentimentScore" in sentimentData:
-                        if "Mixed" in sentimentData["SentimentScore"]:
-                            response.data[i]['report']["MixedScore"] = sentimentData["SentimentScore"]["Mixed"]
-                        if "Negative" in sentimentData["SentimentScore"]:
-                            response.data[i]['report']["NegativeScore"] = sentimentData["SentimentScore"]["Negative"]
-                        if "Neutral" in sentimentData["SentimentScore"]:
-                            response.data[i]['report']["NeutralScore"] = sentimentData["SentimentScore"]["Neutral"]
-                        if "Positive" in sentimentData["SentimentScore"]:
-                            response.data[i]['report']["PositiveScore"] = sentimentData["SentimentScore"]["Positive"]
-
-        return response
-
-# need to consider
-class AOResponseFeedbackSummaryViewset(viewsets.ModelViewSet):
-    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
-    queryset = AOResponse.objects.all()
-    serializer_class = AOResponseSerializer
-
-    def get_queryset(self):
-        queryset = AOResponse.objects.all()
-
-        survey = self.request.query_params.get('survey', None)
-        subProjectUser = self.request.query_params.get('subProjectUser', None)
-        
-        if (survey is not None) & (subProjectUser is not None):
-            queryset = queryset.filter(survey_id=survey, subProjectUser_id=subProjectUser)
-        elif survey is not None:
-            queryset = queryset.filter(survey_id=survey)
-        elif subProjectUser is not None:
-            queryset = queryset.filter(subProjectUser_id=subProjectUser)
-
-        return queryset
-
-    def list(self, request, *args, **kwargs):
-
-        response = super().list(request, *args, **kwargs)
-        # print(response.data)
-        for i in range(len(response.data)):
-            aoquestion_queryset = AOQuestion.objects.filter(id=response.data[i]['aoQuestion'])
-            ao_serializer = AOQuestionSerializer(aoquestion_queryset, many=True)
-            response.data[i]['aoQuestionData'] = ao_serializer.data
-            # response.data[i]['amQuestionData'] = AMQuestion.objects.filter(id=response.data[i]['amQuestion']).values()[0]
-            # response.data[i]['shGroups'] = AMQuestionSHGroup.objects.filter(amQuestion=response.data[i]['amQuestion']).values_list('shGroup')
-            response.data[i]['report'] = {
-                "Sentiment": "ERROR",
-                "MixedScore": 0,
-                "NegativeScore": 0,
-                "NeutralScore": 0,
-                "PositiveScore": 0,
-            }
-
-            if response.data[i]['controlType'] == 'TEXT' or response.data[i]['controlType'] == 'MULTI_TOPICS':
-                Text = response.data[i]['topicValue'] + " " + response.data[i]['commentValue']
-
-                if response.data[i]['topicValue'] != "" or response.data[i]['commentValue'] != "":
-                    sentimentData = comprehend.detect_sentiment(Text=Text, LanguageCode="en")
-                    
-                    # new
-                    response.data[i]['integerValue'] = int(
-                        abs(sentimentData["SentimentScore"]["Positive"] * 100))
-
-                    if "Sentiment" in sentimentData:
-                        response.data[i]['report']["Sentiment"] = sentimentData["Sentiment"]
-                    if "SentimentScore" in sentimentData:
-                        if "Mixed" in sentimentData["SentimentScore"]:
-                            response.data[i]['report']["MixedScore"] = sentimentData["SentimentScore"]["Mixed"]
-                        if "Negative" in sentimentData["SentimentScore"]:
-                            response.data[i]['report']["NegativeScore"] = sentimentData["SentimentScore"]["Negative"]
-                        if "Neutral" in sentimentData["SentimentScore"]:
-                            response.data[i]['report']["NeutralScore"] = sentimentData["SentimentScore"]["Neutral"]
-                        if "Positive" in sentimentData["SentimentScore"]:
-                            response.data[i]['report']["PositiveScore"] = sentimentData["SentimentScore"]["Positive"]
-
-        return response
-
-class AMResponseViewSet(viewsets.ModelViewSet):
-    permission_classes = [permissions.IsAuthenticated,permissions.IsAuthenticatedOrReadOnly]
-    queryset = AMResponse.objects.all()
-    serializer_class = AMResponseSerializer
-
-    def create(self, request, *args, **kwargs):
-        data = request.data.get("items") if 'items' in request.data else request.data
-        many = isinstance(data, list)
-        
-        if many == True:
-            for item in data:
-                defaults = item
-                try:
-                    # 2020-05-20
-                    # obj = AMResponse.objects.get(survey_id=item['survey'], project_id=item['project'], user_id=item['user'], amQuestion_id=item['amQuestion']) 
-                    obj = AMResponse.objects.get(survey_id=item['survey'], project_id=item['project'], projectUser_id=item['projectUser'], amQuestion_id=item['amQuestion']) 
-
-                    if obj.controlType == "TEXT" or obj.controlType == "MULTI_TOPICS":
-                        text = obj.topicValue + " " + obj.commentValue
-
-                        sentimentResult = comprehend.detect_sentiment(Text=text, LanguageCode="en")
-                        obj.integerValue = int(abs(sentimentResult["SentimentScore"]["Positive"] * 100))
-                    else:                   
-                        obj.integerValue = defaults['integerValue']
-                    obj.topicValue = defaults['topicValue']
-                    obj.commentValue = defaults['commentValue']
-                    obj.skipValue = defaults['skipValue']
-                    obj.topicTags = defaults['topicTags']
-                    obj.commentTags = defaults['commentTags']
-
-                    obj.save()
-
-
-                except AMResponse.DoesNotExist:
-                    # 2020-05-20
-                    # obj = AMResponse(amQuestion_id=defaults['amQuestion'], 
-                    #             user_id=defaults['user'], subjectUser_id=defaults['subjectUser'], 
-                    #             survey_id=defaults['survey'], project_id=defaults['project'], 
-                    #             controlType=defaults['controlType'], integerValue=defaults['integerValue'],
-                    #             topicValue=defaults['topicValue'], commentValue=defaults['commentValue'],
-                    #             skipValue=defaults['skipValue'], topicTags=defaults['topicTags'],
-                    #             commentTags=defaults['commentTags'])
-
-                    if defaults["controlType"] == "TEXT" or defaults["controlType"] == "MULTI_TOPICS":
-                        text = defaults['topicValue'] + " " + defaults['commentValue']
-
-                        sentimentResult = comprehend.detect_sentiment(Text=text, LanguageCode="en")
-                        defaults["integerValue"] = int(abs(sentimentResult["SentimentScore"]["Positive"] * 100))
-
-                    obj = AMResponse(amQuestion_id=defaults['amQuestion'], 
-                                projectUser_id=defaults['projectUser'], subProjectUser_id=defaults['subProjectUser'], 
-                                survey_id=defaults['survey'], project_id=defaults['project'], 
-                                controlType=defaults['controlType'], integerValue=defaults['integerValue'],
-                                topicValue=defaults['topicValue'], commentValue=defaults['commentValue'],
-                                skipValue=defaults['skipValue'], topicTags=defaults['topicTags'],
-                                commentTags=defaults['commentTags'])
-
-                    obj.save()
-                    
-        elif many == False:
-            defaults = data
-            try:
-                # 2020-05-20
-                # obj = AMResponse.objects.get(survey_id=defaults['survey'], project_id=defaults['project'], user_id=defaults['user'], amQuestion_id=defaults['amQuestion'])
-                obj = AMResponse.objects.get(survey_id=defaults['survey'], project_id=defaults['project'], projectUser_id=defaults['projectUser'], amQuestion_id=defaults['amQuestion'])
-                
-                if obj.controlType == "TEXT" or obj.controlType == "MULTI_TOPICS":
-                    text = obj.topicValue + " " + obj.commentValue
-
-                    sentimentResult = comprehend.detect_sentiment(Text=text, LanguageCode="en")
-                    obj.integerValue = int(abs(sentimentResult["SentimentScore"]["Positive"] * 100))
-                else:                   
-                    obj.integerValue = defaults['integerValue']
-
-                obj.topicValue = defaults['topicValue']
-                obj.commentValue = defaults['commentValue']
-                obj.skipValue = defaults['skipValue']
-                obj.topicTags = defaults['topicTags']
-                obj.commentTags = defaults['commentTags']
-
-                obj.save()
-            except AMResponse.DoesNotExist:
-
-                # 2020-05-20
-                # obj = AMResponse(amQuestion_id=data['amQuestion'], 
-                #                 user_id=data['user'], subjectUser_id=data['subjectUser'], 
-                #                 survey_id=data['survey'], project_id=data['project'], 
-                #                 controlType=data['controlType'], integerValue=data['integerValue'],
-                #                 topicValue=data['topicValue'], commentValue=data['commentValue'],
-                #                 skipValue=data['skipValue'], topicTags=data['topicTags'],
-                #                 commentTags=data['commentTags'])
-                if data["controlType"] == "TEXT" or data["controlType"] == "MULTI_TOPICS":
-                    text = data['topicValue'] + " " + data['commentValue']
-
-                    sentimentResult = comprehend.detect_sentiment(Text=text, LanguageCode="en")
-                    data["integerValue"] = int(abs(sentimentResult["SentimentScore"]["Positive"] * 100))
-
-                obj = AMResponse(amQuestion_id=data['amQuestion'], 
-                                projectUser_id=data['projectUser'], subProjectUser_id=data['subProjectUser'], 
-                                survey_id=data['survey'], project_id=data['project'], 
-                                controlType=data['controlType'], integerValue=data['integerValue'],
-                                topicValue=data['topicValue'], commentValue=data['commentValue'],
-                                skipValue=data['skipValue'], topicTags=data['topicTags'],
-                                commentTags=data['commentTags'])
-
-                obj.save()
-
-        # 2020-05-20
-        # result = AMResponse.objects.all().values('user', 'subjectUser', 'survey', 'project', 'amQuestion', 'controlType', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags')
-        result = AMResponse.objects.all().values('projectUser', 'subProjectUser', 'survey', 'project', 'amQuestion', 'controlType', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags')
-
-        list_result = [entry for entry in result]
-        
-        serializer = self.get_serializer(data=list_result, many=True)
-        serializer.is_valid(raise_exception=True)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-
-class AMResponseExcelViewSet(XLSXFileMixin, viewsets.ReadOnlyModelViewSet):
-    permission_classes = [permissions.IsAuthenticated,permissions.IsAuthenticatedOrReadOnly]
-    queryset = AMResponse.objects.all()
-    serializer_class = AMResponseSerializer
-    renderer_classes = (XLSXRenderer,)
-    filename = 'amresponse_export.xlsx'
-
-class AMResponseTopicViewSet(viewsets.ModelViewSet):
-    permission_classes = [permissions.IsAuthenticated,permissions.IsAuthenticatedOrReadOnly]
-    queryset = AMResponseTopic.objects.all()
-    serializer_class = AMResponseTopicSerializer
-    
-    def create(self, request, *args, **kwargs):
-        data = request.data.get("items") if 'items' in request.data else request.data
-        many = isinstance(data, list)
-        serializer = self.get_serializer(data=data, many=many)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-
-class AOResponseViewSet(viewsets.ModelViewSet):
-    permission_classes = [permissions.IsAuthenticated,permissions.IsAuthenticatedOrReadOnly]
-    queryset = AOResponse.objects.all()
-    serializer_class = AOResponseSerializer
-
-    def create(self, request, *args, **kwargs):
-        data = request.data.get("items") if 'items' in request.data else request.data
-        many = isinstance(data, list)
-        
-        if many == True:
-            for item in data:
-                defaults = item
-                try:
-                    # 2020-05-20
-                    # obj = AOResponse.objects.get(survey_id=item['survey'], project_id=item['project'], user_id=item['user'], subjectUser_id=item['subjectUser'], aoQuestion_id=item['aoQuestion'])
-                    # 2020-12-17
-                    # obj = AOResponse.objects.get(survey_id=item['survey'], project_id=item['project'], projectUser_id=item['projectUser'], subProjectUser_id=item['subProjectUser'], shCategory_id=item['shCategory'], aoQuestion_id=item['aoQuestion'])
-                    obj = AOResponse.objects.get(survey_id=item['survey'], project_id=item['project'], projectUser_id=item['projectUser'], subProjectUser_id=item['subProjectUser'], aoQuestion_id=item['aoQuestion'])
-
-                    if obj.controlType == "TEXT" or obj.controlType == "MULTI_TOPICS":
-                        text = obj.topicValue + " " + obj.commentValue
-
-                        sentimentResult = comprehend.detect_sentiment(Text=text, LanguageCode="en")
-                        obj.integerValue = int(abs(sentimentResult["SentimentScore"]["Positive"] * 100))
-                    else:
-                        obj.integerValue = defaults['integerValue']
-                    obj.topicValue = defaults['topicValue']
-                    obj.commentValue = defaults['commentValue']
-                    obj.skipValue = defaults['skipValue']
-                    obj.topicTags = defaults['topicTags']
-                    obj.commentTags = defaults['commentTags']
-
-                    obj.save()
-
-                except AOResponse.DoesNotExist:
-                    # 2020-05-20
-                    # obj = AOResponse(aoQuestion_id=defaults['aoQuestion'],
-                    #             user_id=defaults['user'], subjectUser_id=defaults['subjectUser'],
-                    #             survey_id=defaults['survey'], project_id=defaults['project'],
-                    #             controlType=defaults['controlType'], integerValue=defaults['integerValue'],
-                    #             topicValue=defaults['topicValue'], commentValue=defaults['commentValue'],
-                    #             skipValue=defaults['skipValue'], topicTags=defaults['topicTags'],
-                    #             commentTags=defaults['commentTags'])
-                    
-                    if defaults["controlType"] == "TEXT" or defaults["controlType"] == "MULTI_TOPICS":
-                        text = defaults['topicValue'] + " " + defaults['commentValue']
-
-                        sentimentResult = comprehend.detect_sentiment(Text=text, LanguageCode="en")
-                        defaults["integerValue"] = int(abs(sentimentResult["SentimentScore"]["Positive"] * 100))
-
-                    obj = AOResponse(aoQuestion_id=defaults['aoQuestion'],
-                                projectUser_id=defaults['projectUser'], subProjectUser_id=defaults['subProjectUser'],
-                                shCategory_id=defaults['shCategory'],
-                                survey_id=defaults['survey'], project_id=defaults['project'],
-                                controlType=defaults['controlType'], integerValue=defaults['integerValue'],
-                                topicValue=defaults['topicValue'], commentValue=defaults['commentValue'],
-                                skipValue=defaults['skipValue'], topicTags=defaults['topicTags'],
-                                commentTags=defaults['commentTags'])
-                    obj.save()
-        elif many == False:
-            defaults = data
-            try:
-                # 2020-05-20
-                # obj = AOResponse.objects.get(survey_id=item['survey'], project_id=item['project'], user_id=item['user'], subjectUser_id=item['subjectUser'], aoQuestion_id=item['aoQuestion'])
-                # obj = AOResponse.objects.get(survey_id=item['survey'], project_id=item['project'], projectUser_id=item['projectUser'], subProjectUser_id=item['subProjectUser'], shCategory_id=item['shCategory'], aoQuestion_id=item['aoQuestion'])
-                obj = AOResponse.objects.get(survey_id=item['survey'], project_id=item['project'], projectUser_id=item['projectUser'], subProjectUser_id=item['subProjectUser'], aoQuestion_id=item['aoQuestion'])
-
-                if obj.controlType == "TEXT" or obj.controlType == "MULTI_TOPICS":
-                    text = obj.topicValue + " " + obj.commentValue
-
-                    sentimentResult = comprehend.detect_sentiment(Text=text, LanguageCode="en")
-                    obj.integerValue = int(abs(sentimentResult["SentimentScore"]["Positive"] * 100))
-                else:
-                    obj.integerValue = defaults['integerValue']
-                
-                obj.integerValue = defaults['integerValue']
-                obj.topicValue = defaults['topicValue']
-                obj.commentValue = defaults['commentValue']
-                obj.skipValue = defaults['skipValue']
-                obj.topicTags = defaults['topicTags']
-                obj.commentTags = defaults['commentTags']
-
-                obj.save()
-            except AOResponse.DoesNotExist:
-                # 2020-05-20
-                # obj = AOResponse(aoQuestion_id=defaults['aoQuestion'],
-                #             user_id=defaults['user'], subjectUser_id=defaults['subjectUser'],
-                #             survey_id=defaults['survey'], project_id=defaults['project'],
-                #             controlType=defaults['controlType'], integerValue=defaults['integerValue'],
-                #             topicValue=defaults['topicValue'], commentValue=defaults['commentValue'],
-                #             skipValue=defaults['skipValue'], topicTags=defaults['topicTags'],
-                #             commentTags=defaults['commentTags'])
-
-                if defaults["controlType"] == "TEXT" or defaults["controlType"] == "MULTI_TOPICS":
-                    text = defaults["topicValue"] + " " + defaults["commentValue"]
-
-                    sentimentResult = comprehend.detect_sentiment(Text=text, LanguageCode="en")
-                    defaults["integerValue"] = int(abs(sentimentResult["SentimentScore"]["Positive"] * 100))
-
-                obj = AOResponse(aoQuestion_id=defaults['aoQuestion'],
-                            projectUser_id=defaults['projectUser'], subProjectUser_id=defaults['subProjectUser'],
-                            shCategory_id=defaults['shCategory'],
-                            survey_id=defaults['survey'], project_id=defaults['project'],
-                            controlType=defaults['controlType'], integerValue=defaults['integerValue'],
-                            topicValue=defaults['topicValue'], commentValue=defaults['commentValue'],
-                            skipValue=defaults['skipValue'], topicTags=defaults['topicTags'],
-                            commentTags=defaults['commentTags'])
-                obj.save()
-        
-        # 2020-05-20
-        # result = AOResponse.objects.all().values('user', 'subjectUser', 'survey', 'project', 'aoQuestion', 'controlType', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags')
-        result = AOResponse.objects.all().values('projectUser', 'subProjectUser', 'shCategory', 'survey', 'project', 'aoQuestion', 'controlType', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags')
-        
-        list_result = [entry for entry in result]
-
-        serializer = self.get_serializer(data=list_result, many=True)
-        serializer.is_valid(raise_exception=True)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-
-class AOResponseExcelViewSet(XLSXFileMixin, viewsets.ReadOnlyModelViewSet):
-    permission_classes = [permissions.IsAuthenticated,permissions.IsAuthenticatedOrReadOnly]
-    queryset = AOResponse.objects.all()
-    serializer_class = AOResponseSerializer
-    renderer_classes = (XLSXRenderer,)
-    filename = 'aoresponse_export.xlsx'
-    
-class AOResponseTopicViewSet(viewsets.ModelViewSet):
-    permission_classes = [permissions.IsAuthenticated,permissions.IsAuthenticatedOrReadOnly]
-    queryset = AOResponseTopic.objects.all()
-    serializer_class = AOResponseTopicSerializer
-
-    def create(self, request, *args, **kwargs):
-        data = request.data.get("items") if 'items' in request.data else request.data
-        many = isinstance(data, list)
-        serializer = self.get_serializer(data=data, many=many)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-
-class TeamViewSet(viewsets.ModelViewSet):
-    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
-    queryset = Team.objects.all()
-    serializer_class = TeamSerializer
-
-    def get_queryset(self):
-        queryset = Team.objects.all()
-
-        project = self.request.query_params.get('project', None)
-        if project is not None:
-            queryset = queryset.filter(project__id=project)
-
-        return queryset
-        
-    def create(self, request, *args, **kwargs):
-        data = request.data.get("items") if 'items' in request.data else request.data
-        many = isinstance(data, list)
-        serializer = self.get_serializer(data=data, many=many)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-
-class SHGroupViewSet(viewsets.ModelViewSet):
-    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
-    queryset = SHGroup.objects.all()
-    serializer_class = SHGroupSerializer
-
-    def get_queryset(self):
-        queryset = SHGroup.objects.all()
-
-        # updated project to survey   2020-05-20
-        # project = self.request.query_params.get('project', None)
-        # if project is not None:
-        #    queryset = queryset.filter(project__id=project)
-        survey = self.request.query_params.get('survey', None)
-        if survey is not None:
-            queryset = queryset.filter(survey__id=survey)
-
-        return queryset
-
-    def create(self, request, *args, **kwargs):
-        data = request.data.get("items") if 'items' in request.data else request.data
-        many = isinstance(data, list)
-        serializer = self.get_serializer(data=data, many=many)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-
-class OptionViewSet(viewsets.ModelViewSet):
-    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
-    queryset = Option.objects.all()
-    serializer_class = OptionSerializer
-
-class SkipOptionViewSet(viewsets.ModelViewSet):
-    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
-    queryset = SkipOption.objects.all()
-    serializer_class = SkipOptionSerializer
-      
+# projectuser api
 class ProjectUserViewSet(viewsets.ModelViewSet):
-    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.IsAuthenticated,
+                          permissions.IsAuthenticatedOrReadOnly]
     queryset = ProjectUser.objects.all()
     serializer_class = ProjectUserSerializer
 
@@ -803,18 +930,20 @@ class ProjectUserViewSet(viewsets.ModelViewSet):
         projectUser_id = ret.data['id']
 
         shMyCategories = request.data['shMyCategory']
-        
+
         # MyMapLayout.objects.filter(user_id=request.user.id, project_id=request.data['project']).delete()
-        obj = MyMapLayout.objects.get(user_id=request.user.id, project_id=request.data['project'])
+        obj = MyMapLayout.objects.get(
+            user_id=request.user.id, project_id=request.data['project'])
 
         # obj.user_id = request.user.id
         # obj.project_id = request.data['project']
-        # obj.layout_json = ''   
+        # obj.layout_json = ''
 
         # 2020-05-20     added projectUser, subProjectUser
         # SHMapping.objects.filter(projectUser_id=projectUser_id).delete()
         myProjectUser_id = request.data['myProjectUser']
-        SHMapping.objects.filter(projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id).delete()
+        SHMapping.objects.filter(
+            projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id).delete()
 
         for i in range(len(shMyCategories)):
             # new_obj = ProjectUser.objects.get(id=projectUser_id)
@@ -823,19 +952,22 @@ class ProjectUserViewSet(viewsets.ModelViewSet):
             try:
                 # 2020-05-20
                 # shObj = SHMapping.objects.get(shCategory_id=shMyCategories[i], projectUser_id=projectUser_id)
-                shObj = SHMapping.objects.get(shCategory_id=shMyCategories[i], projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id)
+                shObj = SHMapping.objects.get(
+                    shCategory_id=shMyCategories[i], projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id)
             except SHMapping.DoesNotExist:
                 # 2020-05-20
                 # mapObj = SHMapping(shCategory_id=shMyCategories[i], projectUser_id=projectUser_id, relationshipStatus="")
-                mapObj = SHMapping(shCategory_id=shMyCategories[i], projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id, relationshipStatus="")
+                mapObj = SHMapping(
+                    shCategory_id=shMyCategories[i], projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id, relationshipStatus="")
                 mapObj.save()
-        
+
         # obj.save()
 
         shProjectCategories = request.data['shProjectCategory']
 
         # ProjectMapLayout.objects.filter(user_id=request.user.id, project_id=request.data['project']).delete()
-        obj1 = ProjectMapLayout.objects.get(user_id=request.user.id, project_id=request.data['project'])
+        obj1 = ProjectMapLayout.objects.get(
+            user_id=request.user.id, project_id=request.data['project'])
 
         # obj1.user_id = request.user.id
         # obj1.project_id = request.data['project']
@@ -848,25 +980,29 @@ class ProjectUserViewSet(viewsets.ModelViewSet):
             try:
                 # 2020-05-20
                 # shObj1 = SHMapping.objects.get(shCategory_id=shProjectCategories[j], projectUser_id=projectUser_id)
-                shObj1 = SHMapping.objects.get(shCategory_id=shProjectCategories[j], projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id)
+                shObj1 = SHMapping.objects.get(
+                    shCategory_id=shProjectCategories[j], projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id)
             except SHMapping.DoesNotExist:
                 # 2020-05-20
                 # mapObj1 = SHMapping(shCategory_id=shProjectCategories[j], projectUser_id=projectUser_id, relationshipStatus="")
-                mapObj1 = SHMapping(shCategory_id=shProjectCategories[j], projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id, relationshipStatus="")
+                mapObj1 = SHMapping(
+                    shCategory_id=shProjectCategories[j], projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id, relationshipStatus="")
                 mapObj1.save()
-        
+
         # obj1.save()
 
         return ret
 
     def create(self, request, *args, **kwargs):
-        data = request.data.get("items") if 'items' in request.data else request.data
+        data = request.data.get(
+            "items") if 'items' in request.data else request.data
         many = isinstance(data, list)
         serializer = self.get_serializer(data=data, many=many)
-        
+
         projectUser_id = 0
 
-        existCheckObj = ProjectUser.objects.filter(survey_id=data['survey'], user_id=data['user'])
+        existCheckObj = ProjectUser.objects.filter(
+            survey_id=data['survey'], user_id=data['user'])
 
         if len(existCheckObj) > 0:
             projectUser_id = existCheckObj[0].id
@@ -874,21 +1010,22 @@ class ProjectUserViewSet(viewsets.ModelViewSet):
             serializer.is_valid(raise_exception=True)
             self.perform_create(serializer)
             projectUser_id = serializer.data['id']
-            
+
         # headers = self.get_success_headers(serializer.data)
-        
+
         shMyCategories = request.data['shMyCategory']
         # 2020-05-20
         myProjectUser_id = request.data['myProjectUser']
 
         try:
-            obj = MyMapLayout.objects.get(user_id=request.user.id, project_id=data['project'])
-            
+            obj = MyMapLayout.objects.get(
+                user_id=request.user.id, project_id=data['project'])
+
             # 2020-11-24 added
             # obj.projectUser.clear()
             new_obj = ProjectUser.objects.get(id=projectUser_id)
             obj.projectUser.add(new_obj)
-            
+
             for i in range(len(shMyCategories)):
                 # new_obj = ProjectUser.objects.get(id=projectUser_id)
                 # obj.projectUser.add(new_obj)
@@ -896,18 +1033,21 @@ class ProjectUserViewSet(viewsets.ModelViewSet):
                 try:
                     # 2020-05-20
                     # shObj = SHMapping.objects.get(shCategory_id=shMyCategories[i], projectUser_id=projectUser_id)
-                    shObj = SHMapping.objects.get(shCategory_id=shMyCategories[i], projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id)
+                    shObj = SHMapping.objects.get(
+                        shCategory_id=shMyCategories[i], projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id)
                 except SHMapping.DoesNotExist:
                     # 2020-05-20
                     # mapObj = SHMapping(shCategory_id=shMyCategories[i], projectUser_id=projectUser_id, relationshipStatus="")
-                    mapObj = SHMapping(shCategory_id=shMyCategories[i], projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id, relationshipStatus="")
+                    mapObj = SHMapping(
+                        shCategory_id=shMyCategories[i], projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id, relationshipStatus="")
                     mapObj.save()
 
             # 2020-11-24 added
             obj.save()
-            
+
         except MyMapLayout.DoesNotExist:
-            obj = MyMapLayout.objects.create(user_id=request.user.id, project_id=data['project'])
+            obj = MyMapLayout.objects.create(
+                user_id=request.user.id, project_id=data['project'])
 
             obj.user_id = request.user.id
             obj.project_id = data['project']
@@ -924,11 +1064,13 @@ class ProjectUserViewSet(viewsets.ModelViewSet):
                 try:
                     # 2020-05-20
                     # shObj = SHMapping.objects.get(shCategory_id=shMyCategories[i], projectUser_id=projectUser_id)
-                    shObj = SHMapping.objects.get(shCategory_id=shMyCategories[i], projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id)
+                    shObj = SHMapping.objects.get(
+                        shCategory_id=shMyCategories[i], projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id)
                 except SHMapping.DoesNotExist:
                     # 2020-05-20
                     # mapObj = SHMapping(shCategory_id=shMyCategories[i], projectUser_id=projectUser_id, relationshipStatus="")
-                    mapObj = SHMapping(shCategory_id=shMyCategories[i], projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id, relationshipStatus="")
+                    mapObj = SHMapping(
+                        shCategory_id=shMyCategories[i], projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id, relationshipStatus="")
                     mapObj.save()
 
             obj.save()
@@ -936,7 +1078,8 @@ class ProjectUserViewSet(viewsets.ModelViewSet):
         shProjectCategories = request.data['shProjectCategory']
 
         try:
-            obj1 = ProjectMapLayout.objects.get(user_id=request.user.id, project_id=data['project'])
+            obj1 = ProjectMapLayout.objects.get(
+                user_id=request.user.id, project_id=data['project'])
 
             # 2020-11-24 added
             # obj1.projectUser.clear()
@@ -950,18 +1093,21 @@ class ProjectUserViewSet(viewsets.ModelViewSet):
                 try:
                     # 2020-05-20
                     # shObj1 = SHMapping.objects.get(shCategory_id=shProjectCategories[j], projectUser_id=projectUser_id)
-                    shObj1 = SHMapping.objects.get(shCategory_id=shProjectCategories[j], projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id)
+                    shObj1 = SHMapping.objects.get(
+                        shCategory_id=shProjectCategories[j], projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id)
                 except SHMapping.DoesNotExist:
                     # 2020-05-20
                     # mapObj1 = SHMapping(shCategory_id=shProjectCategories[j], projectUser_id=projectUser_id, relationshipStatus="")
-                    mapObj1 = SHMapping(shCategory_id=shProjectCategories[j], projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id, relationshipStatus="")
+                    mapObj1 = SHMapping(
+                        shCategory_id=shProjectCategories[j], projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id, relationshipStatus="")
                     mapObj1.save()
 
             # 2020-11-24 added
             obj1.save()
 
         except ProjectMapLayout.DoesNotExist:
-            obj1 = ProjectMapLayout.objects.create(user_id=request.user.id, project_id=data['project'])
+            obj1 = ProjectMapLayout.objects.create(
+                user_id=request.user.id, project_id=data['project'])
 
             obj1.user_id = request.user.id
             obj1.project_id = data['project']
@@ -978,273 +1124,21 @@ class ProjectUserViewSet(viewsets.ModelViewSet):
                 try:
                     # 2020-05-20
                     # shObj1 = SHMapping.objects.get(shCategory_id=shProjectCategories[j], projectUser_id=projectUser_id)
-                    shObj1 = SHMapping.objects.get(shCategory_id=shProjectCategories[j], projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id)
+                    shObj1 = SHMapping.objects.get(
+                        shCategory_id=shProjectCategories[j], projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id)
                 except SHMapping.DoesNotExist:
                     # 2020-05-20
                     # mapObj1 = SHMapping(shCategory_id=shProjectCategories[j], projectUser_id=projectUser_id, relationshipStatus="")
-                    mapObj1 = SHMapping(shCategory_id=shProjectCategories[j], projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id, relationshipStatus="")
+                    mapObj1 = SHMapping(
+                        shCategory_id=shProjectCategories[j], projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id, relationshipStatus="")
                     mapObj1.save()
-            
+
             obj1.save()
 
         # return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
         return Response("success", status=status.HTTP_201_CREATED)
 
-class ConfigPageViewSet(viewsets.ModelViewSet):
-    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
-    queryset = ConfigPage.objects.all()
-    serializer_class = ConfigPageSerializer
-
-    def get_queryset(self):
-        queryset = ConfigPage.objects.all()
-        survey = self.request.query_params.get('survey', None)
-        if survey is not None:
-            queryset = queryset.filter(survey__id=survey)
-        return queryset
-
-class UserAvatarViewSet(viewsets.ModelViewSet):
-    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
-    queryset = UserAvatar.objects.all()
-    serializer_class = UserAvatarSerializer
-
-class SurveyViewSet(viewsets.ModelViewSet):
-    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
-    queryset = Survey.objects.all()
-    serializer_class = SurveySerializer
-
-    def get_queryset(self):
-        queryset = Survey.objects.all()
-        project = self.request.query_params.get('project', None)
-        
-        if project is not None:
-            queryset = queryset.filter(project__id=project, isActive=True)    
-        
-        return queryset
-
-class ProjectViewSet(viewsets.ModelViewSet):
-    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
-    queryset = Project.objects.all()
-    serializer_class = ProjectSerializer
-
-class ProjectByUserViewSet(viewsets.ModelViewSet):
-    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
-    queryset = ProjectUser.objects.all()
-    serializer_class = SurveyByUserSerializer
-
-    def get_queryset(self):
-        queryset = ProjectUser.objects.all()
-        user = self.request.query_params.get('user', None)
-        if user is not None:
-            queryset = queryset.filter(user__id=user)
-        return queryset
-
-    def list(self, request, *args, **kwargs):
-        response = super().list(request, *args, **kwargs)
-
-        new_data = []
-        project_ids = []
-        for i in range(len(response.data)):
-            if response.data[i]['survey']['project'] not in project_ids:
-                project_ids.append(response.data[i]['survey']['project'])
-
-        response.data = []
-        for i in range(len(project_ids)):
-            item = model_to_dict(Project.objects.get(id=project_ids[i]))
-            response.data.append(item)
-
-        return response
-
-class UserBySurveyViewSet(viewsets.ModelViewSet):
-    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
-    queryset = ProjectUser.objects.all()
-    serializer_class = UserBySurveySerializer
-
-    def list(self, request, *args, **kwargs):
-        response = super().list(request, *args, **kwargs)
-
-        myProjectUser_id = self.request.GET.get('myProjectUser')
-        survey = self.request.GET.get('survey')
-
-        for i in range(len(response.data)):
-            filters = ~Q(shGroup=None)
-            if response.data[i]['user']['last_login'] is not None:
-                response.data[i]['accept_status'] = True
-            else:
-                response.data[i]['accept_status'] = False
-
-            response.data[i]['am_total'] = AMQuestion.objects.filter(filters).filter(survey__id=survey).count()
-            response.data[i]['am_response'] = []
-            # 2020-05-20
-            # for item1 in AMResponse.objects.filter(user_id=response.data[i]['user']['id'], project_id=response.data[i]['project']['id']).values('amQuestion'):
-            #     response.data[i]['am_response'].append(item1['amQuestion']) 
-            # response.data[i]['am_answered'] = AMResponse.objects.filter(user_id=response.data[i]['user']['id'], project_id=response.data[i]['project']['id']).count()
-            # response.data[i]['ao_total'] = AOQuestion.objects.count()
-            # response.data[i]['ao_response'] = []
-            # for item2 in AOResponse.objects.filter(subjectUser_id=response.data[i]['user']['id'], project_id=response.data[i]['project']['id']).values('aoQuestion'):
-            #     response.data[i]['ao_response'].append(item2['aoQuestion']) 
-            # response.data[i]['ao_answered'] = AOResponse.objects.filter(subjectUser_id=response.data[i]['user']['id'], project_id=response.data[i]['project']['id']).count()
-            for item1 in AMResponse.objects.filter(projectUser_id=response.data[i]['id']).values('amQuestion'):
-                response.data[i]['am_response'].append(item1['amQuestion']) 
-            response.data[i]['am_answered'] = AMResponse.objects.filter(projectUser_id=response.data[i]['id']).count()
-            response.data[i]['ao_total'] = AOQuestion.objects.filter(filters).filter(survey__id=survey).count()
-            response.data[i]['ao_response'] = []
-            for item2 in AOResponse.objects.filter(subProjectUser_id=response.data[i]['id']).values('aoQuestion'):
-                response.data[i]['ao_response'].append(item2['aoQuestion']) 
-            response.data[i]['ao_answered'] = AOResponse.objects.filter(subProjectUser_id=response.data[i]['id']).count()
-
-            # 2020-05-20
-            response.data[i]['shCategory'] = []
-            # for item3 in SHMapping.objects.filter(projectUser_id=response.data[i]['id']).values('shCategory'):
-            for item3 in SHMapping.objects.filter(projectUser_id=myProjectUser_id, subProjectUser_id=response.data[i]['id']).values('shCategory'):
-                response.data[i]['shCategory'].append(item3['shCategory'])
-
-        return response
-
-    def get_queryset(self):
-        queryset = ProjectUser.objects.all()
-
-        # 2020-05-27
-        # project = self.request.query_params.get('project', None)
-        # user = self.request.query_params.get('user', None)
-        
-        # if (project is not None ) & (user is not None):
-        #     queryset = queryset.filter(project__id=project, user__id=user)
-        # elif project is not None:
-        #     queryset = queryset.filter(project__id=project)    
-        # elif user is not None:
-        #     queryset = queryset.filter(user__id=user)
-        survey = self.request.query_params.get('survey', None)
-        user = self.request.query_params.get('user', None)
-        
-        if (survey is not None) & (user is not None):
-            # queryset = queryset.filter(survey__id=survey, user__id=user).exclude(user__id=self.request.user.id)
-            queryset = queryset.filter(survey__id=survey, user__id=user)
-        elif survey is not None:
-            # queryset = queryset.filter(survey__id=survey).exclude(user__id=self.request.user.id)
-            queryset = queryset.filter(survey__id=survey)   
-        elif user is not None:
-            # queryset = queryset.filter(user__id=user).exclude(user__id=self.request.user.id)
-            queryset = queryset.filter(user__id=user)
-
-        return queryset
-
-class DriverViewSet(viewsets.ModelViewSet):
-    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
-    queryset = Driver.objects.all()
-    serializer_class = DriverSerializer
-
-    # added survey to the driver table     2020-05-20
-    def get_queryset(self):
-        queryset = Driver.objects.all()
-        survey = self.request.query_params.get('survey', None)
-
-        if survey is not None:
-            queryset = queryset.filter(survey__id=survey)
-
-        return queryset
-
-class MyMapLayoutViewSet(viewsets.ModelViewSet):
-
-    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
-    queryset = MyMapLayout.objects.all()
-    serializer_class = MyMapLayoutStoreSerializer
-    filterset_fields = ['user', 'project']
-
-    def list(self, request, *args, **kwargs):
-        response = super().list(request, *args, **kwargs)
-
-        # 2020-05-20
-        myProjectUser_id = self.request.GET.get('myProjectUser')
-        
-        for i in range(len(response.data)):
-            response.data[i]['pu_category'] = []
-            for item in response.data[i]['projectUser']:
-                # 2020-05-20
-                # catIDs = SHMapping.objects.filter(projectUser_id=item)
-                catIDs = SHMapping.objects.filter(projectUser_id=myProjectUser_id, subProjectUser_id=item)
-
-                for catID in catIDs:
-                    try:
-                        obj = SHCategory.objects.get(id=catID.shCategory_id, mapType=2)
-                        response.data[i]['pu_category'].append({'projectUser':item, 'category':catID.shCategory_id})
-                    except SHCategory.DoesNotExist:
-                        continue
-        return response
-
-    def create(self, request, *args, **kwargs):
-        data = request.data
-        content_type = request.content_type
-        # 2020-05-20
-        myProjectUser_id = data['myProjectUser']
-
-        try:
-            obj = MyMapLayout.objects.get(user_id=data['user'], project_id=data['project'])
-
-            obj.projectUser.clear()
-            
-            if "application/json" in content_type:
-                
-                for item in data['pu_category']:
-                    new_obj = ProjectUser.objects.get(id=item['projectUser'])
-                    obj.projectUser.add(new_obj)
-
-                    try:
-                        # 2020-05-20
-                        # shObj = SHMapping.objects.get(shCategory_id=item['category'], projectUser_id=item['projectUser'])
-                        shObj = SHMapping.objects.get(shCategory_id=item['category'], projectUser_id=myProjectUser_id, subProjectUser_id=item['projectUser'])
-                    except SHMapping.DoesNotExist:
-                        # 2020-05-20
-                        # mapObj = SHMapping(shCategory_id=item['category'], projectUser_id=item['projectUser'], relationshipStatus="")
-                        mapObj = SHMapping(shCategory_id=item['category'], projectUser_id=myProjectUser_id, subProjectUser_id=item['projectUser'], relationshipStatus="")
-                        mapObj.save()
-
-            # else:
-            #     for item in data.getlist('pu_category'):
-            #         new_obj = ProjectUser.objects.get(id=item.projectUser)
-            #         obj.projectUser.add(new_obj)
-
-            obj.save()
-
-        except MyMapLayout.DoesNotExist:
-            obj = MyMapLayout.objects.create(user_id=data['user'], project_id=data['project'])
-
-            obj.user_id = data['user']
-            obj.project_id = data['project']
-            obj.layout_json = data['layout_json']
-
-            if "application/json" in content_type:
-                for item in data['pu_category']:
-                    new_obj = ProjectUser.objects.get(id=item['projectUser'])
-                    obj.projectUser.add(new_obj)
-
-                    try:
-                        # 2020-05-20
-                        # shObj = SHMapping.objects.get(shCategory_id=item['category'], projectUser_id=item['projectUser'])
-                        shObj = SHMapping.objects.get(shCategory_id=item['category'], projectUser_id=myProjectUser_id, subProjectUser_id=item['projectUser'])
-                    except SHMapping.DoesNotExist:
-                        # 2020-05-20
-                        # mapObj = SHMapping(shCategory_id=item['category'], projectUser_id=item['projectUser'], relationshipStatus="")
-                        mapObj = SHMapping(shCategory_id=item['category'], projectUser_id=myProjectUser_id, subProjectUser_id=item['projectUser'], relationshipStatus="")
-                        mapObj.save()
-            # else:
-            #     for item in data.getlist('projectUser'):
-            #         new_obj = ProjectUser.objects.get(id=item)
-            #         obj.projectUser.add(new_obj)
-
-            obj.save()
-
-        result = model_to_dict(MyMapLayout.objects.get(user_id=data['user'], project_id=data['project']))
-
-        list_result = result
-        for idx in range(len(result['projectUser'])):
-            list_result['projectUser'][idx] = result['projectUser'][idx].id
-
-        serializer = self.get_serializer(data=list_result)
-        serializer.is_valid(raise_exception=True)
-        headers = self.get_success_headers(serializer.data)
-
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-
+# projectmaplayouts api
 class ProjectMapLayoutViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
     queryset = ProjectMapLayout.objects.all()
@@ -1337,6 +1231,85 @@ class ProjectMapLayoutViewSet(viewsets.ModelViewSet):
 
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
+# projectbyuser api
+class ProjectByUserViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+    queryset = ProjectUser.objects.all()
+    serializer_class = SurveyByUserSerializer
+
+    def get_queryset(self):
+        queryset = ProjectUser.objects.all()
+        user = self.request.query_params.get('user', None)
+        if user is not None:
+            queryset = queryset.filter(user__id=user)
+        return queryset
+
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+
+        new_data = []
+        project_ids = []
+        for i in range(len(response.data)):
+            if response.data[i]['survey']['project'] not in project_ids:
+                project_ids.append(response.data[i]['survey']['project'])
+
+        response.data = []
+        for i in range(len(project_ids)):
+            item = model_to_dict(Project.objects.get(id=project_ids[i]))
+            response.data.append(item)
+
+        return response
+
+# shgroup api
+class SHGroupViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+    queryset = SHGroup.objects.all()
+    serializer_class = SHGroupSerializer
+
+    def get_queryset(self):
+        queryset = SHGroup.objects.all()
+
+        # updated project to survey   2020-05-20
+        # project = self.request.query_params.get('project', None)
+        # if project is not None:
+        #    queryset = queryset.filter(project__id=project)
+        survey = self.request.query_params.get('survey', None)
+        if survey is not None:
+            queryset = queryset.filter(survey__id=survey)
+
+        return queryset
+
+    def create(self, request, *args, **kwargs):
+        data = request.data.get("items") if 'items' in request.data else request.data
+        many = isinstance(data, list)
+        serializer = self.get_serializer(data=data, many=many)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+# skipoption api
+class SkipOptionViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+    queryset = SkipOption.objects.all()
+    serializer_class = SkipOptionSerializer
+  
+# surveybyproject api
+class SurveyViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+    queryset = Survey.objects.all()
+    serializer_class = SurveySerializer
+
+    def get_queryset(self):
+        queryset = Survey.objects.all()
+        project = self.request.query_params.get('project', None)
+        
+        if project is not None:
+            queryset = queryset.filter(project__id=project, isActive=True)    
+        
+        return queryset
+
+# shcategory api
 class SHCategoryViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
     queryset = SHCategory.objects.all()
@@ -1352,34 +1325,131 @@ class SHCategoryViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(mapType__id=mapType)
         return queryset
 
-class SetPasswordView(APIView):
-    permission_classes = [permissions.AllowAny]
+# subdriver api
+class SubDriverViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+    queryset = Driver.objects.all()
+    serializer_class = DriverSubDriverSerializer
 
-    @classmethod
-    def get_extra_actions(cls):
-        return []
+    def get_queryset(self):
+        queryset = Driver.objects.all()
+        survey = self.request.query_params.get('survey', None)
+        driver = self.request.query_params.get('driver', None)
 
-    def post(self, request):
-        password = request.data['password']
-        email = request.data['email']
+        if (survey is not None) & (driver is not None):
+            queryset = queryset.filter(survey__id=survey, id=driver)
+        elif survey is not None:
+            queryset = queryset.filter(survey__id=survey)
+        elif driver is not None:
+            queryset = queryset.filter(id=driver)
+
+        return queryset
+
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+        survey = self.request.query_params.get('survey', None)
+        driver = self.request.query_params.get('driver', None)
+
+        for i in range(len(response.data)):
+            amsubdriver_queryset = ''
+            aosubdriver_queryset = ''
+            if (survey is not None) & (driver is not None):
+                amsubdriver_queryset = AMQuestion.objects.filter(survey__id=survey, driver__id=driver).values('subdriver').distinct()
+                aosubdriver_queryset = AOQuestion.objects.filter(survey__id=survey, driver__id=driver).values('subdriver').distinct()
+            elif survey is not None:
+                amsubdriver_queryset = AMQuestion.objects.filter(survey__id=survey).values('subdriver').distinct()
+                aosubdriver_queryset = AOQuestion.objects.filter(survey__id=survey).values('subdriver').distinct()
+            elif driver is not None:
+                amsubdriver_queryset = AMQuestion.objects.filter(driver__id=driver).values('subdriver').distinct()
+                aosubdriver_queryset = AOQuestion.objects.filter(driver__id=driver).values('subdriver').distinct()
+            else:
+                amsubdriver_queryset = AMQuestion.objects.all().values('subdriver').distinct()
+                aosubdriver_queryset = AOQuestion.objects.all().values('subdriver').distinct()
+
+            amsubdriver_serializer = AMQuestionSubDriverSerializer(amsubdriver_queryset, many=True)
+            aosubdriver_serializer = AOQuestionSubDriverSerializer(aosubdriver_queryset, many=True)
+
+            response.data[i]['subdriver'] = []
+            response.data[i]['subdriver'] = []
+
+            for item in amsubdriver_serializer.data:
+                response.data[i]['subdriver'].append(item['subdriver'])
+            for item in aosubdriver_serializer.data:
+                if not item['subdriver'] in response.data[i]['subdriver']:
+                    response.data[i]['subdriver'].append(item['subdriver'])
+
+        return response
+
+# team api
+class TeamViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+    queryset = Team.objects.all()
+    serializer_class = TeamSerializer
+
+    def get_queryset(self):
+        queryset = Team.objects.all()
+
+        project = self.request.query_params.get('project', None)
+        if project is not None:
+            queryset = queryset.filter(project__id=project)
+
+        return queryset
         
-        try:
-            token = Token.objects.get(key=request.data['token'])
-            user = User.objects.get(id=token.user_id)
+    def create(self, request, *args, **kwargs):
+        data = request.data.get("items") if 'items' in request.data else request.data
+        many = isinstance(data, list)
+        serializer = self.get_serializer(data=data, many=many)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
-            if (email == user.email):
-                user.set_password(password)
-                user.save()
+# tooltipguide api
+class ToolTipGuideViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+    queryset = ToolTipGuide.objects.all()
+    serializer_class = ToolTipGuideSerializer
 
-                return Response('success', status=status.HTTP_201_CREATED) 
+# users api
+class UserViewSet(viewsets.ModelViewSet):
+    """
+    This viewset automatically provides `list` and `detail` actions.
+    """
+    permission_classes = [permissions.IsAuthenticated,permissions.IsAuthenticatedOrReadOnly]
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 
-            return Response("Invaid Email", status=status.HTTP_400_BAD_REQUEST)
+    def get_queryset(self):
+        queryset = User.objects.all()
 
-        except Token.DoesNotExist:
-            token = None
+        email = self.request.query_params.get('email', None)
+        if email is not None:
+            queryset = queryset.filter(email=email)
 
-            return Response("Invaid Token", status=status.HTTP_400_BAD_REQUEST)
+        return queryset
 
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+
+        for i in range(len(response.data)):
+            if response.data[i]['guidemode'] is None:
+                response.data[i]['guide'] = True
+            else:
+                response.data[i]['guide'] = response.data[i]['guidemode']['name']
+
+        return response
+
+    def retrieve(self, request, pk=None):
+        response = super().retrieve(request, pk)
+        
+        if response.data['guidemode'] is None:
+            response.data['guide'] = True
+        else:
+            response.data['guide'] = response.data['guidemode']['name']
+
+        return response
+
+# updatestakeholder api
 class UpdateStakeHolderViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
     queryset = ProjectUser.objects.all()
@@ -1451,8 +1521,157 @@ class UpdateStakeHolderViewSet(viewsets.ModelViewSet):
 
         return ret
 
-class ChangePasswordView(APIView):
+# userbysurvey api
+class UserBySurveyViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+    queryset = ProjectUser.objects.all()
+    serializer_class = UserBySurveySerializer
+
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+
+        myProjectUser_id = self.request.GET.get('myProjectUser')
+        survey = self.request.GET.get('survey')
+
+        for i in range(len(response.data)):
+            filters = ~Q(shGroup=None)
+            if response.data[i]['user']['last_login'] is not None:
+                response.data[i]['accept_status'] = True
+            else:
+                response.data[i]['accept_status'] = False
+
+            response.data[i]['am_total'] = AMQuestion.objects.filter(filters).filter(survey__id=survey).count()
+            response.data[i]['am_response'] = []
+            # 2020-05-20
+            # for item1 in AMResponse.objects.filter(user_id=response.data[i]['user']['id'], project_id=response.data[i]['project']['id']).values('amQuestion'):
+            #     response.data[i]['am_response'].append(item1['amQuestion']) 
+            # response.data[i]['am_answered'] = AMResponse.objects.filter(user_id=response.data[i]['user']['id'], project_id=response.data[i]['project']['id']).count()
+            # response.data[i]['ao_total'] = AOQuestion.objects.count()
+            # response.data[i]['ao_response'] = []
+            # for item2 in AOResponse.objects.filter(subjectUser_id=response.data[i]['user']['id'], project_id=response.data[i]['project']['id']).values('aoQuestion'):
+            #     response.data[i]['ao_response'].append(item2['aoQuestion']) 
+            # response.data[i]['ao_answered'] = AOResponse.objects.filter(subjectUser_id=response.data[i]['user']['id'], project_id=response.data[i]['project']['id']).count()
+            for item1 in AMResponse.objects.filter(projectUser_id=response.data[i]['id']).values('amQuestion'):
+                response.data[i]['am_response'].append(item1['amQuestion']) 
+            response.data[i]['am_answered'] = AMResponse.objects.filter(projectUser_id=response.data[i]['id']).count()
+            response.data[i]['ao_total'] = AOQuestion.objects.filter(filters).filter(survey__id=survey).count()
+            response.data[i]['ao_response'] = []
+            for item2 in AOResponse.objects.filter(subProjectUser_id=response.data[i]['id']).values('aoQuestion'):
+                response.data[i]['ao_response'].append(item2['aoQuestion']) 
+            response.data[i]['ao_answered'] = AOResponse.objects.filter(subProjectUser_id=response.data[i]['id']).count()
+
+            # 2020-05-20
+            response.data[i]['shCategory'] = []
+            # for item3 in SHMapping.objects.filter(projectUser_id=response.data[i]['id']).values('shCategory'):
+            for item3 in SHMapping.objects.filter(projectUser_id=myProjectUser_id, subProjectUser_id=response.data[i]['id']).values('shCategory'):
+                response.data[i]['shCategory'].append(item3['shCategory'])
+
+        return response
+
+    def get_queryset(self):
+        queryset = ProjectUser.objects.all()
+
+        # 2020-05-27
+        # project = self.request.query_params.get('project', None)
+        # user = self.request.query_params.get('user', None)
+        
+        # if (project is not None ) & (user is not None):
+        #     queryset = queryset.filter(project__id=project, user__id=user)
+        # elif project is not None:
+        #     queryset = queryset.filter(project__id=project)    
+        # elif user is not None:
+        #     queryset = queryset.filter(user__id=user)
+        survey = self.request.query_params.get('survey', None)
+        user = self.request.query_params.get('user', None)
+        
+        if (survey is not None) & (user is not None):
+            # queryset = queryset.filter(survey__id=survey, user__id=user).exclude(user__id=self.request.user.id)
+            queryset = queryset.filter(survey__id=survey, user__id=user)
+        elif survey is not None:
+            # queryset = queryset.filter(survey__id=survey).exclude(user__id=self.request.user.id)
+            queryset = queryset.filter(survey__id=survey)   
+        elif user is not None:
+            # queryset = queryset.filter(user__id=user).exclude(user__id=self.request.user.id)
+            queryset = queryset.filter(user__id=user)
+
+        return queryset
+
+# useravatar api
+class UserAvatarViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+    queryset = UserAvatar.objects.all()
+    serializer_class = UserAvatarSerializer
+
+# api-token-auth api
+class CustomAuthToken(ObtainAuthToken):
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request, *args, **kwargs):
+        response = super(CustomAuthToken, self).post(request, *args, **kwargs)
+        token = Token.objects.get(key=response.data['token'])
+        return Response({'token': token.key, 'id': token.user_id})
+
+# get_csrf api
+def get_csrf(request):
+    return HttpResponse("{0}".format(csrf.get_token(request)), content_type="text/plain")
+
+# changepassword api
+class ChangePasswordView(APIView):
+    permission_classes = [permissions.IsAuthenticated,
+                          permissions.IsAuthenticatedOrReadOnly]
+
+    @classmethod
+    def get_extra_actions(cls):
+        return []
+
+    def post(self, request):
+        password = request.data['password']
+        email = request.data['email']
+
+        try:
+            token = Token.objects.get(key=request.data['token'])
+            user = User.objects.get(id=token.user_id)
+
+            if (email == user.email):
+                user.set_password(password)
+                user.save()
+
+                return Response('success', status=status.HTTP_201_CREATED)
+
+            return Response("Invaid Email", status=status.HTTP_400_BAD_REQUEST)
+
+        except Token.DoesNotExist:
+            token = None
+
+            return Response("Invaid Token", status=status.HTTP_400_BAD_REQUEST)
+
+# stakeholder api
+class StakeHolderUserView(APIView):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+
+    @classmethod
+    def get_extra_actions(cls):
+        return []
+
+    def get(self, format=None):
+        organizations = Organization.objects.all()
+        serializer = StakeHolderSerializer(organizations, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        
+        serializer = StakeHolderSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=ValueError):
+            serializer.create(validated_data=request.data)
+            
+            dt = User.objects.filter(username=serializer.data['user']['username']).values_list('pk', flat=True)
+
+            return Response(dt[0], status=status.HTTP_201_CREATED)
+        return Response(serializer.error_messages, status=status.HTTP_400_BAD_REQUEST)
+
+# setpassword api
+class SetPasswordView(APIView):
+    permission_classes = [permissions.AllowAny]
 
     @classmethod
     def get_extra_actions(cls):
@@ -1479,35 +1698,7 @@ class ChangePasswordView(APIView):
 
             return Response("Invaid Token", status=status.HTTP_400_BAD_REQUEST)
 
-class UserGuideModeView(APIView):
-    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
-
-    @classmethod
-    def get_extra_actions(cls):
-        return []
-
-    def post(self, request):
-        guidemode = request.data['guidemode']
-
-        try:
-            token = Token.objects.get(key=request.data['token'])
-
-            try:
-                userGuideMode = UserGuideMode.objects.get(user_id=token.user_id)
-                userGuideMode.name = guidemode
-
-                userGuideMode.save()
-            except UserGuideMode.DoesNotExist:
-                userGuideMode = UserGuideMode(name=guidemode, user_id=token.user_id)
-
-                userGuideMode.save()
-
-            return Response('success', status=status.HTTP_201_CREATED)
-        except Token.DoesNotExist:
-            token = None
-
-            return Response("Invalid Token", status=status.HTTP_400_BAD_REQUEST)
-
+# userprofile api
 class UserProfileView(APIView):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
 
@@ -1565,86 +1756,38 @@ class UserProfileView(APIView):
             token = None
 
             return Response("Invalid Token", status=status.HTTP_400_BAD_REQUEST)
-            
-class StakeHolderUserView(APIView):
+
+# userguidemode api
+class UserGuideModeView(APIView):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
 
     @classmethod
     def get_extra_actions(cls):
         return []
 
-    def get(self, format=None):
-        organizations = Organization.objects.all()
-        serializer = StakeHolderSerializer(organizations, many=True)
-        return Response(serializer.data)
-
     def post(self, request):
-        
-        serializer = StakeHolderSerializer(data=request.data)
-        if serializer.is_valid(raise_exception=ValueError):
-            serializer.create(validated_data=request.data)
-            
-            dt = User.objects.filter(username=serializer.data['user']['username']).values_list('pk', flat=True)
+        guidemode = request.data['guidemode']
 
-            return Response(dt[0], status=status.HTTP_201_CREATED)
-        return Response(serializer.error_messages, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            token = Token.objects.get(key=request.data['token'])
 
-class NikelMobilePageViewSet(viewsets.ModelViewSet):
-    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
-    queryset = NikelMobilePage.objects.all()
-    serializer_class = NikelMobilePageSerializer
+            try:
+                userGuideMode = UserGuideMode.objects.get(user_id=token.user_id)
+                userGuideMode.name = guidemode
 
-    def get_queryset(self):
-        queryset = NikelMobilePage.objects.all()
-        survey = self.request.query_params.get('survey', None)
-        if survey is not None:
-            queryset = queryset.filter(survey__id=survey)
-        return queryset
+                userGuideMode.save()
+            except UserGuideMode.DoesNotExist:
+                userGuideMode = UserGuideMode(name=guidemode, user_id=token.user_id)
 
-class ToolTipGuideViewSet(viewsets.ModelViewSet):
-    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
-    queryset = ToolTipGuide.objects.all()
-    serializer_class = ToolTipGuideSerializer
+                userGuideMode.save()
 
-class OverallSentimentReportViewSet(viewsets.ModelViewSet):
-    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
-    queryset = AMResponse.objects.all()
-    serializer_class = AMResponseSerializer
+            return Response('success', status=status.HTTP_201_CREATED)
+        except Token.DoesNotExist:
+            token = None
 
-    def get_queryset(self):
-        queryset = AMResponse.objects.all()
-        survey = self.request.query_params.get('survey', None)
-        if survey is not None:
-            queryset = queryset.filter(survey__id=survey)
-        return queryset
+            return Response("Invalid Token", status=status.HTTP_400_BAD_REQUEST)
 
-    def list(self, request, *args, **kwargs):
-        response = super().list(request, *args, **kwargs)
-        total = 0
-        for i in range(len(response.data)):
-            total = total + response.data[i]['integerValue']
-        cnt = len(response.data)
-
-        percentage = 0
-        if (cnt > 0):
-            percentage = total / cnt
-
-        response.data = []
-        if percentage < 40:
-            response.data.append({'emojiType': 'angry', 'value': percentage})
-        elif percentage < 50:
-            response.data.append({'emojiType': 'worried', 'value': percentage})
-        elif percentage < 60:
-            response.data.append({'emojiType': 'flat', 'value': percentage})
-        elif percentage < 70:
-            response.data.append({'emojiType': 'smile', 'value': percentage})
-        elif percentage < 80:
-            response.data.append({'emojiType': 'big', 'value': percentage})
-        else:
-            response.data.append({'emojiType': 'green', 'value': percentage})
-
-        return response
-
+# wordcloud api
 class WordCloudView(APIView):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
 
@@ -1823,60 +1966,6 @@ class WordCloudView(APIView):
         aux.reverse()
         
         return Response(aux)
-    
-class SubDriverViewSet(viewsets.ModelViewSet):
-    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
-    queryset = Driver.objects.all()
-    serializer_class = DriverSubDriverSerializer
-
-    def get_queryset(self):
-        queryset = Driver.objects.all()
-        survey = self.request.query_params.get('survey', None)
-        driver = self.request.query_params.get('driver', None)
-
-        if (survey is not None) & (driver is not None):
-            queryset = queryset.filter(survey__id=survey, id=driver)
-        elif survey is not None:
-            queryset = queryset.filter(survey__id=survey)
-        elif driver is not None:
-            queryset = queryset.filter(id=driver)
-
-        return queryset
-
-    def list(self, request, *args, **kwargs):
-        response = super().list(request, *args, **kwargs)
-        survey = self.request.query_params.get('survey', None)
-        driver = self.request.query_params.get('driver', None)
-
-        for i in range(len(response.data)):
-            amsubdriver_queryset = ''
-            aosubdriver_queryset = ''
-            if (survey is not None) & (driver is not None):
-                amsubdriver_queryset = AMQuestion.objects.filter(survey__id=survey, driver__id=driver).values('subdriver').distinct()
-                aosubdriver_queryset = AOQuestion.objects.filter(survey__id=survey, driver__id=driver).values('subdriver').distinct()
-            elif survey is not None:
-                amsubdriver_queryset = AMQuestion.objects.filter(survey__id=survey).values('subdriver').distinct()
-                aosubdriver_queryset = AOQuestion.objects.filter(survey__id=survey).values('subdriver').distinct()
-            elif driver is not None:
-                amsubdriver_queryset = AMQuestion.objects.filter(driver__id=driver).values('subdriver').distinct()
-                aosubdriver_queryset = AOQuestion.objects.filter(driver__id=driver).values('subdriver').distinct()
-            else:
-                amsubdriver_queryset = AMQuestion.objects.all().values('subdriver').distinct()
-                aosubdriver_queryset = AOQuestion.objects.all().values('subdriver').distinct()
-
-            amsubdriver_serializer = AMQuestionSubDriverSerializer(amsubdriver_queryset, many=True)
-            aosubdriver_serializer = AOQuestionSubDriverSerializer(aosubdriver_queryset, many=True)
-
-            response.data[i]['subdriver'] = []
-            response.data[i]['subdriver'] = []
-
-            for item in amsubdriver_serializer.data:
-                response.data[i]['subdriver'].append(item['subdriver'])
-            for item in aosubdriver_serializer.data:
-                if not item['subdriver'] in response.data[i]['subdriver']:
-                    response.data[i]['subdriver'].append(item['subdriver'])
-
-        return response
 
 # WIP
 class BubbleChartView(APIView):
