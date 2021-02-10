@@ -2012,19 +2012,19 @@ class WordCloudView(APIView):
         return Response(aux)
 
 # WIP
-class BubbleChartView(APIView):
-    permission_classes = [permissions.IsAuthenticated,
-                          permissions.IsAuthenticatedOrReadOnly]
+# class BubbleChartView(APIView):
+#     permission_classes = [permissions.IsAuthenticated,
+#                           permissions.IsAuthenticatedOrReadOnly]
 
-    @classmethod
-    def get_extra_actions(cls):
-        return []
+#     @classmethod
+#     def get_extra_actions(cls):
+#         return []
 
-    def get(self, format=None):
-        amqueryset = AMResponse.objects.all()
-        aoqueryset = AOResponse.objects.all()
+#     def get(self, format=None):
+#         amqueryset = AMResponse.objects.all()
+#         aoqueryset = AOResponse.objects.all()
 
-        survey = self.request.query_params.get('survey', None)
-        projectUser = self.request.query_params.get('projectUser', None)
+#         survey = self.request.query_params.get('survey', None)
+#         projectUser = self.request.query_params.get('projectUser', None)
 
 
