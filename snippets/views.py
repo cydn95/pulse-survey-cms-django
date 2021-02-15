@@ -392,37 +392,37 @@ class AMResponseReportViewSet(viewsets.ModelViewSet):
             am_serializer = AMQuestionSerializer(
                 amquestion_queryset, many=True)
             response.data[i]['amQuestionData'] = am_serializer.data
-            response.data[i]['report'] = {
-                "Sentiment": "ERROR",
-                "MixedScore": 0,
-                "NegativeScore": 0,
-                "NeutralScore": 0,
-                "PositiveScore": 0,
-            }
+            # response.data[i]['report'] = {
+            #     "Sentiment": "ERROR",
+            #     "MixedScore": 0,
+            #     "NegativeScore": 0,
+            #     "NeutralScore": 0,
+            #     "PositiveScore": 0,
+            # }
 
-            if response.data[i]['controlType'] == 'TEXT' or response.data[i]['controlType'] == 'MULTI_TOPICS':
-                Text = response.data[i]['topicValue'] + \
-                    " " + response.data[i]['commentValue']
+            # if response.data[i]['controlType'] == 'TEXT' or response.data[i]['controlType'] == 'MULTI_TOPICS':
+            #     Text = response.data[i]['topicValue'] + \
+            #         " " + response.data[i]['commentValue']
 
-                if response.data[i]['topicValue'] != "" or response.data[i]['commentValue'] != "":
-                    sentimentData = comprehend.detect_sentiment(
-                        Text=Text, LanguageCode="en")
+            #     if response.data[i]['topicValue'] != "" or response.data[i]['commentValue'] != "":
+            #         sentimentData = comprehend.detect_sentiment(
+            #             Text=Text, LanguageCode="en")
 
-                    # new
-                    response.data[i]['integerValue'] = int(
-                        abs(sentimentData["SentimentScore"]["Positive"] * 100))
+            #         # new
+            #         response.data[i]['integerValue'] = int(
+            #             abs(sentimentData["SentimentScore"]["Positive"] * 100))
 
-                    if "Sentiment" in sentimentData:
-                        response.data[i]['report']["Sentiment"] = sentimentData["Sentiment"]
-                    if "SentimentScore" in sentimentData:
-                        if "Mixed" in sentimentData["SentimentScore"]:
-                            response.data[i]['report']["MixedScore"] = sentimentData["SentimentScore"]["Mixed"]
-                        if "Negative" in sentimentData["SentimentScore"]:
-                            response.data[i]['report']["NegativeScore"] = sentimentData["SentimentScore"]["Negative"]
-                        if "Neutral" in sentimentData["SentimentScore"]:
-                            response.data[i]['report']["NeutralScore"] = sentimentData["SentimentScore"]["Neutral"]
-                        if "Positive" in sentimentData["SentimentScore"]:
-                            response.data[i]['report']["PositiveScore"] = sentimentData["SentimentScore"]["Positive"]
+            #         if "Sentiment" in sentimentData:
+            #             response.data[i]['report']["Sentiment"] = sentimentData["Sentiment"]
+            #         if "SentimentScore" in sentimentData:
+            #             if "Mixed" in sentimentData["SentimentScore"]:
+            #                 response.data[i]['report']["MixedScore"] = sentimentData["SentimentScore"]["Mixed"]
+            #             if "Negative" in sentimentData["SentimentScore"]:
+            #                 response.data[i]['report']["NegativeScore"] = sentimentData["SentimentScore"]["Negative"]
+            #             if "Neutral" in sentimentData["SentimentScore"]:
+            #                 response.data[i]['report']["NeutralScore"] = sentimentData["SentimentScore"]["Neutral"]
+            #             if "Positive" in sentimentData["SentimentScore"]:
+            #                 response.data[i]['report']["PositiveScore"] = sentimentData["SentimentScore"]["Positive"]
 
         return response
 
@@ -464,35 +464,35 @@ class AOResponseReportViewSet(viewsets.ModelViewSet):
             aoquestion_queryset = AOQuestion.objects.filter(id=response.data[i]['aoQuestion'])
             ao_serializer = AOQuestionSerializer(aoquestion_queryset, many=True)
             response.data[i]['aoQuestionData'] = ao_serializer.data
-            response.data[i]['report'] = {
-                "Sentiment": "ERROR",
-                "MixedScore": 0,
-                "NegativeScore": 0,
-                "NeutralScore": 0,
-                "PositiveScore": 0,
-            }
+            # response.data[i]['report'] = {
+            #     "Sentiment": "ERROR",
+            #     "MixedScore": 0,
+            #     "NegativeScore": 0,
+            #     "NeutralScore": 0,
+            #     "PositiveScore": 0,
+            # }
 
-            if response.data[i]['controlType'] == 'TEXT' or response.data[i]['controlType'] == 'MULTI_TOPICS':
-                Text = response.data[i]['topicValue'] + " " + response.data[i]['commentValue']
+            # if response.data[i]['controlType'] == 'TEXT' or response.data[i]['controlType'] == 'MULTI_TOPICS':
+            #     Text = response.data[i]['topicValue'] + " " + response.data[i]['commentValue']
 
-                if response.data[i]['topicValue'] != "" or response.data[i]['commentValue'] != "":
-                    sentimentData = comprehend.detect_sentiment(Text=Text, LanguageCode="en")
+            #     if response.data[i]['topicValue'] != "" or response.data[i]['commentValue'] != "":
+            #         sentimentData = comprehend.detect_sentiment(Text=Text, LanguageCode="en")
                     
-                    # new
-                    response.data[i]['integerValue'] = int(
-                        abs(sentimentData["SentimentScore"]["Positive"] * 100))
+            #         # new
+            #         response.data[i]['integerValue'] = int(
+            #             abs(sentimentData["SentimentScore"]["Positive"] * 100))
 
-                    if "Sentiment" in sentimentData:
-                        response.data[i]['report']["Sentiment"] = sentimentData["Sentiment"]
-                    if "SentimentScore" in sentimentData:
-                        if "Mixed" in sentimentData["SentimentScore"]:
-                            response.data[i]['report']["MixedScore"] = sentimentData["SentimentScore"]["Mixed"]
-                        if "Negative" in sentimentData["SentimentScore"]:
-                            response.data[i]['report']["NegativeScore"] = sentimentData["SentimentScore"]["Negative"]
-                        if "Neutral" in sentimentData["SentimentScore"]:
-                            response.data[i]['report']["NeutralScore"] = sentimentData["SentimentScore"]["Neutral"]
-                        if "Positive" in sentimentData["SentimentScore"]:
-                            response.data[i]['report']["PositiveScore"] = sentimentData["SentimentScore"]["Positive"]
+            #         if "Sentiment" in sentimentData:
+            #             response.data[i]['report']["Sentiment"] = sentimentData["Sentiment"]
+            #         if "SentimentScore" in sentimentData:
+            #             if "Mixed" in sentimentData["SentimentScore"]:
+            #                 response.data[i]['report']["MixedScore"] = sentimentData["SentimentScore"]["Mixed"]
+            #             if "Negative" in sentimentData["SentimentScore"]:
+            #                 response.data[i]['report']["NegativeScore"] = sentimentData["SentimentScore"]["Negative"]
+            #             if "Neutral" in sentimentData["SentimentScore"]:
+            #                 response.data[i]['report']["NeutralScore"] = sentimentData["SentimentScore"]["Neutral"]
+            #             if "Positive" in sentimentData["SentimentScore"]:
+            #                 response.data[i]['report']["PositiveScore"] = sentimentData["SentimentScore"]["Positive"]
 
         return response
 
