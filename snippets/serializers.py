@@ -334,7 +334,7 @@ class ProjectUserForReportSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProjectUser
         # fields = '__all__'
-        fields = ['id', 'survey', 'user', 'projectUserTitle', 'team', 'shGroup', 'isTeamMember', 'isCGroup1', 'isCGroup2', 'isCGroup3']
+        fields = ['user', 'team', 'shGroup', 'isTeamMember', 'isCGroup1', 'isCGroup2', 'isCGroup3']
 
 
 class AMResponseForReportSerializer(serializers.ModelSerializer):
@@ -343,7 +343,17 @@ class AMResponseForReportSerializer(serializers.ModelSerializer):
     class Meta:
         model = AMResponse
         # fields = '__all__'
-        fields = ['id', 'controlType', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags', 'created_at', 'updated_at', 'projectUser', 'subProjectUser', 'survey', 'project', 'amQuestion']
+        # fields = ['id', 'controlType', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags', 'created_at', 'updated_at', 'projectUser', 'subProjectUser', 'survey', 'project', 'amQuestion']
+        fields = ['controlType', 'integerValue', 'created_at', 'updated_at',
+                  'projectUser', 'subProjectUser', 'survey', 'project', 'amQuestion']
+
+class AOResponseForReportSerializer(serializers.ModelSerializer):
+    subProjectUser = ProjectUserForReportSerializer()
+
+    class Meta:
+        model = AOResponse
+        fields = ['controlType', 'integerValue', 'created_at', 'updated_at', 
+                  'projectUser', 'subProjectUser', 'survey', 'project', 'aoQuestion']
 
 # class AMResponseReportSerializer(serializers.ModelSerializer):
 #     amQuestion = AMQuestionSerializer
