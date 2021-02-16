@@ -2065,7 +2065,7 @@ class WordCloudView(APIView):
             return Response(aux)
 
 # WIP
-class AMResponseRateView(APIView):
+class AMQuestionCountBySHGroup(APIView):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
 
     @classmethod
@@ -2073,32 +2073,28 @@ class AMResponseRateView(APIView):
         return []
 
     def get(self, format=None):
-        responsequeryset = AMResponse.objects.all()
+        queryset = AMQuestion.objects.all()
 
         survey = self.request.query_params.get('survey', None)
         driver = self.request.query_params.get('driver', None)
-        startDate = self.request.query_params.get('stdt', None)
-        endDate = self.request.query_params.get('eddt', None)
-
-        if (survey is not None) & (driver is not None) & (startDate is not None) & (endDate is not None):
-            responsequeryset = responsequeryset.filter(survey__id=survey, amQuestion__driver__driverName=driver, updated_at__range=[startDate, endDate])
-        elif (survey is not None) & (driver is not None):
-            responsequeryset = responsequeryset.filter(survey__id=survey, amQuestion__driver__driverName=driver)
-        elif (survey is not None) & (startDate is not None) & (endDate is not None):
-            responsequeryset = responsequeryset.filter(survey__id=survey, updated_at__range=[startDate, endDate])
-        elif (driver is not None) & (startDate is not None) & (endDate is not None):
-            responsequeryset = responsequeryset.filter(amQuestion__driver__driverName=driver, updated_at__range=[startDate, endDate])
+        
+        if (survey is not None) & (driver is not None):
+            queryset = queryset.filter(
+                survey__id=survey, amQuestion__driver__driverName=driver)
         elif survey is not None:
-            responsequeryset = responsequeryset.filter(survey__id=survey)
+            queryset = queryset.filter(survey__id=survey)
         elif driver is not None:
-            responsequeryset = responsequeryset.filter(amQuestion__driver__driverName=driver)
-        elif (startDate is not None) & (endDate is not None):
-            responsequeryset = responsequeryset.filter(
-                updated_at__range=[startDate, endDate])
+            queryset = queryset.filter(amQuestion__driver__driverName=driver)
 
-        amserializer = AMResponseSerializer(responsequeryset, many=True)
+        shgroup = SHGroup.objects.all()
+        if survey is not None:
+            shgroup = shgroup.filter(survey__id=survey)
 
-        return Response(amserializer.data, status=status.HTTP_200_OK)
+        for i in range(len(shgroup.data)):
+            shgroup.data[i]['questionCnt'] = queryset.filter(shGroup__id=shgroup.data[i]['id']).count()
+        shgroup.data['totalQuestionCnt'] = queryset.count()
+        
+        return Response(shgroup.data, status=status.HTTP_200_OK)
 
 class BubbleChartView(APIView):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]

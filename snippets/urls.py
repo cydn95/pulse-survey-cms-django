@@ -64,7 +64,7 @@ urlpatterns += format_suffix_patterns([
     url(r'userguidemode', views.UserGuideModeView.as_view()),
     url(r'wordcloud', views.WordCloudView.as_view()),
     # WIP
-    url(r'responserate', views.AMResponseRateView.as_view()),
+    url(r'amquestioncnt', views.AMQuestionCountBySHGroup.as_view()),
 ])
 
 # router.register(r'interestreport', views.AMResponseFeedbackSummaryForInterestViewset)     # deprecated
