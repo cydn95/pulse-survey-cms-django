@@ -1843,19 +1843,34 @@ class WordCloudView(APIView):
     def get(self, format=None):
         amqueryset = AMResponse.objects.all()
         aoqueryset = AOResponse.objects.all()
-
+        
         survey = self.request.query_params.get('survey', None)
         projectUser = self.request.query_params.get('projectUser', None)
+        driver = self.request.query_params.get('driver', None)
+        limit = self.request.query_params.get('limit', None)
 
-        if (survey is not None) & (projectUser is not None):
+        if (survey is not None) & (projectUser is not None) & (driver is not None):
+            amqueryset = amqueryset.filter(survey__id=survey, subProjectUser__id=projectUser, amQuestion__driver__driverName=driver)
+            aoqueryset = aoqueryset.filter(survey__id=survey, subProjectUser__id=projectUser, aoQuestion__driver__driverName=driver)
+        elif (survey is not None) & (projectUser is not None):
             amqueryset = amqueryset.filter(survey__id=survey, subProjectUser__id=projectUser)
             aoqueryset = aoqueryset.filter(survey__id=survey, subProjectUser__id=projectUser)
+        elif (survey is not None) & (driver is not None):
+            amqueryset = amqueryset.filter(survey__id=survey, amQuestion__driver__driverName=driver)
+            aoqueryset = aoqueryset.filter(survey__id=survey, aoQuestion__driver__driverName=driver)
+        elif (projectUser is not None) & (driver is not None):
+            amqueryset = amqueryset.filter(subProjectUser__id=survey, amQuestion__driver__driverName=driver)
+            aoqueryset = aoqueryset.filter(
+                subProjectUser__id=survey, aoQuestion__driver__driverName=driver)
         elif survey is not None:
             amqueryset = amqueryset.filter(survey__id=survey)
             aoqueryset = aoqueryset.filter(survey__id=survey)
         elif projectUser is not None:
             amqueryset = amqueryset.filter(subProjectUser__id=projectUser)
             aoqueryset = aoqueryset.filter(subProjectUser__id=projectUser)
+        elif driver is not None:
+            amqueryset = amqueryset.filter(amQuestion__driver__driverName=driver)
+            aoqueryset = aoqueryset.filter(aoQuestion__driver__driverName=driver)
         
         amserializer = AMResponseSerializer(amqueryset, many=True)
         aoserializer = AOResponseSerializer(aoqueryset, many=True)
@@ -2010,7 +2025,10 @@ class WordCloudView(APIView):
         aux.sort()
         aux.reverse()
         
-        return Response(aux)
+        if limit is not None:
+            return Response(aux[:limit])
+        else:
+            return Response(aux)
 
 # WIP
 class BubbleChartView(APIView):
