@@ -2031,6 +2031,40 @@ class WordCloudView(APIView):
             return Response(aux)
 
 # WIP
+class AMResponseRateView(APIView):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+
+    @classmethod
+    def get_extra_actions(cls):
+        return []
+
+    def get(self, format=None):
+        queryset = AMResponse.objects.all()
+
+        survey = self.request.query_params.get('survey', None)
+        driver = self.request.query_params.get('driver', None)
+        startDate = self.request.query_params.get('stdt', None)
+        endDate = self.request.query_params.get('eddt', None)
+
+        if (survey is not None) & (driver is not None) & (startDate is not None) & (endDate is not None):
+            queryset = queryset.filter(survey__id=survey, amQuestion__driver__driverName=driver, updated_at__range=[startDate, endDate])
+        elif (survey is not None) & (driver is not None):
+            queryset = queryset.filter(survey__id=survey, amQuestion__driver__driverName=driver)
+        elif (survey is not None) & (startDate is not None) & (endDate is not None):
+            queryset = queryset.filter(survey__id=survey, updated_at__range=[startDate, endDate])
+        elif (driver is not None) & (startDate is not None) & (endDate is not None):
+            queryset = queryset.filter(amQuestion__driver__driverName=driver, updated_at__range=[startDate, endDate])
+        elif survey is not None:
+            queryset = queryset.filter(survey__id=survey)
+        elif driver is not None:
+            queryset = queryset.filter(amQuestion__driver__driverName=driver)
+        elif (startDate is not None) & (endDate is not None):
+            queryset = queryset.filter(updated_at__range=[startDate, endDate])
+
+        amserializer = AMResponseSerializer(queryset, many=True)
+
+        return Response(amserializer.data, status=status.HTTP_200_OK)
+
 class BubbleChartView(APIView):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
 
