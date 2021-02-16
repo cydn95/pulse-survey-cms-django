@@ -2080,11 +2080,11 @@ class AMQuestionCountBySHGroup(APIView):
         
         if (survey is not None) & (driver is not None):
             queryset = queryset.filter(
-                survey__id=survey, amQuestion__driver__driverName=driver)
+                survey__id=survey, driver__driverName=driver)
         elif survey is not None:
             queryset = queryset.filter(survey__id=survey)
         elif driver is not None:
-            queryset = queryset.filter(amQuestion__driver__driverName=driver)
+            queryset = queryset.filter(driver__driverName=driver)
 
         shgroup = SHGroup.objects.all()
         if survey is not None:
@@ -2093,7 +2093,7 @@ class AMQuestionCountBySHGroup(APIView):
         for i in range(len(shgroup.data)):
             shgroup.data[i]['questionCnt'] = queryset.filter(shGroup__id=shgroup.data[i]['id']).count()
         shgroup.data['totalQuestionCnt'] = queryset.count()
-        
+
         return Response(shgroup.data, status=status.HTTP_200_OK)
 
 class BubbleChartView(APIView):
