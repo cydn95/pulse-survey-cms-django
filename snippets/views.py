@@ -2090,11 +2090,13 @@ class AMQuestionCountBySHGroup(APIView):
         if survey is not None:
             shgroup = shgroup.filter(survey__id=survey)
 
-        for i in range(len(shgroup.data)):
-            shgroup.data[i]['questionCnt'] = queryset.filter(shGroup__id=shgroup.data[i]['id']).count()
-        shgroup.data['totalQuestionCnt'] = queryset.count()
+        shgroupserializer = SHGroupSerializer(shgroup, many=True)
+        for i in range(len(shgroupserializer.data)):
+            shgroupserializer.data[i]['questionCnt'] = queryset.filter(
+                shGroup__id=shgroupserializer.data[i]['id']).count()
+        shgroupserializer.data['totalQuestionCnt'] = queryset.count()
 
-        return Response(shgroup.data, status=status.HTTP_200_OK)
+        return Response(shgroupserializer.data, status=status.HTTP_200_OK)
 
 class BubbleChartView(APIView):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
