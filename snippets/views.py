@@ -2094,9 +2094,10 @@ class AMQuestionCountBySHGroup(APIView):
         for i in range(len(shgroupserializer.data)):
             shgroupserializer.data[i]['questionCnt'] = queryset.filter(
                 shGroup__id=shgroupserializer.data[i]['id']).count()
-        shgroupserializer.data['totalQuestionCnt'] = queryset.count()
+        ret['data'] = shgroupserializer.data
+        ret['questionTotalCnt'] = queryset.count()
 
-        return Response(shgroupserializer.data, status=status.HTTP_200_OK)
+        return Response(ret, status=status.HTTP_200_OK)
 
 class BubbleChartView(APIView):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
