@@ -2094,6 +2094,7 @@ class AMQuestionCountBySHGroup(APIView):
         for i in range(len(shgroupserializer.data)):
             shgroupserializer.data[i]['questionCnt'] = queryset.filter(
                 shGroup__id=shgroupserializer.data[i]['id']).count()
+            shgroupserializer.data[i]['questionTotalCnt'] = queryset.count()
         
         # ret = ''
         # ret['data'] = shgroupserializer.data
