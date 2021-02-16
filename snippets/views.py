@@ -2026,7 +2026,7 @@ class WordCloudView(APIView):
         aux.reverse()
         
         if limit is not None:
-            return Response(aux[:limit])
+            return Response(aux[:int(limit)])
         else:
             return Response(aux)
 
