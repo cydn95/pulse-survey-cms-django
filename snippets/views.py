@@ -2120,7 +2120,7 @@ class BubbleChartView(APIView):
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
 
         amqueryset = AMResponse.objects.filter(survey__id=survey, subProjectUser__id=projectUser)
-        amqueryset = AOResponse.objects.filter(survey__id=survey, subProjectUser__id=projectUser)
+        aoqueryset = AOResponse.objects.filter(survey__id=survey, subProjectUser__id=projectUser)
 
         amserializer = AMResponseSerializer(amqueryset, many=True)
         aoserializer = AOResponseSerializer(aoqueryset, many=True)
@@ -2128,7 +2128,7 @@ class BubbleChartView(APIView):
         res = amserializer.data + aoserializer.data
 
         return Response(res, status=status.HTTP_200_OK)
-        
+
 # WIP
 # class BubbleChartView(APIView):
 #     permission_classes = [permissions.IsAuthenticated,
