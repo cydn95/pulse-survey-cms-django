@@ -1652,6 +1652,44 @@ class CustomAuthToken(ObtainAuthToken):
 def get_csrf(request):
     return HttpResponse("{0}".format(csrf.get_token(request)), content_type="text/plain")
 
+# amquestioncnt api
+class AMQuestionCountBySHGroup(APIView):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+
+    @classmethod
+    def get_extra_actions(cls):
+        return []
+
+    def get(self, format=None):
+        queryset = AMQuestion.objects.all()
+
+        survey = self.request.query_params.get('survey', None)
+        driver = self.request.query_params.get('driver', None)
+        
+        if (survey is not None) & (driver is not None):
+            queryset = queryset.filter(
+                survey__id=survey, driver__driverName=driver)
+        elif survey is not None:
+            queryset = queryset.filter(survey__id=survey)
+        elif driver is not None:
+            queryset = queryset.filter(driver__driverName=driver)
+
+        shgroup = SHGroup.objects.all()
+        if survey is not None:
+            shgroup = shgroup.filter(survey__id=survey)
+
+        shgroupserializer = SHGroupSerializer(shgroup, many=True)
+        for i in range(len(shgroupserializer.data)):
+            shgroupserializer.data[i]['questionCnt'] = queryset.filter(
+                shGroup__id=shgroupserializer.data[i]['id']).count()
+            shgroupserializer.data[i]['questionTotalCnt'] = queryset.count()
+        
+        # ret = ''
+        # ret['data'] = shgroupserializer.data
+        # ret['questionTotalCnt'] = queryset.count()
+
+        return Response(shgroupserializer.data, status=status.HTTP_200_OK)
+
 # changepassword api
 class ChangePasswordView(APIView):
     permission_classes = [permissions.IsAuthenticated,
@@ -2065,43 +2103,6 @@ class WordCloudView(APIView):
             return Response(aux)
 
 # WIP
-class AMQuestionCountBySHGroup(APIView):
-    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
-
-    @classmethod
-    def get_extra_actions(cls):
-        return []
-
-    def get(self, format=None):
-        queryset = AMQuestion.objects.all()
-
-        survey = self.request.query_params.get('survey', None)
-        driver = self.request.query_params.get('driver', None)
-        
-        if (survey is not None) & (driver is not None):
-            queryset = queryset.filter(
-                survey__id=survey, driver__driverName=driver)
-        elif survey is not None:
-            queryset = queryset.filter(survey__id=survey)
-        elif driver is not None:
-            queryset = queryset.filter(driver__driverName=driver)
-
-        shgroup = SHGroup.objects.all()
-        if survey is not None:
-            shgroup = shgroup.filter(survey__id=survey)
-
-        shgroupserializer = SHGroupSerializer(shgroup, many=True)
-        for i in range(len(shgroupserializer.data)):
-            shgroupserializer.data[i]['questionCnt'] = queryset.filter(
-                shGroup__id=shgroupserializer.data[i]['id']).count()
-            shgroupserializer.data[i]['questionTotalCnt'] = queryset.count()
-        
-        # ret = ''
-        # ret['data'] = shgroupserializer.data
-        # ret['questionTotalCnt'] = queryset.count()
-
-        return Response(shgroupserializer.data, status=status.HTTP_200_OK)
-
 class BubbleChartView(APIView):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
 
@@ -2110,7 +2111,24 @@ class BubbleChartView(APIView):
         return []
 
     def get(self, format=None):
-        None
+        survey = self.request.query_params.get('survey', None)
+        projectUser = self.request.query_params.get('projectUser', None)
+
+        if survey is None:
+            return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
+        if projectUser is None:
+            return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
+
+        amqueryset = AMResponse.objects.filter(survey__id=survey, subProjectUser__id=projectUser)
+        amqueryset = AOResponse.objects.filter(survey__id=survey, subProjectUser__id=projectUser)
+
+        amserializer = AMResponseSerializer(amqueryset, many=True)
+        aoserializer = AOResponseSerializer(aoqueryset, many=True)
+
+        res = amserializer.data + aoserializer.data
+
+        return Response(res, status=status.HTTP_200_OK)
+        
 # WIP
 # class BubbleChartView(APIView):
 #     permission_classes = [permissions.IsAuthenticated,
