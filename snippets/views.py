@@ -2124,8 +2124,10 @@ class BubbleChartView(APIView):
         aoqueryset = AOResponse.objects.filter(survey__id=survey, subProjectUser__id=projectUser)
 
         shgroupserializer = SHGroupSerializer(shgroupqueryset, many=True)
-        amserializer = AMResponseSerializer(amqueryset, many=True)
-        aoserializer = AOResponseSerializer(aoqueryset, many=True)
+        amserializer = AMResponseForReportSerializer(amqueryset, many=True)
+        aoserializer = AOResponseForReportSerializer(aoqueryset, many=True)
+
+        # for i in range(len(shgroupserializer.data)):
 
         res = shgroupserializer.data + amserializer.data + aoserializer.data
 
