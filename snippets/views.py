@@ -2147,9 +2147,7 @@ class BubbleChartView(APIView):
             if perceptionTotal > 0:
                 perception = perceptionTotal / len(aoserializer.data)
 
-            shgroupserializer.data[i]['point'] = ''
-            shgroupserializer.data[i]['point']['x'] = reality
-            shgroupserializer.data[i]['point']['y'] = perception
+            shgroupserializer.data[i]['point'] = {"x": reality, "y": perception}
 
         res = shgroupserializer.data
 
