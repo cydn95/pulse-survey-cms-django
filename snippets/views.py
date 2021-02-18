@@ -1710,15 +1710,15 @@ class PerceptionRealityView(APIView):
         reality = 0
         realityTotal = 0
         for i in range(len(amserializer.data)):
-            perceptionTotal = perceptionTotal + amserializer.data[i]['integerValue']
+            perceptionTotal = perceptionTotal + aoserializer.data[i]['integerValue']
         for j in range(len(aoserializer.data)):
-            realityTotal = realityTotal + aoserializer.data[j]['integerValue']
+            realityTotal = realityTotal + amserializer.data[j]['integerValue']
 
         if perceptionTotal > 0:
-            perception = perceptionTotal / len(amserializer.data)
+            perception = perceptionTotal / len(aoserializer.data)
 
         if realityTotal > 0:
-            reality = realityTotal / len(aoserializer.data)
+            reality = realityTotal / len(amserializer.data)
 
         res = [perception, reality]
 
