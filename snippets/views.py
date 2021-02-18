@@ -1747,9 +1747,9 @@ class PerceptionRealityView(APIView):
         perceptionTotal = 0
         reality = 0
         realityTotal = 0
-        for i in range(len(amserializer.data)):
+        for i in range(len(aoserializer.data)):
             perceptionTotal = perceptionTotal + aoserializer.data[i]['integerValue']
-        for j in range(len(aoserializer.data)):
+        for j in range(len(amserializer.data)):
             realityTotal = realityTotal + amserializer.data[j]['integerValue']
 
         if perceptionTotal > 0:
@@ -2120,16 +2120,38 @@ class BubbleChartView(APIView):
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
 
         shgroupqueryset = SHGroup.objects.filter(survey__id=survey)
-        amqueryset = AMResponse.objects.filter(survey__id=survey, subProjectUser__id=projectUser)
-        aoqueryset = AOResponse.objects.filter(survey__id=survey, subProjectUser__id=projectUser)
+        # amqueryset = AMResponse.objects.filter(survey__id=survey, subProjectUser__id=projectUser)
+        # aoqueryset = AOResponse.objects.filter(survey__id=survey, subProjectUser__id=projectUser)
 
         shgroupserializer = SHGroupSerializer(shgroupqueryset, many=True)
-        amserializer = AMResponseForBubbleChartSerializer(amqueryset, many=True)
-        aoserializer = AOResponseForBubbleChartSerializer(aoqueryset, many=True)
+        
+        for i in range(len(shgroupserializer.data)):
+            amqueryset = AMResponse.objects.filter(survey__id=survey, subProjectUser__id=projectUser, amQuestion__shGroup__id=shgroupserializer.data[i]['id'])
+            aoqueryset = AOResponse.objects.filter(survey__id=survey, subProjectUser__id=projectUser, aoQuestion__shGroup__id=shgroupserializer.data[i]['id'])
 
-        # for i in range(len(shgroupserializer.data)):
+            amserializer = AMResponseSerializer(amqueryset, many=True)
+            aoserializer = AOResponseSerializer(aoqueryset, many=True)
 
-        res = shgroupserializer.data + amserializer.data + aoserializer.data
+            perception = 0
+            perceptionTotal = 0
+            reality = 0
+            realityTotal = 0
+            
+            for j in range(len(amserializer.data)):
+                realityTotal = realityTotal + amserializer.data[j]['integerValue']
+            for k in range(len(aoserializer.data)):
+                perceptionTotal = perceptionTotal + aoserializer.data[k]['integerValue']
+
+            if realityTotal > 0:
+                reality = realityTotal / len(amserializer.data)
+            if perceptionTotal > 0:
+                perception = perceptionTotal / len(aoserializer.data)
+
+            shgroupserializer.data[i]['point'] = ''
+            shgroupserializer.data[i]['point']['x'] = reality
+            shgroupserializer.data[i]['point']['y'] = perception
+
+        res = shgroupserializer.data
 
         return Response(res, status=status.HTTP_200_OK)
 
