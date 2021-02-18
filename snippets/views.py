@@ -2119,13 +2119,15 @@ class BubbleChartView(APIView):
         if projectUser is None:
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
 
+        shgroupqueryset = SHGroup.objects.filter(survey__id=survey)
         amqueryset = AMResponse.objects.filter(survey__id=survey, subProjectUser__id=projectUser)
         aoqueryset = AOResponse.objects.filter(survey__id=survey, subProjectUser__id=projectUser)
 
+        shgroupserializer = SHGroupSerializer(shgroupqueryset, many=True)
         amserializer = AMResponseSerializer(amqueryset, many=True)
         aoserializer = AOResponseSerializer(aoqueryset, many=True)
 
-        res = amserializer.data + aoserializer.data
+        res = shgroupserializer.data + amserializer.data + aoserializer.data
 
         return Response(res, status=status.HTTP_200_OK)
 
