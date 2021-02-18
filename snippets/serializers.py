@@ -161,7 +161,7 @@ class AMQuestionSerializer(serializers.ModelSerializer):
         'sliderTextLeft', 'sliderTextRight', 'skipOptionYN',  
         'topicPrompt', 'commentPrompt', 'survey', 'driver', 'controlType', 
         'shGroup', 'option', 'skipOption']
-
+                 
 class PageAMQuestionSerializer(serializers.ModelSerializer):
     amQuestion = AMQuestionSerializer()
     class Meta:
@@ -356,6 +356,24 @@ class AOResponseForReportSerializer(serializers.ModelSerializer):
         model = AOResponse
         fields = ['controlType', 'integerValue', 'topicValue', 'commentValue', 'created_at', 'updated_at',
                   'projectUser', 'subProjectUser', 'survey', 'project', 'aoQuestion']
+
+class AMResponseForBubbleChartSerializer(serializers.ModelSerializer):
+    amQuestion = AMQuestionSerializer()
+
+    class Meta:
+        model = AMResponse
+        # fields = '__all__'
+        fields = ['id', 'controlType', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags',
+                  'commentTags', 'created_at', 'updated_at', 'projectUser', 'subProjectUser', 'survey', 'project', 'amQuestion']
+
+
+class AOResponseForBubbleChartSerializer(serializers.ModelSerializer):
+    aoQuestion = AOQuestionSerializer()
+
+    class Meta:
+        model = AOResponse
+        fields = ['id', 'controlType', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags',
+                  'commentTags', 'created_at', 'updated_at', 'projectUser', 'subProjectUser', 'survey', 'project', 'aoQuestion']
 
 # class AMResponseReportSerializer(serializers.ModelSerializer):
 #     amQuestion = AMQuestionSerializer
