@@ -3,7 +3,7 @@ import re
 from pathlib import Path
 from email.mime.image import MIMEImage
 
-from snippets.serializers import AMResponseForBubbleChartSerializer, AOResponseForBubbleChartSerializer, AMResponseForReportSerializer, AOResponseForReportSerializer, ProjectUserForReportSerializer, AMQuestionSubDriverSerializer, AOQuestionSubDriverSerializer, DriverSubDriverSerializer, ProjectSerializer, ToolTipGuideSerializer, SurveySerializer, NikelMobilePageSerializer, ConfigPageSerializer, UserAvatarSerializer, SHMappingSerializer, ProjectVideoUploadSerializer, AMQuestionSerializer, AOQuestionSerializer, StakeHolderSerializer, SHCategorySerializer, MyMapLayoutStoreSerializer, ProjectMapLayoutStoreSerializer, UserBySurveySerializer, SurveyByUserSerializer, SkipOptionSerializer, DriverSerializer, AOQuestionSerializer, OrganizationSerializer, OptionSerializer, ProjectUserSerializer, SHGroupSerializer, UserSerializer, PageSettingSerializer, PageSerializer, AMResponseSerializer, AMResponseTopicSerializer, AOResponseSerializer, AOResponseTopicSerializer, AOPageSerializer, TeamSerializer
+from snippets.serializers import AMResponseForReportSerializer, AOResponseForReportSerializer, ProjectUserForReportSerializer, AMQuestionSubDriverSerializer, AOQuestionSubDriverSerializer, DriverSubDriverSerializer, ProjectSerializer, ToolTipGuideSerializer, SurveySerializer, NikelMobilePageSerializer, ConfigPageSerializer, UserAvatarSerializer, SHMappingSerializer, ProjectVideoUploadSerializer, AMQuestionSerializer, AOQuestionSerializer, StakeHolderSerializer, SHCategorySerializer, MyMapLayoutStoreSerializer, ProjectMapLayoutStoreSerializer, UserBySurveySerializer, SurveyByUserSerializer, SkipOptionSerializer, DriverSerializer, AOQuestionSerializer, OrganizationSerializer, OptionSerializer, ProjectUserSerializer, SHGroupSerializer, UserSerializer, PageSettingSerializer, PageSerializer, AMResponseSerializer, AMResponseTopicSerializer, AOResponseSerializer, AOResponseTopicSerializer, AOPageSerializer, TeamSerializer
 from rest_framework import generics, permissions
 from django.contrib.auth.models import User
 from rest_framework.decorators import action
@@ -2154,19 +2154,6 @@ class BubbleChartView(APIView):
         return Response(res, status=status.HTTP_200_OK)
 
 # WIP
-# class BubbleChartView(APIView):
-#     permission_classes = [permissions.IsAuthenticated,
-#                           permissions.IsAuthenticatedOrReadOnly]
 
-#     @classmethod
-#     def get_extra_actions(cls):
-#         return []
-
-#     def get(self, format=None):
-#         amqueryset = AMResponse.objects.all()
-#         aoqueryset = AOResponse.objects.all()
-
-#         survey = self.request.query_params.get('survey', None)
-#         projectUser = self.request.query_params.get('projectUser', None)
 
 

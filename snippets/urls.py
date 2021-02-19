@@ -57,6 +57,7 @@ urlpatterns = [
 
 urlpatterns += format_suffix_patterns([
     url(r'amquestioncnt', views.AMQuestionCountBySHGroup.as_view()),
+    url(r'bubblechart', views.BubbleChartView.as_view()),
     url(r'changepassword', views.ChangePasswordView.as_view()),
     url(r'perceptionreality', views.PerceptionRealityView.as_view()),
     url(r'stakeholder', views.StakeHolderUserView.as_view()),
@@ -65,7 +66,7 @@ urlpatterns += format_suffix_patterns([
     url(r'userguidemode', views.UserGuideModeView.as_view()),
     url(r'wordcloud', views.WordCloudView.as_view()),
     # WIP
-    url(r'bubblechart', views.BubbleChartView.as_view()),
+    
 ])
 
 # router.register(r'interestreport', views.AMResponseFeedbackSummaryForInterestViewset)     # deprecated
