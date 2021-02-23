@@ -2128,26 +2128,34 @@ class BubbleChartView(APIView):
         for i in range(len(shgroupserializer.data)):
             amqueryset = AMResponse.objects.filter(survey__id=survey, subProjectUser__id=projectUser, amQuestion__shGroup__id=shgroupserializer.data[i]['id'])
             aoqueryset = AOResponse.objects.filter(survey__id=survey, subProjectUser__id=projectUser, aoQuestion__shGroup__id=shgroupserializer.data[i]['id'])
+            aoqueryforzset = AOResponse.objects.filter(survey__id=survey, aoQuestion__shGroup__id=shgroupserializer.data[i]['id'])
 
             amserializer = AMResponseSerializer(amqueryset, many=True)
             aoserializer = AOResponseSerializer(aoqueryset, many=True)
+            aoforzserializer = AOResponseSerializer(aoqueryforzset, many=True)
 
             perception = 0
             perceptionTotal = 0
             reality = 0
             realityTotal = 0
-            
+            zvalue = 0
+            zvauleTotal = 0
+
             for j in range(len(amserializer.data)):
                 realityTotal = realityTotal + amserializer.data[j]['integerValue']
             for k in range(len(aoserializer.data)):
                 perceptionTotal = perceptionTotal + aoserializer.data[k]['integerValue']
+            for m in range(len(aoforzserializer.data)):
+                zvauleTotal = zvauleTotal + aoforzserializer.data[m]['integerValue']
 
             if realityTotal > 0:
                 reality = realityTotal / len(amserializer.data)
             if perceptionTotal > 0:
                 perception = perceptionTotal / len(aoserializer.data)
+            if zvauleTotal > 0:
+                zvalue = zvauleTotal / len(aoforzserializer.data)
 
-            shgroupserializer.data[i]['point'] = {"x": reality, "y": perception}
+            shgroupserializer.data[i]['point'] = {"x": reality, "y": perception, "z": zvalue}
 
         res = shgroupserializer.data
 
