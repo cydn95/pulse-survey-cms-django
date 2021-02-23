@@ -76,16 +76,24 @@ class AMResponse(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-# working 
-class AMResponseAcknowledgement(models.Model):
-    amResponse = models.ForeignKey(AMResponse, on_delete=models.CASCADE)
-    survey = models.ForeignKey(Survey, on_delete=models.CASCADE)
-    project = models.ForeignKey(Project, on_delete=models.CASCADE)
-    actionText = models.CharField(max_length=10)
-    actionType = models.PositiveIntegerField(default=0, blank=False, null=False)
+# # working
+# # 1: like
+# # 2: dislike
+# # 3: Thanks for sharing
+# # 4: Great idea
+# # 5: Working on it
+# # 6: Would love to talk in person
+# # 7: I agree
+# # 8: 
+# class AMResponseAcknowledgement(models.Model):
+#     amResponse = models.ForeignKey(AMResponse, on_delete=models.CASCADE)
+#     # survey = models.ForeignKey(Survey, on_delete=models.CASCADE)
+#     # project = models.ForeignKey(Project, on_delete=models.CASCADE)
+#     actionText = models.CharField(max_length=10)
+#     actionType = models.PositiveIntegerField(default=0, blank=False, null=False)
     
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+#     created_at = models.DateTimeField(auto_now_add=True)
+#     updated_at = models.DateTimeField(auto_now=True)
 
 class AMResponseSentiment(models.Model):
     amResponse = models.ForeignKey(AMResponse, on_delete=models.CASCADE)
