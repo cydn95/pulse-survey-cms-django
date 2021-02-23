@@ -69,9 +69,9 @@ urlpatterns += format_suffix_patterns([
     
 ])
 
-router.register(r'interestreport', views.AMResponseFeedbackSummaryForInterestViewset)     # deprecated
-router.register(r'perceptionreality', views.PerceptionRealityViewSet)         # deprecated
-router.register(r'fetchperceptioninfo', views.FetchPerceptionInfoViewSet)     # deprecated
+# router.register(r'interestreport', views.AMResponseFeedbackSummaryForInterestViewset)     # deprecated
+# router.register(r'perceptionreality', views.PerceptionRealityViewSet)         # deprecated
+# router.register(r'fetchperceptioninfo', views.FetchPerceptionInfoViewSet)     # deprecated
 # router.register(r'fetchRealityInfo', views.FetchRealityInfoViewSet)           # deprecated
 # router.register(r'overallsentimentreportv2', views.ProjectUserv2ViewSet)     # deprecated
 # router.register(r'aoresponsereportv2', views.AOResponseReportv2ViewSet)       # deprecated
@@ -82,6 +82,6 @@ router.register(r'fetchperceptioninfo', views.FetchPerceptionInfoViewSet)     # 
 # router.register(r'aoquestion', views.AOQuestionViewSet, base_name='aoquestion')         # deprecated
 # router.register(r'aopage', views.AOPageViewSet)         # deprecated
 # router.register(r'pagesettings', views.PageSettingViewSet)      # deprecated
-router.register(r'shmapping', views.SHMappingViewSet)         # deprecated
-router.register(r'sentimentreport', views.AMResponseFeedbackSummaryForSentimentViewSet)       # deprecated
-router.register(r'engagementtrend', views.AMResponseFeedbackSummaryForEngagementViewset)      # deprecated
+# router.register(r'shmapping', views.SHMappingViewSet)         # deprecated
+# router.register(r'sentimentreport', views.AMResponseFeedbackSummaryForSentimentViewSet)       # deprecated
+# router.register(r'engagementtrend', views.AMResponseFeedbackSummaryForEngagementViewset)      # deprecated
