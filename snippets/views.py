@@ -44,6 +44,12 @@ import json
 #initialize comprehend module
 comprehend = boto3.client(service_name='comprehend', region_name='us-east-2')
 
+# acknowledgement api
+class AOResponseAcknowledgementViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+    queryset = AOResponseAcknowledgement.objects.all()
+    serializer_class = AOResponseAcknowledgementSerializer
+
 # amresponse api
 class AMResponseViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated,
@@ -1639,13 +1645,6 @@ class UserAvatarViewSet(viewsets.ModelViewSet):
     queryset = UserAvatar.objects.all()
     serializer_class = UserAvatarSerializer
 
-# WIP
-# aoresponseacknowledgement api
-class AOResponseAcknowledgementViewSet(viewsets.ModelViewSet):
-    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
-    queryset = AOResponseAcknowledgement.objects.all()
-    serializer_class = AOResponseAcknowledgementSerializer
-
 # api-token-auth api
 class CustomAuthToken(ObtainAuthToken):
     permission_classes = [permissions.AllowAny]
@@ -2109,7 +2108,7 @@ class WordCloudView(APIView):
         else:
             return Response(aux)
 
-# WIP
+# bubblechart
 class BubbleChartView(APIView):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
 
@@ -2167,7 +2166,4 @@ class BubbleChartView(APIView):
         res = shgroupserializer.data
 
         return Response(res, status=status.HTTP_200_OK)
-
-# WIP
-
 
