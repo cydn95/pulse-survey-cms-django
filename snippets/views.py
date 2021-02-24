@@ -3,7 +3,7 @@ import re
 from pathlib import Path
 from email.mime.image import MIMEImage
 
-from snippets.serializers import AMResponseForReportSerializer, AOResponseForReportSerializer, ProjectUserForReportSerializer, AMQuestionSubDriverSerializer, AOQuestionSubDriverSerializer, DriverSubDriverSerializer, ProjectSerializer, ToolTipGuideSerializer, SurveySerializer, NikelMobilePageSerializer, ConfigPageSerializer, UserAvatarSerializer, SHMappingSerializer, ProjectVideoUploadSerializer, AMQuestionSerializer, AOQuestionSerializer, StakeHolderSerializer, SHCategorySerializer, MyMapLayoutStoreSerializer, ProjectMapLayoutStoreSerializer, UserBySurveySerializer, SurveyByUserSerializer, SkipOptionSerializer, DriverSerializer, AOQuestionSerializer, OrganizationSerializer, OptionSerializer, ProjectUserSerializer, SHGroupSerializer, UserSerializer, PageSettingSerializer, PageSerializer, AMResponseSerializer, AMResponseTopicSerializer, AOResponseSerializer, AOResponseTopicSerializer, AOPageSerializer, TeamSerializer
+from snippets.serializers import AOResponseAcknowledgementSerializer, AMResponseForReportSerializer, AOResponseForReportSerializer, ProjectUserForReportSerializer, AMQuestionSubDriverSerializer, AOQuestionSubDriverSerializer, DriverSubDriverSerializer, ProjectSerializer, ToolTipGuideSerializer, SurveySerializer, NikelMobilePageSerializer, ConfigPageSerializer, UserAvatarSerializer, SHMappingSerializer, ProjectVideoUploadSerializer, AMQuestionSerializer, AOQuestionSerializer, StakeHolderSerializer, SHCategorySerializer, MyMapLayoutStoreSerializer, ProjectMapLayoutStoreSerializer, UserBySurveySerializer, SurveyByUserSerializer, SkipOptionSerializer, DriverSerializer, AOQuestionSerializer, OrganizationSerializer, OptionSerializer, ProjectUserSerializer, SHGroupSerializer, UserSerializer, PageSettingSerializer, PageSerializer, AMResponseSerializer, AMResponseTopicSerializer, AOResponseSerializer, AOResponseTopicSerializer, AOPageSerializer, TeamSerializer
 from rest_framework import generics, permissions
 from django.contrib.auth.models import User
 from rest_framework.decorators import action
@@ -14,7 +14,7 @@ from rest_framework import viewsets
 from page_setting.models import PageSetting
 from cms.models import Page
 from aboutme.models import AMQuestion, AMResponse, AMResponseTopic, AMQuestionSHGroup
-from aboutothers.models import AOResponse, AOResponseTopic, AOPage
+from aboutothers.models import AOResponseAcknowledgement, AOResponse, AOResponseTopic, AOPage
 from team.models import Team
 from shgroup.models import SHGroup, ProjectUser, MyMapLayout, ProjectMapLayout, SHCategory, SHMapping
 from option.models import Option, SkipOption
@@ -1639,6 +1639,13 @@ class UserAvatarViewSet(viewsets.ModelViewSet):
     queryset = UserAvatar.objects.all()
     serializer_class = UserAvatarSerializer
 
+# WIP
+# aoresponseacknowledgement api
+class AOResponseAcknowledgementViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+    queryset = AOResponseAcknowledgement.objects.all()
+    serializer_class = AOResponseAcknowledgementSerializer
+
 # api-token-auth api
 class CustomAuthToken(ObtainAuthToken):
     permission_classes = [permissions.AllowAny]
@@ -2162,6 +2169,5 @@ class BubbleChartView(APIView):
         return Response(res, status=status.HTTP_200_OK)
 
 # WIP
-
 
 

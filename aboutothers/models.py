@@ -77,7 +77,6 @@ class AOResponse(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-
 class AOResponseAcknowledgement(models.Model):
     aoResponse = models.ForeignKey(AOResponse, on_delete=models.CASCADE)
     # survey = models.ForeignKey(Survey, on_delete=models.CASCADE)

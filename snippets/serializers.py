@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from page_setting.models import PageSetting, PageType
 from cms.models import Page, Title
 from aboutme.models import PageAMQuestion, AMQuestion, AMResponse, AMResponseTopic
-from aboutothers.models import PageAOQuestion, AOQuestion, AOResponse, AOResponseTopic, AOPage
+from aboutothers.models import AOResponseAcknowledgement, PageAOQuestion, AOQuestion, AOResponse, AOResponseTopic, AOPage
 from page_nav.models import PageNav
 from team.models import Team
 from shgroup.models import SHGroup, ProjectUser, MyMapLayout, ProjectMapLayout, SHCategory, SHMapping
@@ -374,6 +374,12 @@ class AOResponseForBubbleChartSerializer(serializers.ModelSerializer):
         model = AOResponse
         fields = ['id', 'controlType', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags',
                   'commentTags', 'created_at', 'updated_at', 'projectUser', 'subProjectUser', 'survey', 'project', 'aoQuestion']
+
+
+class AOResponseAcknowledgementSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AOResponseAcknowledgement
+        fields = '__all__'
 
 # class AMResponseReportSerializer(serializers.ModelSerializer):
 #     amQuestion = AMQuestionSerializer

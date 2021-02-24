@@ -40,6 +40,8 @@ router.register(r'users', views.UserViewSet)
 router.register(r'updatestakeholder', views.UpdateStakeHolderViewSet)
 router.register(r'userbysurvey', views.UserBySurveyViewSet)
 router.register(r'useravatar', views.UserAvatarViewSet)
+# WIP
+router.register(r'acknowledgement', views.AOResponseAcknowledgementViewSet)
 
 # The API URLs are now determined automatically by the router.
 urlpatterns = [
