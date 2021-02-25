@@ -2167,3 +2167,13 @@ class BubbleChartView(APIView):
 
         return Response(res, status=status.HTTP_200_OK)
 
+# WIP
+class KeyThemesView(APIView):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+
+    @classmethod
+    def get_extra_actions(cls):
+        return []
+
+    def get(self, format=None):
+        return []
