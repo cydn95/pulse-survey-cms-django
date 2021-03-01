@@ -71,7 +71,7 @@ urlpatterns += format_suffix_patterns([
     # WIP
     url(r'keytheme', views.KeyThemesView.as_view()),
     url(r'mymatrix', views.MyMatrixView.as_view()),
-    url(r'projectmatrix', views.ProjectMatrixVuew.as_view()),
+    url(r'projectmatrix', views.ProjectMatrixView.as_view()),
 ])
 
 # router.register(r'interestreport', views.AMResponseFeedbackSummaryForInterestViewset)     # deprecated
