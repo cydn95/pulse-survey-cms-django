@@ -2108,7 +2108,7 @@ class WordCloudView(APIView):
         else:
             return Response(aux)
 
-# bubblechart
+# bubblechart api
 class BubbleChartView(APIView):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
 
@@ -2168,7 +2168,54 @@ class BubbleChartView(APIView):
         return Response(res, status=status.HTTP_200_OK)
 
 # WIP
+# keytheme api
 class KeyThemesView(APIView):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+
+    @classmethod
+    def get_extra_actions(cls):
+        return []
+
+    def get(self, format=None):
+        return []
+
+# WIP
+# mymatrix api
+class MyMatrixView(APIView):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+
+    @classmethod
+    def get_extra_actions(cls):
+        return []
+
+    def get(self, format=None):
+        # params
+        # 1: group by "person"
+        # 2: group by "group"
+        # 3: group by "team"
+        # 4: group by "organisation"
+        groupBy = self.request.query_params.get('groupby', None)
+        projectUser = self.request.query_params.get('projectuser', None)
+
+        if projectUser is None:
+            return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
+        if groupBy is None:
+            return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
+        if (groupBy == 0) & (groupBy > 4):
+            return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
+
+        ret = []
+        if groupBy == 1:
+            
+        elif groupBy == 2:
+        elif groupBy == 3:
+        elif groupBy == 4:
+
+        return []
+
+# WIP
+# projectmatrix api
+class ProjectMatrixView(APIView):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
 
     @classmethod
