@@ -2208,7 +2208,7 @@ class MyMatrixView(APIView):
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
 
         ret = []
-        driverqueryset = Driver.objects.all().filter(survey__id=survey, isStandard=True).order_by('driverOrder')
+        driverqueryset = Driver.objects.all().filter(survey__id=survey, isStandard=True).order_by('driveOrder')
         driverserializer = DriverSerializer(driverqueryset, many=True)
 
         # if groupBy == 1:    # 1: group by "person"
