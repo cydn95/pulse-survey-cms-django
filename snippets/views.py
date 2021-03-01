@@ -2204,7 +2204,7 @@ class MyMatrixView(APIView):
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
         if groupBy is None:
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
-        if (groupBy == 0) & (groupBy > 4):
+        if (int(groupBy) == 0) & (int(groupBy) > 4):
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
 
         ret = []
