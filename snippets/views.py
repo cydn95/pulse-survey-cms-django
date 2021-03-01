@@ -2211,24 +2211,22 @@ class MyMatrixView(APIView):
         driverqueryset = Driver.objects.all().filter(survey__id=survey, isStandard=True).order_by('driveOrder')
         driverserializer = DriverSerializer(driverqueryset, many=True)
         
-        aoresponsequeryset = AOResponse.objects.filter(survey__id=survey, subProjectUser__id=projectUser).values(
-            'projectUser').annotate(personalAvg=Avg('integerValue'))
-        aoresponseserializer = AOResponseForMatrixSerializer(aoresponsequeryset, many=True)
+        # aggregation
+        # aoresponsequeryset = AOResponse.objects.filter(survey__id=survey, subProjectUser__id=projectUser).values(
+        #     'projectUser').annotate(personalAvg=Avg('integerValue'))
+        # aoresponseserializer = AOResponseForMatrixSerializer(aoresponsequeryset, many=True)
 
         # aoresponseserializer = ''
         # if groupBy == 1:    # 1: group by "person"
-        #     for i in range(len(driverserializer.data)):
-        #         aoresponsequeryset = AOResponse.objects.all().filter(amQuestion__driver__id=driverserializer.data[i]['id'], survey__id=survey, subProjectUser__id=projectUser).order_by('projectUser')
-        #         aoresponseserializer = AOResponseForMatrixSerializer(aoresponsequeryset, many=True)
-                
-        #         for j in range(len(aoresponseserializer.data)):
-        #             driverserializer.data[i]['aoResponseData'][aoresponseserializer.data[j][]]
-        #         driverserializer.data['aoResponseData'] = aoresponseserializer.data
+        for i in range(len(driverserializer.data)):
+            aoresponsequeryset = AOResponse.objects.all().filter(amQuestion__driver__id=driverserializer.data[i]['id'], survey__id=survey, subProjectUser__id=projectUser).order_by('projectUser')
+            aoresponseserializer = AOResponseForMatrixSerializer(aoresponsequeryset, many=True)
+            driverserializer.data['aoResponseData'] = aoresponseserializer.data
         # elif groupBy == 2:  # 2: group by "group"
         # elif groupBy == 3:  # 3: group by "team"
         # elif groupBy == 4:  # 4: group by "organisation"
 
-        return Response(list(aoresponsequeryset), status=status.HTTP_200_OK)
+        return Response(driverserializer.data, status=status.HTTP_200_OK)
 
 # WIP
 # projectmatrix api
