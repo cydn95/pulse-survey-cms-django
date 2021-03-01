@@ -24,7 +24,7 @@ from aboutothers.models import AOQuestion
 from survey.models import ToolTipGuide, Survey, Driver, Project, ProjectVideoUpload, ConfigPage, NikelMobilePage
 from rest_framework.views import APIView
 from django.forms.models import model_to_dict
-from django.db.models import Q, Count
+from django.db.models import Q, Count, Avg
 
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
@@ -2208,19 +2208,27 @@ class MyMatrixView(APIView):
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
 
         ret = []
-        # driverqueryset = Driver.objects.all().filter(survey__id=survey, isStandard=True).order_by('driveOrder')
-        # driverserializer = DriverSerializer(driverqueryset, many=True)
+        driverqueryset = Driver.objects.all().filter(survey__id=survey, isStandard=True).order_by('driveOrder')
+        driverserializer = DriverSerializer(driverqueryset, many=True)
+        
+        aoresponsequeryset = AOResponse.objects.filter(amQuestion__driver__id=driverserializer.data[i]['id'], survey__id=survey, subProjectUser__id=projectUser).values(
+            'projectUser').annotate(personalAvg=Avg('integerValue'))
+        aoresponseserializer = AOResponseForMatrixSerializer(aoresponsequeryset, many=True)
 
+        # aoresponseserializer = ''
         # if groupBy == 1:    # 1: group by "person"
-        aoresponsequeryset = AOResponse.objects.all().filter(survey__id=survey, subProjectUser__id=projectUser)
-        aoresponseserializer = AOResponseForMatrixSerializer(
-            aoresponsequeryset, many=True)
-        #     # aoqueryset = aoqueryset.filter(survey__id=survey, subProjectUser__id=projectUser, )
+        #     for i in range(len(driverserializer.data)):
+        #         aoresponsequeryset = AOResponse.objects.all().filter(amQuestion__driver__id=driverserializer.data[i]['id'], survey__id=survey, subProjectUser__id=projectUser).order_by('projectUser')
+        #         aoresponseserializer = AOResponseForMatrixSerializer(aoresponsequeryset, many=True)
+                
+        #         for j in range(len(aoresponseserializer.data)):
+        #             driverserializer.data[i]['aoResponseData'][aoresponseserializer.data[j][]]
+        #         driverserializer.data['aoResponseData'] = aoresponseserializer.data
         # elif groupBy == 2:  # 2: group by "group"
         # elif groupBy == 3:  # 3: group by "team"
         # elif groupBy == 4:  # 4: group by "organisation"
 
-        return Response(aoresponseserializer.data, status=status.HTTP_200_OK)
+        return Response(driverserializer.data, status=status.HTTP_200_OK)
 
 # WIP
 # projectmatrix api
