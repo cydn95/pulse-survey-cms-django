@@ -2208,17 +2208,18 @@ class MyMatrixView(APIView):
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
 
         ret = []
-        driverqueryset = Driver.objects.all().filter(survey__id=survey, isStandard=True).order_by('driveOrder')
-        driverserializer = DriverSerializer(driverqueryset, many=True)
+        # driverqueryset = Driver.objects.all().filter(survey__id=survey, isStandard=True).order_by('driveOrder')
+        # driverserializer = DriverSerializer(driverqueryset, many=True)
 
         # if groupBy == 1:    # 1: group by "person"
-            
+        aoresponsequeryset = AOResponse.objects.all().filter(survey__id=survey, subProjectUser__id=projectUser).group_by('projectUser')
+        aoresponseserializer = AOResponseForReportSerializer(aoresponsequeryset, many=True)
         #     # aoqueryset = aoqueryset.filter(survey__id=survey, subProjectUser__id=projectUser, )
         # elif groupBy == 2:  # 2: group by "group"
         # elif groupBy == 3:  # 3: group by "team"
         # elif groupBy == 4:  # 4: group by "organisation"
 
-        return Response(driverserializer.data, status=status.HTTP_200_OK)
+        return Response(aoresponseserializer.data, status=status.HTTP_200_OK)
 
 # WIP
 # projectmatrix api
