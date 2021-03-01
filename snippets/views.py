@@ -2211,7 +2211,7 @@ class MyMatrixView(APIView):
         driverqueryset = Driver.objects.all().filter(survey__id=survey, isStandard=True).order_by('driveOrder')
         driverserializer = DriverSerializer(driverqueryset, many=True)
         
-        aoresponsequeryset = AOResponse.objects.filter(amQuestion__driver__id=driverserializer.data[i]['id'], survey__id=survey, subProjectUser__id=projectUser).values(
+        aoresponsequeryset = AOResponse.objects.filter(survey__id=survey, subProjectUser__id=projectUser).values(
             'projectUser').annotate(personalAvg=Avg('integerValue'))
         aoresponseserializer = AOResponseForMatrixSerializer(aoresponsequeryset, many=True)
 
