@@ -2228,7 +2228,7 @@ class MyMatrixView(APIView):
         # elif groupBy == 3:  # 3: group by "team"
         # elif groupBy == 4:  # 4: group by "organisation"
 
-        return Response(aoresponseserializer.data, status=status.HTTP_200_OK)
+        return Response(list(aoresponsequeryset), status=status.HTTP_200_OK)
 
 # WIP
 # projectmatrix api
