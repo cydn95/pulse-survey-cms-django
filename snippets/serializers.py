@@ -357,6 +357,16 @@ class AOResponseForReportSerializer(serializers.ModelSerializer):
         fields = ['controlType', 'integerValue', 'topicValue', 'commentValue', 'created_at', 'updated_at',
                   'projectUser', 'subProjectUser', 'survey', 'project', 'aoQuestion']
 
+
+class AOResponseForMatrixSerializer(serializers.ModelSerializer):
+    projectUser = ProjectUserForReportSerializer()
+    subProjectUser = ProjectUserForReportSerializer()
+
+    class Meta:
+        model = AOResponse
+        fields = ['controlType', 'integerValue', 'topicValue', 'commentValue', 'created_at', 'updated_at',
+                  'projectUser', 'subProjectUser', 'survey', 'project', 'aoQuestion']
+
 class AMResponseForBubbleChartSerializer(serializers.ModelSerializer):
     amQuestion = AMQuestionSerializer()
 
