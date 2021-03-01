@@ -24,7 +24,7 @@ from aboutothers.models import AOQuestion
 from survey.models import ToolTipGuide, Survey, Driver, Project, ProjectVideoUpload, ConfigPage, NikelMobilePage
 from rest_framework.views import APIView
 from django.forms.models import model_to_dict
-from django.db.models import Q
+from django.db.models import Q, Count
 
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
