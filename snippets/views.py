@@ -2196,7 +2196,10 @@ class MyMatrixView(APIView):
         # 4: group by "organisation"
         groupBy = self.request.query_params.get('groupby', None)
         projectUser = self.request.query_params.get('projectuser', None)
+        survey = self.request.query_params.get('survey', None)
 
+        if survey is None:
+            return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
         if projectUser is None:
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
         if groupBy is None:
@@ -2205,11 +2208,11 @@ class MyMatrixView(APIView):
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
 
         ret = []
-        if groupBy == 1:
+        if groupBy == 1:    # 1: group by "person"
             
-        elif groupBy == 2:
-        elif groupBy == 3:
-        elif groupBy == 4:
+        elif groupBy == 2:  # 2: group by "group"
+        elif groupBy == 3:  # 3: group by "team"
+        elif groupBy == 4:  # 4: group by "organisation"
 
         return []
 
