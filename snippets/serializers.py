@@ -336,7 +336,7 @@ class ProjectUserForReportSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProjectUser
         # fields = '__all__'
-        fields = ['user', 'team', 'shGroup', 'isTeamMember', 'isCGroup1', 'isCGroup2', 'isCGroup3']
+        fields = ['id', 'user', 'team', 'shGroup', 'isTeamMember', 'isCGroup1', 'isCGroup2', 'isCGroup3']
 
 
 class AMResponseForReportSerializer(serializers.ModelSerializer):
