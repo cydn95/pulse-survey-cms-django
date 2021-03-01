@@ -2212,7 +2212,7 @@ class MyMatrixView(APIView):
         # driverserializer = DriverSerializer(driverqueryset, many=True)
 
         # if groupBy == 1:    # 1: group by "person"
-        aoresponsequeryset = AOResponse.objects.all().filter(survey__id=survey, subProjectUser__id=projectUser).group_by('projectUser')
+        aoresponsequeryset = AOResponse.objects.all().filter(survey__id=survey, subProjectUser__id=projectUser).annotate(Count('projectUser'))
         aoresponseserializer = AOResponseForReportSerializer(aoresponsequeryset, many=True)
         #     # aoqueryset = aoqueryset.filter(survey__id=survey, subProjectUser__id=projectUser, )
         # elif groupBy == 2:  # 2: group by "group"
