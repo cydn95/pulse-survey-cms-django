@@ -2208,13 +2208,17 @@ class MyMatrixView(APIView):
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
 
         ret = []
-        if groupBy == 1:    # 1: group by "person"
-            
-        elif groupBy == 2:  # 2: group by "group"
-        elif groupBy == 3:  # 3: group by "team"
-        elif groupBy == 4:  # 4: group by "organisation"
+        driverqueryset = Driver.objects.all().filter(survey__id=survey, isStandard=True).order_by('driverOrder')
+        driverserializer = DriverSerializer(driverqueryset, many=True)
 
-        return []
+        # if groupBy == 1:    # 1: group by "person"
+            
+        #     # aoqueryset = aoqueryset.filter(survey__id=survey, subProjectUser__id=projectUser, )
+        # elif groupBy == 2:  # 2: group by "group"
+        # elif groupBy == 3:  # 3: group by "team"
+        # elif groupBy == 4:  # 4: group by "organisation"
+
+        return Response(driverserializer.data, status=status.HTTP_200_OK)
 
 # WIP
 # projectmatrix api
