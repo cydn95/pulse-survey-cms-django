@@ -2221,11 +2221,11 @@ class MyMatrixView(APIView):
         for i in range(len(driverserializer.data)):
             aoresponsequeryset = AOResponse.objects.all().filter(aoQuestion__driver__id=driverserializer.data[i]['id'], survey__id=survey, subProjectUser__id=projectUser).order_by('projectUser')
             aoresponseserializer = AOResponseForMatrixSerializer(aoresponsequeryset, many=True)
-            driverserializer.data['aoResponseData'] = aoresponseserializer.data
+            driverserializer.data[i]['aoResponseData'] = aoresponseserializer.data
         # elif groupBy == 2:  # 2: group by "group"
         # elif groupBy == 3:  # 3: group by "team"
         # elif groupBy == 4:  # 4: group by "organisation"
-
+        
         return Response(driverserializer.data, status=status.HTTP_200_OK)
 
 # WIP
