@@ -2223,7 +2223,7 @@ class MyMatrixView(APIView):
         )
         nextItemId = len(driverserializer.data)
         paaoresponsequeryset = AOResponse.objects.all().filter(aoQuestion__questionText=paQuestionList,
-                                                               aoQuestion__survey__id=survey, subProjectUser__id=projectUser).order_by('projectUser')
+                                                               survey__id=survey, subProjectUser__id=projectUser).order_by('projectUser')
         paaoresponseserializer = AOResponseForMatrixSerializer(paaoresponsequeryset, many=True)
         
         perceptionAccuracyDriverItem = {
@@ -2264,4 +2264,33 @@ class ProjectMatrixView(APIView):
             aoresponseserializer = AOResponseForMatrixSerializer(aoresponsequeryset, many=True)
             driverserializer.data[i]['aoResponseData'] = aoresponseserializer.data
 
-        return Response(driverserializer.data, status=status.HTTP_200_OK)
+        paQuestionList = (
+            "How do you think {{{FULLNAME}}} feels the {{{PROJECTNAME}}} project is going?",
+            "How engaged do you think {{{FULLNAME}}} should be on this project?",
+            "How engaged / involved do you think {{{FULLNAME}}} actually is on this project?",
+            "How influential do you think {{{FULLNAME}}} is on this project?",
+            "Do you think {{{FULLNAME}}} thinks this project will meet its objectives?",
+            "How do you think {{{FULLNAME}}} views the overall culture on the project?",
+            "How would you describe your working relationship with {{{FULLNAME}}} at present?",
+            "How important do you think this project is to {{{FULLNAME}}}?"
+        )
+        nextItemId = len(driverserializer.data)
+        paaoresponsequeryset = AOResponse.objects.all().filter(aoQuestion__questionText=paQuestionList,
+                                                               survey__id=survey).order_by('projectUser')
+        paaoresponseserializer = AOResponseForMatrixSerializer(
+            paaoresponsequeryset, many=True)
+
+        perceptionAccuracyDriverItem = {
+            "id": 9999999,
+            "driverName": "Perception Accuracy",
+            "iconPath": "",
+            "driverOrder": 999999,
+            "isStandard": True,
+            "survey": survey,
+            "aoResponseData": paaoresponseserializer.data
+        }
+
+        retList = list(driverserializer.data)
+        retList.append(perceptionAccuracyDriverItem)
+
+        return Response(retList, status=status.HTTP_200_OK)
