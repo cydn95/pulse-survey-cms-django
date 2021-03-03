@@ -2222,8 +2222,16 @@ class MyMatrixView(APIView):
             "How important do you think this project is to {{{FULLNAME}}}?"
         )
 
-        paaoresponsequeryset = AOResponse.objects.all().filter(aoQuestion__questionText=paQuestionList,
-                                                               survey__id=survey, subProjectUser__id=projectUser).order_by('projectUser')
+        paaoresponsequeryset = AOResponse.objects.all().filter(
+            Q(aoQuestion__questionText="How do you think {{{FULLNAME}}} feels the {{{PROJECTNAME}}} project is going?") |
+            Q(aoQuestion__questionText="How engaged do you think {{{FULLNAME}}} should be on this project?") |
+            Q(aoQuestion__questionText="How engaged / involved do you think {{{FULLNAME}}} actually is on this project?") |
+            Q(aoQuestion__questionText="How influential do you think {{{FULLNAME}}} is on this project?") |
+            Q(aoQuestion__questionText="Do you think {{{FULLNAME}}} thinks this project will meet its objectives?") |
+            Q(aoQuestion__questionText="How do you think {{{FULLNAME}}} views the overall culture on the project?") |
+            Q(aoQuestion__questionText="How would you describe your working relationship with {{{FULLNAME}}} at present?") |
+            Q(aoQuestion__questionText="How important do you think this project is to {{{FULLNAME}}}?"),
+            survey__id=survey, subProjectUser__id=projectUser).order_by('projectUser')
         paaoresponseserializer = AOResponseForMatrixSerializer(paaoresponsequeryset, many=True)
         
         perceptionAccuracyDriverItem = {
@@ -2276,8 +2284,16 @@ class ProjectMatrixView(APIView):
             "How important do you think this project is to {{{FULLNAME}}}?"
         )
 
-        paaoresponsequeryset = AOResponse.objects.all().filter(aoQuestion__questionText="How do you think {{{FULLNAME}}} feels the {{{PROJECTNAME}}} project is going?",
-                                                               survey__id=survey).order_by('projectUser')
+        paaoresponsequeryset = AOResponse.objects.all().filter(
+            Q(aoQuestion__questionText="How do you think {{{FULLNAME}}} feels the {{{PROJECTNAME}}} project is going?") |
+            Q(aoQuestion__questionText="How engaged do you think {{{FULLNAME}}} should be on this project?") |
+            Q(aoQuestion__questionText="How engaged / involved do you think {{{FULLNAME}}} actually is on this project?") |
+            Q(aoQuestion__questionText="How influential do you think {{{FULLNAME}}} is on this project?") |
+            Q(aoQuestion__questionText="Do you think {{{FULLNAME}}} thinks this project will meet its objectives?") |
+            Q(aoQuestion__questionText="How do you think {{{FULLNAME}}} views the overall culture on the project?") |
+            Q(aoQuestion__questionText="How would you describe your working relationship with {{{FULLNAME}}} at present?") |
+            Q(aoQuestion__questionText="How important do you think this project is to {{{FULLNAME}}}?"),
+            survey__id=survey).order_by('projectUser')
         paaoresponseserializer = AOResponseForMatrixSerializer(
             paaoresponsequeryset, many=True)
 
