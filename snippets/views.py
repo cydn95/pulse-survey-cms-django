@@ -2221,7 +2221,7 @@ class MyMatrixView(APIView):
             "How would you describe your working relationship with {{{FULLNAME}}} at present?",
             "How important do you think this project is to {{{FULLNAME}}}?"
         )
-        nextItemId = len(driverserializer.data)
+
         paaoresponsequeryset = AOResponse.objects.all().filter(aoQuestion__questionText=paQuestionList,
                                                                survey__id=survey, subProjectUser__id=projectUser).order_by('projectUser')
         paaoresponseserializer = AOResponseForMatrixSerializer(paaoresponsequeryset, many=True)
@@ -2256,7 +2256,7 @@ class ProjectMatrixView(APIView):
         if survey is None:
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
         
-        driverqueryset = Driver.ojbects.all().filter(survey__id=survey, isStandard=True).order_by('driverOrder')
+        driverqueryset = Driver.objects.all().filter(survey__id=survey, isStandard=True).order_by('driverOrder')
         driverserializer = DriverSerializer(driverqueryset, many=True)
 
         for i in range(len(driverserializer.data)):
@@ -2274,7 +2274,7 @@ class ProjectMatrixView(APIView):
             "How would you describe your working relationship with {{{FULLNAME}}} at present?",
             "How important do you think this project is to {{{FULLNAME}}}?"
         )
-        nextItemId = len(driverserializer.data)
+
         paaoresponsequeryset = AOResponse.objects.all().filter(aoQuestion__questionText=paQuestionList,
                                                                survey__id=survey).order_by('projectUser')
         paaoresponseserializer = AOResponseForMatrixSerializer(
