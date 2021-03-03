@@ -2230,7 +2230,7 @@ class MyMatrixView(APIView):
             "id": 9999999,
             "driverName": "Perception Accuracy",
             "iconPath": "",
-            "driverOrder": 999999,
+            "driveOrder": 999999,
             "isStandard": True,
             "survey": survey,
             "aoResponseData": paaoresponseserializer.data
@@ -2256,7 +2256,8 @@ class ProjectMatrixView(APIView):
         if survey is None:
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
         
-        driverqueryset = Driver.objects.all().filter(survey__id=survey, isStandard=True).order_by('driverOrder')
+        driverqueryset = Driver.objects.all().filter(
+            survey__id=survey, isStandard=True).order_by('driveOrder')
         driverserializer = DriverSerializer(driverqueryset, many=True)
 
         for i in range(len(driverserializer.data)):
@@ -2284,7 +2285,7 @@ class ProjectMatrixView(APIView):
             "id": 9999999,
             "driverName": "Perception Accuracy",
             "iconPath": "",
-            "driverOrder": 999999,
+            "driveOrder": 999999,
             "isStandard": True,
             "survey": survey,
             "aoResponseData": paaoresponseserializer.data
