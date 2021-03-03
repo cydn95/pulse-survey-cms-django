@@ -2225,8 +2225,18 @@ class MyMatrixView(APIView):
         paaoresponsequeryset = AOResponse.objects.all().filter(aoQuestion__questionText=paQuestionList,
                                                                aoQuestion__survey__id=survey, subProjectUser__id=projectUser).order_by('projectUser')
         paaoresponseserializer = AOResponseForMatrixSerializer(paaoresponsequeryset, many=True)
-        driverserializer.data.append(
-            {'aoResponseData': paaoresponseserializer.data})
+        
+        perceptionAccuracyDriverItem = {
+            "id": 9999999,
+            "driverName": "Perception Accuracy",
+            "iconPath": "",
+            "driverOrder": 999999,
+            "isStandard": True,
+            "survey": survey,
+            "aoResponseData": paaoresponseserializer.data
+        }
+
+        driverserializer.data.append(perceptionAccuracyDriverItem)
         # driverserializer.data[nextItemId]['aoResponseData'] = paaoresponseserializer.data
 
         return Response(driverserializer.data, status=status.HTTP_200_OK)
