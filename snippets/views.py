@@ -2236,10 +2236,10 @@ class MyMatrixView(APIView):
             "aoResponseData": paaoresponseserializer.data
         }
 
-        driverserializer.data.append(perceptionAccuracyDriverItem)
-        # driverserializer.data[nextItemId]['aoResponseData'] = paaoresponseserializer.data
+        retList = list(driverserializer.data)
+        retList.append(perceptionAccuracyDriverItem)
 
-        return Response(driverserializer.data, status=status.HTTP_200_OK)
+        return Response(retList, status=status.HTTP_200_OK)
 
 # WIP
 # projectmatrix api
