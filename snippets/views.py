@@ -2276,14 +2276,14 @@ class ProjectMatrixView(APIView):
             "How important do you think this project is to {{{FULLNAME}}}?"
         )
 
-        paaoresponsequeryset = AOResponse.objects.all().filter(aoQuestion__questionText=paQuestionList,
+        paaoresponsequeryset = AOResponse.objects.all().filter(aoQuestion__questionText="How do you think {{{FULLNAME}}} feels the {{{PROJECTNAME}}} project is going?",
                                                                survey__id=survey).order_by('projectUser')
         paaoresponseserializer = AOResponseForMatrixSerializer(
             paaoresponsequeryset, many=True)
 
         perceptionAccuracyDriverItem = {
             "id": 9999999,
-            "driverName": "Perception Accuracy",
+            "driverName": "Perception Accuracy",    
             "iconPath": "",
             "driveOrder": 999999,
             "isStandard": True,
