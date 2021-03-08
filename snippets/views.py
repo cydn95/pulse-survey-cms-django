@@ -2169,6 +2169,16 @@ class BubbleChartView(APIView):
 
 # WIP
 # keytheme api
+# AM - Confidence - Risk: What do you see as the biggest risks to the project?
+# AM - Sentiment - Overall Sentiment: How do you think the project is going... in your own words?
+# AM - Culture - Unspoken Problem: Is there a problem that people aren't discussing openly?
+# AM - Interest - Project Interest: What do you care about the most on this project?
+# AM - Interest - Personal Interest:What do you personally want to get out of this project?
+# AM - Improvement - Positives: In your opinion, what is going well on the project?
+# AM - Improvement - Start: What should we start doing?
+# AM - Improvement - Stop: What should we stop doing?
+# AM - Improvement - Change: What should we do differently?
+
 class KeyThemesView(APIView):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
 
@@ -2179,12 +2189,43 @@ class KeyThemesView(APIView):
     def get(self, format=None):
         projectUser = self.request.query_params.get('projectuser', None)
         survey = self.request.query_params.get('survey', None)
+        tab = self.request.query_params.get('tab', None)
 
         if survey is None:
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
         if projectUser is None:
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
-            
+        if tab is None:
+            return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
+
+        # Risk
+        # AM - Confidence - Risk: What do you see as the biggest risks to the project?
+        if tab == 1:
+        # Overall Sentiment
+        # AM - Sentiment - Overall Sentiment: How do you think the project is going... in your own words?
+        elif tab == 2:
+        # Unspoken Problem
+        # AM - Culture - Unspoken Problem: Is there a problem that people aren't discussing openly?
+        elif tab == 3:
+        # Project Interest
+        # AM - Interest - Project Interest: What do you care about the most on this project?
+        elif tab == 4:
+        # Personal Interest
+        # AM - Interest - Personal Interest:What do you personally want to get out of this project?
+        elif tab == 5:
+        # Positives
+        # AM - Improvement - Positives: In your opinion, what is going well on the project?
+        elif tab == 6:
+        # Start
+        # AM - Improvement - Start: What should we start doing?
+        elif tab == 7:
+        # stop
+        # AM - Improvement - Stop: What should we stop doing?
+        elif tab == 8:
+        # change
+        # AM - Improvement - Change: What should we do differently?
+        elif tab == 9:
+
         return []
 
 # WIP
