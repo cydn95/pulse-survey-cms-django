@@ -2201,6 +2201,10 @@ class KeyThemesView(APIView):
         # Risk
         # AM - Confidence - Risk: What do you see as the biggest risks to the project?
         if tab == 1:
+            ktamresponsequeryset = AMResponse.objects.all().filter(
+                Q(amQuestion__questionText="What do you see as the biggest risks to the project?"),
+                    survey__id=survey, subProjectUser__id=projectUser).order_by('projectUser')
+
         # Overall Sentiment
         # AM - Sentiment - Overall Sentiment: How do you think the project is going... in your own words?
         elif tab == 2:
