@@ -3,7 +3,7 @@ from snippets.models import Snippet, LANGUAGE_CHOICES, STYLE_CHOICES
 from django.contrib.auth.models import User
 from page_setting.models import PageSetting, PageType
 from cms.models import Page, Title
-from aboutme.models import PageAMQuestion, AMQuestion, AMResponse, AMResponseTopic
+from aboutme.models import AMResponseAcknowledgement, PageAMQuestion, AMQuestion, AMResponse, AMResponseTopic
 from aboutothers.models import AOResponseAcknowledgement, PageAOQuestion, AOQuestion, AOResponse, AOResponseTopic, AOPage
 from page_nav.models import PageNav
 from team.models import Team
@@ -389,6 +389,12 @@ class AOResponseForBubbleChartSerializer(serializers.ModelSerializer):
 class AOResponseAcknowledgementSerializer(serializers.ModelSerializer):
     class Meta:
         model = AOResponseAcknowledgement
+        fields = '__all__'
+
+
+class AMResponseAcknowledgementSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AMResponseAcknowledgement
         fields = '__all__'
 
 # class AMResponseReportSerializer(serializers.ModelSerializer):

@@ -9,7 +9,8 @@ from django.contrib.auth import views as auth_views
 # Create a router and register our viewsets with it.
 router = DefaultRouter()
 
-router.register(r'acknowledgement', views.AOResponseAcknowledgementViewSet)
+# router.register(r'acknowledgement', views.AOResponseAcknowledgementViewSet)
+router.register(r'acknowledgement', views.AMResponseAcknowledgementViewSet)
 router.register(r'amresponse', views.AMResponseViewSet)
 router.register(r'amresponsetopic', views.AMResponseTopicViewSet)
 router.register(r'aoresponse', views.AOResponseViewSet)
