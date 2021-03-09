@@ -44,6 +44,131 @@ import json
 #initialize comprehend module
 comprehend = boto3.client(service_name='comprehend', region_name='us-east-2')
 
+# normal english stopwords
+stopwords = ['a', 'about', 'above', 'across', 'after']
+stopwords += ['afterwards', 'along', 'among', 'another']
+stopwords += ['again', 'against', 'all', 'almost', 'alone']
+stopwords += ['already', 'also', 'although', 'always', 'am']
+stopwords += ['amongst', 'amoungst', 'amount', 'an', 'and']
+stopwords += ['any', 'anyhow', 'anyone', 'anything', 'anyway']
+stopwords += ['anywhere', 'back', 'be', 'became', 'both']
+stopwords += ['are', 'aren\'t', 'around', 'as', 'at']
+stopwords += ['because', 'become', 'becomes', 'becoming', 'been']
+stopwords += ['before', 'beforehand', 'behind', 'being', 'below']
+stopwords += ['beside', 'besides', 'between', 'beyond', 'bill']
+stopwords += ['bottom', 'but', 'by', 'call', 'can']
+stopwords += ['co', 'computer', 'con', 'could', 'couldnt']
+stopwords += ['describe', 'detail', 'did', 'didn\'t', 'do']
+stopwords += ['cannot', 'cant', 'can\'t', 'couldn\'t', 'cry']
+stopwords += ['de', 'does', 'doesn\'t', 'eleven', 'else']
+stopwords += ['doing', 'don\'t', 'done', 'down', 'due']
+stopwords += ['during', 'each', 'eg', 'eight', 'either']
+stopwords += ['elsewhere', 'empty', 'enough', 'etc', 'even']
+stopwords += ['every', 'everyone', 'everything', 'everywhere', 'except']
+stopwords += ['ever', 'fire', 'first', 'found', 'get']
+stopwords += ['few', 'fifteen', 'fifty', 'fill', 'find']
+stopwords += ['five', 'for', 'former', 'formerly', 'forty']
+stopwords += ['four', 'from', 'front', 'full', 'further']
+stopwords += ['go', 'had', 'has', 'hasnt', 'have']
+stopwords += ['give', 'he', 'hence', 'her', 'he\'ll']
+stopwords += ['hadn\'t', 'hasn\'t', 'haven\'t', 'having', 'he\'d']
+stopwords += ['he\'s', 'here\'s', 'how\'s', 'hers', 'however']
+stopwords += ['here', 'hereafter', 'hereby', 'herein', 'hereupon']
+stopwords += ['herself', 'him', 'himself', 'his', 'how']
+stopwords += ['hundred', 'i', 'ie', 'if', 'in']
+stopwords += ['i\'d', 'i\'ll', 'i\'m', 'i\'ve', 'isn\'t']
+stopwords += ['inc', 'indeed', 'it\'s', 'itself', 'keep']
+stopwords += ['interest', 'into', 'is', 'it', 'its']
+stopwords += ['last', 'latter', 'latterly', 'least', 'less']
+stopwords += ['many', 'may', 'me', 'meanwhile', 'might']
+stopwords += ['let\'s', 'ltd', 'made', 'mill', 'mine']
+stopwords += ['more', 'moreover', 'most', 'mostly', 'move']
+stopwords += ['must', 'mustn\'t', 'my', 'myself', 'name']
+stopwords += ['much', 'namely', 'neither', 'never', 'none']
+stopwords += ['nevertheless', 'next', 'nine', 'no', 'nobody']
+stopwords += ['noone', 'nor', 'not', 'nothing', 'now']
+stopwords += ['off', 'often', 'on','once', 'one']
+stopwords += ['nowhere', 'of', 'only', 'onto', 'or']
+stopwords += ['other', 'others', 'ought', 'otherwise', 'our']
+stopwords += ['out', 'over', 'own', 'part', 'per']
+stopwords += ['ours', 'ourselves', 'perhaps', 'please', 'see']
+stopwords += ['put', 'rather', 're', 's', 'same']
+stopwords += ['seeming', 'seems', 'serious', 'several', 'shan\'t']
+stopwords += ['seem', 'seemed', 'she', 'should', 'there\'s']
+stopwords += ['she\'d', 'she\'ll', 'she\'s', 'shouldn\'t', 'that\'s']
+stopwords += ['show', 'side', 'since', 'sincere', 'six']
+stopwords += ['sixty', 'so', 'take', 'them', 'themselves']
+stopwords += ['some', 'somehow', 'someone', 'something', 'sometime']
+stopwords += ['sometimes', 'somewhere', 'still', 'such', 'system']
+stopwords += ['ten', 'than', 'that', 'the', 'their']
+stopwords += ['then', 'thence', 'there', 'thereafter', 'thereby']
+stopwords += ['therefore', 'therein', 'thereupon', 'these', 'they']
+stopwords += ['they\'d', 'they\'ll', 'they\'re', 'they\'ve', 'though']
+stopwords += ['thick', 'thin', 'third', 'this', 'those']
+stopwords += ['three', 'through', 'throughout', 'thru', 'thus']
+stopwords += ['to', 'twelve', 'up', 'upon', 'we']
+stopwords += ['together', 'too', 'top', 'toward', 'towards']
+stopwords += ['twenty', 'two', 'un', 'under', 'until']
+stopwords += ['us', 'very', 'via', 'was', 'wasn\'t']
+stopwords += ['we\'d', 'we\'ll', 'we\'re', 'we\'ve', 'weren\'t']
+stopwords += ['well', 'were', 'what', 'what\'s', 'when\'s']
+stopwords += ['whatever', 'when', 'whence', 'whenever', 'where']
+stopwords += ['whereafter', 'whereas', 'whereby', 'wherein', 'whereupon']
+stopwords += ['wherever', 'whether', 'which', 'while', 'whither']
+stopwords += ['where\'s', 'who', 'will', 'with', 'your']
+stopwords += ['who\'s', 'why\'s', 'won\'t', 'wouldn\'t', 'yours']
+stopwords += ['whoever', 'whole', 'whom', 'whose', 'why']
+stopwords += ['within', 'without', 'would', 'yet', 'you']
+stopwords += ['you\'d', 'you\'ll', 'you\'re', 'you\'ve', 'yourself']
+stopwords += ['yourselves']
+
+# MySQL Stopwords
+stopwords += ['a\'s', 'accordingly', 'allows', 'anybody', 'anyways']
+stopwords += ['appropriate', 'aside', 'available', 'certain', 'com']
+stopwords += ['consider', 'corresponding', 'according', 'actually', 'ain\'t']
+stopwords += ['allow', 'apart', 'appear', 'appreciate', 'ask']
+stopwords += ['asking', 'associated', 'away', 'awfully', 'believe']
+stopwords += ['best', 'better', 'both', 'brief', 'c\'mon']
+stopwords += ['c\'s', 'came', 'cause', 'causes', 'certainly']
+stopwords += ['changes', 'clearly', 'come', 'comes', 'concerning']
+stopwords += ['consequently', 'considering', 'contain', 'containing', 'contains']
+stopwords += ['course', 'currently', 'definitely', 'described', 'despite']
+stopwords += ['different', 'downwards','edu', 'entirely', 'especially']
+stopwords += ['et', 'exactly', 'example', 'far', 'fifth']
+stopwords += ['followed', 'following', 'follows', 'forth', 'furthermore']
+stopwords += ['gets', 'getting', 'given', 'gives', 'goes']
+stopwords += ['going', 'gone', 'got', 'gotten', 'greetings']
+stopwords += ['happens', 'hardly', 'hello', 'help', 'hi']
+stopwords += ['hither', 'hopefully', 'howbeit', 'ignored', 'immediate']
+stopwords += ['inasmuch', 'indicate', 'indicated', 'indicates', 'inner']
+stopwords += ['insofar', 'instead', 'inward', 'just', 'keeps']
+stopwords += ['kept', 'know', 'known', 'knows', 'lately']
+stopwords += ['later', 'lest', 'let', 'like', 'liked']
+stopwords += ['likely', 'little', 'look', 'looking', 'looks']
+stopwords += ['mainly', 'maybe', 'mean', 'merely', 'nd']
+stopwords += ['near', 'nearly', 'necessary', 'need', 'needs']
+stopwords += ['new', 'non', 'normally', 'novel', 'obviously']
+stopwords += ['oh', 'ok', 'okay', 'old', 'ones']
+stopwords += ['outside', 'overall', 'particular', 'particularly', 'placed']
+stopwords += ['plus', 'possible', 'presumably', 'probably', 'provides']
+stopwords += ['que', 'quite', 'qv', 'rd', 'really']
+stopwords += ['reasonably', 'regarding', 'regardless', 'regards', 'relatively']
+stopwords += ['respectively', 'right', 'said', 'saw', 'say']
+stopwords += ['saying', 'says', 'second', 'secondly', 'seeing']
+stopwords += ['seen', 'self', 'selves', 'sensible', 'sent']
+stopwords += ['seriously', 'seven', 'shall', 'somewhat', 'soon']
+stopwords += ['sorry', 'specified', 'specify', 'specifying', 'sub']
+stopwords += ['sup', 'sure', 't\'s', 'taken', 'tell']
+stopwords += ['tends', 'th', 'thank', 'thanks', 'thanx']
+stopwords += ['thats', 'theirs', 'theres', 'think', 'thorough']
+stopwords += ['thoroughly', 'took', 'tried', 'tries', 'truly']
+stopwords += ['try', 'trying', 'twice', 'unfortunately', 'unless']
+stopwords += ['unlikely', 'unto', 'use', 'used', 'useful']
+stopwords += ['uses', 'using', 'usually', 'value', 'various']
+stopwords += ['viz', 'vs', 'want', 'wants', 'way']
+stopwords += ['welcome', 'went', 'willing', 'wish', 'wonder']
+stopwords += ['yes', 'zero']
+
 # acknowledgement api
 class AOResponseAcknowledgementViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
@@ -1960,131 +2085,6 @@ class WordCloudView(APIView):
 
         res = amserializer.data + aoserializer.data
 
-        # normal english stopwords
-        stopwords = ['a', 'about', 'above', 'across', 'after']
-        stopwords += ['afterwards', 'along', 'among', 'another']
-        stopwords += ['again', 'against', 'all', 'almost', 'alone']
-        stopwords += ['already', 'also', 'although', 'always', 'am']
-        stopwords += ['amongst', 'amoungst', 'amount', 'an', 'and']
-        stopwords += ['any', 'anyhow', 'anyone', 'anything', 'anyway']
-        stopwords += ['anywhere', 'back', 'be', 'became', 'both']
-        stopwords += ['are', 'aren\'t', 'around', 'as', 'at']
-        stopwords += ['because', 'become', 'becomes', 'becoming', 'been']
-        stopwords += ['before', 'beforehand', 'behind', 'being', 'below']
-        stopwords += ['beside', 'besides', 'between', 'beyond', 'bill']
-        stopwords += ['bottom', 'but', 'by', 'call', 'can']
-        stopwords += ['co', 'computer', 'con', 'could', 'couldnt']
-        stopwords += ['describe', 'detail', 'did', 'didn\'t', 'do']
-        stopwords += ['cannot', 'cant', 'can\'t', 'couldn\'t', 'cry']
-        stopwords += ['de', 'does', 'doesn\'t', 'eleven', 'else']
-        stopwords += ['doing', 'don\'t', 'done', 'down', 'due']
-        stopwords += ['during', 'each', 'eg', 'eight', 'either']
-        stopwords += ['elsewhere', 'empty', 'enough', 'etc', 'even']
-        stopwords += ['every', 'everyone', 'everything', 'everywhere', 'except']
-        stopwords += ['ever', 'fire', 'first', 'found', 'get']
-        stopwords += ['few', 'fifteen', 'fifty', 'fill', 'find']
-        stopwords += ['five', 'for', 'former', 'formerly', 'forty']
-        stopwords += ['four', 'from', 'front', 'full', 'further']
-        stopwords += ['go', 'had', 'has', 'hasnt', 'have']
-        stopwords += ['give', 'he', 'hence', 'her', 'he\'ll']
-        stopwords += ['hadn\'t', 'hasn\'t', 'haven\'t', 'having', 'he\'d']
-        stopwords += ['he\'s', 'here\'s', 'how\'s', 'hers', 'however']
-        stopwords += ['here', 'hereafter', 'hereby', 'herein', 'hereupon']
-        stopwords += ['herself', 'him', 'himself', 'his', 'how']
-        stopwords += ['hundred', 'i', 'ie', 'if', 'in']
-        stopwords += ['i\'d', 'i\'ll', 'i\'m', 'i\'ve', 'isn\'t']
-        stopwords += ['inc', 'indeed', 'it\'s', 'itself', 'keep']
-        stopwords += ['interest', 'into', 'is', 'it', 'its']
-        stopwords += ['last', 'latter', 'latterly', 'least', 'less']
-        stopwords += ['many', 'may', 'me', 'meanwhile', 'might']
-        stopwords += ['let\'s', 'ltd', 'made', 'mill', 'mine']
-        stopwords += ['more', 'moreover', 'most', 'mostly', 'move']
-        stopwords += ['must', 'mustn\'t', 'my', 'myself', 'name']
-        stopwords += ['much', 'namely', 'neither', 'never', 'none']
-        stopwords += ['nevertheless', 'next', 'nine', 'no', 'nobody']
-        stopwords += ['noone', 'nor', 'not', 'nothing', 'now']
-        stopwords += ['off', 'often', 'on','once', 'one']
-        stopwords += ['nowhere', 'of', 'only', 'onto', 'or']
-        stopwords += ['other', 'others', 'ought', 'otherwise', 'our']
-        stopwords += ['out', 'over', 'own', 'part', 'per']
-        stopwords += ['ours', 'ourselves', 'perhaps', 'please', 'see']
-        stopwords += ['put', 'rather', 're', 's', 'same']
-        stopwords += ['seeming', 'seems', 'serious', 'several', 'shan\'t']
-        stopwords += ['seem', 'seemed', 'she', 'should', 'there\'s']
-        stopwords += ['she\'d', 'she\'ll', 'she\'s', 'shouldn\'t', 'that\'s']
-        stopwords += ['show', 'side', 'since', 'sincere', 'six']
-        stopwords += ['sixty', 'so', 'take', 'them', 'themselves']
-        stopwords += ['some', 'somehow', 'someone', 'something', 'sometime']
-        stopwords += ['sometimes', 'somewhere', 'still', 'such', 'system']
-        stopwords += ['ten', 'than', 'that', 'the', 'their']
-        stopwords += ['then', 'thence', 'there', 'thereafter', 'thereby']
-        stopwords += ['therefore', 'therein', 'thereupon', 'these', 'they']
-        stopwords += ['they\'d', 'they\'ll', 'they\'re', 'they\'ve', 'though']
-        stopwords += ['thick', 'thin', 'third', 'this', 'those']
-        stopwords += ['three', 'through', 'throughout', 'thru', 'thus']
-        stopwords += ['to', 'twelve', 'up', 'upon', 'we']
-        stopwords += ['together', 'too', 'top', 'toward', 'towards']
-        stopwords += ['twenty', 'two', 'un', 'under', 'until']
-        stopwords += ['us', 'very', 'via', 'was', 'wasn\'t']
-        stopwords += ['we\'d', 'we\'ll', 'we\'re', 'we\'ve', 'weren\'t']
-        stopwords += ['well', 'were', 'what', 'what\'s', 'when\'s']
-        stopwords += ['whatever', 'when', 'whence', 'whenever', 'where']
-        stopwords += ['whereafter', 'whereas', 'whereby', 'wherein', 'whereupon']
-        stopwords += ['wherever', 'whether', 'which', 'while', 'whither']
-        stopwords += ['where\'s', 'who', 'will', 'with', 'your']
-        stopwords += ['who\'s', 'why\'s', 'won\'t', 'wouldn\'t', 'yours']
-        stopwords += ['whoever', 'whole', 'whom', 'whose', 'why']
-        stopwords += ['within', 'without', 'would', 'yet', 'you']
-        stopwords += ['you\'d', 'you\'ll', 'you\'re', 'you\'ve', 'yourself']
-        stopwords += ['yourselves']
-
-        # MySQL Stopwords
-        stopwords += ['a\'s', 'accordingly', 'allows', 'anybody', 'anyways']
-        stopwords += ['appropriate', 'aside', 'available', 'certain', 'com']
-        stopwords += ['consider', 'corresponding', 'according', 'actually', 'ain\'t']
-        stopwords += ['allow', 'apart', 'appear', 'appreciate', 'ask']
-        stopwords += ['asking', 'associated', 'away', 'awfully', 'believe']
-        stopwords += ['best', 'better', 'both', 'brief', 'c\'mon']
-        stopwords += ['c\'s', 'came', 'cause', 'causes', 'certainly']
-        stopwords += ['changes', 'clearly', 'come', 'comes', 'concerning']
-        stopwords += ['consequently', 'considering', 'contain', 'containing', 'contains']
-        stopwords += ['course', 'currently', 'definitely', 'described', 'despite']
-        stopwords += ['different', 'downwards','edu', 'entirely', 'especially']
-        stopwords += ['et', 'exactly', 'example', 'far', 'fifth']
-        stopwords += ['followed', 'following', 'follows', 'forth', 'furthermore']
-        stopwords += ['gets', 'getting', 'given', 'gives', 'goes']
-        stopwords += ['going', 'gone', 'got', 'gotten', 'greetings']
-        stopwords += ['happens', 'hardly', 'hello', 'help', 'hi']
-        stopwords += ['hither', 'hopefully', 'howbeit', 'ignored', 'immediate']
-        stopwords += ['inasmuch', 'indicate', 'indicated', 'indicates', 'inner']
-        stopwords += ['insofar', 'instead', 'inward', 'just', 'keeps']
-        stopwords += ['kept', 'know', 'known', 'knows', 'lately']
-        stopwords += ['later', 'lest', 'let', 'like', 'liked']
-        stopwords += ['likely', 'little', 'look', 'looking', 'looks']
-        stopwords += ['mainly', 'maybe', 'mean', 'merely', 'nd']
-        stopwords += ['near', 'nearly', 'necessary', 'need', 'needs']
-        stopwords += ['new', 'non', 'normally', 'novel', 'obviously']
-        stopwords += ['oh', 'ok', 'okay', 'old', 'ones']
-        stopwords += ['outside', 'overall', 'particular', 'particularly', 'placed']
-        stopwords += ['plus', 'possible', 'presumably', 'probably', 'provides']
-        stopwords += ['que', 'quite', 'qv', 'rd', 'really']
-        stopwords += ['reasonably', 'regarding', 'regardless', 'regards', 'relatively']
-        stopwords += ['respectively', 'right', 'said', 'saw', 'say']
-        stopwords += ['saying', 'says', 'second', 'secondly', 'seeing']
-        stopwords += ['seen', 'self', 'selves', 'sensible', 'sent']
-        stopwords += ['seriously', 'seven', 'shall', 'somewhat', 'soon']
-        stopwords += ['sorry', 'specified', 'specify', 'specifying', 'sub']
-        stopwords += ['sup', 'sure', 't\'s', 'taken', 'tell']
-        stopwords += ['tends', 'th', 'thank', 'thanks', 'thanx']
-        stopwords += ['thats', 'theirs', 'theres', 'think', 'thorough']
-        stopwords += ['thoroughly', 'took', 'tried', 'tries', 'truly']
-        stopwords += ['try', 'trying', 'twice', 'unfortunately', 'unless']
-        stopwords += ['unlikely', 'unto', 'use', 'used', 'useful']
-        stopwords += ['uses', 'using', 'usually', 'value', 'various']
-        stopwords += ['viz', 'vs', 'want', 'wants', 'way']
-        stopwords += ['welcome', 'went', 'willing', 'wish', 'wonder']
-        stopwords += ['yes', 'zero']
-
         wordstring = ''
         for i in range(len(res)):
             if res[i]['topicValue'] != "":
@@ -2195,6 +2195,7 @@ class KeyThemesView(APIView):
         projectUser = self.request.query_params.get('projectuser', None)
         survey = self.request.query_params.get('survey', None)
         tab = self.request.query_params.get('tab', None)
+        limit = self.request.query_params.get('limit', None)
 
         if survey is None:
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
@@ -2204,7 +2205,7 @@ class KeyThemesView(APIView):
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
         if (int(tab) < 1) | (int(tab) > 9):
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
-
+        
         # Risk
         # AM - Confidence - Risk: What do you see as the biggest risks to the project?
         if tab == "1":
@@ -2213,7 +2214,37 @@ class KeyThemesView(APIView):
                 survey__id=survey).order_by('projectUser')
             ktamresponseserializer = AMResponseForReportSerializer(ktamresponsequeryset, many=True)
 
-            return Response(ktamresponseserializer.data, status=status.HTTP_200_OK)
+            wordstring = ''
+            res = ktamresponseserializer.data
+            for i in range(len(res)):
+                if res[i]['topicValue'] != "":
+                    wordstring += ' ' + res[i]['topicValue']
+                if res[i]['commentValue'] != "":
+                    wordstring += ' ' + res[i]['commentValue']
+                if res[i]['skipValue'] != "":
+                    wordstring += ' ' + res[i]['skipValue']
+                if res[i]['topicTags'] != "":
+                    wordstring += ' ' + res[i]['topicTags']
+                if res[i]['commentTags'] != "":
+                    wordstring += ' ' + res[i]['commentTags']
+
+            wordList = re.findall()
+
+            wordList = re.findall(r"[\w\']+", wordstring.lower())
+            filteredWordList = [w for w in wordList if w not in stopwords]
+            wordfreq = [filteredWordList.count(p) for p in filteredWordList]
+            dictionary = dict(list(zip(filteredWordList, wordfreq)))
+
+            aux = [(dictionary[key], key) for key in dictionary]
+            aux.sort()
+            aux.reverse()
+            
+            if limit is not None:
+                return Response(aux[:int(limit)], status=status.HTTP_200_OK)
+            else:
+                return Response(aux, status=status.HTTP_200_OK)
+                
+            # return Response(ktamresponseserializer.data, status=status.HTTP_200_OK)
 
         # Overall Sentiment
         # AM - Sentiment - Overall Sentiment: How do you think the project is going... in your own words?
