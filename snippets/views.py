@@ -2228,8 +2228,6 @@ class KeyThemesView(APIView):
                 if res[i]['commentTags'] != "":
                     wordstring += ' ' + res[i]['commentTags']
 
-            wordList = re.findall()
-
             wordList = re.findall(r"[\w\']+", wordstring.lower())
             filteredWordList = [w for w in wordList if w not in stopwords]
             wordfreq = [filteredWordList.count(p) for p in filteredWordList]
