@@ -76,6 +76,18 @@ class AMResponse(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+class AMResponseAcknowledgement(models.Model):
+    AMResponse = models.ForeignKey(AMResponse, on_delete=models.CASCADE)
+    projectUser = models.ForeignKey(
+        ProjectUser, on_delete=models.CASCADE, related_name="amCommentProjectUser")
+    likeStatus = models.PositiveIntegerField(default=0, blank=False, null=False)    # 0: no answer, 1: like, 2: dislike
+    acknowledgeStatus = models.PositiveIntegerField(default=0, blank=False, null=False)     # 0: no answer, 1: thanks for sharing, 2: Great idea, 3: Working on it, 4: Would love to talk in person, 5: I agree
+    flagStatus = models.PositiveIntegerField(
+        default=0, blank=False, null=False)     # 0: no answer, 1: Individual can be identified, 2: Commenter can be identified, 3: Non-Constructive Feedback, 4: Out of Policy, 5: Aggressive or Hostile
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
 # # working
 # # 1: like
 # # 2: dislike
