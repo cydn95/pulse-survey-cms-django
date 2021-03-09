@@ -2197,40 +2197,96 @@ class KeyThemesView(APIView):
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
         if tab is None:
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
+        if (tab < 1) | (tab > 9):
+            return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
 
         # Risk
         # AM - Confidence - Risk: What do you see as the biggest risks to the project?
         if tab == 1:
             ktamresponsequeryset = AMResponse.objects.all().filter(
                 Q(amQuestion__questionText="What do you see as the biggest risks to the project?"),
-                    survey__id=survey, subProjectUser__id=projectUser).order_by('projectUser')
+                survey__id=survey, subProjectUser__id=projectUser).order_by('projectUser')
+            ktamresponseserializer = AMResponseForReportSerializer(ktamresponsequeryset, many=True)
+
+            return Response(ktamresponseserializer.data, status=status.HTTP_200_OK)
 
         # Overall Sentiment
         # AM - Sentiment - Overall Sentiment: How do you think the project is going... in your own words?
         elif tab == 2:
+            ktamresponsequeryset = AMResponse.objects.all().filter(
+                Q(amQuestion__questionText="How do you think the project is going... in your own words?"),
+                survey__id=survey, subProjectUser__id=projectUser).order_by('projectUser')
+            ktamresponseserializer = AMResponseForReportSerializer(ktamresponsequeryset, many=True)
+
+            return Response(ktamresponseserializer.data, status=status.HTTP_200_OK)
+
         # Unspoken Problem
         # AM - Culture - Unspoken Problem: Is there a problem that people aren't discussing openly?
         elif tab == 3:
+            ktamresponsequeryset = AMResponse.objects.all().filter(
+                Q(amQuestion__questionText="Is there a problem that people aren't discussing openly?"),
+                    survey__id=survey, subProjectUser__id=projectUser).order_by('projectUser')
+            ktamresponseserializer = AMResponseForReportSerializer(ktamresponsequeryset, many=True)
+
+            return Response(ktamresponseserializer.data, status=status.HTTP_200_OK)
+
         # Project Interest
         # AM - Interest - Project Interest: What do you care about the most on this project?
         elif tab == 4:
+            ktamresponsequeryset = AMResponse.objects.all().filter(
+                Q(amQuestion__questionText="What do you care about the most on this project?"),
+                survey__id=survey, subProjectUser__id=projectUser).order_by('projectUser')
+            ktamresponseserializer = AMResponseForReportSerializer(ktamresponsequeryset, many=True)
+
+            return Response(ktamresponseserializer.data, status=status.HTTP_200_OK)
+
         # Personal Interest
         # AM - Interest - Personal Interest:What do you personally want to get out of this project?
         elif tab == 5:
+            ktamresponsequeryset = AMResponse.objects.all().filter(
+                Q(amQuestion__questionText="What do you personally want to get out of this project?"),
+                survey__id=survey, subProjectUser__id=projectUser).order_by('projectUser')
+            ktamresponseserializer = AMResponseForReportSerializer(ktamresponsequeryset, many=True)
+
+            return Response(ktamresponseserializer.data, status=status.HTTP_200_OK)
+
         # Positives
         # AM - Improvement - Positives: In your opinion, what is going well on the project?
         elif tab == 6:
+            ktamresponsequeryset = AMResponse.objects.all().filter(
+                Q(amQuestion__questionText="In your opinion, what is going well on the project?"),
+                survey__id=survey, subProjectUser__id=projectUser).order_by('projectUser')
+            ktamresponseserializer = AMResponseForReportSerializer(ktamresponsequeryset, many=True)
+
+            return Response(ktamresponseserializer.data, status=status.HTTP_200_OK)
+
         # Start
         # AM - Improvement - Start: What should we start doing?
         elif tab == 7:
+            ktamresponsequeryset = AMResponse.objects.all().filter(
+                Q(amQuestion__questionText="What should we start doing?"),
+                survey__id=survey, subProjectUser__id=projectUser).order_by('projectUser')
+            ktamresponseserializer = AMResponseForReportSerializer(ktamresponsequeryset, many=True)
+
+            return Response(ktamresponseserializer.data, status=status.HTTP_200_OK)
+
         # stop
         # AM - Improvement - Stop: What should we stop doing?
         elif tab == 8:
+            ktamresponsequeryset = AMResponse.objects.all().filter(
+                survey__id=survey, subProjectUser__id=projectUser).order_by('projectUser')
+            ktamresponseserializer = AMResponseForReportSerializer(ktamresponsequeryset, many=True)
+
+            return Response(ktamresponseserializer.data, status=status.HTTP_200_OK)
+
         # change
         # AM - Improvement - Change: What should we do differently?
         elif tab == 9:
+            ktamresponsequeryset = AMResponse.objects.all().filter(
+                survey__id=survey, subProjectUser__id=projectUser).order_by('projectUser')
+            ktamresponseserializer = AMResponseForReportSerializer(ktamresponsequeryset, many=True)
 
-        return []
+            return Response(ktamresponseserializer.data, status=status.HTTP_200_OK)
 
 # WIP
 # mymatrix api
