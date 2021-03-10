@@ -2293,12 +2293,15 @@ class KeyThemesView(APIView):
             aux.sort()
             aux.reverse()
             
-            ret = list(aux)
-            for j in range(len(ret)):
-                upvoteCnt = KeyThemeUpDownVote.objects.all().filter(keyTheme=ret[j][1], voteValue=1).count()
-                downvoteCnt = KeyThemeUpDownVote.objects.all().filter(keyTheme=ret[j][1], voteValue=-1).count()
+            ret = []
+            for j in range(len(aux)):
+                upvoteCnt = KeyThemeUpDownVote.objects.all().filter(
+                    keyTheme=aux[j][1], voteValue=1).count()
+                downvoteCnt = KeyThemeUpDownVote.objects.all().filter(
+                    keyTheme=aux[j][1], voteValue=-1).count()
 
-                ret[j][2] = {"upvoteCount": upvoteCnt, "downvoteCount": downvoteCnt}
+                ret.append({"key": aux[j][1], "freq": aux[j][0],
+                            "upvoteCount": upvoteCnt, "downvoteCount": downvoteCnt})
 
             if limit is not None:
                 return Response(ret[:int(limit)], status=status.HTTP_200_OK)
@@ -2368,15 +2371,15 @@ class KeyThemesView(APIView):
             aux.sort()
             aux.reverse()
 
-            ret = list(aux)
-            for j in range(len(ret)):
+            ret = []
+            for j in range(len(aux)):
                 upvoteCnt = KeyThemeUpDownVote.objects.all().filter(
-                    keyTheme=ret[j][1], voteValue=1).count()
+                    keyTheme=aux[j][1], voteValue=1).count()
                 downvoteCnt = KeyThemeUpDownVote.objects.all().filter(
-                    keyTheme=ret[j][1], voteValue=-1).count()
+                    keyTheme=aux[j][1], voteValue=-1).count()
 
-                ret[j][2] = {"upvoteCount": upvoteCnt,
-                             "downvoteCount": downvoteCnt}
+                ret.append({"key": aux[j][1], "freq": aux[j][0],
+                            "upvoteCount": upvoteCnt, "downvoteCount": downvoteCnt})
 
             if limit is not None:
                 return Response(ret[:int(limit)], status=status.HTTP_200_OK)
@@ -2415,12 +2418,12 @@ class KeyThemesView(APIView):
             aux.sort()
             aux.reverse()
 
-            ret = list(aux)
-            for j in range(len(ret)):
-                upvoteCnt = KeyThemeUpDownVote.objects.all().filter(keyTheme=ret[j][1], voteValue=1).count()
-                downvoteCnt = KeyThemeUpDownVote.objects.all().filter(keyTheme=ret[j][1], voteValue=-1).count()
+            ret = []
+            for j in range(len(aux)):
+                upvoteCnt = KeyThemeUpDownVote.objects.all().filter(keyTheme=aux[j][1], voteValue=1).count()
+                downvoteCnt = KeyThemeUpDownVote.objects.all().filter(keyTheme=aux[j][1], voteValue=-1).count()
 
-                ret[j][2] = {"upvoteCount": upvoteCnt, "downvoteCount": downvoteCnt}
+                ret.append({"key": aux[j][1], "freq": aux[j][0], "upvoteCount": upvoteCnt, "downvoteCount": downvoteCnt})
 
             if limit is not None:
                 return Response(ret[:int(limit)], status=status.HTTP_200_OK)
@@ -2459,15 +2462,15 @@ class KeyThemesView(APIView):
             aux.sort()
             aux.reverse()
 
-            ret = list(aux)
-            for j in range(len(ret)):
+            ret = []
+            for j in range(len(aux)):
                 upvoteCnt = KeyThemeUpDownVote.objects.all().filter(
-                    keyTheme=ret[j][1], voteValue=1).count()
+                    keyTheme=aux[j][1], voteValue=1).count()
                 downvoteCnt = KeyThemeUpDownVote.objects.all().filter(
-                    keyTheme=ret[j][1], voteValue=-1).count()
+                    keyTheme=aux[j][1], voteValue=-1).count()
 
-                ret[j][2] = {"upvoteCount": upvoteCnt,
-                             "downvoteCount": downvoteCnt}
+                ret.append({"key": aux[j][1], "freq": aux[j][0],
+                            "upvoteCount": upvoteCnt, "downvoteCount": downvoteCnt})
 
             if limit is not None:
                 return Response(ret[:int(limit)], status=status.HTTP_200_OK)
@@ -2506,15 +2509,15 @@ class KeyThemesView(APIView):
             aux.sort()
             aux.reverse()
 
-            ret = list(aux)
-            for j in range(len(ret)):
+            ret = []
+            for j in range(len(aux)):
                 upvoteCnt = KeyThemeUpDownVote.objects.all().filter(
-                    keyTheme=ret[j][1], voteValue=1).count()
+                    keyTheme=aux[j][1], voteValue=1).count()
                 downvoteCnt = KeyThemeUpDownVote.objects.all().filter(
-                    keyTheme=ret[j][1], voteValue=-1).count()
+                    keyTheme=aux[j][1], voteValue=-1).count()
 
-                ret[j][2] = {"upvoteCount": upvoteCnt,
-                             "downvoteCount": downvoteCnt}
+                ret.append({"key": aux[j][1], "freq": aux[j][0],
+                            "upvoteCount": upvoteCnt, "downvoteCount": downvoteCnt})
 
             if limit is not None:
                 return Response(ret[:int(limit)], status=status.HTTP_200_OK)
@@ -2552,15 +2555,15 @@ class KeyThemesView(APIView):
             aux.sort()
             aux.reverse()
             
-            ret = list(aux)
-            for j in range(len(ret)):
+            ret = []
+            for j in range(len(aux)):
                 upvoteCnt = KeyThemeUpDownVote.objects.all().filter(
-                    keyTheme=ret[j][1], voteValue=1).count()
+                    keyTheme=aux[j][1], voteValue=1).count()
                 downvoteCnt = KeyThemeUpDownVote.objects.all().filter(
-                    keyTheme=ret[j][1], voteValue=-1).count()
+                    keyTheme=aux[j][1], voteValue=-1).count()
 
-                ret[j][2] = {"upvoteCount": upvoteCnt,
-                             "downvoteCount": downvoteCnt}
+                ret.append({"key": aux[j][1], "freq": aux[j][0],
+                            "upvoteCount": upvoteCnt, "downvoteCount": downvoteCnt})
 
             if limit is not None:
                 return Response(ret[:int(limit)], status=status.HTTP_200_OK)
@@ -2599,15 +2602,15 @@ class KeyThemesView(APIView):
             aux.sort()
             aux.reverse()
 
-            ret = list(aux)
-            for j in range(len(ret)):
+            ret = []
+            for j in range(len(aux)):
                 upvoteCnt = KeyThemeUpDownVote.objects.all().filter(
-                    keyTheme=ret[j][1], voteValue=1).count()
+                    keyTheme=aux[j][1], voteValue=1).count()
                 downvoteCnt = KeyThemeUpDownVote.objects.all().filter(
-                    keyTheme=ret[j][1], voteValue=-1).count()
+                    keyTheme=aux[j][1], voteValue=-1).count()
 
-                ret[j][2] = {"upvoteCount": upvoteCnt,
-                             "downvoteCount": downvoteCnt}
+                ret.append({"key": aux[j][1], "freq": aux[j][0],
+                            "upvoteCount": upvoteCnt, "downvoteCount": downvoteCnt})
 
             if limit is not None:
                 return Response(ret[:int(limit)], status=status.HTTP_200_OK)
