@@ -346,7 +346,7 @@ class AMResponseForReportSerializer(serializers.ModelSerializer):
         model = AMResponse
         # fields = '__all__'
         # fields = ['id', 'controlType', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags', 'created_at', 'updated_at', 'projectUser', 'subProjectUser', 'survey', 'project', 'amQuestion']
-        fields = ['controlType', 'integerValue', 'topicValue', 'commentValue', 'created_at', 'updated_at',
+        fields = ['id', 'controlType', 'integerValue', 'topicValue', 'commentValue', 'created_at', 'updated_at',
                   'projectUser', 'subProjectUser', 'survey', 'project', 'amQuestion']
 
 class AOResponseForReportSerializer(serializers.ModelSerializer):
@@ -354,7 +354,7 @@ class AOResponseForReportSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = AOResponse
-        fields = ['controlType', 'integerValue', 'topicValue', 'commentValue', 'created_at', 'updated_at',
+        fields = ['id', 'controlType', 'integerValue', 'topicValue', 'commentValue', 'created_at', 'updated_at',
                   'projectUser', 'subProjectUser', 'survey', 'project', 'aoQuestion']
 
 
