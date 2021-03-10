@@ -2248,7 +2248,7 @@ class KeyThemesView(APIView):
         return []
 
     def get(self, format=None):
-        # projectUser = self.request.query_params.get('projectuser', None)
+        projectUser = self.request.query_params.get('projectuser', None)
         survey = self.request.query_params.get('survey', None)
         tab = self.request.query_params.get('tab', None)
         limit = self.request.query_params.get('limit', None)
@@ -2334,7 +2334,8 @@ class KeyThemesView(APIView):
                 ret[i]['nonConstructiveCount'] = AMResponseAcknowledgement.objects.all().filter(amResponse__id=ret[i]['id'], flagStatus=3).count()
                 ret[i]['outOfPolicyCount'] = AMResponseAcknowledgement.objects.all().filter(amResponse__id=ret[i]['id'], flagStatus=4).count()
                 ret[i]['aggressiveCount'] = AMResponseAcknowledgement.objects.all().filter(amResponse__id=ret[i]['id'], flagStatus=5).count()
-
+                ret[i]['myStatus'] = AMResponseAcknowledgement.objects.all().filter(amResponse__id=ret[i]['id'], projectUser__id=projectUser)
+            
             return Response(ret, status=status.HTTP_200_OK)
 
         # Unspoken Problem
@@ -2349,20 +2350,34 @@ class KeyThemesView(APIView):
             for i in range(len(ret)):
                 ret[i]['acknowledgementData'] = AMResponseAcknowledgement.objects.all().filter(
                     amResponse__id=ret[i]['id'])
-                ret[i]['likeCount'] = AMResponseAcknowledgement.objects.all().filter(amResponse__id=ret[i]['id'], likeStatus=1).count()
-                ret[i]['dislikeCount'] = AMResponseAcknowledgement.objects.all().filter(amResponse__id=ret[i]['id'], likeStatus=2).count()
-                ret[i]['thanksForSharingCount'] = AMResponseAcknowledgement.objects.all().filter(amResponse__id=ret[i]['id'], acknowledgeStatus=1).count()
-                ret[i]['greatIdeaCount'] = AMResponseAcknowledgement.objects.all().filter(amResponse__id=ret[i]['id'], acknowledgeStatus=2).count()
-                ret[i]['workingOnItCount'] = AMResponseAcknowledgement.objects.all().filter(amResponse__id=ret[i]['id'], acknowledgeStatus=3).count()
-                ret[i]['loveToTalkCount'] = AMResponseAcknowledgement.objects.all().filter(amResponse__id=ret[i]['id'], acknowledgeStatus=5).count()
-                ret[i]['agreeCount'] = AMResponseAcknowledgement.objects.all().filter(amResponse__id=ret[i]['id'], acknowledgeStatus=6).count()
-                ret[i]['agreeCount'] = AMResponseAcknowledgement.objects.all().filter(amResponse__id=ret[i]['id'], acknowledgeStatus=6).count()
-                ret[i]['individualCount'] = AMResponseAcknowledgement.objects.all().filter(amResponse__id=ret[i]['id'], flagStatus=1).count()
-                ret[i]['commenterCount'] = AMResponseAcknowledgement.objects.all().filter(amResponse__id=ret[i]['id'], flagStatus=2).count()
-                ret[i]['nonConstructiveCount'] = AMResponseAcknowledgement.objects.all().filter(amResponse__id=ret[i]['id'], flagStatus=3).count()
-                ret[i]['outOfPolicyCount'] = AMResponseAcknowledgement.objects.all().filter(amResponse__id=ret[i]['id'], flagStatus=4).count()
-                ret[i]['aggressiveCount'] = AMResponseAcknowledgement.objects.all().filter(amResponse__id=ret[i]['id'], flagStatus=5).count()
-
+                ret[i]['likeCount'] = AMResponseAcknowledgement.objects.all().filter(
+                    amResponse__id=ret[i]['id'], likeStatus=1).count()
+                ret[i]['dislikeCount'] = AMResponseAcknowledgement.objects.all().filter(
+                    amResponse__id=ret[i]['id'], likeStatus=2).count()
+                ret[i]['thanksForSharingCount'] = AMResponseAcknowledgement.objects.all(
+                ).filter(amResponse__id=ret[i]['id'], acknowledgeStatus=1).count()
+                ret[i]['greatIdeaCount'] = AMResponseAcknowledgement.objects.all().filter(
+                    amResponse__id=ret[i]['id'], acknowledgeStatus=2).count()
+                ret[i]['workingOnItCount'] = AMResponseAcknowledgement.objects.all().filter(
+                    amResponse__id=ret[i]['id'], acknowledgeStatus=3).count()
+                ret[i]['loveToTalkCount'] = AMResponseAcknowledgement.objects.all().filter(
+                    amResponse__id=ret[i]['id'], acknowledgeStatus=5).count()
+                ret[i]['agreeCount'] = AMResponseAcknowledgement.objects.all().filter(
+                    amResponse__id=ret[i]['id'], acknowledgeStatus=6).count()
+                ret[i]['agreeCount'] = AMResponseAcknowledgement.objects.all().filter(
+                    amResponse__id=ret[i]['id'], acknowledgeStatus=6).count()
+                ret[i]['individualCount'] = AMResponseAcknowledgement.objects.all().filter(
+                    amResponse__id=ret[i]['id'], flagStatus=1).count()
+                ret[i]['commenterCount'] = AMResponseAcknowledgement.objects.all().filter(
+                    amResponse__id=ret[i]['id'], flagStatus=2).count()
+                ret[i]['nonConstructiveCount'] = AMResponseAcknowledgement.objects.all().filter(
+                    amResponse__id=ret[i]['id'], flagStatus=3).count()
+                ret[i]['outOfPolicyCount'] = AMResponseAcknowledgement.objects.all().filter(
+                    amResponse__id=ret[i]['id'], flagStatus=4).count()
+                ret[i]['aggressiveCount'] = AMResponseAcknowledgement.objects.all().filter(
+                    amResponse__id=ret[i]['id'], flagStatus=5).count()
+                ret[i]['myStatus'] = AMResponseAcknowledgement.objects.all().filter(amResponse__id=ret[i]['id'], projectUser__id=projectUser)
+                
             return Response(ret, status=status.HTTP_200_OK)
 
         # Project Interest
