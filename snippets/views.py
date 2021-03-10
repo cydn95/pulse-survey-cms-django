@@ -223,7 +223,7 @@ class KeyThemeUpDownVoteViewSet(viewsets.ModelViewSet):
         queryset = KeyThemeUpDownVote.objects.all()
 
         keyTheme = self.request.query_params.get('key', None)
-        voteValue = self.request.query_params.get('vote', None)     # 1: upvote    2: downvote
+        voteValue = self.request.query_params.get('vote', None)     # 1: upvote    -1: downvote
 
         if (keyTheme is not None) & (voteValue is not None):
             queryset = queryset.filter(keyTheme=keyTheme, voteValue=voteValue)
@@ -2320,7 +2320,10 @@ class KeyThemesView(APIView):
 
             ret = ktamresponseserializer.data
             for i in range(len(ret)):
-                ret[i]['acknowledgementData'] = AMResponseAcknowledgement.objects.all().filter(amResponse__id=ret[i]['id'])
+                tmpQuerySet = AMResponseAcknowledgement.objects.all().filter(
+                    amResponse__id=ret[i]['id'])
+                amResponseAcknowledgementSerializer = AMResponseAcknowledgementSerializer(tmpQuerySet, many=True)
+                ret[i]['acknowledgementData'] = amResponseAcknowledgementSerializer.data
                 ret[i]['likeCount'] = AMResponseAcknowledgement.objects.all().filter(amResponse__id=ret[i]['id'], likeStatus=1).count()
                 ret[i]['dislikeCount'] = AMResponseAcknowledgement.objects.all().filter(amResponse__id=ret[i]['id'], likeStatus=2).count()
                 ret[i]['thanksForSharingCount'] = AMResponseAcknowledgement.objects.all().filter(amResponse__id=ret[i]['id'], acknowledgeStatus=1).count()
@@ -2348,8 +2351,10 @@ class KeyThemesView(APIView):
 
             ret = ktamresponseserializer.data
             for i in range(len(ret)):
-                ret[i]['acknowledgementData'] = AMResponseAcknowledgement.objects.all().filter(
+                tmpQuerySet = AMResponseAcknowledgement.objects.all().filter(
                     amResponse__id=ret[i]['id'])
+                amResponseAcknowledgementSerializer = AMResponseAcknowledgementSerializer(tmpQuerySet, many=True)
+                ret[i]['acknowledgementData'] = amResponseAcknowledgementSerializer.data
                 ret[i]['likeCount'] = AMResponseAcknowledgement.objects.all().filter(
                     amResponse__id=ret[i]['id'], likeStatus=1).count()
                 ret[i]['dislikeCount'] = AMResponseAcknowledgement.objects.all().filter(
@@ -2377,7 +2382,7 @@ class KeyThemesView(APIView):
                 ret[i]['aggressiveCount'] = AMResponseAcknowledgement.objects.all().filter(
                     amResponse__id=ret[i]['id'], flagStatus=5).count()
                 ret[i]['myStatus'] = AMResponseAcknowledgement.objects.all().filter(amResponse__id=ret[i]['id'], projectUser__id=projectUser)
-                
+
             return Response(ret, status=status.HTTP_200_OK)
 
         # Project Interest
