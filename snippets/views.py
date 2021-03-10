@@ -226,13 +226,13 @@ class KeyThemeUpDownVoteViewSet(viewsets.ModelViewSet):
         voteValue = self.request.query_params.get('vote', None)     # 1: upvote    2: downvote
 
         if (keyTheme is not None) & (voteValue is not None):
-            queryset = queryset.filter(keyTheme=keyTheme, voteVaule=voteValue)
+            queryset = queryset.filter(keyTheme=keyTheme, voteValue=voteValue)
 
         if keyTheme is not None:
             queryset = queryset.filter(keyTheme=keyTheme)
         
         if voteValue is not None:
-            queryset = queryset.filter(voteValue=voteVal)
+            queryset = queryset.filter(voteValue=voteValue)
 
         return queryset
 
@@ -2293,6 +2293,12 @@ class KeyThemesView(APIView):
             aux.sort()
             aux.reverse()
             
+            for j in range(len(aux)):
+                upvoteCnt = KeyThemeUpDownVote.objects.all().filter(keyTheme=aux[j][1], voteValue=1).count()
+                downvoteCnt = KeyThemeUpDownVote.objects.all().filter(keyTheme=aux[j][1], voteValue=-1).count()
+
+                aux[j][2] = {"upvoteCount": upvoteCnt, "downvoteCount": downvoteCnt}
+
             if limit is not None:
                 return Response(aux[:int(limit)], status=status.HTTP_200_OK)
             else:
@@ -2361,6 +2367,12 @@ class KeyThemesView(APIView):
             aux.sort()
             aux.reverse()
 
+            for j in range(len(aux)):
+                upvoteCnt = KeyThemeUpDownVote.objects.all().filter(keyTheme=aux[j][1], voteValue=1).count()
+                downvoteCnt = KeyThemeUpDownVote.objects.all().filter(keyTheme=aux[j][1], voteValue=-1).count()
+
+                aux[j][2] = {"upvoteCount": upvoteCnt, "downvoteCount": downvoteCnt}
+
             if limit is not None:
                 return Response(aux[:int(limit)], status=status.HTTP_200_OK)
             else:
@@ -2397,6 +2409,12 @@ class KeyThemesView(APIView):
             aux = [(dictionary[key], key) for key in dictionary]
             aux.sort()
             aux.reverse()
+
+            for j in range(len(aux)):
+                upvoteCnt = KeyThemeUpDownVote.objects.all().filter(keyTheme=aux[j][1], voteValue=1).count()
+                downvoteCnt = KeyThemeUpDownVote.objects.all().filter(keyTheme=aux[j][1], voteValue=-1).count()
+
+                aux[j][2] = {"upvoteCount": upvoteCnt, "downvoteCount": downvoteCnt}
 
             if limit is not None:
                 return Response(aux[:int(limit)], status=status.HTTP_200_OK)
@@ -2435,6 +2453,12 @@ class KeyThemesView(APIView):
             aux.sort()
             aux.reverse()
 
+            for j in range(len(aux)):
+                upvoteCnt = KeyThemeUpDownVote.objects.all().filter(keyTheme=aux[j][1], voteValue=1).count()
+                downvoteCnt = KeyThemeUpDownVote.objects.all().filter(keyTheme=aux[j][1], voteValue=-1).count()
+
+                aux[j][2] = {"upvoteCount": upvoteCnt, "downvoteCount": downvoteCnt}
+
             if limit is not None:
                 return Response(aux[:int(limit)], status=status.HTTP_200_OK)
             else:
@@ -2472,6 +2496,12 @@ class KeyThemesView(APIView):
             aux.sort()
             aux.reverse()
 
+            for j in range(len(aux)):
+                upvoteCnt = KeyThemeUpDownVote.objects.all().filter(keyTheme=aux[j][1], voteValue=1).count()
+                downvoteCnt = KeyThemeUpDownVote.objects.all().filter(keyTheme=aux[j][1], voteValue=-1).count()
+
+                aux[j][2] = {"upvoteCount": upvoteCnt, "downvoteCount": downvoteCnt}
+
             if limit is not None:
                 return Response(aux[:int(limit)], status=status.HTTP_200_OK)
             else:
@@ -2508,6 +2538,12 @@ class KeyThemesView(APIView):
             aux.sort()
             aux.reverse()
             
+            for j in range(len(aux)):
+                upvoteCnt = KeyThemeUpDownVote.objects.all().filter(keyTheme=aux[j][1], voteValue=1).count()
+                downvoteCnt = KeyThemeUpDownVote.objects.all().filter(keyTheme=aux[j][1], voteValue=-1).count()
+
+                aux[j][2] = {"upvoteCount": upvoteCnt, "downvoteCount": downvoteCnt}
+
             if limit is not None:
                 return Response(aux[:int(limit)], status=status.HTTP_200_OK)
             else:
@@ -2545,6 +2581,12 @@ class KeyThemesView(APIView):
             aux.sort()
             aux.reverse()
 
+            for j in range(len(aux)):
+                upvoteCnt = KeyThemeUpDownVote.objects.all().filter(keyTheme=aux[j][1], voteValue=1).count()
+                downvoteCnt = KeyThemeUpDownVote.objects.all().filter(keyTheme=aux[j][1], voteValue=-1).count()
+
+                aux[j][2] = {"upvoteCount": upvoteCnt, "downvoteCount": downvoteCnt}
+                
             if limit is not None:
                 return Response(aux[:int(limit)], status=status.HTTP_200_OK)
             else:
