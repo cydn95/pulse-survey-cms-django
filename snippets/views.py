@@ -175,10 +175,44 @@ class AOResponseAcknowledgementViewSet(viewsets.ModelViewSet):
     queryset = AOResponseAcknowledgement.objects.all()
     serializer_class = AOResponseAcknowledgementSerializer
 
+    def get_queryset(self):
+        queryset = AMResponseAcknowledgement.objects.all()
+
+        amresponse = self.request.query_params.get('response', None)
+        projectUser = self.request.query_params.get('projectuser', None)
+
+        if (amresponse is not None) & (projectUser is not None):
+            queryset = queryset.filter(amResponse__id=amresponse, projectUser__id=projectUser)
+        
+        if amresponse is not None:
+            queryset = queryset.filter(amResponse__id=amresponse)
+
+        if projectUser is not None:
+            queryset = queryset.filter(projectUser__id=projectUser)
+            
+        return queryset
+        
 class AMResponseAcknowledgementViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
     queryset = AMResponseAcknowledgement.objects.all()
     serializer_class = AMResponseAcknowledgementSerializer
+
+    def get_queryset(self):
+        queryset = AMResponseAcknowledgement.objects.all()
+
+        amresponse = self.request.query_params.get('response', None)
+        projectUser = self.request.query_params.get('projectuser', None)
+
+        if (amresponse is not None) & (projectUser is not None):
+            queryset = queryset.filter(amResponse__id=amresponse, projectUser__id=projectUser)
+        
+        if amresponse is not None:
+            queryset = queryset.filter(amResponse__id=amresponse)
+
+        if projectUser is not None:
+            queryset = queryset.filter(projectUser__id=projectUser)
+
+        return queryset
 
 # amresponse api
 class AMResponseViewSet(viewsets.ModelViewSet):
@@ -2212,7 +2246,7 @@ class KeyThemesView(APIView):
             ktamresponsequeryset = AMResponse.objects.all().filter(
                 amQuestion__questionText="What do you see as the biggest risks to the project?",
                 survey__id=survey).order_by('projectUser')
-            ktamresponseserializer = AMResponseForReportSerializer(ktamresponsequeryset, many=True)
+            ktamresponseserializer = AMResponseSerializer(ktamresponsequeryset, many=True)
 
             wordstring = ''
             res = ktamresponseserializer.data
@@ -2270,9 +2304,36 @@ class KeyThemesView(APIView):
             ktamresponsequeryset = AMResponse.objects.all().filter(
                 amQuestion__questionText="What do you care about the most on this project?",
                 survey__id=survey).order_by('projectUser')
-            ktamresponseserializer = AMResponseForReportSerializer(ktamresponsequeryset, many=True)
+            ktamresponseserializer = AMResponseSerializer(
+                ktamresponsequeryset, many=True)
 
-            return Response(ktamresponseserializer.data, status=status.HTTP_200_OK)
+            wordstring = ''
+            res = ktamresponseserializer.data
+            for i in range(len(res)):
+                if res[i]['topicValue'] != "":
+                    wordstring += ' ' + res[i]['topicValue']
+                if res[i]['commentValue'] != "":
+                    wordstring += ' ' + res[i]['commentValue']
+                if res[i]['skipValue'] != "":
+                    wordstring += ' ' + res[i]['skipValue']
+                if res[i]['topicTags'] != "":
+                    wordstring += ' ' + res[i]['topicTags']
+                if res[i]['commentTags'] != "":
+                    wordstring += ' ' + res[i]['commentTags']
+
+            wordList = re.findall(r"[\w\']+", wordstring.lower())
+            filteredWordList = [w for w in wordList if w not in stopwords]
+            wordfreq = [filteredWordList.count(p) for p in filteredWordList]
+            dictionary = dict(list(zip(filteredWordList, wordfreq)))
+
+            aux = [(dictionary[key], key) for key in dictionary]
+            aux.sort()
+            aux.reverse()
+
+            if limit is not None:
+                return Response(aux[:int(limit)], status=status.HTTP_200_OK)
+            else:
+                return Response(aux, status=status.HTTP_200_OK)
 
         # Personal Interest
         # AM - Interest - Personal Interest:What do you personally want to get out of this project?
@@ -2280,9 +2341,36 @@ class KeyThemesView(APIView):
             ktamresponsequeryset = AMResponse.objects.all().filter(
                 amQuestion__questionText="What do you personally want to get out of this project?",
                 survey__id=survey).order_by('projectUser')
-            ktamresponseserializer = AMResponseForReportSerializer(ktamresponsequeryset, many=True)
+            ktamresponseserializer = AMResponseSerializer(
+                ktamresponsequeryset, many=True)
 
-            return Response(ktamresponseserializer.data, status=status.HTTP_200_OK)
+            wordstring = ''
+            res = ktamresponseserializer.data
+            for i in range(len(res)):
+                if res[i]['topicValue'] != "":
+                    wordstring += ' ' + res[i]['topicValue']
+                if res[i]['commentValue'] != "":
+                    wordstring += ' ' + res[i]['commentValue']
+                if res[i]['skipValue'] != "":
+                    wordstring += ' ' + res[i]['skipValue']
+                if res[i]['topicTags'] != "":
+                    wordstring += ' ' + res[i]['topicTags']
+                if res[i]['commentTags'] != "":
+                    wordstring += ' ' + res[i]['commentTags']
+
+            wordList = re.findall(r"[\w\']+", wordstring.lower())
+            filteredWordList = [w for w in wordList if w not in stopwords]
+            wordfreq = [filteredWordList.count(p) for p in filteredWordList]
+            dictionary = dict(list(zip(filteredWordList, wordfreq)))
+
+            aux = [(dictionary[key], key) for key in dictionary]
+            aux.sort()
+            aux.reverse()
+
+            if limit is not None:
+                return Response(aux[:int(limit)], status=status.HTTP_200_OK)
+            else:
+                return Response(aux, status=status.HTTP_200_OK)
 
         # Positives
         # AM - Improvement - Positives: In your opinion, what is going well on the project?
@@ -2290,9 +2378,36 @@ class KeyThemesView(APIView):
             ktamresponsequeryset = AMResponse.objects.all().filter(
                 amQuestion__questionText="In your opinion, what is going well on the project?",
                 survey__id=survey).order_by('projectUser')
-            ktamresponseserializer = AMResponseForReportSerializer(ktamresponsequeryset, many=True)
+            ktamresponseserializer = AMResponseSerializer(
+                ktamresponsequeryset, many=True)
 
-            return Response(ktamresponseserializer.data, status=status.HTTP_200_OK)
+            wordstring = ''
+            res = ktamresponseserializer.data
+            for i in range(len(res)):
+                if res[i]['topicValue'] != "":
+                    wordstring += ' ' + res[i]['topicValue']
+                if res[i]['commentValue'] != "":
+                    wordstring += ' ' + res[i]['commentValue']
+                if res[i]['skipValue'] != "":
+                    wordstring += ' ' + res[i]['skipValue']
+                if res[i]['topicTags'] != "":
+                    wordstring += ' ' + res[i]['topicTags']
+                if res[i]['commentTags'] != "":
+                    wordstring += ' ' + res[i]['commentTags']
+
+            wordList = re.findall(r"[\w\']+", wordstring.lower())
+            filteredWordList = [w for w in wordList if w not in stopwords]
+            wordfreq = [filteredWordList.count(p) for p in filteredWordList]
+            dictionary = dict(list(zip(filteredWordList, wordfreq)))
+
+            aux = [(dictionary[key], key) for key in dictionary]
+            aux.sort()
+            aux.reverse()
+
+            if limit is not None:
+                return Response(aux[:int(limit)], status=status.HTTP_200_OK)
+            else:
+                return Response(aux, status=status.HTTP_200_OK)
 
         # Start
         # AM - Improvement - Start: What should we start doing?
@@ -2300,9 +2415,36 @@ class KeyThemesView(APIView):
             ktamresponsequeryset = AMResponse.objects.all().filter(
                 amQuestion__questionText="What should we start doing?",
                 survey__id=survey).order_by('projectUser')
-            ktamresponseserializer = AMResponseForReportSerializer(ktamresponsequeryset, many=True)
+            ktamresponseserializer = AMResponseSerializer(
+                ktamresponsequeryset, many=True)
 
-            return Response(ktamresponseserializer.data, status=status.HTTP_200_OK)
+            wordstring = ''
+            res = ktamresponseserializer.data
+            for i in range(len(res)):
+                if res[i]['topicValue'] != "":
+                    wordstring += ' ' + res[i]['topicValue']
+                if res[i]['commentValue'] != "":
+                    wordstring += ' ' + res[i]['commentValue']
+                if res[i]['skipValue'] != "":
+                    wordstring += ' ' + res[i]['skipValue']
+                if res[i]['topicTags'] != "":
+                    wordstring += ' ' + res[i]['topicTags']
+                if res[i]['commentTags'] != "":
+                    wordstring += ' ' + res[i]['commentTags']
+
+            wordList = re.findall(r"[\w\']+", wordstring.lower())
+            filteredWordList = [w for w in wordList if w not in stopwords]
+            wordfreq = [filteredWordList.count(p) for p in filteredWordList]
+            dictionary = dict(list(zip(filteredWordList, wordfreq)))
+
+            aux = [(dictionary[key], key) for key in dictionary]
+            aux.sort()
+            aux.reverse()
+
+            if limit is not None:
+                return Response(aux[:int(limit)], status=status.HTTP_200_OK)
+            else:
+                return Response(aux, status=status.HTTP_200_OK)
 
         # stop
         # AM - Improvement - Stop: What should we stop doing?
@@ -2310,9 +2452,35 @@ class KeyThemesView(APIView):
             ktamresponsequeryset = AMResponse.objects.all().filter(
                 amQuestion__questionText="What should we stop doing?",
                 survey__id=survey).order_by('projectUser')
-            ktamresponseserializer = AMResponseForReportSerializer(ktamresponsequeryset, many=True)
+            ktamresponseserializer = AMResponseSerializer(ktamresponsequeryset, many=True)
 
-            return Response(ktamresponseserializer.data, status=status.HTTP_200_OK)
+            wordstring = ''
+            res = ktamresponseserializer.data
+            for i in range(len(res)):
+                if res[i]['topicValue'] != "":
+                    wordstring += ' ' + res[i]['topicValue']
+                if res[i]['commentValue'] != "":
+                    wordstring += ' ' + res[i]['commentValue']
+                if res[i]['skipValue'] != "":
+                    wordstring += ' ' + res[i]['skipValue']
+                if res[i]['topicTags'] != "":
+                    wordstring += ' ' + res[i]['topicTags']
+                if res[i]['commentTags'] != "":
+                    wordstring += ' ' + res[i]['commentTags']
+
+            wordList = re.findall(r"[\w\']+", wordstring.lower())
+            filteredWordList = [w for w in wordList if w not in stopwords]
+            wordfreq = [filteredWordList.count(p) for p in filteredWordList]
+            dictionary = dict(list(zip(filteredWordList, wordfreq)))
+
+            aux = [(dictionary[key], key) for key in dictionary]
+            aux.sort()
+            aux.reverse()
+            
+            if limit is not None:
+                return Response(aux[:int(limit)], status=status.HTTP_200_OK)
+            else:
+                return Response(aux, status=status.HTTP_200_OK)
 
         # change
         # AM - Improvement - Change: What should we do differently?
@@ -2320,9 +2488,36 @@ class KeyThemesView(APIView):
             ktamresponsequeryset = AMResponse.objects.all().filter(
                 amQuestion__questionText="What should we do differently?",
                 survey__id=survey).order_by('projectUser')
-            ktamresponseserializer = AMResponseForReportSerializer(ktamresponsequeryset, many=True)
+            ktamresponseserializer = AMResponseSerializer(
+                ktamresponsequeryset, many=True)
 
-            return Response(ktamresponseserializer.data, status=status.HTTP_200_OK)
+            wordstring = ''
+            res = ktamresponseserializer.data
+            for i in range(len(res)):
+                if res[i]['topicValue'] != "":
+                    wordstring += ' ' + res[i]['topicValue']
+                if res[i]['commentValue'] != "":
+                    wordstring += ' ' + res[i]['commentValue']
+                if res[i]['skipValue'] != "":
+                    wordstring += ' ' + res[i]['skipValue']
+                if res[i]['topicTags'] != "":
+                    wordstring += ' ' + res[i]['topicTags']
+                if res[i]['commentTags'] != "":
+                    wordstring += ' ' + res[i]['commentTags']
+
+            wordList = re.findall(r"[\w\']+", wordstring.lower())
+            filteredWordList = [w for w in wordList if w not in stopwords]
+            wordfreq = [filteredWordList.count(p) for p in filteredWordList]
+            dictionary = dict(list(zip(filteredWordList, wordfreq)))
+
+            aux = [(dictionary[key], key) for key in dictionary]
+            aux.sort()
+            aux.reverse()
+
+            if limit is not None:
+                return Response(aux[:int(limit)], status=status.HTTP_200_OK)
+            else:
+                return Response(aux, status=status.HTTP_200_OK)
 
 # WIP
 # mymatrix api

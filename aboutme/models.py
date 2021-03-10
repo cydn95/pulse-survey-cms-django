@@ -77,7 +77,7 @@ class AMResponse(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
 class AMResponseAcknowledgement(models.Model):
-    AMResponse = models.ForeignKey(AMResponse, on_delete=models.CASCADE)
+    amResponse = models.ForeignKey(AMResponse, on_delete=models.CASCADE)
     projectUser = models.ForeignKey(
         ProjectUser, on_delete=models.CASCADE, related_name="amCommentProjectUser")
     likeStatus = models.PositiveIntegerField(default=0, blank=False, null=False)    # 0: no answer, 1: like, 2: dislike
