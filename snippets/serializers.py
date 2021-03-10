@@ -7,7 +7,7 @@ from aboutme.models import AMResponseAcknowledgement, PageAMQuestion, AMQuestion
 from aboutothers.models import AOResponseAcknowledgement, PageAOQuestion, AOQuestion, AOResponse, AOResponseTopic, AOPage
 from page_nav.models import PageNav
 from team.models import Team
-from shgroup.models import SHGroup, ProjectUser, MyMapLayout, ProjectMapLayout, SHCategory, SHMapping
+from shgroup.models import KeyThemeUpDownVote, SHGroup, ProjectUser, MyMapLayout, ProjectMapLayout, SHCategory, SHMapping
 from option.models import Option, SkipOption
 from organization.models import Organization, UserAvatar, UserTeam, UserTitle, UserGuideMode
 from survey.models import ToolTipGuide, Driver, Project, Survey, ProjectVideoUpload, Client, ConfigPage, NikelMobilePage
@@ -397,6 +397,12 @@ class AMResponseAcknowledgementSerializer(serializers.ModelSerializer):
         model = AMResponseAcknowledgement
         fields = '__all__'
 
+
+class KeyThemeUpDownVoteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = KeyThemeUpDownVote
+        fields = '__all__'
+        
 # class AMResponseReportSerializer(serializers.ModelSerializer):
 #     amQuestion = AMQuestionSerializer
 #     print(amQuestion)

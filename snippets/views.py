@@ -3,7 +3,7 @@ import re
 from pathlib import Path
 from email.mime.image import MIMEImage
 
-from snippets.serializers import AMResponseAcknowledgementSerializer, AOResponseForMatrixSerializer, AOResponseAcknowledgementSerializer, AMResponseForReportSerializer, AOResponseForReportSerializer, ProjectUserForReportSerializer, AMQuestionSubDriverSerializer, AOQuestionSubDriverSerializer, DriverSubDriverSerializer, ProjectSerializer, ToolTipGuideSerializer, SurveySerializer, NikelMobilePageSerializer, ConfigPageSerializer, UserAvatarSerializer, SHMappingSerializer, ProjectVideoUploadSerializer, AMQuestionSerializer, AOQuestionSerializer, StakeHolderSerializer, SHCategorySerializer, MyMapLayoutStoreSerializer, ProjectMapLayoutStoreSerializer, UserBySurveySerializer, SurveyByUserSerializer, SkipOptionSerializer, DriverSerializer, AOQuestionSerializer, OrganizationSerializer, OptionSerializer, ProjectUserSerializer, SHGroupSerializer, UserSerializer, PageSettingSerializer, PageSerializer, AMResponseSerializer, AMResponseTopicSerializer, AOResponseSerializer, AOResponseTopicSerializer, AOPageSerializer, TeamSerializer
+from snippets.serializers import KeyThemeUpDownVoteSerializer, AMResponseAcknowledgementSerializer, AOResponseForMatrixSerializer, AOResponseAcknowledgementSerializer, AMResponseForReportSerializer, AOResponseForReportSerializer, ProjectUserForReportSerializer, AMQuestionSubDriverSerializer, AOQuestionSubDriverSerializer, DriverSubDriverSerializer, ProjectSerializer, ToolTipGuideSerializer, SurveySerializer, NikelMobilePageSerializer, ConfigPageSerializer, UserAvatarSerializer, SHMappingSerializer, ProjectVideoUploadSerializer, AMQuestionSerializer, AOQuestionSerializer, StakeHolderSerializer, SHCategorySerializer, MyMapLayoutStoreSerializer, ProjectMapLayoutStoreSerializer, UserBySurveySerializer, SurveyByUserSerializer, SkipOptionSerializer, DriverSerializer, AOQuestionSerializer, OrganizationSerializer, OptionSerializer, ProjectUserSerializer, SHGroupSerializer, UserSerializer, PageSettingSerializer, PageSerializer, AMResponseSerializer, AMResponseTopicSerializer, AOResponseSerializer, AOResponseTopicSerializer, AOPageSerializer, TeamSerializer
 from rest_framework import generics, permissions
 from django.contrib.auth.models import User
 from rest_framework.decorators import action
@@ -16,7 +16,7 @@ from cms.models import Page
 from aboutme.models import AMResponseAcknowledgement, AMQuestion, AMResponse, AMResponseTopic, AMQuestionSHGroup
 from aboutothers.models import AOResponseAcknowledgement, AOResponse, AOResponseTopic, AOPage
 from team.models import Team
-from shgroup.models import SHGroup, ProjectUser, MyMapLayout, ProjectMapLayout, SHCategory, SHMapping
+from shgroup.models import KeyThemeUpDownVote, SHGroup, ProjectUser, MyMapLayout, ProjectMapLayout, SHCategory, SHMapping
 from option.models import Option, SkipOption
 from rest_framework import status
 from organization.models import Organization, UserAvatar, UserTeam, UserGuideMode
@@ -211,6 +211,28 @@ class AMResponseAcknowledgementViewSet(viewsets.ModelViewSet):
 
         if projectUser is not None:
             queryset = queryset.filter(projectUser__id=projectUser)
+
+        return queryset
+
+class KeyThemeUpDownVoteViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+    queryset = KeyThemeUpDownVote.objects.all()
+    serializer_class = KeyThemeUpDownVoteSerializer
+
+    def get_queryset(self):
+        queryset = KeyThemeUpDownVote.objects.all()
+
+        keyTheme = self.request.query_params.get('key', None)
+        voteValue = self.request.query_params.get('vote', None)     # 1: upvote    2: downvote
+
+        if (keyTheme is not None) & (voteValue is not None):
+            queryset = queryset.filter(keyTheme=keyTheme, voteVaule=voteValue)
+
+        if keyTheme is not None:
+            queryset = queryset.filter(keyTheme=keyTheme)
+        
+        if voteValue is not None:
+            queryset = queryset.filter(voteValue=voteVal)
 
         return queryset
 
@@ -2286,7 +2308,11 @@ class KeyThemesView(APIView):
                 survey__id=survey).order_by('projectUser')
             ktamresponseserializer = AMResponseForReportSerializer(ktamresponsequeryset, many=True)
 
-            return Response(ktamresponseserializer.data, status=status.HTTP_200_OK)
+            ret = ktamresponseserializer.data
+            for i in range(len(ret)):
+                ret[i]['acknowledgementData'] = AMResponseAcknowledgement.objects.all().filter(amResponse__id=ret[i]['id'])
+
+            return Response(ret, status=status.HTTP_200_OK)
 
         # Unspoken Problem
         # AM - Culture - Unspoken Problem: Is there a problem that people aren't discussing openly?
@@ -2296,7 +2322,12 @@ class KeyThemesView(APIView):
                 survey__id=survey).order_by('projectUser')
             ktamresponseserializer = AMResponseForReportSerializer(ktamresponsequeryset, many=True)
 
-            return Response(ktamresponseserializer.data, status=status.HTTP_200_OK)
+            ret = ktamresponseserializer.data
+            for i in range(len(ret)):
+                ret[i]['acknowledgementData'] = AMResponseAcknowledgement.objects.all().filter(
+                    amResponse__id=ret[i]['id'])
+
+            return Response(ret, status=status.HTTP_200_OK)
 
         # Project Interest
         # AM - Interest - Project Interest: What do you care about the most on this project?
