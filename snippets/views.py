@@ -2322,7 +2322,8 @@ class KeyThemesView(APIView):
             for i in range(len(ret)):
                 tmpQuerySet = AMResponseAcknowledgement.objects.all().filter(
                     amResponse__id=ret[i]['id'])
-                amResponseAcknowledgementSerializer = AMResponseAcknowledgementSerializer(tmpQuerySet, many=True)
+                amResponseAcknowledgementSerializer = AMResponseAcknowledgementSerializer(
+                    tmpQuerySet, many=True)
                 ret[i]['acknowledgementData'] = amResponseAcknowledgementSerializer.data
                 ret[i]['likeCount'] = AMResponseAcknowledgement.objects.all().filter(amResponse__id=ret[i]['id'], likeStatus=1).count()
                 ret[i]['dislikeCount'] = AMResponseAcknowledgement.objects.all().filter(amResponse__id=ret[i]['id'], likeStatus=2).count()
@@ -2337,7 +2338,10 @@ class KeyThemesView(APIView):
                 ret[i]['nonConstructiveCount'] = AMResponseAcknowledgement.objects.all().filter(amResponse__id=ret[i]['id'], flagStatus=3).count()
                 ret[i]['outOfPolicyCount'] = AMResponseAcknowledgement.objects.all().filter(amResponse__id=ret[i]['id'], flagStatus=4).count()
                 ret[i]['aggressiveCount'] = AMResponseAcknowledgement.objects.all().filter(amResponse__id=ret[i]['id'], flagStatus=5).count()
-                ret[i]['myStatus'] = AMResponseAcknowledgement.objects.all().filter(amResponse__id=ret[i]['id'], projectUser__id=projectUser)
+                myQuerySet = AMResponseAcknowledgement.objects.all().filter(amResponse__id=ret[i]['id'], projectUser__id=projectUser)
+                myAmResponseAcknowledgementSerializer = AMResponseAcknowledgementSerializer(
+                    myQuerySet, many=True)
+                ret[i]['myStatus'] = myAmResponseAcknowledgementSerializer.data
             
             return Response(ret, status=status.HTTP_200_OK)
 
@@ -2381,7 +2385,10 @@ class KeyThemesView(APIView):
                     amResponse__id=ret[i]['id'], flagStatus=4).count()
                 ret[i]['aggressiveCount'] = AMResponseAcknowledgement.objects.all().filter(
                     amResponse__id=ret[i]['id'], flagStatus=5).count()
-                ret[i]['myStatus'] = AMResponseAcknowledgement.objects.all().filter(amResponse__id=ret[i]['id'], projectUser__id=projectUser)
+                myQuerySet = AMResponseAcknowledgement.objects.all().filter(amResponse__id=ret[i]['id'], projectUser__id=projectUser)
+                myAmResponseAcknowledgementSerializer = AMResponseAcknowledgementSerializer(
+                    myQuerySet, many=True)
+                ret[i]['myStatus'] = myAmResponseAcknowledgementSerializer.data
 
             return Response(ret, status=status.HTTP_200_OK)
 
