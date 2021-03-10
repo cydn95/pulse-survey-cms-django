@@ -191,7 +191,7 @@ class AOResponseAcknowledgementViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(projectUser__id=projectUser)
             
         return queryset
-        
+
 class AMResponseAcknowledgementViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
     queryset = AMResponseAcknowledgement.objects.all()
@@ -2226,7 +2226,7 @@ class KeyThemesView(APIView):
         return []
 
     def get(self, format=None):
-        projectUser = self.request.query_params.get('projectuser', None)
+        # projectUser = self.request.query_params.get('projectuser', None)
         survey = self.request.query_params.get('survey', None)
         tab = self.request.query_params.get('tab', None)
         limit = self.request.query_params.get('limit', None)

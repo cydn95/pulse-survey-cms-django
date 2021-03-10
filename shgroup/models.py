@@ -141,6 +141,15 @@ class ProjectUser(models.Model):
 # class ProjectUserForm(ModelForm):
 #     userPermission = forms.ModelMultipleChoiceField(queryset=Permission.objects.all(), required=False)
 
+
+class KeyThemeUpDownVote(models.Model):
+    keyTheme = models.TextField(default="", blank=False, null=False)
+    projectUser = models.ForeignKey(ProjectUser, on_delete=models.CASCADE)
+    voteValue = models.IntegerField(blank=False, null=False)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
 class SHMapping(models.Model):
     shCategory = models.ForeignKey(SHCategory, on_delete=models.CASCADE)
     projectUser = models.ForeignKey(ProjectUser, on_delete=models.CASCADE, related_name='projectUser')
