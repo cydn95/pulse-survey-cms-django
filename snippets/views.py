@@ -758,13 +758,13 @@ class AOResponseFeedbackSummaryViewset(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated,
                           permissions.IsAuthenticatedOrReadOnly]
     queryset = AOResponse.objects.all()
-    serializer_class = AOResponseSerializer
+    serializer_class = AOResponseForMatrixSerializer
 
     def get_queryset(self):
         queryset = AOResponse.objects.all()
 
         survey = self.request.query_params.get('survey', None)
-        subProjectUser = self.request.query_params.get('subProjectUser', None)
+        subProjectUser = self.request.query_params.get('projectuser', None)
 
         if (survey is not None) & (subProjectUser is not None):
             queryset = queryset.filter(
