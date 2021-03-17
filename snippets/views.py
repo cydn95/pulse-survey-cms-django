@@ -1857,30 +1857,54 @@ class AMQuestionCountBySHGroup(APIView):
 
         survey = self.request.query_params.get('survey', None)
         driver = self.request.query_params.get('driver', None)
-        
-        if (survey is not None) & (driver is not None):
-            queryset = queryset.filter(
-                survey__id=survey, driver__driverName=driver)
-        elif survey is not None:
-            queryset = queryset.filter(survey__id=survey)
-        elif driver is not None:
-            queryset = queryset.filter(driver__driverName=driver)
+        project = self.request.query_params.get('project', None)
+        user = self.request.query_params.get('user', None)
+
+        if survey is None:
+            return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
+        if driver is None:
+            return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
+        if project is None:
+            return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
+        if user is None:
+            return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
+
+        queryset = queryset.filter(survey__id=survey, driver__driverName=driver)
 
         shgroup = SHGroup.objects.all()
-        if survey is not None:
-            shgroup = shgroup.filter(survey__id=survey)
+        # if survey is not None:
+        shgroup = shgroup.filter(survey__id=survey)
 
         shgroupserializer = SHGroupSerializer(shgroup, many=True)
         for i in range(len(shgroupserializer.data)):
             shgroupserializer.data[i]['questionCnt'] = queryset.filter(
                 shGroup__id=shgroupserializer.data[i]['id']).count()
-            shgroupserializer.data[i]['questionTotalCnt'] = queryset.count()
+            # shgroupserializer.data[i]['questionTotalCnt'] = queryset.count()
         
-        # ret = ''
-        # ret['data'] = shgroupserializer.data
-        # ret['questionTotalCnt'] = queryset.count()
+        team = Team.objects.all()
+        team = team.filter(project__id=project)
 
-        return Response(shgroupserializer.data, status=status.HTTP_200_OK)
+        teamserializer = TeamSerializer(team, many=True)
+        for i in range(len(teamserializer.data)):
+            teamserializer.data[i]['questionCnt'] = queryset.filter(
+                survey__project__id=teamserializer.data[i]['id']).count()
+            # teamserializer.data[i]
+
+        organization = Organization.objects.all()
+        organization = organization.filter(user__id=user)
+
+        organizationserializer = OrganizationSerializer(organization, many=True)
+        for i in range(len(organizationserializer.data)):
+            organizationserializer.data[i]['questionCnt'] = queryset.count()
+        
+        ret = []
+        ret = {
+            shgroupData: shgroupserializer.data,
+            teamData: teamserializer.data,
+            organizationData: organizationserializer.data
+        }
+
+        return Response(ret, status=status.HTTP_200_OK)
 
 # changepassword api
 class ChangePasswordView(APIView):
