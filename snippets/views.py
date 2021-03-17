@@ -1887,7 +1887,7 @@ class AMQuestionCountBySHGroup(APIView):
         teamserializer = TeamSerializer(team, many=True)
         for i in range(len(teamserializer.data)):
             teamserializer.data[i]['questionCnt'] = queryset.filter(
-                survey__project__id=teamserializer.data[i]['id']).count()
+                survey__project__id=teamserializer.data[i]['project']).count()
             # teamserializer.data[i]
 
         organization = Organization.objects.all()
