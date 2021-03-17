@@ -1897,12 +1897,10 @@ class AMQuestionCountBySHGroup(APIView):
         for i in range(len(organizationserializer.data)):
             organizationserializer.data[i]['questionCnt'] = queryset.count()
         
-        ret = []
-        ret = {
-            shgroupData: shgroupserializer.data,
-            teamData: teamserializer.data,
-            organizationData: organizationserializer.data
-        }
+        ret = ''
+        ret['shgroupData'] = shgroupserializer.data
+        ret['teamData'] = teamserializer.data
+        ret['organizationData'] = organizationserializer.data
 
         return Response(ret, status=status.HTTP_200_OK)
 
