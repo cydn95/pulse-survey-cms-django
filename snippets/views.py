@@ -2290,7 +2290,7 @@ class KeyThemesView(APIView):
         # AM - Confidence - Risk: What do you see as the biggest risks to the project?
         if tab == "1":
             ktamresponsequeryset = AMResponse.objects.all().filter(
-                amQuestion__questionText="What do you see as the biggest risks to the project?",
+                amQuestion__questionText="What do you see as the biggest risks to the {{{PROJECTNAME}}}?",
                 survey__id=survey).order_by('projectUser')
             ktamresponseserializer = AMResponseSerializer(ktamresponsequeryset, many=True)
 
@@ -2373,7 +2373,7 @@ class KeyThemesView(APIView):
         # AM - Culture - Unspoken Problem: Is there a problem that people aren't discussing openly?
         elif tab == "3":
             ktamresponsequeryset = AMResponse.objects.all().filter(
-                amQuestion__questionText="Is there a problem that people aren't discussing openly?",
+                amQuestion__questionText="Is there a problem that people aren't talking openly about?",
                 survey__id=survey).order_by('projectUser')
             ktamresponseserializer = AMResponseForReportSerializer(ktamresponsequeryset, many=True)
 
@@ -2420,7 +2420,7 @@ class KeyThemesView(APIView):
         # AM - Interest - Project Interest: What do you care about the most on this project?
         elif tab == "4":
             ktamresponsequeryset = AMResponse.objects.all().filter(
-                amQuestion__questionText="What do you care about the most on this project?",
+                amQuestion__questionText="What do you care most about on this project?",
                 survey__id=survey).order_by('projectUser')
             ktamresponseserializer = AMResponseSerializer(
                 ktamresponsequeryset, many=True)
