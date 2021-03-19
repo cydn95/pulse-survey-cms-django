@@ -2323,8 +2323,8 @@ class KeyThemesView(APIView):
                     keyTheme=aux[j][1], voteValue=1).count()
                 downvoteCnt = KeyThemeUpDownVote.objects.all().filter(
                     keyTheme=aux[j][1], voteValue=-1).count()
-                mystatus = list(KeyThemeUpDownVote.objects.all().filter(
-                    keyTheme=aux[j][1], projectUser=projectUser))
+                mystatus = KeyThemeUpDownVote.objects.get(
+                    keyTheme=aux[j][1], projectUser=projectUser)
                     
                 ret.append({"key": aux[j][1], "freq": aux[j][0],
                             "upvoteCount": upvoteCnt, "downvoteCount": downvoteCnt, "myStatus": mystatus})
