@@ -2279,8 +2279,8 @@ class KeyThemesView(APIView):
 
         if survey is None:
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
-        # if projectUser is None:
-        #     return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
+        if projectUser is None:
+            return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
         if tab is None:
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
         if (int(tab) < 1) | (int(tab) > 9):
@@ -2323,9 +2323,11 @@ class KeyThemesView(APIView):
                     keyTheme=aux[j][1], voteValue=1).count()
                 downvoteCnt = KeyThemeUpDownVote.objects.all().filter(
                     keyTheme=aux[j][1], voteValue=-1).count()
-
+                mystatus = KeyThemeUpDownVote.objects.all().filter(
+                    keyTheme=aux[j][1], projectUser=projectUser)
+                    
                 ret.append({"key": aux[j][1], "freq": aux[j][0],
-                            "upvoteCount": upvoteCnt, "downvoteCount": downvoteCnt})
+                            "upvoteCount": upvoteCnt, "downvoteCount": downvoteCnt, "myStatus": mystatus})
 
             if limit is not None:
                 return Response(ret[:int(limit)], status=status.HTTP_200_OK)
