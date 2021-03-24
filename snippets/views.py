@@ -767,7 +767,7 @@ class AOResponseTopPositiveNegativeViewSet(viewsets.ModelViewSet):
         response = super().list(request, *args, **kwargs)
         
         ret = ''
-        ret = {'topPositive': response[:3], 'topNegative': response[3:]}
+        ret = {'topPositive': response.data[:3], 'topNegative': response.data[3:]}
         # ret[0]['topPositive'] = response[:3]
         # ret[0]['topNegative'] = response[3:]
 
