@@ -2399,7 +2399,7 @@ class KeyThemesView(APIView):
                     wordlist.append(res[i]['topicValue'])
 
             wordfreq = [wordlist.count(p) for p in wordlist]
-            dictionary = dic(list(zip(wordlist, wordfreq)))
+            dictionary = dict(list(zip(wordlist, wordfreq)))
 
             aux = [(dictionary[key], key) for key in dictionary]
             aux.sort()
