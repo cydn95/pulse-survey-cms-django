@@ -86,8 +86,8 @@ class ProjectUser(models.Model):
         self.sendInvite = False
 
         # blocked sendinvite
-        # if not self.pk:
-        #     self.sendInvite = True
+        if not self.pk:
+            self.sendInvite = True
         
         super(ProjectUser, self).save(*args, **kwargs)
 
