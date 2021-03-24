@@ -746,13 +746,21 @@ class AOResponseTopPositiveNegativeViewSet(viewsets.ModelViewSet):
 
         if survey is None:
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
-        if projectUser is None:
-            return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
+        # if projectUser is None:
+        #     return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
 
-        if (startDate is not None) & (endDate is not None):
+        if (projectUser is not None) & (startDate is not None) & (endDate is not None):
             queryset = queryset.filter(
                 survey__id=survey, subProjectUser__id=projectUser, updated_at__range=[startDate, endDate])
-        
+        elif (projectUser is not None):
+            queryset = queryset.filter(
+                survey__id=survey, subProjectUser__id=projectUser)
+        elif (startDate is not None) & (endDate is not None):
+            queryset = queryset.filter(
+                survey__id=survey, updated_at__range=[startDate, endDate])
+        else:
+            queryset = queryset.filter(survey__id=survey)
+
         return queryset
     
     def list(self, request, *args, **kwargs):
