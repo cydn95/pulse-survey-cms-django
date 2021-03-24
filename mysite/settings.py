@@ -432,7 +432,7 @@ CORS_ORIGIN_WHITELIST = [
 
 # For sendgrid mail
 # SEND_GRID_API_KEY = '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' # old api key
-SEND_GRID_API_KEY = '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'
+SENDGRID_API_KEY = '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'
 EMAIL_HOST = 'smtp.sendgrid.net'
 EMAIL_HOST_USER = 'pulseprojectai'
 EMAIL_HOST_PASSWORD = 'RocketMan39'
