@@ -768,8 +768,8 @@ class AOResponseTopPositiveNegativeViewSet(viewsets.ModelViewSet):
         
         ret = {}
         ret['data'] = response
-        ret['topPositive'] = response[:3]
-        ret['topNegative'] = response[-3]
+        # ret['topPositive'] = response[:3]
+        # ret['topNegative'] = response[3:]
 
         return Response(ret, status=status.HTTP_200_OK)
 
