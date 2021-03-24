@@ -730,6 +730,41 @@ class AOResponseReportViewSet(viewsets.ModelViewSet):
 
         return response
 
+# aoresponsetoppositivenegativereport api
+class AOResponseTopPositiveNegativeViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+    queryset = AOResponse.objects.all()
+    serializer_class = AOResponseForReportSerializer
+
+    def get_queryset(self):
+        queryset = AOResponse.objects.all().filter(Q(controlType='TEXT')|Q(controlType='MULTI_TOPICS')).order_by('-integerValue')
+
+        survey = self.request.query_params.get('survey', None)
+        projectUser = self.request.query_params.get('projectuser', None)
+        startDate = self.request.query_params.get('stdt', None)
+        endDate = self.request.query_params.get('eddt', None)
+
+        if survey is None:
+            return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
+        if projectUser is None:
+            return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
+
+        if (startDate is not None) & (endDate is not None):
+            queryset = queryset.filter(
+                survey__id=survey, subProjectUser__id=projectUser, updated_at__range=[startDate, endDate])
+        
+        return queryset
+    
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+        
+        ret = {}
+        ret['data'] = response
+        ret['topPositive'] = response[:3]
+        ret['topNegative'] = response[-3]
+
+        return Response(ret, status=status.HTTP_200_OK)
+
 # configpage api
 class ConfigPageViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
