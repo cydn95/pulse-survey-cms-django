@@ -2348,32 +2348,63 @@ class KeyThemesView(APIView):
         if tab == "1":
             ktamresponsequeryset = AMResponse.objects.all().filter(
                 amQuestion__questionText="What do you see as the biggest risks to the {{{PROJECTNAME}}}?",
-                survey__id=survey).order_by('projectUser')
+                survey__id=survey, controlType="MULTI_TOPICS").order_by('projectUser')
             ktamresponseserializer = AMResponseSerializer(ktamresponsequeryset, many=True)
 
-            wordstring = ''
+            # wordstring = ''
+            # res = ktamresponseserializer.data
+            # for i in range(len(res)):
+            #     if res[i]['topicValue'] != "":
+            #         wordstring += ' ' + res[i]['topicValue']
+            #     if res[i]['commentValue'] != "":
+            #         wordstring += ' ' + res[i]['commentValue']
+            #     if res[i]['skipValue'] != "":
+            #         wordstring += ' ' + res[i]['skipValue']
+            #     if res[i]['topicTags'] != "":
+            #         wordstring += ' ' + res[i]['topicTags']
+            #     if res[i]['commentTags'] != "":
+            #         wordstring += ' ' + res[i]['commentTags']
+
+            # wordList = re.findall(r"[\w\']+", wordstring.lower())
+            # filteredWordList = [w for w in wordList if w not in stopwords]
+            # wordfreq = [filteredWordList.count(p) for p in filteredWordList]
+            # dictionary = dict(list(zip(filteredWordList, wordfreq)))
+
+            # aux = [(dictionary[key], key) for key in dictionary]
+            # aux.sort()
+            # aux.reverse()
+            
+            # ret = []
+            # for j in range(len(aux)):
+            #     upvoteCnt = KeyThemeUpDownVote.objects.all().filter(
+            #         keyTheme=aux[j][1], voteValue=1).count()
+            #     downvoteCnt = KeyThemeUpDownVote.objects.all().filter(
+            #         keyTheme=aux[j][1], voteValue=-1).count()
+            #     tempQueryset = KeyThemeUpDownVote.objects.filter(
+            #         keyTheme=aux[j][1], projectUser=projectUser)
+            #     myStatus = KeyThemeUpDownVoteSerializer(tempQueryset, many=True)
+                    
+            #     ret.append({"key": aux[j][1], "freq": aux[j][0],
+            #                 "upvoteCount": upvoteCnt, "downvoteCount": downvoteCnt, "myStatus": myStatus.data})
+
+            # if limit is not None:
+            #     return Response(ret[:int(limit)], status=status.HTTP_200_OK)
+            # else:
+            #     return Response(ret, status=status.HTTP_200_OK)
+
+            wordlist = []
             res = ktamresponseserializer.data
             for i in range(len(res)):
                 if res[i]['topicValue'] != "":
-                    wordstring += ' ' + res[i]['topicValue']
-                if res[i]['commentValue'] != "":
-                    wordstring += ' ' + res[i]['commentValue']
-                if res[i]['skipValue'] != "":
-                    wordstring += ' ' + res[i]['skipValue']
-                if res[i]['topicTags'] != "":
-                    wordstring += ' ' + res[i]['topicTags']
-                if res[i]['commentTags'] != "":
-                    wordstring += ' ' + res[i]['commentTags']
+                    wordlist.append(res[i]['topicValue'])
 
-            wordList = re.findall(r"[\w\']+", wordstring.lower())
-            filteredWordList = [w for w in wordList if w not in stopwords]
-            wordfreq = [filteredWordList.count(p) for p in filteredWordList]
-            dictionary = dict(list(zip(filteredWordList, wordfreq)))
+            wordfreq = [wordlist.count(p) for p in wordlist]
+            dictionary = dic(list(zip(wordlist, wordfreq)))
 
             aux = [(dictionary[key], key) for key in dictionary]
             aux.sort()
             aux.reverse()
-            
+
             ret = []
             for j in range(len(aux)):
                 upvoteCnt = KeyThemeUpDownVote.objects.all().filter(
@@ -2383,7 +2414,7 @@ class KeyThemesView(APIView):
                 tempQueryset = KeyThemeUpDownVote.objects.filter(
                     keyTheme=aux[j][1], projectUser=projectUser)
                 myStatus = KeyThemeUpDownVoteSerializer(tempQueryset, many=True)
-                    
+
                 ret.append({"key": aux[j][1], "freq": aux[j][0],
                             "upvoteCount": upvoteCnt, "downvoteCount": downvoteCnt, "myStatus": myStatus.data})
 
@@ -2391,8 +2422,6 @@ class KeyThemesView(APIView):
                 return Response(ret[:int(limit)], status=status.HTTP_200_OK)
             else:
                 return Response(ret, status=status.HTTP_200_OK)
-                
-            # return Response(ktamresponseserializer.data, status=status.HTTP_200_OK)
 
         # Overall Sentiment
         # AM - Sentiment - Overall Sentiment: How do you think the project is going... in your own words?
