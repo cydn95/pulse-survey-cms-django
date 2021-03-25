@@ -105,6 +105,16 @@
       )
     }
 
+    document.addEventListener("DOMContentLoaded", function(event) {
+      let inline_actions = document.querySelectorAll(".inline_actions input");
+      for (var i=0;i<inline_actions.length;i++) {
+        inline_actions[i].addEventListener("click", function(e) {
+          e.preventDefault();
+        });
+      }
+    });
+   
+
     // var tick_observer = new MutationObserver(function(mutations) {
     //     for (let mutation of mutations) {
     //         if (mutation.type === 'childList' && mutation.addedNodes.length == 1) {

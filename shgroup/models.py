@@ -83,7 +83,7 @@ class ProjectUser(models.Model):
         return '{0} - {1}'.format(self.survey, self.user.username)
 
     def save(self, *args, **kwargs):
-        self.sendInvite = False
+        # self.sendInvite = False
 
         # blocked sendinvite
         if not self.pk:
@@ -145,6 +145,8 @@ class ProjectUser(models.Model):
 
 class KeyThemeUpDownVote(models.Model):
     keyTheme = models.TextField(default="", blank=False, null=False)
+    survey = models.ForeignKey(Survey, on_delete=models.CASCADE)
+    tab = models.PositiveIntegerField(default=0)
     projectUser = models.ForeignKey(ProjectUser, on_delete=models.CASCADE)
     voteValue = models.IntegerField(blank=False, null=False)    # 1: upvote, -1: downvote
 

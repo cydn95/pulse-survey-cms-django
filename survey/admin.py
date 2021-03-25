@@ -58,13 +58,17 @@ class ProjectUserInline(InlineActionsMixin, admin.TabularInline):
     list_per_page = 10
     extra = 0
 
-    #readonly_fields = ['invite_button']
+    # readonly_fields = ['send_invite']
     #fields = ('user', 'projectUserTitle', 'team', 'shGroup', 'invite_button')
     inline_actions = ['send_invite']
 
     def send_invite(self, request, obj, parent_obj=None):
-        obj.save()
+        # temporary commented 2021-03-24
+        print("Send Invite Test")
+        print(self)
+        # obj.save()
         messages.info(request, 'Email invitation has been sent.')
+
 
     def formfield_for_dbfield(self, db_field, request, **kwargs):
         formfield = super(ProjectUserInline, self).formfield_for_dbfield(db_field, request, **kwargs)
