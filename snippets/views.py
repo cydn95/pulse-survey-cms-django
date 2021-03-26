@@ -2568,7 +2568,7 @@ class KeyThemesView(APIView):
             for j in range(len(aux)):
                 upvoteCnt = KeyThemeUpDownVote.objects.all().filter(
                     keyTheme=aux[j][1], survey__id=survey, tab=4, voteValue=1).count()
-                downvoteCont = KeyThemeUpDownVote.objects.all().filter(
+                downvoteCnt = KeyThemeUpDownVote.objects.all().filter(
                     keyTheme=aux[j][1], survey__id=survey, tab=4, voteValue=-1).count()
                 tempQueryset = KeyThemeUpDownVote.objects.filter(
                     keyTheme=aux[j][1], survey__id=survey, tab=4, projectUser=projectUser)
