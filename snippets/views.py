@@ -2287,21 +2287,21 @@ class BubbleChartView(APIView):
             reality = 0
             realityTotal = 0
             zvalue = 0
-            zvauleTotal = 0
+            zvalueTotal = 0
 
             for j in range(len(amserializer.data)):
                 realityTotal = realityTotal + amserializer.data[j]['integerValue']
             for k in range(len(aoserializer.data)):
                 perceptionTotal = perceptionTotal + aoserializer.data[k]['integerValue']
             for m in range(len(aoforzserializer.data)):
-                zvauleTotal = zvauleTotal + aoforzserializer.data[m]['integerValue']
+                zvalueTotal = zvalueTotal + aoforzserializer.data[m]['integerValue']
 
             if realityTotal > 0:
                 reality = realityTotal / len(amserializer.data)
             if perceptionTotal > 0:
                 perception = perceptionTotal / len(aoserializer.data)
-            if zvauleTotal > 0:
-                zvalue = zvauleTotal / len(aoforzserializer.data)
+            if zvalueTotal > 0:
+                zvalue = zvalueTotal / len(aoforzserializer.data)
 
             shgroupserializer.data[i]['point'] = {"x": reality, "y": perception, "z": zvalue}
 
