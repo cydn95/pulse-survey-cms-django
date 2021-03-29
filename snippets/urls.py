@@ -70,7 +70,7 @@ urlpatterns += format_suffix_patterns([
     url(r'userprofile', views.UserProfileView.as_view()),
     url(r'userguidemode', views.UserGuideModeView.as_view()),
     url(r'wordcloud', views.WordCloudView.as_view()),
-    # WIP
+
     url(r'keytheme', views.KeyThemesView.as_view()),
     url(r'mymatrix', views.MyMatrixView.as_view()),
     url(r'projectmatrix', views.ProjectMatrixView.as_view()),

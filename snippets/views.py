@@ -2309,7 +2309,6 @@ class BubbleChartView(APIView):
 
         return Response(res, status=status.HTTP_200_OK)
 
-# WIP
 # keytheme api
 # AM - Confidence - Risk: What do you see as the biggest risks to the project?
 # AM - Sentiment - Overall Sentiment: How do you think the project is going... in your own words?
@@ -2968,7 +2967,6 @@ class KeyThemesView(APIView):
             else:
                 return Response(ret, status=status.HTTP_200_OK)
 
-# WIP
 # mymatrix api
 class MyMatrixView(APIView):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
@@ -3038,7 +3036,6 @@ class MyMatrixView(APIView):
 
         return Response(retList, status=status.HTTP_200_OK)
 
-# WIP
 # projectmatrix api
 class ProjectMatrixView(APIView):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
