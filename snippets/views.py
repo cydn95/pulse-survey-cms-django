@@ -257,12 +257,7 @@ class AMResponseViewSet(viewsets.ModelViewSet):
                     obj = AMResponse.objects.get(
                         survey_id=item['survey'], project_id=item['project'], projectUser_id=item['projectUser'], amQuestion_id=item['amQuestion'])
 
-                    if obj.topicValue != defaults['topicValue'] or 
-                        obj.commentValue != defaults['commentValue'] or
-                        obj.integerValue != defaults['integerValue'] or
-                        obj.skipValue != defaults['skipValue'] or
-                        obj.topicTags != defaults['topicTags'] or
-                        obj.commentTags != defaults['commentTags']:
+                    if obj.topicValue != defaults['topicValue'] or obj.commentValue != defaults['commentValue'] or obj.integerValue != defaults['integerValue'] or obj.skipValue != defaults['skipValue'] or obj.topicTags != defaults['topicTags'] or obj.commentTags != defaults['commentTags']:
                         if obj.controlType == "TEXT" or obj.controlType == "MULTI_TOPICS":
                             # text = obj.topicValue + " " + obj.commentValue
                             text = defaults['topicValue'] + defaults['commentValue']
@@ -317,12 +312,7 @@ class AMResponseViewSet(viewsets.ModelViewSet):
                 obj = AMResponse.objects.get(survey_id=defaults['survey'], project_id=defaults['project'],
                                              projectUser_id=defaults['projectUser'], amQuestion_id=defaults['amQuestion'])
 
-                if obj.topicValue != defaults['topicValue'] or 
-                        obj.commentValue != defaults['commentValue'] or
-                        obj.integerValue != defaults['integerValue'] or
-                        obj.skipValue != defaults['skipValue'] or
-                        obj.topicTags != defaults['topicTags'] or
-                        obj.commentTags != defaults['commentTags']:
+                if obj.topicValue != defaults['topicValue'] or obj.commentValue != defaults['commentValue'] or obj.integerValue != defaults['integerValue'] or obj.skipValue != defaults['skipValue'] or obj.topicTags != defaults['topicTags'] or obj.commentTags != defaults['commentTags']:
                     if obj.controlType == "TEXT" or obj.controlType == "MULTI_TOPICS":
                         text = obj.topicValue + " " + obj.commentValue
 
@@ -417,12 +407,7 @@ class AOResponseViewSet(viewsets.ModelViewSet):
                     # obj = AOResponse.objects.get(survey_id=item['survey'], project_id=item['project'], projectUser_id=item['projectUser'], subProjectUser_id=item['subProjectUser'], shCategory_id=item['shCategory'], aoQuestion_id=item['aoQuestion'])
                     obj = AOResponse.objects.get(survey_id=item['survey'], project_id=item['project'], projectUser_id=item['projectUser'], subProjectUser_id=item['subProjectUser'], aoQuestion_id=item['aoQuestion'])
 
-                    if obj.topicValue != defaults['topicValue'] or 
-                        obj.commentValue != defaults['commentValue'] or
-                        obj.integerValue != defaults['integerValue'] or
-                        obj.skipValue != defaults['skipValue'] or
-                        obj.topicTags != defaults['topicTags'] or
-                        obj.commentTags != defaults['commentTags']:
+                    if obj.topicValue != defaults['topicValue'] or obj.commentValue != defaults['commentValue'] or obj.integerValue != defaults['integerValue'] or obj.skipValue != defaults['skipValue'] or obj.topicTags != defaults['topicTags'] or obj.commentTags != defaults['commentTags']:
                         if obj.controlType == "TEXT" or obj.controlType == "MULTI_TOPICS":
                             text = obj.topicValue + " " + obj.commentValue
 
@@ -471,12 +456,7 @@ class AOResponseViewSet(viewsets.ModelViewSet):
                 # obj = AOResponse.objects.get(survey_id=item['survey'], project_id=item['project'], projectUser_id=item['projectUser'], subProjectUser_id=item['subProjectUser'], shCategory_id=item['shCategory'], aoQuestion_id=item['aoQuestion'])
                 obj = AOResponse.objects.get(survey_id=item['survey'], project_id=item['project'], projectUser_id=item['projectUser'], subProjectUser_id=item['subProjectUser'], aoQuestion_id=item['aoQuestion'])
 
-                if obj.topicValue != defaults['topicValue'] or 
-                        obj.commentValue != defaults['commentValue'] or
-                        obj.integerValue != defaults['integerValue'] or
-                        obj.skipValue != defaults['skipValue'] or
-                        obj.topicTags != defaults['topicTags'] or
-                        obj.commentTags != defaults['commentTags']:
+                if obj.topicValue != defaults['topicValue'] or obj.commentValue != defaults['commentValue'] or obj.integerValue != defaults['integerValue'] or obj.skipValue != defaults['skipValue'] or obj.topicTags != defaults['topicTags'] or obj.commentTags != defaults['commentTags']:
                     if obj.controlType == "TEXT" or obj.controlType == "MULTI_TOPICS":
                         text = obj.topicValue + " " + obj.commentValue
 
