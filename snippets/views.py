@@ -257,22 +257,28 @@ class AMResponseViewSet(viewsets.ModelViewSet):
                     obj = AMResponse.objects.get(
                         survey_id=item['survey'], project_id=item['project'], projectUser_id=item['projectUser'], amQuestion_id=item['amQuestion'])
 
-                    if obj.controlType == "TEXT" or obj.controlType == "MULTI_TOPICS":
-                        text = obj.topicValue + " " + obj.commentValue
+                    if obj.topicValue != defaults['topicValue'] or 
+                        obj.commentValue != defaults['commentValue'] or
+                        obj.integerValue != defaults['integerValue'] or
+                        obj.skipValue != defaults['skipValue'] or
+                        obj.topicTags != defaults['topicTags'] or
+                        obj.commentTags != defaults['commentTags']:
+                        if obj.controlType == "TEXT" or obj.controlType == "MULTI_TOPICS":
+                            # text = obj.topicValue + " " + obj.commentValue
+                            text = defaults['topicValue'] + defaults['commentValue']
+                            sentimentResult = comprehend.detect_sentiment(
+                                Text=text, LanguageCode="en")
+                            obj.integerValue = int(
+                                abs(sentimentResult["SentimentScore"]["Positive"] * 100))
+                        else:
+                            obj.integerValue = defaults['integerValue']
+                        obj.topicValue = defaults['topicValue']
+                        obj.commentValue = defaults['commentValue']
+                        obj.skipValue = defaults['skipValue']
+                        obj.topicTags = defaults['topicTags']
+                        obj.commentTags = defaults['commentTags']
 
-                        sentimentResult = comprehend.detect_sentiment(
-                            Text=text, LanguageCode="en")
-                        obj.integerValue = int(
-                            abs(sentimentResult["SentimentScore"]["Positive"] * 100))
-                    else:
-                        obj.integerValue = defaults['integerValue']
-                    obj.topicValue = defaults['topicValue']
-                    obj.commentValue = defaults['commentValue']
-                    obj.skipValue = defaults['skipValue']
-                    obj.topicTags = defaults['topicTags']
-                    obj.commentTags = defaults['commentTags']
-
-                    obj.save()
+                        obj.save()
 
                 except AMResponse.DoesNotExist:
                     # 2020-05-20
@@ -311,23 +317,29 @@ class AMResponseViewSet(viewsets.ModelViewSet):
                 obj = AMResponse.objects.get(survey_id=defaults['survey'], project_id=defaults['project'],
                                              projectUser_id=defaults['projectUser'], amQuestion_id=defaults['amQuestion'])
 
-                if obj.controlType == "TEXT" or obj.controlType == "MULTI_TOPICS":
-                    text = obj.topicValue + " " + obj.commentValue
+                if obj.topicValue != defaults['topicValue'] or 
+                        obj.commentValue != defaults['commentValue'] or
+                        obj.integerValue != defaults['integerValue'] or
+                        obj.skipValue != defaults['skipValue'] or
+                        obj.topicTags != defaults['topicTags'] or
+                        obj.commentTags != defaults['commentTags']:
+                    if obj.controlType == "TEXT" or obj.controlType == "MULTI_TOPICS":
+                        text = obj.topicValue + " " + obj.commentValue
 
-                    sentimentResult = comprehend.detect_sentiment(
-                        Text=text, LanguageCode="en")
-                    obj.integerValue = int(
-                        abs(sentimentResult["SentimentScore"]["Positive"] * 100))
-                else:
-                    obj.integerValue = defaults['integerValue']
+                        sentimentResult = comprehend.detect_sentiment(
+                            Text=text, LanguageCode="en")
+                        obj.integerValue = int(
+                            abs(sentimentResult["SentimentScore"]["Positive"] * 100))
+                    else:
+                        obj.integerValue = defaults['integerValue']
 
-                obj.topicValue = defaults['topicValue']
-                obj.commentValue = defaults['commentValue']
-                obj.skipValue = defaults['skipValue']
-                obj.topicTags = defaults['topicTags']
-                obj.commentTags = defaults['commentTags']
+                    obj.topicValue = defaults['topicValue']
+                    obj.commentValue = defaults['commentValue']
+                    obj.skipValue = defaults['skipValue']
+                    obj.topicTags = defaults['topicTags']
+                    obj.commentTags = defaults['commentTags']
 
-                obj.save()
+                    obj.save()
             except AMResponse.DoesNotExist:
 
                 # 2020-05-20
@@ -405,20 +417,26 @@ class AOResponseViewSet(viewsets.ModelViewSet):
                     # obj = AOResponse.objects.get(survey_id=item['survey'], project_id=item['project'], projectUser_id=item['projectUser'], subProjectUser_id=item['subProjectUser'], shCategory_id=item['shCategory'], aoQuestion_id=item['aoQuestion'])
                     obj = AOResponse.objects.get(survey_id=item['survey'], project_id=item['project'], projectUser_id=item['projectUser'], subProjectUser_id=item['subProjectUser'], aoQuestion_id=item['aoQuestion'])
 
-                    if obj.controlType == "TEXT" or obj.controlType == "MULTI_TOPICS":
-                        text = obj.topicValue + " " + obj.commentValue
+                    if obj.topicValue != defaults['topicValue'] or 
+                        obj.commentValue != defaults['commentValue'] or
+                        obj.integerValue != defaults['integerValue'] or
+                        obj.skipValue != defaults['skipValue'] or
+                        obj.topicTags != defaults['topicTags'] or
+                        obj.commentTags != defaults['commentTags']:
+                        if obj.controlType == "TEXT" or obj.controlType == "MULTI_TOPICS":
+                            text = obj.topicValue + " " + obj.commentValue
 
-                        sentimentResult = comprehend.detect_sentiment(Text=text, LanguageCode="en")
-                        obj.integerValue = int(abs(sentimentResult["SentimentScore"]["Positive"] * 100))
-                    else:
-                        obj.integerValue = defaults['integerValue']
-                    obj.topicValue = defaults['topicValue']
-                    obj.commentValue = defaults['commentValue']
-                    obj.skipValue = defaults['skipValue']
-                    obj.topicTags = defaults['topicTags']
-                    obj.commentTags = defaults['commentTags']
+                            sentimentResult = comprehend.detect_sentiment(Text=text, LanguageCode="en")
+                            obj.integerValue = int(abs(sentimentResult["SentimentScore"]["Positive"] * 100))
+                        else:
+                            obj.integerValue = defaults['integerValue']
+                        obj.topicValue = defaults['topicValue']
+                        obj.commentValue = defaults['commentValue']
+                        obj.skipValue = defaults['skipValue']
+                        obj.topicTags = defaults['topicTags']
+                        obj.commentTags = defaults['commentTags']
 
-                    obj.save()
+                        obj.save()
 
                 except AOResponse.DoesNotExist:
                     # 2020-05-20
@@ -453,22 +471,28 @@ class AOResponseViewSet(viewsets.ModelViewSet):
                 # obj = AOResponse.objects.get(survey_id=item['survey'], project_id=item['project'], projectUser_id=item['projectUser'], subProjectUser_id=item['subProjectUser'], shCategory_id=item['shCategory'], aoQuestion_id=item['aoQuestion'])
                 obj = AOResponse.objects.get(survey_id=item['survey'], project_id=item['project'], projectUser_id=item['projectUser'], subProjectUser_id=item['subProjectUser'], aoQuestion_id=item['aoQuestion'])
 
-                if obj.controlType == "TEXT" or obj.controlType == "MULTI_TOPICS":
-                    text = obj.topicValue + " " + obj.commentValue
+                if obj.topicValue != defaults['topicValue'] or 
+                        obj.commentValue != defaults['commentValue'] or
+                        obj.integerValue != defaults['integerValue'] or
+                        obj.skipValue != defaults['skipValue'] or
+                        obj.topicTags != defaults['topicTags'] or
+                        obj.commentTags != defaults['commentTags']:
+                    if obj.controlType == "TEXT" or obj.controlType == "MULTI_TOPICS":
+                        text = obj.topicValue + " " + obj.commentValue
 
-                    sentimentResult = comprehend.detect_sentiment(Text=text, LanguageCode="en")
-                    obj.integerValue = int(abs(sentimentResult["SentimentScore"]["Positive"] * 100))
-                else:
+                        sentimentResult = comprehend.detect_sentiment(Text=text, LanguageCode="en")
+                        obj.integerValue = int(abs(sentimentResult["SentimentScore"]["Positive"] * 100))
+                    else:
+                        obj.integerValue = defaults['integerValue']
+                    
                     obj.integerValue = defaults['integerValue']
-                
-                obj.integerValue = defaults['integerValue']
-                obj.topicValue = defaults['topicValue']
-                obj.commentValue = defaults['commentValue']
-                obj.skipValue = defaults['skipValue']
-                obj.topicTags = defaults['topicTags']
-                obj.commentTags = defaults['commentTags']
+                    obj.topicValue = defaults['topicValue']
+                    obj.commentValue = defaults['commentValue']
+                    obj.skipValue = defaults['skipValue']
+                    obj.topicTags = defaults['topicTags']
+                    obj.commentTags = defaults['commentTags']
 
-                obj.save()
+                    obj.save()
             except AOResponse.DoesNotExist:
                 # 2020-05-20
                 # obj = AOResponse(aoQuestion_id=defaults['aoQuestion'],
