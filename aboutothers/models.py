@@ -73,7 +73,9 @@ class AOResponse(models.Model):
     skipValue = models.TextField(blank=True)
     topicTags = models.TextField(blank=True)
     commentTags = models.TextField(blank=True)
-
+    # new field for history 2021-04-01
+    latestReponse = models.BooleanField(default=False)
+    
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
