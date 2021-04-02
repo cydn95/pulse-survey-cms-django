@@ -255,25 +255,47 @@ class AMResponseViewSet(viewsets.ModelViewSet):
                     # 2020-05-20
                     # obj = AMResponse.objects.get(survey_id=item['survey'], project_id=item['project'], user_id=item['user'], amQuestion_id=item['amQuestion'])
                     obj = AMResponse.objects.get(
-                        survey_id=item['survey'], project_id=item['project'], projectUser_id=item['projectUser'], amQuestion_id=item['amQuestion'])
+                        survey_id=item['survey'], project_id=item['project'], projectUser_id=item['projectUser'], amQuestion_id=item['amQuestion'], latestResponse=True)
 
                     if obj.topicValue != defaults['topicValue'] or obj.commentValue != defaults['commentValue'] or obj.integerValue != defaults['integerValue'] or obj.skipValue != defaults['skipValue'] or obj.topicTags != defaults['topicTags'] or obj.commentTags != defaults['commentTags']:
-                        if obj.controlType == "TEXT" or obj.controlType == "MULTI_TOPICS":
-                            # text = obj.topicValue + " " + obj.commentValue
-                            text = defaults['topicValue'] + defaults['commentValue']
-                            sentimentResult = comprehend.detect_sentiment(
-                                Text=text, LanguageCode="en")
-                            obj.integerValue = int(
-                                abs(sentimentResult["SentimentScore"]["Positive"] * 100))
-                        else:
-                            obj.integerValue = defaults['integerValue']
-                        obj.topicValue = defaults['topicValue']
-                        obj.commentValue = defaults['commentValue']
-                        obj.skipValue = defaults['skipValue']
-                        obj.topicTags = defaults['topicTags']
-                        obj.commentTags = defaults['commentTags']
+                        # if obj.controlType == "TEXT" or obj.controlType == "MULTI_TOPICS":
+                        #     # text = obj.topicValue + " " + obj.commentValue
+                        #     text = defaults['topicValue'] + defaults['commentValue']
+                        #     sentimentResult = comprehend.detect_sentiment(
+                        #         Text=text, LanguageCode="en")
+                        #     obj.integerValue = int(
+                        #         abs(sentimentResult["SentimentScore"]["Positive"] * 100))
+                        # else:
+                        #     obj.integerValue = defaults['integerValue']
+                        # obj.topicValue = defaults['topicValue']
+                        # obj.commentValue = defaults['commentValue']
+                        # obj.skipValue = defaults['skipValue']
+                        # obj.topicTags = defaults['topicTags']
+                        # obj.commentTags = defaults['commentTags']
+                        obj.latestResponse = False
 
                         obj.save()
+
+                    # 2021-04-01
+                    # if obj.topicValue != defaults['topicValue'] or obj.commentValue != defaults['commentValue'] or obj.integerValue != defaults['integerValue'] or obj.skipValue != defaults['skipValue'] or obj.topicTags != defaults['topicTags'] or obj.commentTags != defaults['commentTags']:
+                        if defaults["controlType"] == "TEXT" or defaults["controlType"] == "MULTI_TOPICS":
+                            text = defaults['topicValue'] + \
+                                " " + defaults['commentValue']
+
+                            sentimentResult = comprehend.detect_sentiment(
+                                Text=text, LanguageCode="en")
+                            defaults["integerValue"] = int(
+                                abs(sentimentResult["SentimentScore"]["Positive"] * 100))
+
+                        obj1 = AMResponse(amQuestion_id=defaults['amQuestion'],
+                                        projectUser_id=defaults['projectUser'], subProjectUser_id=defaults['subProjectUser'],
+                                        survey_id=defaults['survey'], project_id=defaults['project'],
+                                        controlType=defaults['controlType'], integerValue=defaults['integerValue'],
+                                        topicValue=defaults['topicValue'], commentValue=defaults['commentValue'],
+                                        skipValue=defaults['skipValue'], topicTags=defaults['topicTags'],
+                                        commentTags=defaults['commentTags'], latestResponse=True)
+
+                        obj1.save()
 
                 except AMResponse.DoesNotExist:
                     # 2020-05-20
@@ -300,7 +322,7 @@ class AMResponseViewSet(viewsets.ModelViewSet):
                                      controlType=defaults['controlType'], integerValue=defaults['integerValue'],
                                      topicValue=defaults['topicValue'], commentValue=defaults['commentValue'],
                                      skipValue=defaults['skipValue'], topicTags=defaults['topicTags'],
-                                     commentTags=defaults['commentTags'])
+                                     commentTags=defaults['commentTags'], latestResponse=True)
 
                     obj.save()
 
@@ -313,21 +335,22 @@ class AMResponseViewSet(viewsets.ModelViewSet):
                                              projectUser_id=defaults['projectUser'], amQuestion_id=defaults['amQuestion'])
 
                 if obj.topicValue != defaults['topicValue'] or obj.commentValue != defaults['commentValue'] or obj.integerValue != defaults['integerValue'] or obj.skipValue != defaults['skipValue'] or obj.topicTags != defaults['topicTags'] or obj.commentTags != defaults['commentTags']:
-                    if obj.controlType == "TEXT" or obj.controlType == "MULTI_TOPICS":
-                        text = obj.topicValue + " " + obj.commentValue
+                    # if obj.controlType == "TEXT" or obj.controlType == "MULTI_TOPICS":
+                    #     text = obj.topicValue + " " + obj.commentValue
 
-                        sentimentResult = comprehend.detect_sentiment(
-                            Text=text, LanguageCode="en")
-                        obj.integerValue = int(
-                            abs(sentimentResult["SentimentScore"]["Positive"] * 100))
-                    else:
-                        obj.integerValue = defaults['integerValue']
+                    #     sentimentResult = comprehend.detect_sentiment(
+                    #         Text=text, LanguageCode="en")
+                    #     obj.integerValue = int(
+                    #         abs(sentimentResult["SentimentScore"]["Positive"] * 100))
+                    # else:
+                    #     obj.integerValue = defaults['integerValue']
 
-                    obj.topicValue = defaults['topicValue']
-                    obj.commentValue = defaults['commentValue']
-                    obj.skipValue = defaults['skipValue']
-                    obj.topicTags = defaults['topicTags']
-                    obj.commentTags = defaults['commentTags']
+                    # obj.topicValue = defaults['topicValue']
+                    # obj.commentValue = defaults['commentValue']
+                    # obj.skipValue = defaults['skipValue']
+                    # obj.topicTags = defaults['topicTags']
+                    # obj.commentTags = defaults['commentTags']
+                    obj.latestResponse = False
 
                     obj.save()
             except AMResponse.DoesNotExist:
