@@ -332,7 +332,7 @@ class AMResponseViewSet(viewsets.ModelViewSet):
                 # 2020-05-20
                 # obj = AMResponse.objects.get(survey_id=defaults['survey'], project_id=defaults['project'], user_id=defaults['user'], amQuestion_id=defaults['amQuestion'])
                 obj = AMResponse.objects.get(survey_id=defaults['survey'], project_id=defaults['project'],
-                                             projectUser_id=defaults['projectUser'], amQuestion_id=defaults['amQuestion'])
+                                             projectUser_id=defaults['projectUser'], amQuestion_id=defaults['amQuestion'], latestResponse=True)
 
                 if obj.topicValue != defaults['topicValue'] or obj.commentValue != defaults['commentValue'] or obj.integerValue != defaults['integerValue'] or obj.skipValue != defaults['skipValue'] or obj.topicTags != defaults['topicTags'] or obj.commentTags != defaults['commentTags']:
                     # if obj.controlType == "TEXT" or obj.controlType == "MULTI_TOPICS":
@@ -353,6 +353,26 @@ class AMResponseViewSet(viewsets.ModelViewSet):
                     obj.latestResponse = False
 
                     obj.save()
+
+                    if defaults["controlType"] == "TEXT" or defaults["controlType"] == "MULTI_TOPICS":
+                        text = defaults['topicValue'] + \
+                            " " + defaults['commentValue']
+
+                        sentimentResult = comprehend.detect_sentiment(
+                            Text=text, LanguageCode="en")
+                        defaults["integerValue"] = int(
+                            abs(sentimentResult["SentimentScore"]["Positive"] * 100))
+
+                    obj1 = AMResponse(amQuestion_id=defaults['amQuestion'],
+                                    projectUser_id=defaults['projectUser'], subProjectUser_id=defaults['subProjectUser'],
+                                    survey_id=defaults['survey'], project_id=defaults['project'],
+                                    controlType=defaults['controlType'], integerValue=defaults['integerValue'],
+                                    topicValue=defaults['topicValue'], commentValue=defaults['commentValue'],
+                                    skipValue=defaults['skipValue'], topicTags=defaults['topicTags'],
+                                    commentTags=defaults['commentTags'], latestResponse=True)
+
+                    obj1.save()
+
             except AMResponse.DoesNotExist:
 
                 # 2020-05-20
@@ -377,14 +397,14 @@ class AMResponseViewSet(viewsets.ModelViewSet):
                                  controlType=data['controlType'], integerValue=data['integerValue'],
                                  topicValue=data['topicValue'], commentValue=data['commentValue'],
                                  skipValue=data['skipValue'], topicTags=data['topicTags'],
-                                 commentTags=data['commentTags'])
+                                 commentTags=data['commentTags'], latestResponse=True)
 
                 obj.save()
 
         # 2020-05-20
         # result = AMResponse.objects.all().values('user', 'subjectUser', 'survey', 'project', 'amQuestion', 'controlType', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags')
         result = AMResponse.objects.all().values('projectUser', 'subProjectUser', 'survey', 'project', 'amQuestion',
-                                                 'controlType', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags')
+                                                 'controlType', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags', 'latestResponse')
 
         list_result = [entry for entry in result]
 
@@ -428,23 +448,44 @@ class AOResponseViewSet(viewsets.ModelViewSet):
                     # obj = AOResponse.objects.get(survey_id=item['survey'], project_id=item['project'], user_id=item['user'], subjectUser_id=item['subjectUser'], aoQuestion_id=item['aoQuestion'])
                     # 2020-12-17
                     # obj = AOResponse.objects.get(survey_id=item['survey'], project_id=item['project'], projectUser_id=item['projectUser'], subProjectUser_id=item['subProjectUser'], shCategory_id=item['shCategory'], aoQuestion_id=item['aoQuestion'])
-                    obj = AOResponse.objects.get(survey_id=item['survey'], project_id=item['project'], projectUser_id=item['projectUser'], subProjectUser_id=item['subProjectUser'], aoQuestion_id=item['aoQuestion'])
+                    obj = AOResponse.objects.get(survey_id=item['survey'], project_id=item['project'], projectUser_id=item['projectUser'],
+                                                 subProjectUser_id=item['subProjectUser'], aoQuestion_id=item['aoQuestion'], latestResponse=True)
 
                     if obj.topicValue != defaults['topicValue'] or obj.commentValue != defaults['commentValue'] or obj.integerValue != defaults['integerValue'] or obj.skipValue != defaults['skipValue'] or obj.topicTags != defaults['topicTags'] or obj.commentTags != defaults['commentTags']:
-                        if obj.controlType == "TEXT" or obj.controlType == "MULTI_TOPICS":
-                            text = obj.topicValue + " " + obj.commentValue
+                        # if obj.controlType == "TEXT" or obj.controlType == "MULTI_TOPICS":
+                        #     text = obj.topicValue + " " + obj.commentValue
 
-                            sentimentResult = comprehend.detect_sentiment(Text=text, LanguageCode="en")
-                            obj.integerValue = int(abs(sentimentResult["SentimentScore"]["Positive"] * 100))
-                        else:
-                            obj.integerValue = defaults['integerValue']
-                        obj.topicValue = defaults['topicValue']
-                        obj.commentValue = defaults['commentValue']
-                        obj.skipValue = defaults['skipValue']
-                        obj.topicTags = defaults['topicTags']
-                        obj.commentTags = defaults['commentTags']
+                        #     sentimentResult = comprehend.detect_sentiment(Text=text, LanguageCode="en")
+                        #     obj.integerValue = int(abs(sentimentResult["SentimentScore"]["Positive"] * 100))
+                        # else:
+                        #     obj.integerValue = defaults['integerValue']
+                        # obj.topicValue = defaults['topicValue']
+                        # obj.commentValue = defaults['commentValue']
+                        # obj.skipValue = defaults['skipValue']
+                        # obj.topicTags = defaults['topicTags']
+                        # obj.commentTags = defaults['commentTags']
+                        obj.latestResponse = False
 
                         obj.save()
+
+                        if defaults["controlType"] == "TEXT" or defaults["controlType"] == "MULTI_TOPICS":
+                            text = defaults['topicValue'] + \
+                                " " + defaults['commentValue']
+
+                            sentimentResult = comprehend.detect_sentiment(
+                                Text=text, LanguageCode="en")
+                            defaults["integerValue"] = int(
+                                abs(sentimentResult["SentimentScore"]["Positive"] * 100))
+
+                        obj1 = AOResponse(aoQuestion_id=defaults['aoQuestion'],
+                                        projectUser_id=defaults['projectUser'], subProjectUser_id=defaults['subProjectUser'],
+                                        shCategory_id=defaults['shCategory'],
+                                        survey_id=defaults['survey'], project_id=defaults['project'],
+                                        controlType=defaults['controlType'], integerValue=defaults['integerValue'],
+                                        topicValue=defaults['topicValue'], commentValue=defaults['commentValue'],
+                                        skipValue=defaults['skipValue'], topicTags=defaults['topicTags'],
+                                        commentTags=defaults['commentTags'], latestResponse=True)
+                        obj1.save()
 
                 except AOResponse.DoesNotExist:
                     # 2020-05-20
@@ -469,7 +510,7 @@ class AOResponseViewSet(viewsets.ModelViewSet):
                                 controlType=defaults['controlType'], integerValue=defaults['integerValue'],
                                 topicValue=defaults['topicValue'], commentValue=defaults['commentValue'],
                                 skipValue=defaults['skipValue'], topicTags=defaults['topicTags'],
-                                commentTags=defaults['commentTags'])
+                                commentTags=defaults['commentTags'], latestResponse=True)
                     obj.save()
         elif many == False:
             defaults = data
@@ -477,25 +518,45 @@ class AOResponseViewSet(viewsets.ModelViewSet):
                 # 2020-05-20
                 # obj = AOResponse.objects.get(survey_id=item['survey'], project_id=item['project'], user_id=item['user'], subjectUser_id=item['subjectUser'], aoQuestion_id=item['aoQuestion'])
                 # obj = AOResponse.objects.get(survey_id=item['survey'], project_id=item['project'], projectUser_id=item['projectUser'], subProjectUser_id=item['subProjectUser'], shCategory_id=item['shCategory'], aoQuestion_id=item['aoQuestion'])
-                obj = AOResponse.objects.get(survey_id=item['survey'], project_id=item['project'], projectUser_id=item['projectUser'], subProjectUser_id=item['subProjectUser'], aoQuestion_id=item['aoQuestion'])
+                obj = AOResponse.objects.get(survey_id=item['survey'], project_id=item['project'], projectUser_id=item['projectUser'], subProjectUser_id=item['subProjectUser'], aoQuestion_id=item['aoQuestion'], latestResponse=True)
 
                 if obj.topicValue != defaults['topicValue'] or obj.commentValue != defaults['commentValue'] or obj.integerValue != defaults['integerValue'] or obj.skipValue != defaults['skipValue'] or obj.topicTags != defaults['topicTags'] or obj.commentTags != defaults['commentTags']:
-                    if obj.controlType == "TEXT" or obj.controlType == "MULTI_TOPICS":
-                        text = obj.topicValue + " " + obj.commentValue
+                    # if obj.controlType == "TEXT" or obj.controlType == "MULTI_TOPICS":
+                    #     text = obj.topicValue + " " + obj.commentValue
 
-                        sentimentResult = comprehend.detect_sentiment(Text=text, LanguageCode="en")
-                        obj.integerValue = int(abs(sentimentResult["SentimentScore"]["Positive"] * 100))
-                    else:
-                        obj.integerValue = defaults['integerValue']
+                    #     sentimentResult = comprehend.detect_sentiment(Text=text, LanguageCode="en")
+                    #     obj.integerValue = int(abs(sentimentResult["SentimentScore"]["Positive"] * 100))
+                    # else:
+                    #     obj.integerValue = defaults['integerValue']
                     
-                    obj.integerValue = defaults['integerValue']
-                    obj.topicValue = defaults['topicValue']
-                    obj.commentValue = defaults['commentValue']
-                    obj.skipValue = defaults['skipValue']
-                    obj.topicTags = defaults['topicTags']
-                    obj.commentTags = defaults['commentTags']
-
+                    # obj.integerValue = defaults['integerValue']
+                    # obj.topicValue = defaults['topicValue']
+                    # obj.commentValue = defaults['commentValue']
+                    # obj.skipValue = defaults['skipValue']
+                    # obj.topicTags = defaults['topicTags']
+                    # obj.commentTags = defaults['commentTags']
+                    obj.latestResponse = False
                     obj.save()
+
+                    if defaults["controlType"] == "TEXT" or defaults["controlType"] == "MULTI_TOPICS":
+                        text = defaults["topicValue"] + \
+                            " " + defaults["commentValue"]
+
+                        sentimentResult = comprehend.detect_sentiment(
+                            Text=text, LanguageCode="en")
+                        defaults["integerValue"] = int(
+                            abs(sentimentResult["SentimentScore"]["Positive"] * 100))
+
+                    obj1 = AOResponse(aoQuestion_id=defaults['aoQuestion'],
+                                    projectUser_id=defaults['projectUser'], subProjectUser_id=defaults['subProjectUser'],
+                                    shCategory_id=defaults['shCategory'],
+                                    survey_id=defaults['survey'], project_id=defaults['project'],
+                                    controlType=defaults['controlType'], integerValue=defaults['integerValue'],
+                                    topicValue=defaults['topicValue'], commentValue=defaults['commentValue'],
+                                    skipValue=defaults['skipValue'], topicTags=defaults['topicTags'],
+                                    commentTags=defaults['commentTags'], latestResponse=True)
+                    obj1.save()
+
             except AOResponse.DoesNotExist:
                 # 2020-05-20
                 # obj = AOResponse(aoQuestion_id=defaults['aoQuestion'],
@@ -519,12 +580,12 @@ class AOResponseViewSet(viewsets.ModelViewSet):
                             controlType=defaults['controlType'], integerValue=defaults['integerValue'],
                             topicValue=defaults['topicValue'], commentValue=defaults['commentValue'],
                             skipValue=defaults['skipValue'], topicTags=defaults['topicTags'],
-                            commentTags=defaults['commentTags'])
+                            commentTags=defaults['commentTags'], latestResponse=True)
                 obj.save()
         
         # 2020-05-20
         # result = AOResponse.objects.all().values('user', 'subjectUser', 'survey', 'project', 'aoQuestion', 'controlType', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags')
-        result = AOResponse.objects.all().values('projectUser', 'subProjectUser', 'shCategory', 'survey', 'project', 'aoQuestion', 'controlType', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags')
+        result = AOResponse.objects.all().values('projectUser', 'subProjectUser', 'shCategory', 'survey', 'project', 'aoQuestion', 'controlType', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags', 'latestResponse')
         
         list_result = [entry for entry in result]
 
@@ -1114,7 +1175,7 @@ class PageViewSet(viewsets.ReadOnlyModelViewSet):
                             try:
                                 # 2020-05-20
                                 #ret = AMResponse.objects.get(user_id=projectuser.user, survey_id=survey_param, amQuestion_id=list_drivers[i]['amquestion'][j]['id'])
-                                ret = AMResponse.objects.get(projectUser_id=projectuser_param, survey_id=survey_param, amQuestion_id=list_drivers[i]['amquestion'][j]['id'])
+                                ret = AMResponse.objects.get(projectUser_id=projectuser_param, survey_id=survey_param, amQuestion_id=list_drivers[i]['amquestion'][j]['id'], latestResponse=True)
                                 list_drivers[i]['amquestion'][j]['responsestatus'] = True
                                 list_drivers[i]['amquestion'][j]['response'] = model_to_dict(ret)
                             except AMResponse.DoesNotExist:
@@ -1142,7 +1203,7 @@ class PageViewSet(viewsets.ReadOnlyModelViewSet):
                                 # ret = AOResponse.objects.get(subjectUser_id=projectuser.user, survey_id=survey_param, aoQuestion_id=list_drivers[i]['aoquestion'][j]['id'])
                                 # 2020-08-20
                                 # ret = AOResponse.objects.get(subProjectUser_id=projectuser_param, survey_id=survey_param, aoQuestion_id=list_drivers[i]['aoquestion'][j]['id'])
-                            ret = AOResponse.objects.filter(projectUser_id=projectuser_param, survey_id=survey_param, aoQuestion_id=list_drivers[i]['aoquestion'][j]['id'])
+                            ret = AOResponse.objects.filter(projectUser_id=projectuser_param, survey_id=survey_param, aoQuestion_id=list_drivers[i]['aoquestion'][j]['id'], latestResponse=True)
                             
                             if (len(ret) > 0):
                                 list_drivers[i]['aoquestion'][j]['responsestatus'] = True
@@ -1174,7 +1235,7 @@ class PageViewSet(viewsets.ReadOnlyModelViewSet):
                             try:
                                 # 2020-05-20
                                 # ret = AMResponse.objects.get(user_id=projectuser.user, survey_id=survey_param, amQuestion_id=list_drivers[i]['amquestion'][j]['id'])
-                                ret = AMResponse.objects.get(projectUser_id=projectuser_param, survey_id=survey_param, amQuestion_id=list_drivers[i]['amquestion'][j]['id'])
+                                ret = AMResponse.objects.get(projectUser_id=projectuser_param, survey_id=survey_param, amQuestion_id=list_drivers[i]['amquestion'][j]['id'], latestResponse=True)
                                 list_drivers[i]['amquestion'][j]['responsestatus'] = True
                                 list_drivers[i]['amquestion'][j]['response'] = model_to_dict(ret)
                             except AMResponse.DoesNotExist:
@@ -1202,7 +1263,7 @@ class PageViewSet(viewsets.ReadOnlyModelViewSet):
                                 # ret = AOResponse.objects.get(subjectUser_id=projectuser.user, survey_id=survey_param, aoQuestion_id=list_drivers[i]['aoquestion'][j]['id'])
                                 # 2020-08-20
                                 # ret = AOResponse.objects.get(subProjectUser_id=projectuser_param, survey_id=survey_param, aoQuestion_id=list_drivers[i]['aoquestion'][j]['id'])
-                            ret = AOResponse.objects.filter(projectUser_id=projectuser_param, survey_id=survey_param, aoQuestion_id=list_drivers[i]['aoquestion'][j]['id'])
+                            ret = AOResponse.objects.filter(projectUser_id=projectuser_param, survey_id=survey_param, aoQuestion_id=list_drivers[i]['aoquestion'][j]['id'], latestResponse=True)
                             
                             if (len(ret) > 0):
                                 list_drivers[i]['aoquestion'][j]['responsestatus'] = True
@@ -1864,14 +1925,15 @@ class UserBySurveyViewSet(viewsets.ModelViewSet):
             # for item2 in AOResponse.objects.filter(subjectUser_id=response.data[i]['user']['id'], project_id=response.data[i]['project']['id']).values('aoQuestion'):
             #     response.data[i]['ao_response'].append(item2['aoQuestion']) 
             # response.data[i]['ao_answered'] = AOResponse.objects.filter(subjectUser_id=response.data[i]['user']['id'], project_id=response.data[i]['project']['id']).count()
-            for item1 in AMResponse.objects.filter(projectUser_id=response.data[i]['id']).values('amQuestion'):
+            for item1 in AMResponse.objects.filter(projectUser_id=response.data[i]['id'], latestResponse=True).values('amQuestion'):
                 response.data[i]['am_response'].append(item1['amQuestion']) 
-            response.data[i]['am_answered'] = AMResponse.objects.filter(projectUser_id=response.data[i]['id']).count()
+            response.data[i]['am_answered'] = AMResponse.objects.filter(
+                projectUser_id=response.data[i]['id'], latestResponse=True).count()
             response.data[i]['ao_total'] = AOQuestion.objects.filter(filters).filter(survey__id=survey).count()
             response.data[i]['ao_response'] = []
-            for item2 in AOResponse.objects.filter(subProjectUser_id=response.data[i]['id']).values('aoQuestion'):
+            for item2 in AOResponse.objects.filter(subProjectUser_id=response.data[i]['id'], latestResponse=True).values('aoQuestion'):
                 response.data[i]['ao_response'].append(item2['aoQuestion']) 
-            response.data[i]['ao_answered'] = AOResponse.objects.filter(subProjectUser_id=response.data[i]['id']).count()
+            response.data[i]['ao_answered'] = AOResponse.objects.filter(subProjectUser_id=response.data[i]['id'], latestResponse=True).count()
 
             # 2020-05-20
             response.data[i]['shCategory'] = []
