@@ -23,6 +23,7 @@ router.register(r'aoresponsetoppositivenegativereport', views.AOResponseTopPosit
 router.register(r'configpage', views.ConfigPageViewSet)
 router.register(r'driver', views.DriverViewSet)
 router.register(r'feedbacksummaryreport', views.AOResponseFeedbackSummaryViewset)
+router.register(r'keythemeupdownvote', views.KeyThemeUpDownVoteViewSet)
 router.register(r'mymaplayouts', views.MyMapLayoutViewSet)
 router.register(r'nikelmobilepage', views.NikelMobilePageViewSet)
 router.register(r'option', views.OptionViewSet)
@@ -44,7 +45,6 @@ router.register(r'updatestakeholder', views.UpdateStakeHolderViewSet)
 router.register(r'userbysurvey', views.UserBySurveyViewSet)
 router.register(r'useravatar', views.UserAvatarViewSet)
 # WIP
-router.register(r'keythemeupdownvote', views.KeyThemeUpDownVoteViewSet)
 
 # The API URLs are now determined automatically by the router.
 urlpatterns = [
@@ -64,16 +64,15 @@ urlpatterns += format_suffix_patterns([
     url(r'amquestioncnt', views.AMQuestionCountBySHGroup.as_view()),
     url(r'bubblechart', views.BubbleChartView.as_view()),
     url(r'changepassword', views.ChangePasswordView.as_view()),
+    url(r'keytheme', views.KeyThemesView.as_view()),
+    url(r'mymatrix', views.MyMatrixView.as_view()),
     url(r'perceptionreality', views.PerceptionRealityView.as_view()),
+    url(r'projectmatrix', views.ProjectMatrixView.as_view()),
     url(r'stakeholder', views.StakeHolderUserView.as_view()),
     url(r'setpassword', views.SetPasswordView.as_view()),
     url(r'userprofile', views.UserProfileView.as_view()),
     url(r'userguidemode', views.UserGuideModeView.as_view()),
     url(r'wordcloud', views.WordCloudView.as_view()),
-
-    url(r'keytheme', views.KeyThemesView.as_view()),
-    url(r'mymatrix', views.MyMatrixView.as_view()),
-    url(r'projectmatrix', views.ProjectMatrixView.as_view()),
 ])
 
 # router.register(r'interestreport', views.AMResponseFeedbackSummaryForInterestViewset)     # deprecated
