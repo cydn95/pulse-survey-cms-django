@@ -1090,6 +1090,8 @@ class OptionViewSet(viewsets.ModelViewSet):
     serializer_class = OptionSerializer
 
 # overallsentimentreport api
+# 2021-04-06
+# add filter params by date range, shgroup, team, organization
 class OverallSentimentReportViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
     queryset = AMResponse.objects.all()
