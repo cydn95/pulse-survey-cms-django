@@ -634,101 +634,106 @@ class AMResponseReportViewSet(viewsets.ModelViewSet):
     serializer_class = AMResponseForReportSerializer
 
     def get_queryset(self):
-        queryset = AMResponse.objects.all()
+        try:
+            queryset = AMResponse.objects.all()
 
-        survey = self.request.query_params.get('survey', None)
-        projectUser = self.request.query_params.get('projectUser', None)
-        driver = self.request.query_params.get('driver', None)
-        startDate = self.request.query_params.get('stdt', None)
-        endDate = self.request.query_params.get('eddt', None)
-        controlType = self.request.query_params.get('controltype', None)
+            survey = self.request.query_params.get('survey', None)
+            projectUser = self.request.query_params.get('projectUser', None)
+            driver = self.request.query_params.get('driver', None)
+            startDate = self.request.query_params.get('stdt', None)
+            endDate = self.request.query_params.get('eddt', None)
+            controlType = self.request.query_params.get('controltype', None)
 
-        if survey is None:
-            return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
+            # if survey is None:
+            #     return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
 
-        if (controlType is not None) & (driver is not None) & (projectUser is not None) & (startDate is not None) & (endDate is not None):
-            queryset = queryset.filter(
-                controlType=controlType, survey__id=survey, subProjectUser__id=projectUser, amQuestion__driver__driverName=driver, updated_at__range=[startDate, endDate])
-        elif (controlType is not None) & (driver is not None) & (startDate is not None) & (endDate is not None):
-            queryset = queryset.filter(
-                controlType=controlType, survey__id=survey, amQuestion__driver__driverName=driver, updated_at__range=[startDate, endDate])
-        elif (controlType is not None) & (projectUser is not None) & (driver is not None):
-            queryset = queryset.filter(
-                controlType=controlType, survey__id=survey, subProjectUser__id=projectUser, amQuestion__driver__driverName=driver)
-        elif (controlType is not None) & (driver is not None):
-            queryset = queryset.filter(
-                controlType=controlType, survey__id=survey, amQuestion__driver__driverName=driver)
-        elif (controlType is not None) & (projectUser is not None) & (startDate is not None) & (endDate is not None):
-            queryset = queryset.filter(
-                controlType=controlType, survey__id=survey, subProjectUser__id=projectUser, updated_at__range=[startDate, endDate])
-        elif (controlType is not None) & (startDate is not None) & (endDate is not None):
-            queryset = queryset.filter(
-                controlType=controlType, survey__id=survey, updated_at__range=[startDate, endDate])
-        elif (driver is not None) & (projectUser is not None) & (startDate is not None) & (endDate is not None):
-            queryset = queryset.filter(
-                survey__id=survey, subProjectUser__id=projectUser, amQuestion__driver__driverName=driver, updated_at__range=[startDate, endDate])
-        elif (driver is not None) & (startDate is not None) & (endDate is not None):
-            queryset = queryset.filter(
-                survey__id=survey, amQuestion__driver__driverName=driver, updated_at__range=[startDate, endDate])
-        elif driver is not None:
-            queryset = queryset.filter(
-                survey__id=survey, amQuestion__driver__driverName=driver)
-        elif projectUser is not None:
-            queryset = queryset.filter(
-                survey__id=survey, subProjectUser__id=projectUser)
-        elif (startDate is not None) & (endDate is not None):
-            queryset = queryset.filter(
-                survey__id=survey, updated_at__range=[startDate, endDate])
-        else:
-            queryset = queryset.filter(survey__id=survey)
+            if (controlType is not None) & (driver is not None) & (projectUser is not None) & (startDate is not None) & (endDate is not None):
+                queryset = queryset.filter(
+                    controlType=controlType, survey__id=survey, subProjectUser__id=projectUser, amQuestion__driver__driverName=driver, updated_at__range=[startDate, endDate])
+            elif (controlType is not None) & (driver is not None) & (startDate is not None) & (endDate is not None):
+                queryset = queryset.filter(
+                    controlType=controlType, survey__id=survey, amQuestion__driver__driverName=driver, updated_at__range=[startDate, endDate])
+            elif (controlType is not None) & (projectUser is not None) & (driver is not None):
+                queryset = queryset.filter(
+                    controlType=controlType, survey__id=survey, subProjectUser__id=projectUser, amQuestion__driver__driverName=driver)
+            elif (controlType is not None) & (driver is not None):
+                queryset = queryset.filter(
+                    controlType=controlType, survey__id=survey, amQuestion__driver__driverName=driver)
+            elif (controlType is not None) & (projectUser is not None) & (startDate is not None) & (endDate is not None):
+                queryset = queryset.filter(
+                    controlType=controlType, survey__id=survey, subProjectUser__id=projectUser, updated_at__range=[startDate, endDate])
+            elif (controlType is not None) & (startDate is not None) & (endDate is not None):
+                queryset = queryset.filter(
+                    controlType=controlType, survey__id=survey, updated_at__range=[startDate, endDate])
+            elif (driver is not None) & (projectUser is not None) & (startDate is not None) & (endDate is not None):
+                queryset = queryset.filter(
+                    survey__id=survey, subProjectUser__id=projectUser, amQuestion__driver__driverName=driver, updated_at__range=[startDate, endDate])
+            elif (driver is not None) & (startDate is not None) & (endDate is not None):
+                queryset = queryset.filter(
+                    survey__id=survey, amQuestion__driver__driverName=driver, updated_at__range=[startDate, endDate])
+            elif driver is not None:
+                queryset = queryset.filter(
+                    survey__id=survey, amQuestion__driver__driverName=driver)
+            elif projectUser is not None:
+                queryset = queryset.filter(
+                    survey__id=survey, subProjectUser__id=projectUser)
+            elif (startDate is not None) & (endDate is not None):
+                queryset = queryset.filter(
+                    survey__id=survey, updated_at__range=[startDate, endDate])
+            else:
+                queryset = queryset.filter(survey__id=survey)
 
-        return queryset
+            return queryset
+        except:
+            return None
 
     def list(self, request, *args, **kwargs):
+        try:
+            response = super().list(request, *args, **kwargs)
 
-        response = super().list(request, *args, **kwargs)
+            for i in range(len(response.data)):
+                amquestion_queryset = AMQuestion.objects.filter(
+                    id=response.data[i]['amQuestion'])
+                am_serializer = AMQuestionSerializer(
+                    amquestion_queryset, many=True)
+                response.data[i]['amQuestionData'] = am_serializer.data
+                
+                # commented for improve 2021-03-24
+                # response.data[i]['report'] = {
+                #     "Sentiment": "ERROR",
+                #     "MixedScore": 0,
+                #     "NegativeScore": 0,
+                #     "NeutralScore": 0,
+                #     "PositiveScore": 0,
+                # }
 
-        for i in range(len(response.data)):
-            amquestion_queryset = AMQuestion.objects.filter(
-                id=response.data[i]['amQuestion'])
-            am_serializer = AMQuestionSerializer(
-                amquestion_queryset, many=True)
-            response.data[i]['amQuestionData'] = am_serializer.data
-            
-            # commented for improve 2021-03-24
-            # response.data[i]['report'] = {
-            #     "Sentiment": "ERROR",
-            #     "MixedScore": 0,
-            #     "NegativeScore": 0,
-            #     "NeutralScore": 0,
-            #     "PositiveScore": 0,
-            # }
+                # if response.data[i]['controlType'] == 'TEXT' or response.data[i]['controlType'] == 'MULTI_TOPICS':
+                #     Text = response.data[i]['topicValue'] + \
+                #         " " + response.data[i]['commentValue']
 
-            # if response.data[i]['controlType'] == 'TEXT' or response.data[i]['controlType'] == 'MULTI_TOPICS':
-            #     Text = response.data[i]['topicValue'] + \
-            #         " " + response.data[i]['commentValue']
+                #     if response.data[i]['topicValue'] != "" or response.data[i]['commentValue'] != "":
+                #         sentimentData = comprehend.detect_sentiment(
+                #             Text=Text, LanguageCode="en")
 
-            #     if response.data[i]['topicValue'] != "" or response.data[i]['commentValue'] != "":
-            #         sentimentData = comprehend.detect_sentiment(
-            #             Text=Text, LanguageCode="en")
+                #         # new
+                #         response.data[i]['integerValue'] = int(
+                #             abs(sentimentData["SentimentScore"]["Positive"] * 100))
 
-            #         # new
-            #         response.data[i]['integerValue'] = int(
-            #             abs(sentimentData["SentimentScore"]["Positive"] * 100))
+                #         if "Sentiment" in sentimentData:
+                #             response.data[i]['report']["Sentiment"] = sentimentData["Sentiment"]
+                #         if "SentimentScore" in sentimentData:
+                #             if "Mixed" in sentimentData["SentimentScore"]:
+                #                 response.data[i]['report']["MixedScore"] = sentimentData["SentimentScore"]["Mixed"]
+                #             if "Negative" in sentimentData["SentimentScore"]:
+                #                 response.data[i]['report']["NegativeScore"] = sentimentData["SentimentScore"]["Negative"]
+                #             if "Neutral" in sentimentData["SentimentScore"]:
+                #                 response.data[i]['report']["NeutralScore"] = sentimentData["SentimentScore"]["Neutral"]
+                #             if "Positive" in sentimentData["SentimentScore"]:
+                #                 response.data[i]['report']["PositiveScore"] = sentimentData["SentimentScore"]["Positive"]
 
-            #         if "Sentiment" in sentimentData:
-            #             response.data[i]['report']["Sentiment"] = sentimentData["Sentiment"]
-            #         if "SentimentScore" in sentimentData:
-            #             if "Mixed" in sentimentData["SentimentScore"]:
-            #                 response.data[i]['report']["MixedScore"] = sentimentData["SentimentScore"]["Mixed"]
-            #             if "Negative" in sentimentData["SentimentScore"]:
-            #                 response.data[i]['report']["NegativeScore"] = sentimentData["SentimentScore"]["Negative"]
-            #             if "Neutral" in sentimentData["SentimentScore"]:
-            #                 response.data[i]['report']["NeutralScore"] = sentimentData["SentimentScore"]["Neutral"]
-            #             if "Positive" in sentimentData["SentimentScore"]:
-            #                 response.data[i]['report']["PositiveScore"] = sentimentData["SentimentScore"]["Positive"]
-
-        return response
+            return response
+        except Exception as error:
+            return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
 
 # aoresponsereport api
 class AOResponseReportViewSet(viewsets.ModelViewSet):
@@ -737,92 +742,97 @@ class AOResponseReportViewSet(viewsets.ModelViewSet):
     serializer_class = AOResponseForReportSerializer
 
     def get_queryset(self):
-        queryset = AOResponse.objects.all()
+        try:
+            queryset = AOResponse.objects.all()
 
-        survey = self.request.query_params.get('survey', None)
-        projectUser = self.request.query_params.get('projectUser', None)
-        driver = self.request.query_params.get('driver', None)
-        startDate = self.request.query_params.get('stdt', None)
-        endDate = self.request.query_params.get('eddt', None)
-        controlType = self.request.query_params.get('controltype', None)
+            survey = self.request.query_params.get('survey', None)
+            projectUser = self.request.query_params.get('projectUser', None)
+            driver = self.request.query_params.get('driver', None)
+            startDate = self.request.query_params.get('stdt', None)
+            endDate = self.request.query_params.get('eddt', None)
+            controlType = self.request.query_params.get('controltype', None)
 
-        if survey is None:
-            return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
-            
-        if (controlType is not None) & (driver is not None) & (projectUser is not None) & (startDate is not None) & (endDate is not None):
-            queryset = queryset.filter(
-                controlType=controlType, survey__id=survey, subProjectUser__id=projectUser, amQuestion__driver__driverName=driver, updated_at__range=[startDate, endDate])
-        elif (controlType is not None) & (driver is not None) & (startDate is not None) & (endDate is not None):
-            queryset = queryset.filter(
-                controlType=controlType, survey__id=survey, amQuestion__driver__driverName=driver, updated_at__range=[startDate, endDate])
-        elif (controlType is not None) & (projectUser is not None) & (driver is not None):
-            queryset = queryset.filter(
-                controlType=controlType, survey__id=survey, subProjectUser__id=projectUser, amQuestion__driver__driverName=driver)
-        elif (controlType is not None) & (driver is not None):
-            queryset = queryset.filter(
-                controlType=controlType, survey__id=survey, amQuestion__driver__driverName=driver)
-        elif (controlType is not None) & (projectUser is not None) & (startDate is not None) & (endDate is not None):
-            queryset = queryset.filter(
-                controlType=controlType, survey__id=survey, subProjectUser__id=projectUser, updated_at__range=[startDate, endDate])
-        elif (controlType is not None) & (startDate is not None) & (endDate is not None):
-            queryset = queryset.filter(
-                controlType=controlType, survey__id=survey, updated_at__range=[startDate, endDate])
-        elif (driver is not None) & (projectUser is not None) & (startDate is not None) & (endDate is not None):
-            queryset = queryset.filter(
-                survey__id=survey, subProjectUser__id=projectUser, amQuestion__driver__driverName=driver, updated_at__range=[startDate, endDate])
-        elif (driver is not None) & (startDate is not None) & (endDate is not None):
-            queryset = queryset.filter(
-                survey__id=survey, amQuestion__driver__driverName=driver, updated_at__range=[startDate, endDate])
-        elif driver is not None:
-            queryset = queryset.filter(survey__id=survey, amQuestion__driver__driverName=driver)
-        elif projectUser is not None:
-            queryset = queryset.filter(survey__id=survey, subProjectUser__id=projectUser)
-        elif (startDate is not None) & (endDate is not None):
-            queryset = queryset.filter(
-                survey__id=survey, updated_at__range=[startDate, endDate])
+            # if survey is None:
+            #     return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
+                
+            if (controlType is not None) & (driver is not None) & (projectUser is not None) & (startDate is not None) & (endDate is not None):
+                queryset = queryset.filter(
+                    controlType=controlType, survey__id=survey, subProjectUser__id=projectUser, amQuestion__driver__driverName=driver, updated_at__range=[startDate, endDate])
+            elif (controlType is not None) & (driver is not None) & (startDate is not None) & (endDate is not None):
+                queryset = queryset.filter(
+                    controlType=controlType, survey__id=survey, amQuestion__driver__driverName=driver, updated_at__range=[startDate, endDate])
+            elif (controlType is not None) & (projectUser is not None) & (driver is not None):
+                queryset = queryset.filter(
+                    controlType=controlType, survey__id=survey, subProjectUser__id=projectUser, amQuestion__driver__driverName=driver)
+            elif (controlType is not None) & (driver is not None):
+                queryset = queryset.filter(
+                    controlType=controlType, survey__id=survey, amQuestion__driver__driverName=driver)
+            elif (controlType is not None) & (projectUser is not None) & (startDate is not None) & (endDate is not None):
+                queryset = queryset.filter(
+                    controlType=controlType, survey__id=survey, subProjectUser__id=projectUser, updated_at__range=[startDate, endDate])
+            elif (controlType is not None) & (startDate is not None) & (endDate is not None):
+                queryset = queryset.filter(
+                    controlType=controlType, survey__id=survey, updated_at__range=[startDate, endDate])
+            elif (driver is not None) & (projectUser is not None) & (startDate is not None) & (endDate is not None):
+                queryset = queryset.filter(
+                    survey__id=survey, subProjectUser__id=projectUser, amQuestion__driver__driverName=driver, updated_at__range=[startDate, endDate])
+            elif (driver is not None) & (startDate is not None) & (endDate is not None):
+                queryset = queryset.filter(
+                    survey__id=survey, amQuestion__driver__driverName=driver, updated_at__range=[startDate, endDate])
+            elif driver is not None:
+                queryset = queryset.filter(survey__id=survey, amQuestion__driver__driverName=driver)
+            elif projectUser is not None:
+                queryset = queryset.filter(survey__id=survey, subProjectUser__id=projectUser)
+            elif (startDate is not None) & (endDate is not None):
+                queryset = queryset.filter(
+                    survey__id=survey, updated_at__range=[startDate, endDate])
 
-        return queryset
+            return queryset
+        except:
+            return None
 
     def list(self, request, *args, **kwargs):
+        try:
+            response = super().list(request, *args, **kwargs)
+            for i in range(len(response.data)):
+                aoquestion_queryset = AOQuestion.objects.filter(id=response.data[i]['aoQuestion'])
+                ao_serializer = AOQuestionSerializer(aoquestion_queryset, many=True)
+                response.data[i]['aoQuestionData'] = ao_serializer.data
+                
+                # improvement 2021-03-24
+                # response.data[i]['report'] = {
+                #     "Sentiment": "ERROR",
+                #     "MixedScore": 0,
+                #     "NegativeScore": 0,
+                #     "NeutralScore": 0,
+                #     "PositiveScore": 0,
+                # }
 
-        response = super().list(request, *args, **kwargs)
-        for i in range(len(response.data)):
-            aoquestion_queryset = AOQuestion.objects.filter(id=response.data[i]['aoQuestion'])
-            ao_serializer = AOQuestionSerializer(aoquestion_queryset, many=True)
-            response.data[i]['aoQuestionData'] = ao_serializer.data
-            
-            # improvement 2021-03-24
-            # response.data[i]['report'] = {
-            #     "Sentiment": "ERROR",
-            #     "MixedScore": 0,
-            #     "NegativeScore": 0,
-            #     "NeutralScore": 0,
-            #     "PositiveScore": 0,
-            # }
+                # if response.data[i]['controlType'] == 'TEXT' or response.data[i]['controlType'] == 'MULTI_TOPICS':
+                #     Text = response.data[i]['topicValue'] + " " + response.data[i]['commentValue']
 
-            # if response.data[i]['controlType'] == 'TEXT' or response.data[i]['controlType'] == 'MULTI_TOPICS':
-            #     Text = response.data[i]['topicValue'] + " " + response.data[i]['commentValue']
+                #     if response.data[i]['topicValue'] != "" or response.data[i]['commentValue'] != "":
+                #         sentimentData = comprehend.detect_sentiment(Text=Text, LanguageCode="en")
+                        
+                #         # new
+                #         response.data[i]['integerValue'] = int(
+                #             abs(sentimentData["SentimentScore"]["Positive"] * 100))
 
-            #     if response.data[i]['topicValue'] != "" or response.data[i]['commentValue'] != "":
-            #         sentimentData = comprehend.detect_sentiment(Text=Text, LanguageCode="en")
-                    
-            #         # new
-            #         response.data[i]['integerValue'] = int(
-            #             abs(sentimentData["SentimentScore"]["Positive"] * 100))
+                #         if "Sentiment" in sentimentData:
+                #             response.data[i]['report']["Sentiment"] = sentimentData["Sentiment"]
+                #         if "SentimentScore" in sentimentData:
+                #             if "Mixed" in sentimentData["SentimentScore"]:
+                #                 response.data[i]['report']["MixedScore"] = sentimentData["SentimentScore"]["Mixed"]
+                #             if "Negative" in sentimentData["SentimentScore"]:
+                #                 response.data[i]['report']["NegativeScore"] = sentimentData["SentimentScore"]["Negative"]
+                #             if "Neutral" in sentimentData["SentimentScore"]:
+                #                 response.data[i]['report']["NeutralScore"] = sentimentData["SentimentScore"]["Neutral"]
+                #             if "Positive" in sentimentData["SentimentScore"]:
+                #                 response.data[i]['report']["PositiveScore"] = sentimentData["SentimentScore"]["Positive"]
 
-            #         if "Sentiment" in sentimentData:
-            #             response.data[i]['report']["Sentiment"] = sentimentData["Sentiment"]
-            #         if "SentimentScore" in sentimentData:
-            #             if "Mixed" in sentimentData["SentimentScore"]:
-            #                 response.data[i]['report']["MixedScore"] = sentimentData["SentimentScore"]["Mixed"]
-            #             if "Negative" in sentimentData["SentimentScore"]:
-            #                 response.data[i]['report']["NegativeScore"] = sentimentData["SentimentScore"]["Negative"]
-            #             if "Neutral" in sentimentData["SentimentScore"]:
-            #                 response.data[i]['report']["NeutralScore"] = sentimentData["SentimentScore"]["Neutral"]
-            #             if "Positive" in sentimentData["SentimentScore"]:
-            #                 response.data[i]['report']["PositiveScore"] = sentimentData["SentimentScore"]["Positive"]
-
-        return response
+            return response
+        except Exception as error:
+            return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
 
 # aoresponsetoppositivenegativereport api
 class AOResponseTopPositiveNegativeViewSet(viewsets.ModelViewSet):
@@ -831,41 +841,45 @@ class AOResponseTopPositiveNegativeViewSet(viewsets.ModelViewSet):
     serializer_class = AOResponseTopPositiveNegativeSerializer
 
     def get_queryset(self):
-        queryset = AOResponse.objects.all().filter(Q(controlType='TEXT')|Q(controlType='MULTI_TOPICS')).order_by('-integerValue')
+        try:
+            queryset = AOResponse.objects.all().filter(Q(controlType='TEXT')|Q(controlType='MULTI_TOPICS')).order_by('-integerValue')
 
-        survey = self.request.query_params.get('survey', None)
-        projectUser = self.request.query_params.get('projectuser', None)
-        startDate = self.request.query_params.get('stdt', None)
-        endDate = self.request.query_params.get('eddt', None)
+            survey = self.request.query_params.get('survey', None)
+            projectUser = self.request.query_params.get('projectuser', None)
+            startDate = self.request.query_params.get('stdt', None)
+            endDate = self.request.query_params.get('eddt', None)
 
-        if survey is None:
-            return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
-        # if projectUser is None:
-        #     return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
+            # if survey is None:
+            #     return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
 
-        if (projectUser is not None) & (startDate is not None) & (endDate is not None):
-            queryset = queryset.filter(
-                survey__id=survey, subProjectUser__id=projectUser, updated_at__range=[startDate, endDate])
-        elif (projectUser is not None):
-            queryset = queryset.filter(
-                survey__id=survey, subProjectUser__id=projectUser)
-        elif (startDate is not None) & (endDate is not None):
-            queryset = queryset.filter(
-                survey__id=survey, updated_at__range=[startDate, endDate])
-        else:
-            queryset = queryset.filter(survey__id=survey)
+            if (projectUser is not None) & (startDate is not None) & (endDate is not None):
+                queryset = queryset.filter(
+                    survey__id=survey, subProjectUser__id=projectUser, updated_at__range=[startDate, endDate])
+            elif (projectUser is not None):
+                queryset = queryset.filter(
+                    survey__id=survey, subProjectUser__id=projectUser)
+            elif (startDate is not None) & (endDate is not None):
+                queryset = queryset.filter(
+                    survey__id=survey, updated_at__range=[startDate, endDate])
+            else:
+                queryset = queryset.filter(survey__id=survey)
 
-        return queryset
+            return queryset
+        except:
+            return None
     
     def list(self, request, *args, **kwargs):
-        response = super().list(request, *args, **kwargs)
-        
-        ret = ''
-        ret = {'topPositive': response.data[:3], 'topNegative': response.data[-3:]}
-        # ret[0]['topPositive'] = response[:3]
-        # ret[0]['topNegative'] = response[3:]
+        try:
+            response = super().list(request, *args, **kwargs)
+            
+            ret = ''
+            ret = {'topPositive': response.data[:3], 'topNegative': response.data[-3:]}
+            # ret[0]['topPositive'] = response[:3]
+            # ret[0]['topNegative'] = response[3:]
 
-        return Response(ret, status=status.HTTP_200_OK)
+            return Response(ret, status=status.HTTP_200_OK)
+        except Exception as error:
+            return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
 
 # configpage api
 class ConfigPageViewSet(viewsets.ModelViewSet):
@@ -1100,47 +1114,53 @@ class OverallSentimentReportViewSet(viewsets.ModelViewSet):
     serializer_class = AMResponseSerializer
 
     def get_queryset(self):
-        queryset = AMResponse.objects.all()
-        survey = self.request.query_params.get('survey', None)
-        startDate = self.request.query_params.get('stdt', None)
-        endDate = self.request.query_params.get('eddt', None)
+        try:
+            queryset = AMResponse.objects.all()
+            survey = self.request.query_params.get('survey', None)
+            startDate = self.request.query_params.get('stdt', None)
+            endDate = self.request.query_params.get('eddt', None)
 
-        if survey is None:
-            return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
+            # if survey is None:
+            #     return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
 
-        if (startDate is not None) & (endDate is not None):
-            queryset = queryset.filter(survey__id=survey, updated_at__range=[startDate, endDate])
-        else:
-            queryset = queryset.filter(survey__id=survey)
+            if (startDate is not None) & (endDate is not None):
+                queryset = queryset.filter(survey__id=survey, updated_at__range=[startDate, endDate])
+            else:
+                queryset = queryset.filter(survey__id=survey)
 
-        return queryset
+            return queryset
+        except:
+            return None
 
     def list(self, request, *args, **kwargs):
-        response = super().list(request, *args, **kwargs)
-        total = 0
-        for i in range(len(response.data)):
-            total = total + response.data[i]['integerValue']
-        cnt = len(response.data)
+        try:
+            response = super().list(request, *args, **kwargs)
+            total = 0
+            for i in range(len(response.data)):
+                total = total + response.data[i]['integerValue']
+            cnt = len(response.data)
 
-        percentage = 0
-        if (cnt > 0):
-            percentage = total / cnt
+            percentage = 0
+            if (cnt > 0):
+                percentage = total / cnt
 
-        response.data = []
-        if percentage < 40:
-            response.data.append({'emojiType': 'angry', 'value': percentage})
-        elif percentage < 50:
-            response.data.append({'emojiType': 'worried', 'value': percentage})
-        elif percentage < 60:
-            response.data.append({'emojiType': 'flat', 'value': percentage})
-        elif percentage < 70:
-            response.data.append({'emojiType': 'smile', 'value': percentage})
-        elif percentage < 80:
-            response.data.append({'emojiType': 'big', 'value': percentage})
-        else:
-            response.data.append({'emojiType': 'green', 'value': percentage})
+            response.data = []
+            if percentage < 40:
+                response.data.append({'emojiType': 'angry', 'value': percentage})
+            elif percentage < 50:
+                response.data.append({'emojiType': 'worried', 'value': percentage})
+            elif percentage < 60:
+                response.data.append({'emojiType': 'flat', 'value': percentage})
+            elif percentage < 70:
+                response.data.append({'emojiType': 'smile', 'value': percentage})
+            elif percentage < 80:
+                response.data.append({'emojiType': 'big', 'value': percentage})
+            else:
+                response.data.append({'emojiType': 'green', 'value': percentage})
 
-        return response
+            return response
+        except Exception as error:
+            return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
 
 # pages api
 class PageViewSet(viewsets.ReadOnlyModelViewSet):
