@@ -679,6 +679,8 @@ class AMResponseReportViewSet(viewsets.ModelViewSet):
         elif (startDate is not None) & (endDate is not None):
             queryset = queryset.filter(
                 survey__id=survey, updated_at__range=[startDate, endDate])
+        else:
+            queryset = queryset.filter(survey__id=survey)
 
         return queryset
 
@@ -1102,11 +1104,13 @@ class OverallSentimentReportViewSet(viewsets.ModelViewSet):
         survey = self.request.query_params.get('survey', None)
         startDate = self.request.query_params.get('stdt', None)
         endDate = self.request.query_params.get('eddt', None)
-        
+
         if survey is None:
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
 
-        if survey is not None:
+        if (startDate is not None) & (endDate is not None):
+            queryset = queryset.filter(survey__id=survey, updated_at__range=[startDate, endDate])
+        else:
             queryset = queryset.filter(survey__id=survey)
 
         return queryset
