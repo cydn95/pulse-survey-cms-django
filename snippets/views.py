@@ -1100,8 +1100,15 @@ class OverallSentimentReportViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = AMResponse.objects.all()
         survey = self.request.query_params.get('survey', None)
+        startDate = self.request.query_params.get('stdt', None)
+        endDate = self.request.query_params.get('eddt', None)
+
+        if survey is None:
+            return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
+
         if survey is not None:
             queryset = queryset.filter(survey__id=survey)
+            
         return queryset
 
     def list(self, request, *args, **kwargs):
