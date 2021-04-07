@@ -649,10 +649,10 @@ class AMResponseReportViewSet(viewsets.ModelViewSet):
 
             if (controlType is not None) & (driver is not None) & (projectUser is not None) & (startDate is not None) & (endDate is not None):
                 queryset = queryset.filter(
-                    controlType=controlType, survey__id=survey, subProjectUser__id=projectUser, amQuestion__driver__driverName=driver, updated_at__range=[startDate, endDate])
+                    controlType=controlType, survey__id=survey, subProjectUser__id=projectUser, amQuestion__driver__driverName=driver, created_at__range=[startDate, endDate])
             elif (controlType is not None) & (driver is not None) & (startDate is not None) & (endDate is not None):
                 queryset = queryset.filter(
-                    controlType=controlType, survey__id=survey, amQuestion__driver__driverName=driver, updated_at__range=[startDate, endDate])
+                    controlType=controlType, survey__id=survey, amQuestion__driver__driverName=driver, created_at__range=[startDate, endDate])
             elif (controlType is not None) & (projectUser is not None) & (driver is not None):
                 queryset = queryset.filter(
                     controlType=controlType, survey__id=survey, subProjectUser__id=projectUser, amQuestion__driver__driverName=driver)
@@ -661,16 +661,16 @@ class AMResponseReportViewSet(viewsets.ModelViewSet):
                     controlType=controlType, survey__id=survey, amQuestion__driver__driverName=driver)
             elif (controlType is not None) & (projectUser is not None) & (startDate is not None) & (endDate is not None):
                 queryset = queryset.filter(
-                    controlType=controlType, survey__id=survey, subProjectUser__id=projectUser, updated_at__range=[startDate, endDate])
+                    controlType=controlType, survey__id=survey, subProjectUser__id=projectUser, created_at__range=[startDate, endDate])
             elif (controlType is not None) & (startDate is not None) & (endDate is not None):
                 queryset = queryset.filter(
-                    controlType=controlType, survey__id=survey, updated_at__range=[startDate, endDate])
+                    controlType=controlType, survey__id=survey, created_at__range=[startDate, endDate])
             elif (driver is not None) & (projectUser is not None) & (startDate is not None) & (endDate is not None):
                 queryset = queryset.filter(
-                    survey__id=survey, subProjectUser__id=projectUser, amQuestion__driver__driverName=driver, updated_at__range=[startDate, endDate])
+                    survey__id=survey, subProjectUser__id=projectUser, amQuestion__driver__driverName=driver, created_at__range=[startDate, endDate])
             elif (driver is not None) & (startDate is not None) & (endDate is not None):
                 queryset = queryset.filter(
-                    survey__id=survey, amQuestion__driver__driverName=driver, updated_at__range=[startDate, endDate])
+                    survey__id=survey, amQuestion__driver__driverName=driver, created_at__range=[startDate, endDate])
             elif driver is not None:
                 queryset = queryset.filter(
                     survey__id=survey, amQuestion__driver__driverName=driver)
@@ -679,7 +679,7 @@ class AMResponseReportViewSet(viewsets.ModelViewSet):
                     survey__id=survey, subProjectUser__id=projectUser)
             elif (startDate is not None) & (endDate is not None):
                 queryset = queryset.filter(
-                    survey__id=survey, updated_at__range=[startDate, endDate])
+                    survey__id=survey, created_at__range=[startDate, endDate])
             else:
                 queryset = queryset.filter(survey__id=survey)
 
@@ -757,10 +757,10 @@ class AOResponseReportViewSet(viewsets.ModelViewSet):
                 
             if (controlType is not None) & (driver is not None) & (projectUser is not None) & (startDate is not None) & (endDate is not None):
                 queryset = queryset.filter(
-                    controlType=controlType, survey__id=survey, subProjectUser__id=projectUser, amQuestion__driver__driverName=driver, updated_at__range=[startDate, endDate])
+                    controlType=controlType, survey__id=survey, subProjectUser__id=projectUser, amQuestion__driver__driverName=driver, created_at__range=[startDate, endDate])
             elif (controlType is not None) & (driver is not None) & (startDate is not None) & (endDate is not None):
                 queryset = queryset.filter(
-                    controlType=controlType, survey__id=survey, amQuestion__driver__driverName=driver, updated_at__range=[startDate, endDate])
+                    controlType=controlType, survey__id=survey, amQuestion__driver__driverName=driver, created_at__range=[startDate, endDate])
             elif (controlType is not None) & (projectUser is not None) & (driver is not None):
                 queryset = queryset.filter(
                     controlType=controlType, survey__id=survey, subProjectUser__id=projectUser, amQuestion__driver__driverName=driver)
@@ -769,23 +769,23 @@ class AOResponseReportViewSet(viewsets.ModelViewSet):
                     controlType=controlType, survey__id=survey, amQuestion__driver__driverName=driver)
             elif (controlType is not None) & (projectUser is not None) & (startDate is not None) & (endDate is not None):
                 queryset = queryset.filter(
-                    controlType=controlType, survey__id=survey, subProjectUser__id=projectUser, updated_at__range=[startDate, endDate])
+                    controlType=controlType, survey__id=survey, subProjectUser__id=projectUser, created_at__range=[startDate, endDate])
             elif (controlType is not None) & (startDate is not None) & (endDate is not None):
                 queryset = queryset.filter(
-                    controlType=controlType, survey__id=survey, updated_at__range=[startDate, endDate])
+                    controlType=controlType, survey__id=survey, created_at__range=[startDate, endDate])
             elif (driver is not None) & (projectUser is not None) & (startDate is not None) & (endDate is not None):
                 queryset = queryset.filter(
-                    survey__id=survey, subProjectUser__id=projectUser, amQuestion__driver__driverName=driver, updated_at__range=[startDate, endDate])
+                    survey__id=survey, subProjectUser__id=projectUser, amQuestion__driver__driverName=driver, created_at__range=[startDate, endDate])
             elif (driver is not None) & (startDate is not None) & (endDate is not None):
                 queryset = queryset.filter(
-                    survey__id=survey, amQuestion__driver__driverName=driver, updated_at__range=[startDate, endDate])
+                    survey__id=survey, amQuestion__driver__driverName=driver, created_at__range=[startDate, endDate])
             elif driver is not None:
                 queryset = queryset.filter(survey__id=survey, amQuestion__driver__driverName=driver)
             elif projectUser is not None:
                 queryset = queryset.filter(survey__id=survey, subProjectUser__id=projectUser)
             elif (startDate is not None) & (endDate is not None):
                 queryset = queryset.filter(
-                    survey__id=survey, updated_at__range=[startDate, endDate])
+                    survey__id=survey, created_at__range=[startDate, endDate])
 
             return queryset
         except:
@@ -854,13 +854,13 @@ class AOResponseTopPositiveNegativeViewSet(viewsets.ModelViewSet):
 
             if (projectUser is not None) & (startDate is not None) & (endDate is not None):
                 queryset = queryset.filter(
-                    survey__id=survey, subProjectUser__id=projectUser, updated_at__range=[startDate, endDate])
+                    survey__id=survey, subProjectUser__id=projectUser, created_at__range=[startDate, endDate])
             elif (projectUser is not None):
                 queryset = queryset.filter(
                     survey__id=survey, subProjectUser__id=projectUser)
             elif (startDate is not None) & (endDate is not None):
                 queryset = queryset.filter(
-                    survey__id=survey, updated_at__range=[startDate, endDate])
+                    survey__id=survey, created_at__range=[startDate, endDate])
             else:
                 queryset = queryset.filter(survey__id=survey)
 
@@ -1124,7 +1124,8 @@ class OverallSentimentReportViewSet(viewsets.ModelViewSet):
             #     return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
 
             if (startDate is not None) & (endDate is not None):
-                queryset = queryset.filter(survey__id=survey, updated_at__range=[startDate, endDate])
+                queryset = queryset.filter(
+                    survey__id=survey, created_at__range=[startDate, endDate])
             else:
                 queryset = queryset.filter(survey__id=survey)
 
