@@ -2619,11 +2619,11 @@ class KeyThemesView(APIView):
                     amResponse__id=ret[i]['id'], acknowledgeStatus=2).count()
                 ret[i]['workingOnItCount'] = AMResponseAcknowledgement.objects.all().filter(
                     amResponse__id=ret[i]['id'], acknowledgeStatus=3).count()
-                ret[i]['loveToTalkCount'] = AMResponseAcknowledgement.objects.all().filter(
+                ret[i]['letsTalkAboutItCount'] = AMResponseAcknowledgement.objects.all().filter(
+                    amResponse__id=ret[i]['id'], acknowledgeStatus=4).count()
+                ret[i]['agreeCount'] = AMResponseAcknowledgement.objects.all().filter(
                     amResponse__id=ret[i]['id'], acknowledgeStatus=5).count()
-                ret[i]['agreeCount'] = AMResponseAcknowledgement.objects.all().filter(
-                    amResponse__id=ret[i]['id'], acknowledgeStatus=6).count()
-                ret[i]['agreeCount'] = AMResponseAcknowledgement.objects.all().filter(
+                ret[i]['tellUsMoreCount'] = AMResponseAcknowledgement.objects.all().filter(
                     amResponse__id=ret[i]['id'], acknowledgeStatus=6).count()
                 ret[i]['individualCount'] = AMResponseAcknowledgement.objects.all().filter(
                     amResponse__id=ret[i]['id'], flagStatus=1).count()
