@@ -3235,3 +3235,15 @@ class ProjectMatrixView(APIView):
         retList.append(perceptionAccuracyDriverItem)
 
         return Response(retList, status=status.HTTP_200_OK)
+
+# advisorinsights api
+class AdvisorInsightsView(APIView):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+
+    @classmethod
+    def get_extra_actions(cls):
+        return []
+
+    def get(self, format=None):
+
+        return Response([], status=status.HTTP_200_OK)

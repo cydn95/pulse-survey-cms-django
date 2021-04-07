@@ -46,6 +46,7 @@ router.register(r'userbysurvey', views.UserBySurveyViewSet)
 router.register(r'useravatar', views.UserAvatarViewSet)
 # WIP
 
+
 # The API URLs are now determined automatically by the router.
 urlpatterns = [
     url('', include(router.urls)),
@@ -73,6 +74,9 @@ urlpatterns += format_suffix_patterns([
     url(r'userprofile', views.UserProfileView.as_view()),
     url(r'userguidemode', views.UserGuideModeView.as_view()),
     url(r'wordcloud', views.WordCloudView.as_view()),
+
+    # WIP
+    url(r'advisorinsights', views.AdvisorInsightsView.as_view()),
 ])
 
 # router.register(r'interestreport', views.AMResponseFeedbackSummaryForInterestViewset)     # deprecated
