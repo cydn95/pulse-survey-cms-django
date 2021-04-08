@@ -3276,4 +3276,6 @@ class DriverAnalysisView(APIView):
         return []
 
     def get(self, format=None):
+        survey = self.request.query_params.get('survey', None)
+        
         return Response([], status=status.HTTP_200_OK)
