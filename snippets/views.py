@@ -3245,5 +3245,24 @@ class AdvisorInsightsView(APIView):
         return []
 
     def get(self, format=None):
+        # Respondant: counts of the SHCategory who have got at least 1 AM or AO response
 
+        # Summary: 
+        # % Response rate from invited Team members
+        # % Response rate from invited stakeholders
+        # Department counts in total
+
+        # Recommended stakeholders: It will be the stakeholders who have the most negative responses for certain questions
+
+        # top positive shteam name and score
+        # top positive shgroup name and score
+
+        # top negative shteam name and score
+        # top negative shgroup name and score
+
+        # optimistic would be the groups with high aws comprehend scores (like top positive)
+        
+        # pessimistic would be the groups with lowest aws comprehend scores (like top negative)
+
+        # "least share to share their opinions" groups with the lowest score for this question
         return Response([], status=status.HTTP_200_OK)
