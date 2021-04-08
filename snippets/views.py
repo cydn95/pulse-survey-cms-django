@@ -3269,7 +3269,7 @@ class AdvisorInsightsView(APIView):
 
 # driveranalysis api
 class DriverAnalysisView(APIView):
-    permission_classes = [permission.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
 
     @classmethod
     def get_extra_actions(cls):
