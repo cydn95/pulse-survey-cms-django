@@ -3266,3 +3266,14 @@ class AdvisorInsightsView(APIView):
 
         # "least share to share their opinions" groups with the lowest score for this question
         return Response([], status=status.HTTP_200_OK)
+
+# driveranalysis api
+class DriverAnalysisView(APIView):
+    permission_classes = [permission.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+
+    @classmethod
+    def get_extra_actions(cls):
+        return []
+
+    def get(self, format=None):
+        return Response([], status=status.HTTP_200_OK)
