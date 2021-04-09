@@ -338,6 +338,25 @@ class ProjectUserForReportSerializer(serializers.ModelSerializer):
         # fields = '__all__'
         fields = ['id', 'user', 'team', 'shGroup', 'isTeamMember', 'isCGroup1', 'isCGroup2', 'isCGroup3']
 
+class AMResponseForDriverAnalysisSerializer(serializers.ModelSerializer):
+    projectUser = ProjectUserForReportSerializer()
+    subProjectUser = ProjectUserForReportSerializer()
+
+    class Meta:
+        model = AMResponse
+
+        fields = ['id', 'controlType', 'integerValue', 'topicValue', 'commentValue', 'created_at', 'updated_at',
+                  'projectUser', 'subProjectUser', 'survey', 'project', 'amQuestion', 'latestResponse']
+
+class AOResponseForDriverAnalysisSerializer(serializers.ModelSerializer):
+    projectUser = ProjectUserForReportSerializer()
+    subProjectUser = ProjectUserForReportSerializer()
+
+    class Meta:
+        model = AOResponse
+
+        fields = ['id', 'controlType', 'integerValue', 'topicValue', 'commentValue', 'created_at', 'updated_at',
+                  'projectUser', 'subProjectUser', 'survey', 'project', 'aoQuestion', 'latestResponse']
 
 class AMResponseForReportSerializer(serializers.ModelSerializer):
     subProjectUser = ProjectUserForReportSerializer()

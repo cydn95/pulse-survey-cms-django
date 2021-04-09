@@ -3,7 +3,7 @@ import re
 from pathlib import Path
 from email.mime.image import MIMEImage
 
-from snippets.serializers import AOResponseTopPositiveNegativeSerializer, KeyThemeUpDownVoteSerializer, AMResponseAcknowledgementSerializer, AOResponseForMatrixSerializer, AOResponseAcknowledgementSerializer, AMResponseForReportSerializer, AOResponseForReportSerializer, ProjectUserForReportSerializer, AMQuestionSubDriverSerializer, AOQuestionSubDriverSerializer, DriverSubDriverSerializer, ProjectSerializer, ToolTipGuideSerializer, SurveySerializer, NikelMobilePageSerializer, ConfigPageSerializer, UserAvatarSerializer, SHMappingSerializer, ProjectVideoUploadSerializer, AMQuestionSerializer, AOQuestionSerializer, StakeHolderSerializer, SHCategorySerializer, MyMapLayoutStoreSerializer, ProjectMapLayoutStoreSerializer, UserBySurveySerializer, SurveyByUserSerializer, SkipOptionSerializer, DriverSerializer, AOQuestionSerializer, OrganizationSerializer, OptionSerializer, ProjectUserSerializer, SHGroupSerializer, UserSerializer, PageSettingSerializer, PageSerializer, AMResponseSerializer, AMResponseTopicSerializer, AOResponseSerializer, AOResponseTopicSerializer, AOPageSerializer, TeamSerializer
+from snippets.serializers import AMResponseForDriverAnalysisSerializer, AOResponseForDriverAnalysisSerializer, AOResponseTopPositiveNegativeSerializer, KeyThemeUpDownVoteSerializer, AMResponseAcknowledgementSerializer, AOResponseForMatrixSerializer, AOResponseAcknowledgementSerializer, AMResponseForReportSerializer, AOResponseForReportSerializer, ProjectUserForReportSerializer, AMQuestionSubDriverSerializer, AOQuestionSubDriverSerializer, DriverSubDriverSerializer, ProjectSerializer, ToolTipGuideSerializer, SurveySerializer, NikelMobilePageSerializer, ConfigPageSerializer, UserAvatarSerializer, SHMappingSerializer, ProjectVideoUploadSerializer, AMQuestionSerializer, AOQuestionSerializer, StakeHolderSerializer, SHCategorySerializer, MyMapLayoutStoreSerializer, ProjectMapLayoutStoreSerializer, UserBySurveySerializer, SurveyByUserSerializer, SkipOptionSerializer, DriverSerializer, AOQuestionSerializer, OrganizationSerializer, OptionSerializer, ProjectUserSerializer, SHGroupSerializer, UserSerializer, PageSettingSerializer, PageSerializer, AMResponseSerializer, AMResponseTopicSerializer, AOResponseSerializer, AOResponseTopicSerializer, AOPageSerializer, TeamSerializer
 from rest_framework import generics, permissions
 from django.contrib.auth.models import User
 from rest_framework.decorators import action
@@ -3297,12 +3297,12 @@ class DriverAnalysisView(APIView):
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
 
         amresponsereportqueryset = AMResponse.objects.all().filter(controlType=controlType, survey__id=survey, subProjectUser__id=projectUser, amQuestion__driver__driverName=driver, created_at__range=[startDate, endDate])
-        amresponsereportserializer = AMResponseForReportSerializer(
+        amresponsereportserializer = AMResponseForDriverAnalysisSerializer(
             amresponsereportqueryset, many=True)
         amresponsereportdata = amresponsereportserializer.data
 
         aoresponsereportqueryset = AOResponse.objects.all().filter(controlType=controlType, survey__id=survey, subProjectUser__id=projectUser, aoQuestion__driver__driverName=driver, created_at__range=[startDate, endDate])
-        aoresponsereportserializer = AOResponseForReportSerializer(aoresponsereportqueryset, many=True)
+        aoresponsereportserializer = AOResponseForDriverAnalysisSerializer(aoresponsereportqueryset, many=True)
         aoresponsereportdata = aoresponsereportserializer.data
 
         # responsedProjectUser = []
@@ -3321,8 +3321,13 @@ class DriverAnalysisView(APIView):
             aoserializer = AOQuestionSerializer(aoquestionqueryset, many=True)
             aoresponsereportdata[j]['aoQuestionData'] = aoserializer.data
 
-        # projectusercnt = len(ProjectUser.objects.filter(survey=survey))
-        res = amresponsereportdata + aoresponsereportdata
+        projectusercnt = len(ProjectUser.objects.filter(survey=survey))
+        res['data'] = amresponsereportdata + aoresponsereportdata
+        res['totalStakeholderCnt'] = projectusercnt
         # res['responseRate'] = len(responsedProjectUser) * 100 / projectusercnt
 
+        # shgroupqueryset = SHGroup.objects.filter(survey__id=survey)
+        # shgroupserializer = SHGroupSerializer(shgroupqueryset, many=True)
+        # for i in range(len(shgroupserializer.data)):
+        #     shgroupserializer.data[i]['stakeholderCnt'] = 
         return Response(res, status=status.HTTP_200_OK)
