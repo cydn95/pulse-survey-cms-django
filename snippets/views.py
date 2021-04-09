@@ -3305,17 +3305,24 @@ class DriverAnalysisView(APIView):
         aoresponsereportserializer = AOResponseForReportSerializer(aoresponsereportqueryset, many=True)
         aoresponsereportdata = aoresponsereportserializer.data
 
+        responsedProjectUser = []
         for i in range(len(amresponsereportdata)):
+            if amresponsereportdata[i]['projectUser'] not in responsedProjectUser:
+                responsedProjectUser.append(amresponsereportdata[i]['projectUser'])
             amquestionqueryset = AMQuestion.objects.filter(
                 id=amresponsereportdata[i]['amQuestion'])
             amserializer = AMQuestionSerializer(amquestionqueryset, many=True)
             amresponsereportdata[i]['amQuestionData'] = amserializer.data
 
         for j in range(len(aoresponsereportdata)):
+            if aoresponsereportdata[j]['projectUser'] not in responsedProjectUser:
+                responsedProjectUser.append(aoresponsereportdata[j]['projectUser'])
             aoquestionqueryset = AOQuestion.objects.filter(id=aoresponsereportdata[j]['aoQuestion'])
             aoserializer = AOQuestionSerializer(aoquestionqueryset, many=True)
             aoresponsereportdata[j]['aoQuestionData'] = aoserializer.data
 
-        res = amresponsereportdata + aoresponsereportdata
-        
+        projectusercnt = len(ProjectUser.objects.filter(survey=survey))
+        res['repoartData'] = amresponsereportdata + aoresponsereportdata
+        res['responseRate'] = len(responsedProjectUser) * 100 / projectusercnt
+
         return Response(res, status=status.HTTP_200_OK)
