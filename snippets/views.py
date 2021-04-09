@@ -3277,5 +3277,23 @@ class DriverAnalysisView(APIView):
 
     def get(self, format=None):
         survey = self.request.query_params.get('survey', None)
-        
+        projectUser = self.request.query_params.get('projectUser', None)
+        driver = self.request.query_params.get('driver', None)
+        startDate = self.request.query_params.get('stdt', None)
+        endDate = self.request.query_params.get('eddt', None)
+        controlType = self.request.query_params.get('controltype', None)
+
+        if survey is None:
+            return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
+        if projectUser is None:
+            return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
+        if driver is None:
+            return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
+        if startDate is None:
+            return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
+        if endDate is None:
+            return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
+        if controlType is None:
+            return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
+
         return Response([], status=status.HTTP_200_OK)
