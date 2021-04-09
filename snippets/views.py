@@ -3322,6 +3322,8 @@ class DriverAnalysisView(APIView):
             aoresponsereportdata[j]['aoQuestionData'] = aoserializer.data
 
         projectusercnt = len(ProjectUser.objects.filter(survey=survey))
+
+        res = []
         res['data'] = amresponsereportdata + aoresponsereportdata
         res['totalStakeholderCnt'] = projectusercnt
         # res['responseRate'] = len(responsedProjectUser) * 100 / projectusercnt
