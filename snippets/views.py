@@ -3296,4 +3296,26 @@ class DriverAnalysisView(APIView):
         if controlType is None:
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
 
-        return Response([], status=status.HTTP_200_OK)
+        amresponsereportqueryset = AMResponse.objects.all().filter(controlType=controlType, survey__id=survey, subProjectUser__id=projectUser, amQuestion__driver__driverName=driver, created_at__range=[startDate, endDate])
+        amresponsereportserializer = AMResponseForReportSerializer(
+            amresponsereportqueryset, many=True)
+        amresponsereportdata = amresponsereportserializer.data
+
+        aoresponsereportqueryset = AOResponse.objects.all().filter(controlType=controlType, survey__id=survey, subProjectUser__id=projectUser, amQuestion__driver__driverName=driver, created_at__range=[startDate, endDate])
+        aoresponsereportserializer = AOResponseForReportSerializer(aoresponsereportqueryset, many=True)
+        aoresponsereportdata = aoresponsereportserializer.data
+
+        for i in range(len(amresponsereportdata)):
+            amquestionqueryset = AMQuestion.objects.filter(
+                id=amresponsereportdata[i]['amQuestion'])
+            amserializer = AMQuestionSerializer(amquestionqueryset, many=True)
+            amresponsereportdata[i]['amQuestionData'] = amserializer.data
+
+        for j in range(len(aoresponsereportdata)):
+            aoquestionqueryset = AOQuestion.objects.filter(id=aoresponsereportdata[j]['aoQuestion'])
+            aoserializer = AOQuestionSerializer(aoquestionqueryset, many=True)
+            aoresponsereportdata[j]['aoQuestionData'] = aoserializer.data
+
+        res = amresponsereportdata + aoresponsereportdata
+        
+        return Response(res, status=status.HTTP_200_OK)
