@@ -3301,7 +3301,7 @@ class DriverAnalysisView(APIView):
             amresponsereportqueryset, many=True)
         amresponsereportdata = amresponsereportserializer.data
 
-        aoresponsereportqueryset = AOResponse.objects.all().filter(controlType=controlType, survey__id=survey, subProjectUser__id=projectUser, amQuestion__driver__driverName=driver, created_at__range=[startDate, endDate])
+        aoresponsereportqueryset = AOResponse.objects.all().filter(controlType=controlType, survey__id=survey, subProjectUser__id=projectUser, aoQuestion__driver__driverName=driver, created_at__range=[startDate, endDate])
         aoresponsereportserializer = AOResponseForReportSerializer(aoresponsereportqueryset, many=True)
         aoresponsereportdata = aoresponsereportserializer.data
 
