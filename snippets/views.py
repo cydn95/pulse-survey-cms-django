@@ -3348,11 +3348,11 @@ class TotalStakeHolderView(APIView):
         if survey is None:
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
         
-        # projectusercnt = len(ProjectUser.objects.filter(survey=survey))
+        projectusercnt = len(ProjectUser.objects.filter(survey=survey))
 
-        # ret = ''
-        # ret = {
-        #     "stakeHolderCount": projectusercnt
-        # }
+        ret = ''
+        ret = {
+            "stakeHolderCount": projectusercnt
+        }
 
-        return Response([], status=status.HTTP_200_OK)
+        return Response(ret, status=status.HTTP_200_OK)
