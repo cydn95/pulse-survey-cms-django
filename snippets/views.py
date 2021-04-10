@@ -3354,5 +3354,5 @@ class StakeHolderCountBySurvey(APIView):
         ret = {
             "stakeHolderCount": projectusercnt
         }
-        
-        return Response(ret, status=status.HTTP_200_OK)
+
+        return Response([], status=status.HTTP_200_OK)
