@@ -78,7 +78,7 @@ urlpatterns += format_suffix_patterns([
     # WIP
     url(r'advisorinsights', views.AdvisorInsightsView.as_view()),
     url(r'driveranalysis', views.DriverAnalysisView.as_view()),
-    url(r'stakeholdercnt', views.StakeHolderCountBySurvey.as_view())
+    # url(r'stakeholdercnt', views.StakeHolderCountBySurvey.as_view())
 ])
 
 # router.register(r'interestreport', views.AMResponseFeedbackSummaryForInterestViewset)     # deprecated
