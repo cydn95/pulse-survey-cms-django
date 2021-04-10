@@ -3334,7 +3334,7 @@ class DriverAnalysisView(APIView):
         #     shgroupserializer.data[i]['stakeholderCnt'] = 
         return Response(res, status=status.HTTP_200_OK)
 
-# totalstakeholder api
+# totalshcnt api
 class TotalStakeHolderView(APIView):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
 
