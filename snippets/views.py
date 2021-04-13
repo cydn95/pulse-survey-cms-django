@@ -3246,6 +3246,54 @@ class AdvisorInsightsView(APIView):
 
     def get(self, format=None):
         # Respondant: counts of the SHCategory who have got at least 1 AM or AO response
+        # temparary
+        survey = self.request.query_params.get('survey', None)
+        projectUser = self.request.query_params.get('projectUser', None)
+        driver = self.request.query_params.get('driver', None)
+        startDate = self.request.query_params.get('stdt', None)
+        endDate = self.request.query_params.get('eddt', None)
+        controlType = self.request.query_params.get('controltype', None)
+
+        if survey is None:
+            return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
+        if projectUser is None:
+            return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
+        if driver is None:
+            return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
+        if startDate is None:
+            return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
+        if endDate is None:
+            return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
+        if controlType is None:
+            return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
+
+        amresponsereportqueryset = AMResponse.objects.all().filter(controlType=controlType, survey__id=survey, subProjectUser__id=projectUser, amQuestion__driver__driverName=driver, created_at__range=[startDate, endDate])
+        amresponsereportserializer = AMResponseForDriverAnalysisSerializer(
+            amresponsereportqueryset, many=True)
+        amresponsereportdata = amresponsereportserializer.data
+
+        aoresponsereportqueryset = AOResponse.objects.all().filter(controlType=controlType, survey__id=survey, subProjectUser__id=projectUser, aoQuestion__driver__driverName=driver, created_at__range=[startDate, endDate])
+        aoresponsereportserializer = AOResponseForDriverAnalysisSerializer(aoresponsereportqueryset, many=True)
+        aoresponsereportdata = aoresponsereportserializer.data
+
+        for i in range(len(amresponsereportdata)):
+
+            amquestionqueryset = AMQuestion.objects.filter(
+                id=amresponsereportdata[i]['amQuestion'])
+            amserializer = AMQuestionSerializer(amquestionqueryset, many=True)
+            amresponsereportdata[i]['amQuestionData'] = amserializer.data
+
+        for j in range(len(aoresponsereportdata)):
+
+            aoquestionqueryset = AOQuestion.objects.filter(id=aoresponsereportdata[j]['aoQuestion'])
+            aoserializer = AOQuestionSerializer(aoquestionqueryset, many=True)
+            aoresponsereportdata[j]['aoQuestionData'] = aoserializer.data
+
+        projectusercnt = len(ProjectUser.objects.filter(survey=survey))
+
+        res = amresponsereportdata + aoresponsereportdata
+
+        return Response(res, status=status.HTTP_200_OK)
 
         # Summary: 
         # % Response rate from invited Team members
