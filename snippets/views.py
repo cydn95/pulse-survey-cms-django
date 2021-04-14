@@ -3311,7 +3311,7 @@ class AdvisorInsightsView(APIView):
         responseData = amresponsereportdata + aoresponsereportdata
 
         recommendedProjectUsersQuerySet = ProjectUser.objects.filter(survey=survey)
-        recommendedProjectUserSerializer = ProjectUserSerializer(recommendedProjectUsersQuerySet, many=True)
+        recommendedProjectUserSerializer = ProjectUserForReportSerializer(recommendedProjectUsersQuerySet, many=True)
         
         detailedData = {
             "positively": {
@@ -3385,63 +3385,8 @@ class AdvisorInsightsView(APIView):
                 }
             }
         }
+
         return Response({"respondents": respondents, "summary": summary, "recommendedProjectUsers": recommendedProjectUserSerializer.data, "detailedData": detailedData}, status=status.HTTP_200_OK)
-        
-        
-        # temparary
-
-
-        
-
-
-        amresponsereportqueryset = AMResponse.objects.all().filter(controlType=controlType, survey__id=survey, subProjectUser__id=projectUser, amQuestion__driver__driverName=driver, created_at__range=[startDate, endDate])
-        amresponsereportserializer = AMResponseForDriverAnalysisSerializer(
-            amresponsereportqueryset, many=True)
-        amresponsereportdata = amresponsereportserializer.data
-
-        aoresponsereportqueryset = AOResponse.objects.all().filter(controlType=controlType, survey__id=survey, subProjectUser__id=projectUser, aoQuestion__driver__driverName=driver, created_at__range=[startDate, endDate])
-        aoresponsereportserializer = AOResponseForDriverAnalysisSerializer(aoresponsereportqueryset, many=True)
-        aoresponsereportdata = aoresponsereportserializer.data
-
-        for i in range(len(amresponsereportdata)):
-
-            amquestionqueryset = AMQuestion.objects.filter(
-                id=amresponsereportdata[i]['amQuestion'])
-            amserializer = AMQuestionSerializer(amquestionqueryset, many=True)
-            amresponsereportdata[i]['amQuestionData'] = amserializer.data
-
-        for j in range(len(aoresponsereportdata)):
-
-            aoquestionqueryset = AOQuestion.objects.filter(id=aoresponsereportdata[j]['aoQuestion'])
-            aoserializer = AOQuestionSerializer(aoquestionqueryset, many=True)
-            aoresponsereportdata[j]['aoQuestionData'] = aoserializer.data
-
-        projectusercnt = len(ProjectUser.objects.filter(survey=survey))
-
-        res = amresponsereportdata + aoresponsereportdata
-
-        return Response(res, status=status.HTTP_200_OK)
-
-        # Summary: 
-        # % Response rate from invited Team members
-        # % Response rate from invited stakeholders
-        # Department counts in total
-
-        # Recommended stakeholders: It will be the stakeholders who have the most negative responses for certain questions
-
-        # top positive shteam name and score
-        # top positive shgroup name and score
-
-        # top negative shteam name and score
-        # top negative shgroup name and score
-
-        # optimistic would be the groups with high aws comprehend scores (like top positive)
-        
-        # pessimistic would be the groups with lowest aws comprehend scores (like top negative)
-
-        # "least share to share their opinions" groups with the lowest score for this question
-        
-        # return Response([], status=status.HTTP_200_OK)
 
 # driveranalysis api
 class DriverAnalysisView(APIView):
