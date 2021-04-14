@@ -3245,111 +3245,24 @@ class AdvisorInsightsView(APIView):
         return []
 
     def get(self, format=None):
-        # survey = self.request.query_params.get('survey', None)
-        # Respondant: counts of the SHCategory who have got at least 1 AM or AO response
-        # temparary
         survey = self.request.query_params.get('survey', None)
-        projectUser = self.request.query_params.get('projectUser', None)
-        driver = self.request.query_params.get('driver', None)
-        startDate = self.request.query_params.get('stdt', None)
-        endDate = self.request.query_params.get('eddt', None)
-        controlType = self.request.query_params.get('controltype', None)
+        projectUser = self.request.query_params.get('projectusr', None)
 
         if survey is None:
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
         if projectUser is None:
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
-        if driver is None:
-            return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
-        if startDate is None:
-            return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
-        if endDate is None:
-            return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
-        if controlType is None:
-            return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
 
-        # temp
-        # data = request.data.get(
-        #     "items") if 'items' in request.data else request.data
-        # many = isinstance(data, list)
+        # Respondant: counts of the SHCategory who have got at least 1 AM or AO response
+        myPeersShCategoryId = SHCategory.objects.get(survey=survey, SHCategoryName="My Peers").id
+        return Response([myPeersShCategoryId], status=status.HTTP_200_OK)
+        
+        
+        # temparary
 
-        # if many == True:
-        #     for item in data:
-        #         defaults = item
-        #         try:
-        #             # 2020-05-20
-        #             # obj = AMResponse.objects.get(survey_id=item['survey'], project_id=item['project'], user_id=item['user'], amQuestion_id=item['amQuestion'])
-        #             obj = AMResponse.objects.get(
-        #                 survey_id=item['survey'], project_id=item['project'], projectUser_id=item['projectUser'], amQuestion_id=item['amQuestion'], latestResponse=True)
 
-        #             if obj.topicValue != defaults['topicValue'] or obj.commentValue != defaults['commentValue'] or obj.integerValue != defaults['integerValue'] or obj.skipValue != defaults['skipValue'] or obj.topicTags != defaults['topicTags'] or obj.commentTags != defaults['commentTags']:
-        #                 # if obj.controlType == "TEXT" or obj.controlType == "MULTI_TOPICS":
-        #                 #     # text = obj.topicValue + " " + obj.commentValue
-        #                 #     text = defaults['topicValue'] + defaults['commentValue']
-        #                 #     sentimentResult = comprehend.detect_sentiment(
-        #                 #         Text=text, LanguageCode="en")
-        #                 #     obj.integerValue = int(
-        #                 #         abs(sentimentResult["SentimentScore"]["Positive"] * 100))
-        #                 # else:
-        #                 #     obj.integerValue = defaults['integerValue']
-        #                 # obj.topicValue = defaults['topicValue']
-        #                 # obj.commentValue = defaults['commentValue']
-        #                 # obj.skipValue = defaults['skipValue']
-        #                 # obj.topicTags = defaults['topicTags']
-        #                 # obj.commentTags = defaults['commentTags']
-        #                 obj.latestResponse = False
+        
 
-        #                 obj.save()
-
-        #             # 2021-04-01
-        #             # if obj.topicValue != defaults['topicValue'] or obj.commentValue != defaults['commentValue'] or obj.integerValue != defaults['integerValue'] or obj.skipValue != defaults['skipValue'] or obj.topicTags != defaults['topicTags'] or obj.commentTags != defaults['commentTags']:
-        #                 if defaults["controlType"] == "TEXT" or defaults["controlType"] == "MULTI_TOPICS":
-        #                     text = defaults['topicValue'] + \
-        #                         " " + defaults['commentValue']
-
-        #                     sentimentResult = comprehend.detect_sentiment(
-        #                         Text=text, LanguageCode="en")
-        #                     defaults["integerValue"] = int(
-        #                         abs(sentimentResult["SentimentScore"]["Positive"] * 100))
-
-        #                 obj1 = AMResponse(amQuestion_id=defaults['amQuestion'],
-        #                                 projectUser_id=defaults['projectUser'], subProjectUser_id=defaults['subProjectUser'],
-        #                                 survey_id=defaults['survey'], project_id=defaults['project'],
-        #                                 controlType=defaults['controlType'], integerValue=defaults['integerValue'],
-        #                                 topicValue=defaults['topicValue'], commentValue=defaults['commentValue'],
-        #                                 skipValue=defaults['skipValue'], topicTags=defaults['topicTags'],
-        #                                 commentTags=defaults['commentTags'], latestResponse=True)
-
-        #                 obj1.save()
-
-        #         except AMResponse.DoesNotExist:
-        #             # 2020-05-20
-        #             # obj = AMResponse(amQuestion_id=defaults['amQuestion'],
-        #             #             user_id=defaults['user'], subjectUser_id=defaults['subjectUser'],
-        #             #             survey_id=defaults['survey'], project_id=defaults['project'],
-        #             #             controlType=defaults['controlType'], integerValue=defaults['integerValue'],
-        #             #             topicValue=defaults['topicValue'], commentValue=defaults['commentValue'],
-        #             #             skipValue=defaults['skipValue'], topicTags=defaults['topicTags'],
-        #             #             commentTags=defaults['commentTags'])
-
-        #             if defaults["controlType"] == "TEXT" or defaults["controlType"] == "MULTI_TOPICS":
-        #                 text = defaults['topicValue'] + \
-        #                     " " + defaults['commentValue']
-
-        #                 sentimentResult = comprehend.detect_sentiment(
-        #                     Text=text, LanguageCode="en")
-        #                 defaults["integerValue"] = int(
-        #                     abs(sentimentResult["SentimentScore"]["Positive"] * 100))
-
-        #             obj = AMResponse(amQuestion_id=defaults['amQuestion'],
-        #                              projectUser_id=defaults['projectUser'], subProjectUser_id=defaults['subProjectUser'],
-        #                              survey_id=defaults['survey'], project_id=defaults['project'],
-        #                              controlType=defaults['controlType'], integerValue=defaults['integerValue'],
-        #                              topicValue=defaults['topicValue'], commentValue=defaults['commentValue'],
-        #                              skipValue=defaults['skipValue'], topicTags=defaults['topicTags'],
-        #                              commentTags=defaults['commentTags'], latestResponse=True)
-
-        #             obj.save()
 
         amresponsereportqueryset = AMResponse.objects.all().filter(controlType=controlType, survey__id=survey, subProjectUser__id=projectUser, amQuestion__driver__driverName=driver, created_at__range=[startDate, endDate])
         amresponsereportserializer = AMResponseForDriverAnalysisSerializer(
@@ -3398,7 +3311,7 @@ class AdvisorInsightsView(APIView):
 
         # "least share to share their opinions" groups with the lowest score for this question
         
-        return Response([], status=status.HTTP_200_OK)
+        # return Response([], status=status.HTTP_200_OK)
 
 # driveranalysis api
 class DriverAnalysisView(APIView):
