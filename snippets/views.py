@@ -3278,8 +3278,18 @@ class AdvisorInsightsView(APIView):
             "myDirectReportsCnt": myDirectReportsCnt,
             "whoNeedsMeCnt": whoNeedsMeCnt
         }
-        
-        return Response({"respondents": respondents}, status=status.HTTP_200_OK)
+
+        responseRateFromInvitedTeamMembers = 70
+        responseRateFromInvitedStakeholders = 30
+        totalDepartments = 5
+
+        summary = {
+            "responseRateFromInvitedTeamMembers": responseRateFromInvitedTeamMembers,
+            "responseRateFromInvitedStakeholders": responseRateFromInvitedStakeholders,
+            "totalDepartments": totalDepartments
+        }
+
+        return Response({"respondents": respondents, "summary": summary}, status=status.HTTP_200_OK)
         
         
         # temparary
