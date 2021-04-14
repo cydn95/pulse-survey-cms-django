@@ -3246,7 +3246,7 @@ class AdvisorInsightsView(APIView):
 
     def get(self, format=None):
         survey = self.request.query_params.get('survey', None)
-        projectUser = self.request.query_params.get('projectusr', None)
+        projectUser = self.request.query_params.get('projectuser', None)
 
         if survey is None:
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
@@ -3255,7 +3255,31 @@ class AdvisorInsightsView(APIView):
 
         # Respondant: counts of the SHCategory who have got at least 1 AM or AO response
         myPeersShCategoryId = SHCategory.objects.get(survey=survey, SHCategoryName="My Peers").id
-        return Response([myPeersShCategoryId], status=status.HTTP_200_OK)
+        whoINeedShCategoryId = SHCategory.objects.get(survey=survey, SHCategoryName="Who I Need").id
+        myLeadersShCategoryId = SHCategory.objects.get(survey=survey, SHCategoryName="My Leaders").id
+        myDirectReportsShCategoryId = SHCategory.objects.get(survey=survey, SHCategoryName="My Direct Reports").id
+        whoNeedsMeShCategoryId = SHCategory.objects.get(survey=survey, SHCategoryName="Who Needs Me").id
+
+        myPeersCnt = SHMapping.objects.filter(
+            subProjectUser=projectUser, shCategory=myPeersShCategoryId).count()
+        whoINeedCnt = SHMapping.objects.filter(
+            subProjectUser=projectUser, shCategory=whoINeedShCategoryId).count()
+        myLeadersCnt = SHMapping.objects.filter(
+            subProjectUser=projectUser, shCategory=myLeadersShCategoryId).count()
+        myDirectReportsCnt = SHMapping.objects.filter(
+            subProjectUser=projectUser, shCategory=myDirectReportsShCategoryId).count()
+        whoNeedsMeCnt = SHMapping.objects.filter(
+            subProjectUser=projectUser, shCategory=whoNeedsMeShCategoryId).count()
+
+        respondents = {
+            "myPeersCnt": myPeersCnt,
+            "whoINeedCnt": whoINeedCnt,
+            "myLeadersCnt": myLeadersCnt,
+            "myDirectReportsCnt": myDirectReportsCnt,
+            "whoNeedsMeCnt": whoNeedsMeCnt
+        }
+        
+        return Response({"respondents": respondents}, status=status.HTTP_200_OK)
         
         
         # temparary
