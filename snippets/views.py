@@ -3289,7 +3289,103 @@ class AdvisorInsightsView(APIView):
             "totalDepartments": totalDepartments
         }
 
-        return Response({"respondents": respondents, "summary": summary}, status=status.HTTP_200_OK)
+        amresponsereportqueryset = AMResponse.objects.all().filter(survey__id=survey, subProjectUser__id=projectUser)
+        amresponsereportserializer = AMResponseForDriverAnalysisSerializer(amresponsereportqueryset, many=True)
+        amresponsereportdata = amresponsereportserializer.data
+
+        aoresponsereportqueryset = AOResponse.objects.all().filter(survey__id=survey, subProjectUser__id=projectUser)
+        aoresponsereportserializer = AOResponseForDriverAnalysisSerializer(aoresponsereportqueryset, many=True)
+        aoresponsereportdata = aoresponsereportserializer.data
+
+        for i in range(len(amresponsereportdata)):
+            amquestionqueryset = AMQuestion.objects.filter(
+                id=amresponsereportdata[i]['amQuestion'])
+            amserializer = AMQuestionSerializer(amquestionqueryset, many=True)
+            amresponsereportdata[i]['amQuestionData'] = amserializer.data
+
+        for j in range(len(aoresponsereportdata)):
+            aoquestionqueryset = AOQuestion.objects.filter(id=aoresponsereportdata[j]['aoQuestion'])
+            aoserializer = AOQuestionSerializer(aoquestionqueryset, many=True)
+            aoresponsereportdata[j]['aoQuestionData'] = aoserializer.data
+        
+        responseData = amresponsereportdata + aoresponsereportdata
+
+        recommendedProjectUsersQuerySet = ProjectUser.objects.filter(survey=survey)
+        recommendedProjectUserSerializer = ProjectUserSerializer(recommendedProjectUsersQuerySet, many=True)
+        
+        detailedData = {
+            "positively": {
+                "team": {
+                    "name": "Internal Team",
+                    "score": 7
+                },
+                "shgroup": {
+                    "name": "Internal Group",
+                    "score": 8
+                },
+                "org": {
+                    "name": "LMC",
+                    "score": 6
+                }
+            },
+            "negatively": {
+                "team": {
+                    "name": "Internal Team",
+                    "score": 7
+                },
+                "shgroup": {
+                    "name": "Internal Group",
+                    "score": 8
+                },
+                "org": {
+                    "name": "LMC",
+                    "score": 6
+                }
+            },
+            "optimistic": {
+                "team": {
+                    "name": "Internal Team",
+                    "score": 7
+                },
+                "shgroup": {
+                    "name": "Internal Group",
+                    "score": 8
+                },
+                "org": {
+                    "name": "LMC",
+                    "score": 6
+                }
+            },
+            "pessimistic": {
+                "team": {
+                    "name": "Internal Team",
+                    "score": 7
+                },
+                "shgroup": {
+                    "name": "Internal Group",
+                    "score": 8
+                },
+                "org": {
+                    "name": "LMC",
+                    "score": 6
+                }
+            },
+            "leastsafe": {
+                "team": {
+                    "name": "Internal Team",
+                    "score": 7
+                },
+                "shgroup": {
+                    "name": "Internal Group",
+                    "score": 8
+                },
+                "org": {
+                    "name": "LMC",
+                    "score": 6
+                }
+            }
+        }
+        return Response({"respondents": respondents, "summary": summary, "recommendedProjectUsers": recommendedProjectUserSerializer.data, "detailedData": detailedData}, status=status.HTTP_200_OK)
         
         
         # temparary
