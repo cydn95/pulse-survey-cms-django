@@ -252,32 +252,14 @@ class AMResponseViewSet(viewsets.ModelViewSet):
             for item in data:
                 defaults = item
                 try:
-                    # 2020-05-20
-                    # obj = AMResponse.objects.get(survey_id=item['survey'], project_id=item['project'], user_id=item['user'], amQuestion_id=item['amQuestion'])
                     obj = AMResponse.objects.get(
                         survey_id=item['survey'], project_id=item['project'], projectUser_id=item['projectUser'], amQuestion_id=item['amQuestion'], latestResponse=True)
 
                     if obj.topicValue != defaults['topicValue'] or obj.commentValue != defaults['commentValue'] or obj.integerValue != defaults['integerValue'] or obj.skipValue != defaults['skipValue'] or obj.topicTags != defaults['topicTags'] or obj.commentTags != defaults['commentTags']:
-                        # if obj.controlType == "TEXT" or obj.controlType == "MULTI_TOPICS":
-                        #     # text = obj.topicValue + " " + obj.commentValue
-                        #     text = defaults['topicValue'] + defaults['commentValue']
-                        #     sentimentResult = comprehend.detect_sentiment(
-                        #         Text=text, LanguageCode="en")
-                        #     obj.integerValue = int(
-                        #         abs(sentimentResult["SentimentScore"]["Positive"] * 100))
-                        # else:
-                        #     obj.integerValue = defaults['integerValue']
-                        # obj.topicValue = defaults['topicValue']
-                        # obj.commentValue = defaults['commentValue']
-                        # obj.skipValue = defaults['skipValue']
-                        # obj.topicTags = defaults['topicTags']
-                        # obj.commentTags = defaults['commentTags']
                         obj.latestResponse = False
 
                         obj.save()
 
-                    # 2021-04-01
-                    # if obj.topicValue != defaults['topicValue'] or obj.commentValue != defaults['commentValue'] or obj.integerValue != defaults['integerValue'] or obj.skipValue != defaults['skipValue'] or obj.topicTags != defaults['topicTags'] or obj.commentTags != defaults['commentTags']:
                         if defaults["controlType"] == "TEXT" or defaults["controlType"] == "MULTI_TOPICS":
                             text = defaults['topicValue'] + \
                                 " " + defaults['commentValue']
@@ -298,15 +280,6 @@ class AMResponseViewSet(viewsets.ModelViewSet):
                         obj1.save()
 
                 except AMResponse.DoesNotExist:
-                    # 2020-05-20
-                    # obj = AMResponse(amQuestion_id=defaults['amQuestion'],
-                    #             user_id=defaults['user'], subjectUser_id=defaults['subjectUser'],
-                    #             survey_id=defaults['survey'], project_id=defaults['project'],
-                    #             controlType=defaults['controlType'], integerValue=defaults['integerValue'],
-                    #             topicValue=defaults['topicValue'], commentValue=defaults['commentValue'],
-                    #             skipValue=defaults['skipValue'], topicTags=defaults['topicTags'],
-                    #             commentTags=defaults['commentTags'])
-
                     if defaults["controlType"] == "TEXT" or defaults["controlType"] == "MULTI_TOPICS":
                         text = defaults['topicValue'] + \
                             " " + defaults['commentValue']
@@ -329,27 +302,10 @@ class AMResponseViewSet(viewsets.ModelViewSet):
         elif many == False:
             defaults = data
             try:
-                # 2020-05-20
-                # obj = AMResponse.objects.get(survey_id=defaults['survey'], project_id=defaults['project'], user_id=defaults['user'], amQuestion_id=defaults['amQuestion'])
                 obj = AMResponse.objects.get(survey_id=defaults['survey'], project_id=defaults['project'],
                                              projectUser_id=defaults['projectUser'], amQuestion_id=defaults['amQuestion'], latestResponse=True)
 
                 if obj.topicValue != defaults['topicValue'] or obj.commentValue != defaults['commentValue'] or obj.integerValue != defaults['integerValue'] or obj.skipValue != defaults['skipValue'] or obj.topicTags != defaults['topicTags'] or obj.commentTags != defaults['commentTags']:
-                    # if obj.controlType == "TEXT" or obj.controlType == "MULTI_TOPICS":
-                    #     text = obj.topicValue + " " + obj.commentValue
-
-                    #     sentimentResult = comprehend.detect_sentiment(
-                    #         Text=text, LanguageCode="en")
-                    #     obj.integerValue = int(
-                    #         abs(sentimentResult["SentimentScore"]["Positive"] * 100))
-                    # else:
-                    #     obj.integerValue = defaults['integerValue']
-
-                    # obj.topicValue = defaults['topicValue']
-                    # obj.commentValue = defaults['commentValue']
-                    # obj.skipValue = defaults['skipValue']
-                    # obj.topicTags = defaults['topicTags']
-                    # obj.commentTags = defaults['commentTags']
                     obj.latestResponse = False
 
                     obj.save()
@@ -374,15 +330,6 @@ class AMResponseViewSet(viewsets.ModelViewSet):
                     obj1.save()
 
             except AMResponse.DoesNotExist:
-
-                # 2020-05-20
-                # obj = AMResponse(amQuestion_id=data['amQuestion'],
-                #                 user_id=data['user'], subjectUser_id=data['subjectUser'],
-                #                 survey_id=data['survey'], project_id=data['project'],
-                #                 controlType=data['controlType'], integerValue=data['integerValue'],
-                #                 topicValue=data['topicValue'], commentValue=data['commentValue'],
-                #                 skipValue=data['skipValue'], topicTags=data['topicTags'],
-                #                 commentTags=data['commentTags'])
                 if data["controlType"] == "TEXT" or data["controlType"] == "MULTI_TOPICS":
                     text = data['topicValue'] + " " + data['commentValue']
 
@@ -401,8 +348,6 @@ class AMResponseViewSet(viewsets.ModelViewSet):
 
                 obj.save()
 
-        # 2020-05-20
-        # result = AMResponse.objects.all().values('user', 'subjectUser', 'survey', 'project', 'amQuestion', 'controlType', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags')
         result = AMResponse.objects.all().values('projectUser', 'subProjectUser', 'survey', 'project', 'amQuestion',
                                                  'controlType', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags', 'latestResponse')
 
@@ -444,26 +389,10 @@ class AOResponseViewSet(viewsets.ModelViewSet):
             for item in data:
                 defaults = item
                 try:
-                    # 2020-05-20
-                    # obj = AOResponse.objects.get(survey_id=item['survey'], project_id=item['project'], user_id=item['user'], subjectUser_id=item['subjectUser'], aoQuestion_id=item['aoQuestion'])
-                    # 2020-12-17
-                    # obj = AOResponse.objects.get(survey_id=item['survey'], project_id=item['project'], projectUser_id=item['projectUser'], subProjectUser_id=item['subProjectUser'], shCategory_id=item['shCategory'], aoQuestion_id=item['aoQuestion'])
                     obj = AOResponse.objects.get(survey_id=item['survey'], project_id=item['project'], projectUser_id=item['projectUser'],
                                                  subProjectUser_id=item['subProjectUser'], aoQuestion_id=item['aoQuestion'], latestResponse=True)
 
                     if obj.topicValue != defaults['topicValue'] or obj.commentValue != defaults['commentValue'] or obj.integerValue != defaults['integerValue'] or obj.skipValue != defaults['skipValue'] or obj.topicTags != defaults['topicTags'] or obj.commentTags != defaults['commentTags']:
-                        # if obj.controlType == "TEXT" or obj.controlType == "MULTI_TOPICS":
-                        #     text = obj.topicValue + " " + obj.commentValue
-
-                        #     sentimentResult = comprehend.detect_sentiment(Text=text, LanguageCode="en")
-                        #     obj.integerValue = int(abs(sentimentResult["SentimentScore"]["Positive"] * 100))
-                        # else:
-                        #     obj.integerValue = defaults['integerValue']
-                        # obj.topicValue = defaults['topicValue']
-                        # obj.commentValue = defaults['commentValue']
-                        # obj.skipValue = defaults['skipValue']
-                        # obj.topicTags = defaults['topicTags']
-                        # obj.commentTags = defaults['commentTags']
                         obj.latestResponse = False
 
                         obj.save()
@@ -488,15 +417,6 @@ class AOResponseViewSet(viewsets.ModelViewSet):
                         obj1.save()
 
                 except AOResponse.DoesNotExist:
-                    # 2020-05-20
-                    # obj = AOResponse(aoQuestion_id=defaults['aoQuestion'],
-                    #             user_id=defaults['user'], subjectUser_id=defaults['subjectUser'],
-                    #             survey_id=defaults['survey'], project_id=defaults['project'],
-                    #             controlType=defaults['controlType'], integerValue=defaults['integerValue'],
-                    #             topicValue=defaults['topicValue'], commentValue=defaults['commentValue'],
-                    #             skipValue=defaults['skipValue'], topicTags=defaults['topicTags'],
-                    #             commentTags=defaults['commentTags'])
-                    
                     if defaults["controlType"] == "TEXT" or defaults["controlType"] == "MULTI_TOPICS":
                         text = defaults['topicValue'] + " " + defaults['commentValue']
 
@@ -515,26 +435,9 @@ class AOResponseViewSet(viewsets.ModelViewSet):
         elif many == False:
             defaults = data
             try:
-                # 2020-05-20
-                # obj = AOResponse.objects.get(survey_id=item['survey'], project_id=item['project'], user_id=item['user'], subjectUser_id=item['subjectUser'], aoQuestion_id=item['aoQuestion'])
-                # obj = AOResponse.objects.get(survey_id=item['survey'], project_id=item['project'], projectUser_id=item['projectUser'], subProjectUser_id=item['subProjectUser'], shCategory_id=item['shCategory'], aoQuestion_id=item['aoQuestion'])
                 obj = AOResponse.objects.get(survey_id=item['survey'], project_id=item['project'], projectUser_id=item['projectUser'], subProjectUser_id=item['subProjectUser'], aoQuestion_id=item['aoQuestion'], latestResponse=True)
 
                 if obj.topicValue != defaults['topicValue'] or obj.commentValue != defaults['commentValue'] or obj.integerValue != defaults['integerValue'] or obj.skipValue != defaults['skipValue'] or obj.topicTags != defaults['topicTags'] or obj.commentTags != defaults['commentTags']:
-                    # if obj.controlType == "TEXT" or obj.controlType == "MULTI_TOPICS":
-                    #     text = obj.topicValue + " " + obj.commentValue
-
-                    #     sentimentResult = comprehend.detect_sentiment(Text=text, LanguageCode="en")
-                    #     obj.integerValue = int(abs(sentimentResult["SentimentScore"]["Positive"] * 100))
-                    # else:
-                    #     obj.integerValue = defaults['integerValue']
-                    
-                    # obj.integerValue = defaults['integerValue']
-                    # obj.topicValue = defaults['topicValue']
-                    # obj.commentValue = defaults['commentValue']
-                    # obj.skipValue = defaults['skipValue']
-                    # obj.topicTags = defaults['topicTags']
-                    # obj.commentTags = defaults['commentTags']
                     obj.latestResponse = False
                     obj.save()
 
@@ -558,15 +461,6 @@ class AOResponseViewSet(viewsets.ModelViewSet):
                     obj1.save()
 
             except AOResponse.DoesNotExist:
-                # 2020-05-20
-                # obj = AOResponse(aoQuestion_id=defaults['aoQuestion'],
-                #             user_id=defaults['user'], subjectUser_id=defaults['subjectUser'],
-                #             survey_id=defaults['survey'], project_id=defaults['project'],
-                #             controlType=defaults['controlType'], integerValue=defaults['integerValue'],
-                #             topicValue=defaults['topicValue'], commentValue=defaults['commentValue'],
-                #             skipValue=defaults['skipValue'], topicTags=defaults['topicTags'],
-                #             commentTags=defaults['commentTags'])
-
                 if defaults["controlType"] == "TEXT" or defaults["controlType"] == "MULTI_TOPICS":
                     text = defaults["topicValue"] + " " + defaults["commentValue"]
 
@@ -583,8 +477,6 @@ class AOResponseViewSet(viewsets.ModelViewSet):
                             commentTags=defaults['commentTags'], latestResponse=True)
                 obj.save()
         
-        # 2020-05-20
-        # result = AOResponse.objects.all().values('user', 'subjectUser', 'survey', 'project', 'aoQuestion', 'controlType', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags')
         result = AOResponse.objects.all().values('projectUser', 'subProjectUser', 'shCategory', 'survey', 'project', 'aoQuestion', 'controlType', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags', 'latestResponse')
         
         list_result = [entry for entry in result]
@@ -644,9 +536,6 @@ class AMResponseReportViewSet(viewsets.ModelViewSet):
             endDate = self.request.query_params.get('eddt', None)
             controlType = self.request.query_params.get('controltype', None)
 
-            # if survey is None:
-            #     return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
-
             if (survey is not None) & (controlType is not None) & (driver is not None) & (projectUser is not None) & (startDate is not None) & (endDate is not None):
                 queryset = queryset.filter(
                     controlType=controlType, survey__id=survey, subProjectUser__id=projectUser, amQuestion__driver__driverName=driver, created_at__range=[startDate, endDate])
@@ -698,39 +587,6 @@ class AMResponseReportViewSet(viewsets.ModelViewSet):
                     amquestion_queryset, many=True)
                 response.data[i]['amQuestionData'] = am_serializer.data
                 
-                # commented for improve 2021-03-24
-                # response.data[i]['report'] = {
-                #     "Sentiment": "ERROR",
-                #     "MixedScore": 0,
-                #     "NegativeScore": 0,
-                #     "NeutralScore": 0,
-                #     "PositiveScore": 0,
-                # }
-
-                # if response.data[i]['controlType'] == 'TEXT' or response.data[i]['controlType'] == 'MULTI_TOPICS':
-                #     Text = response.data[i]['topicValue'] + \
-                #         " " + response.data[i]['commentValue']
-
-                #     if response.data[i]['topicValue'] != "" or response.data[i]['commentValue'] != "":
-                #         sentimentData = comprehend.detect_sentiment(
-                #             Text=Text, LanguageCode="en")
-
-                #         # new
-                #         response.data[i]['integerValue'] = int(
-                #             abs(sentimentData["SentimentScore"]["Positive"] * 100))
-
-                #         if "Sentiment" in sentimentData:
-                #             response.data[i]['report']["Sentiment"] = sentimentData["Sentiment"]
-                #         if "SentimentScore" in sentimentData:
-                #             if "Mixed" in sentimentData["SentimentScore"]:
-                #                 response.data[i]['report']["MixedScore"] = sentimentData["SentimentScore"]["Mixed"]
-                #             if "Negative" in sentimentData["SentimentScore"]:
-                #                 response.data[i]['report']["NegativeScore"] = sentimentData["SentimentScore"]["Negative"]
-                #             if "Neutral" in sentimentData["SentimentScore"]:
-                #                 response.data[i]['report']["NeutralScore"] = sentimentData["SentimentScore"]["Neutral"]
-                #             if "Positive" in sentimentData["SentimentScore"]:
-                #                 response.data[i]['report']["PositiveScore"] = sentimentData["SentimentScore"]["Positive"]
-
             return response
         except Exception as error:
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
@@ -751,10 +607,7 @@ class AOResponseReportViewSet(viewsets.ModelViewSet):
             startDate = self.request.query_params.get('stdt', None)
             endDate = self.request.query_params.get('eddt', None)
             controlType = self.request.query_params.get('controltype', None)
-
-            # if survey is None:
-            #     return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
-                
+ 
             if (controlType is not None) & (driver is not None) & (projectUser is not None) & (startDate is not None) & (endDate is not None):
                 queryset = queryset.filter(
                     controlType=controlType, survey__id=survey, subProjectUser__id=projectUser, amQuestion__driver__driverName=driver, created_at__range=[startDate, endDate])
@@ -799,37 +652,6 @@ class AOResponseReportViewSet(viewsets.ModelViewSet):
                 ao_serializer = AOQuestionSerializer(aoquestion_queryset, many=True)
                 response.data[i]['aoQuestionData'] = ao_serializer.data
                 
-                # improvement 2021-03-24
-                # response.data[i]['report'] = {
-                #     "Sentiment": "ERROR",
-                #     "MixedScore": 0,
-                #     "NegativeScore": 0,
-                #     "NeutralScore": 0,
-                #     "PositiveScore": 0,
-                # }
-
-                # if response.data[i]['controlType'] == 'TEXT' or response.data[i]['controlType'] == 'MULTI_TOPICS':
-                #     Text = response.data[i]['topicValue'] + " " + response.data[i]['commentValue']
-
-                #     if response.data[i]['topicValue'] != "" or response.data[i]['commentValue'] != "":
-                #         sentimentData = comprehend.detect_sentiment(Text=Text, LanguageCode="en")
-                        
-                #         # new
-                #         response.data[i]['integerValue'] = int(
-                #             abs(sentimentData["SentimentScore"]["Positive"] * 100))
-
-                #         if "Sentiment" in sentimentData:
-                #             response.data[i]['report']["Sentiment"] = sentimentData["Sentiment"]
-                #         if "SentimentScore" in sentimentData:
-                #             if "Mixed" in sentimentData["SentimentScore"]:
-                #                 response.data[i]['report']["MixedScore"] = sentimentData["SentimentScore"]["Mixed"]
-                #             if "Negative" in sentimentData["SentimentScore"]:
-                #                 response.data[i]['report']["NegativeScore"] = sentimentData["SentimentScore"]["Negative"]
-                #             if "Neutral" in sentimentData["SentimentScore"]:
-                #                 response.data[i]['report']["NeutralScore"] = sentimentData["SentimentScore"]["Neutral"]
-                #             if "Positive" in sentimentData["SentimentScore"]:
-                #                 response.data[i]['report']["PositiveScore"] = sentimentData["SentimentScore"]["Positive"]
-
             return response
         except Exception as error:
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
@@ -848,9 +670,6 @@ class AOResponseTopPositiveNegativeViewSet(viewsets.ModelViewSet):
             projectUser = self.request.query_params.get('projectuser', None)
             startDate = self.request.query_params.get('stdt', None)
             endDate = self.request.query_params.get('eddt', None)
-
-            # if survey is None:
-            #     return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
 
             if (survey is not None) & (projectUser is not None) & (startDate is not None) & (endDate is not None):
                 queryset = queryset.filter(
@@ -874,8 +693,6 @@ class AOResponseTopPositiveNegativeViewSet(viewsets.ModelViewSet):
             
             ret = ''
             ret = {'topPositive': response.data[:3], 'topNegative': response.data[-3:]}
-            # ret[0]['topPositive'] = response[:3]
-            # ret[0]['topNegative'] = response[3:]
 
             return Response(ret, status=status.HTTP_200_OK)
         except Exception as error:
@@ -936,12 +753,6 @@ class AOResponseFeedbackSummaryViewset(viewsets.ModelViewSet):
                     survey_id=survey, subProjectUser_id=subProjectUser)
             elif (survey is not None) & (startDate is not None) & (endDate is not None):
                 queryset = queryset.filter(survey_id=survey, created_at__range=[startDate, endDate])
-            # elif survey is not None:
-            #     queryset = queryset.filter(survey_id=survey)
-            # elif (subProjectUser is not None) & (startDate is not None) & (endDate is not None):
-            #     queryset = queryset.filter(subProjectUser_id=subProjectUser, created_at__range=[startDate, endDate])
-            # elif subProjectUser is not None:
-            #     queryset = queryset.filter(subProjectUser_id=subProjectUser)
 
             return queryset
         except:
@@ -950,48 +761,13 @@ class AOResponseFeedbackSummaryViewset(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         try:
             response = super().list(request, *args, **kwargs)
-            # print(response.data)
+            
             for i in range(len(response.data)):
                 aoquestion_queryset = AOQuestion.objects.filter(
                     id=response.data[i]['aoQuestion'])
                 ao_serializer = AOQuestionSerializer(
                     aoquestion_queryset, many=True)
                 response.data[i]['aoQuestionData'] = ao_serializer.data
-                # response.data[i]['amQuestionData'] = AMQuestion.objects.filter(id=response.data[i]['amQuestion']).values()[0]
-                # response.data[i]['shGroups'] = AMQuestionSHGroup.objects.filter(amQuestion=response.data[i]['amQuestion']).values_list('shGroup')
-                
-                # commented for improve 2021-03-24
-                # response.data[i]['report'] = {
-                #     "Sentiment": "ERROR",
-                #     "MixedScore": 0,
-                #     "NegativeScore": 0,
-                #     "NeutralScore": 0,
-                #     "PositiveScore": 0,
-                # }
-
-                # if response.data[i]['controlType'] == 'TEXT' or response.data[i]['controlType'] == 'MULTI_TOPICS':
-                #     Text = response.data[i]['topicValue'] + \
-                #         " " + response.data[i]['commentValue']
-
-                #     if response.data[i]['topicValue'] != "" or response.data[i]['commentValue'] != "":
-                #         sentimentData = comprehend.detect_sentiment(
-                #             Text=Text, LanguageCode="en")
-
-                #         # new
-                #         response.data[i]['integerValue'] = int(
-                #             abs(sentimentData["SentimentScore"]["Positive"] * 100))
-
-                #         if "Sentiment" in sentimentData:
-                #             response.data[i]['report']["Sentiment"] = sentimentData["Sentiment"]
-                #         if "SentimentScore" in sentimentData:
-                #             if "Mixed" in sentimentData["SentimentScore"]:
-                #                 response.data[i]['report']["MixedScore"] = sentimentData["SentimentScore"]["Mixed"]
-                #             if "Negative" in sentimentData["SentimentScore"]:
-                #                 response.data[i]['report']["NegativeScore"] = sentimentData["SentimentScore"]["Negative"]
-                #             if "Neutral" in sentimentData["SentimentScore"]:
-                #                 response.data[i]['report']["NeutralScore"] = sentimentData["SentimentScore"]["Neutral"]
-                #             if "Positive" in sentimentData["SentimentScore"]:
-                #                 response.data[i]['report']["PositiveScore"] = sentimentData["SentimentScore"]["Positive"]
 
             return response
         except Exception as error:
@@ -1008,14 +784,11 @@ class MyMapLayoutViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
 
-        # 2020-05-20
         myProjectUser_id = self.request.GET.get('myProjectUser')
         
         for i in range(len(response.data)):
             response.data[i]['pu_category'] = []
             for item in response.data[i]['projectUser']:
-                # 2020-05-20
-                # catIDs = SHMapping.objects.filter(projectUser_id=item)
                 catIDs = SHMapping.objects.filter(projectUser_id=myProjectUser_id, subProjectUser_id=item)
 
                 for catID in catIDs:
@@ -1029,7 +802,7 @@ class MyMapLayoutViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         data = request.data
         content_type = request.content_type
-        # 2020-05-20
+
         myProjectUser_id = data['myProjectUser']
 
         try:
@@ -1044,19 +817,10 @@ class MyMapLayoutViewSet(viewsets.ModelViewSet):
                     obj.projectUser.add(new_obj)
 
                     try:
-                        # 2020-05-20
-                        # shObj = SHMapping.objects.get(shCategory_id=item['category'], projectUser_id=item['projectUser'])
                         shObj = SHMapping.objects.get(shCategory_id=item['category'], projectUser_id=myProjectUser_id, subProjectUser_id=item['projectUser'])
                     except SHMapping.DoesNotExist:
-                        # 2020-05-20
-                        # mapObj = SHMapping(shCategory_id=item['category'], projectUser_id=item['projectUser'], relationshipStatus="")
                         mapObj = SHMapping(shCategory_id=item['category'], projectUser_id=myProjectUser_id, subProjectUser_id=item['projectUser'], relationshipStatus="")
                         mapObj.save()
-
-            # else:
-            #     for item in data.getlist('pu_category'):
-            #         new_obj = ProjectUser.objects.get(id=item.projectUser)
-            #         obj.projectUser.add(new_obj)
 
             obj.save()
 
@@ -1073,18 +837,10 @@ class MyMapLayoutViewSet(viewsets.ModelViewSet):
                     obj.projectUser.add(new_obj)
 
                     try:
-                        # 2020-05-20
-                        # shObj = SHMapping.objects.get(shCategory_id=item['category'], projectUser_id=item['projectUser'])
                         shObj = SHMapping.objects.get(shCategory_id=item['category'], projectUser_id=myProjectUser_id, subProjectUser_id=item['projectUser'])
                     except SHMapping.DoesNotExist:
-                        # 2020-05-20
-                        # mapObj = SHMapping(shCategory_id=item['category'], projectUser_id=item['projectUser'], relationshipStatus="")
                         mapObj = SHMapping(shCategory_id=item['category'], projectUser_id=myProjectUser_id, subProjectUser_id=item['projectUser'], relationshipStatus="")
                         mapObj.save()
-            # else:
-            #     for item in data.getlist('projectUser'):
-            #         new_obj = ProjectUser.objects.get(id=item)
-            #         obj.projectUser.add(new_obj)
 
             obj.save()
 
@@ -1120,8 +876,6 @@ class OptionViewSet(viewsets.ModelViewSet):
     serializer_class = OptionSerializer
 
 # overallsentimentreport api
-# 2021-04-06
-# add filter params by date range, shgroup, team, organization
 class OverallSentimentReportViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
     queryset = AMResponse.objects.all()
@@ -1133,9 +887,6 @@ class OverallSentimentReportViewSet(viewsets.ModelViewSet):
             survey = self.request.query_params.get('survey', None)
             startDate = self.request.query_params.get('stdt', None)
             endDate = self.request.query_params.get('eddt', None)
-
-            # if survey is None:
-            #     return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
 
             if (survey is not None) & (startDate is not None) & (endDate is not None):
                 queryset = queryset.filter(
@@ -1185,8 +936,6 @@ class PageViewSet(viewsets.ReadOnlyModelViewSet):
 
     def list(self, request, *kwargs):
         
-        # drivers = Driver.objects.all().values()
-        # list_drivers = [entry for entry in drivers]
         survey_param = ''
         projectuser_param = ''
 
@@ -1200,7 +949,6 @@ class PageViewSet(viewsets.ReadOnlyModelViewSet):
             projectuser_param = int(t_projectuser_param)
 
         queryset = Driver.objects.filter(survey_id=survey_param)
-        #serializer = self.get_serializer(self.get_queryset(), many=True)
         serializer = self.get_serializer(queryset, many=True)
         list_drivers = serializer.data
 
@@ -1221,8 +969,6 @@ class PageViewSet(viewsets.ReadOnlyModelViewSet):
                             list_drivers[i]['amquestion'][j]['topic'] = amresponsetopic_serializer.data
                             
                             try:
-                                # 2020-05-20
-                                #ret = AMResponse.objects.get(user_id=projectuser.user, survey_id=survey_param, amQuestion_id=list_drivers[i]['amquestion'][j]['id'])
                                 ret = AMResponse.objects.get(projectUser_id=projectuser_param, survey_id=survey_param, amQuestion_id=list_drivers[i]['amquestion'][j]['id'], latestResponse=True)
                                 list_drivers[i]['amquestion'][j]['responsestatus'] = True
                                 list_drivers[i]['amquestion'][j]['response'] = model_to_dict(ret)
@@ -1246,11 +992,6 @@ class PageViewSet(viewsets.ReadOnlyModelViewSet):
                             aoresponsetopic_serializer = AOResponseTopicSerializer(aoresponsetopic_queryset, many=True)
                             list_drivers[i]['aoquestion'][j]['topic'] = aoresponsetopic_serializer.data
 
-                            # try:
-                                # 2020-05-20
-                                # ret = AOResponse.objects.get(subjectUser_id=projectuser.user, survey_id=survey_param, aoQuestion_id=list_drivers[i]['aoquestion'][j]['id'])
-                                # 2020-08-20
-                                # ret = AOResponse.objects.get(subProjectUser_id=projectuser_param, survey_id=survey_param, aoQuestion_id=list_drivers[i]['aoquestion'][j]['id'])
                             ret = AOResponse.objects.filter(projectUser_id=projectuser_param, survey_id=survey_param, aoQuestion_id=list_drivers[i]['aoquestion'][j]['id'], latestResponse=True)
                             
                             if (len(ret) > 0):
@@ -1259,7 +1000,7 @@ class PageViewSet(viewsets.ReadOnlyModelViewSet):
                                 for k in range(len(ret)):
                                     item = model_to_dict(ret[k])
                                     list_drivers[i]['aoquestion'][j]['response'].append(item)
-                            # except AOResponse.DoesNotExist:
+                            
                             else:
                                 list_drivers[i]['aoquestion'][j]['responsestatus'] = False
                                 list_drivers[i]['aoquestion'][j]['response'] = []
@@ -1281,8 +1022,6 @@ class PageViewSet(viewsets.ReadOnlyModelViewSet):
                             list_drivers[i]['amquestion'][j]['topic'] = amresponsetopic_serializer.data
 
                             try:
-                                # 2020-05-20
-                                # ret = AMResponse.objects.get(user_id=projectuser.user, survey_id=survey_param, amQuestion_id=list_drivers[i]['amquestion'][j]['id'])
                                 ret = AMResponse.objects.get(projectUser_id=projectuser_param, survey_id=survey_param, amQuestion_id=list_drivers[i]['amquestion'][j]['id'], latestResponse=True)
                                 list_drivers[i]['amquestion'][j]['responsestatus'] = True
                                 list_drivers[i]['amquestion'][j]['response'] = model_to_dict(ret)
@@ -1306,11 +1045,6 @@ class PageViewSet(viewsets.ReadOnlyModelViewSet):
                             aoresponsetopic_serializer = AOResponseTopicSerializer(aoresponsetopic_queryset, many=True)
                             list_drivers[i]['aoquestion'][j]['topic'] = aoresponsetopic_serializer.data
 
-                            # try:
-                                # 2020-05-20
-                                # ret = AOResponse.objects.get(subjectUser_id=projectuser.user, survey_id=survey_param, aoQuestion_id=list_drivers[i]['aoquestion'][j]['id'])
-                                # 2020-08-20
-                                # ret = AOResponse.objects.get(subProjectUser_id=projectuser_param, survey_id=survey_param, aoQuestion_id=list_drivers[i]['aoquestion'][j]['id'])
                             ret = AOResponse.objects.filter(projectUser_id=projectuser_param, survey_id=survey_param, aoQuestion_id=list_drivers[i]['aoquestion'][j]['id'], latestResponse=True)
                             
                             if (len(ret) > 0):
@@ -1319,7 +1053,6 @@ class PageViewSet(viewsets.ReadOnlyModelViewSet):
                                 for k in range(len(ret)):
                                     item = model_to_dict(ret[k])
                                     list_drivers[i]['aoquestion'][j]['response'].append(item)
-                            # except AOResponse.DoesNotExist:
                             else:
                                 list_drivers[i]['aoquestion'][j]['responsestatus'] = False
                                 list_drivers[i]['aoquestion'][j]['response'] = []
@@ -1353,65 +1086,35 @@ class ProjectUserViewSet(viewsets.ModelViewSet):
 
         shMyCategories = request.data['shMyCategory']
 
-        # MyMapLayout.objects.filter(user_id=request.user.id, project_id=request.data['project']).delete()
         obj = MyMapLayout.objects.get(
             user_id=request.user.id, project_id=request.data['project'])
 
-        # obj.user_id = request.user.id
-        # obj.project_id = request.data['project']
-        # obj.layout_json = ''
-
-        # 2020-05-20     added projectUser, subProjectUser
-        # SHMapping.objects.filter(projectUser_id=projectUser_id).delete()
         myProjectUser_id = request.data['myProjectUser']
         SHMapping.objects.filter(
             projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id).delete()
 
         for i in range(len(shMyCategories)):
-            # new_obj = ProjectUser.objects.get(id=projectUser_id)
-            # obj.projectUser.add(new_obj)
-
             try:
-                # 2020-05-20
-                # shObj = SHMapping.objects.get(shCategory_id=shMyCategories[i], projectUser_id=projectUser_id)
                 shObj = SHMapping.objects.get(
                     shCategory_id=shMyCategories[i], projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id)
             except SHMapping.DoesNotExist:
-                # 2020-05-20
-                # mapObj = SHMapping(shCategory_id=shMyCategories[i], projectUser_id=projectUser_id, relationshipStatus="")
                 mapObj = SHMapping(
                     shCategory_id=shMyCategories[i], projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id, relationshipStatus="")
                 mapObj.save()
 
-        # obj.save()
-
         shProjectCategories = request.data['shProjectCategory']
 
-        # ProjectMapLayout.objects.filter(user_id=request.user.id, project_id=request.data['project']).delete()
         obj1 = ProjectMapLayout.objects.get(
             user_id=request.user.id, project_id=request.data['project'])
 
-        # obj1.user_id = request.user.id
-        # obj1.project_id = request.data['project']
-        # obj1.layout_json = ''
-
         for j in range(len(shProjectCategories)):
-            # new_obj1 = ProjectUser.objects.get(id=projectUser_id)
-            # obj1.projectUser.add(new_obj1)
-
             try:
-                # 2020-05-20
-                # shObj1 = SHMapping.objects.get(shCategory_id=shProjectCategories[j], projectUser_id=projectUser_id)
                 shObj1 = SHMapping.objects.get(
                     shCategory_id=shProjectCategories[j], projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id)
             except SHMapping.DoesNotExist:
-                # 2020-05-20
-                # mapObj1 = SHMapping(shCategory_id=shProjectCategories[j], projectUser_id=projectUser_id, relationshipStatus="")
                 mapObj1 = SHMapping(
                     shCategory_id=shProjectCategories[j], projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id, relationshipStatus="")
                 mapObj1.save()
-
-        # obj1.save()
 
         return ret
 
@@ -1433,38 +1136,25 @@ class ProjectUserViewSet(viewsets.ModelViewSet):
             self.perform_create(serializer)
             projectUser_id = serializer.data['id']
 
-        # headers = self.get_success_headers(serializer.data)
-
         shMyCategories = request.data['shMyCategory']
-        # 2020-05-20
         myProjectUser_id = request.data['myProjectUser']
 
         try:
             obj = MyMapLayout.objects.get(
                 user_id=request.user.id, project_id=data['project'])
 
-            # 2020-11-24 added
-            # obj.projectUser.clear()
             new_obj = ProjectUser.objects.get(id=projectUser_id)
             obj.projectUser.add(new_obj)
 
             for i in range(len(shMyCategories)):
-                # new_obj = ProjectUser.objects.get(id=projectUser_id)
-                # obj.projectUser.add(new_obj)
-
                 try:
-                    # 2020-05-20
-                    # shObj = SHMapping.objects.get(shCategory_id=shMyCategories[i], projectUser_id=projectUser_id)
                     shObj = SHMapping.objects.get(
                         shCategory_id=shMyCategories[i], projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id)
                 except SHMapping.DoesNotExist:
-                    # 2020-05-20
-                    # mapObj = SHMapping(shCategory_id=shMyCategories[i], projectUser_id=projectUser_id, relationshipStatus="")
                     mapObj = SHMapping(
                         shCategory_id=shMyCategories[i], projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id, relationshipStatus="")
                     mapObj.save()
 
-            # 2020-11-24 added
             obj.save()
 
         except MyMapLayout.DoesNotExist:
@@ -1475,22 +1165,14 @@ class ProjectUserViewSet(viewsets.ModelViewSet):
             obj.project_id = data['project']
             obj.layout_json = ''
 
-            # 2020-11-24 added
             new_obj = ProjectUser.objects.get(id=projectUser_id)
             obj.projectUser.add(new_obj)
 
             for i in range(len(shMyCategories)):
-                # new_obj = ProjectUser.objects.get(id=projectUser_id)
-                # obj.projectUser.add(new_obj)
-
                 try:
-                    # 2020-05-20
-                    # shObj = SHMapping.objects.get(shCategory_id=shMyCategories[i], projectUser_id=projectUser_id)
                     shObj = SHMapping.objects.get(
                         shCategory_id=shMyCategories[i], projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id)
                 except SHMapping.DoesNotExist:
-                    # 2020-05-20
-                    # mapObj = SHMapping(shCategory_id=shMyCategories[i], projectUser_id=projectUser_id, relationshipStatus="")
                     mapObj = SHMapping(
                         shCategory_id=shMyCategories[i], projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id, relationshipStatus="")
                     mapObj.save()
@@ -1503,28 +1185,18 @@ class ProjectUserViewSet(viewsets.ModelViewSet):
             obj1 = ProjectMapLayout.objects.get(
                 user_id=request.user.id, project_id=data['project'])
 
-            # 2020-11-24 added
-            # obj1.projectUser.clear()
             new_obj1 = ProjectUser.objects.get(id=projectUser_id)
             obj1.projectUser.add(new_obj1)
 
             for j in range(len(shProjectCategories)):
-                #new_obj1 = ProjectUser.objects.get(id=projectUser_id)
-                #obj1.projectUser.add(new_obj1)
-
                 try:
-                    # 2020-05-20
-                    # shObj1 = SHMapping.objects.get(shCategory_id=shProjectCategories[j], projectUser_id=projectUser_id)
                     shObj1 = SHMapping.objects.get(
                         shCategory_id=shProjectCategories[j], projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id)
                 except SHMapping.DoesNotExist:
-                    # 2020-05-20
-                    # mapObj1 = SHMapping(shCategory_id=shProjectCategories[j], projectUser_id=projectUser_id, relationshipStatus="")
                     mapObj1 = SHMapping(
                         shCategory_id=shProjectCategories[j], projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id, relationshipStatus="")
                     mapObj1.save()
 
-            # 2020-11-24 added
             obj1.save()
 
         except ProjectMapLayout.DoesNotExist:
@@ -1535,29 +1207,20 @@ class ProjectUserViewSet(viewsets.ModelViewSet):
             obj1.project_id = data['project']
             obj1.layout_json = ''
 
-            # 2020-11-24 added
             new_obj1 = ProjectUser.objects.get(id=projectUser_id)
             obj1.projectUser.add(new_obj1)
 
             for j in range(len(shProjectCategories)):
-                # new_obj1 = ProjectUser.objects.get(id=projectUser_id)
-                # obj1.projectUser.add(new_obj1)
-
                 try:
-                    # 2020-05-20
-                    # shObj1 = SHMapping.objects.get(shCategory_id=shProjectCategories[j], projectUser_id=projectUser_id)
                     shObj1 = SHMapping.objects.get(
                         shCategory_id=shProjectCategories[j], projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id)
                 except SHMapping.DoesNotExist:
-                    # 2020-05-20
-                    # mapObj1 = SHMapping(shCategory_id=shProjectCategories[j], projectUser_id=projectUser_id, relationshipStatus="")
                     mapObj1 = SHMapping(
                         shCategory_id=shProjectCategories[j], projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id, relationshipStatus="")
                     mapObj1.save()
 
             obj1.save()
 
-        # return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
         return Response("success", status=status.HTTP_201_CREATED)
 
 # projectmaplayouts api
@@ -1570,14 +1233,11 @@ class ProjectMapLayoutViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
 
-        # 2020-05-20
         myProjectUser_id = self.request.GET.get('myProjectUser')
 
         for i in range(len(response.data)):
             response.data[i]['pu_category'] = []
             for item in response.data[i]['projectUser']:
-                # 2020-05-20
-                # catIDs = SHMapping.objects.filter(projectUser_id=item)
                 catIDs = SHMapping.objects.filter(projectUser_id=myProjectUser_id, subProjectUser_id=item)
 
                 for catID in catIDs:
@@ -1593,7 +1253,6 @@ class ProjectMapLayoutViewSet(viewsets.ModelViewSet):
         data = request.data
         content_type = request.content_type
 
-        # 2020-05-20
         myProjectUser_id = data['myProjectUser']
 
         try:
@@ -1607,12 +1266,8 @@ class ProjectMapLayoutViewSet(viewsets.ModelViewSet):
                     obj.projectUser.add(new_obj)
 
                     try:
-                        # 2020-05-20
-                        # shObj = SHMapping.objects.get(shCategory_id=item['category'], projectUser_id=item['projectUser'])
                         shObj = SHMapping.objects.get(shCategory_id=item['category'], projectUser_id=myProjectUser_id, subProjectUser_id=item['projectUser'])
                     except SHMapping.DoesNotExist:
-                        # 2020-05-20
-                        # mapObj = SHMapping(shCategory_id=item['category'], projectUser_id=item['projectUser'], relationshipStatus="")
                         mapObj = SHMapping(shCategory_id=item['category'], projectUser_id=myProjectUser_id, subProjectUser_id=item['projectUser'], relationshipStatus="")
                         mapObj.save()
             obj.save()
@@ -1630,12 +1285,8 @@ class ProjectMapLayoutViewSet(viewsets.ModelViewSet):
                     obj.projectUser.add(new_obj)
 
                     try:
-                        # 2020-05-20
-                        # shObj = SHMapping.objects.get(shCategory_id=item['category'], projectUser_id=item['projectUser'])
                         shObj = SHMapping.objects.get(shCategory_id=item['category'], projectUser_id=myProjectUser_id, subProjectUser_id=item['projectUser'])
                     except SHMapping.DoesNotExist:
-                        # 2020-05-20
-                        # mapObj = SHMapping(shCategory_id=item['category'], projectUser_id=item['projectUser'], relationshipStatus="")
                         mapObj = SHMapping(shCategory_id=item['category'], projectUser_id=myProjectUser_id, subProjectUser_id=item['projectUser'], relationshipStatus="")
                         mapObj.save()
             
@@ -1691,10 +1342,6 @@ class SHGroupViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = SHGroup.objects.all()
 
-        # updated project to survey   2020-05-20
-        # project = self.request.query_params.get('project', None)
-        # if project is not None:
-        #    queryset = queryset.filter(project__id=project)
         survey = self.request.query_params.get('survey', None)
         if survey is not None:
             queryset = queryset.filter(survey__id=survey)
@@ -1888,58 +1535,29 @@ class UpdateStakeHolderViewSet(viewsets.ModelViewSet):
 
         shMyCategories = request.data['shMyCategory']
         
-        # MyMapLayout.objects.filter(user_id=request.user.id, project_id=request.data['project']).delete()
         obj = MyMapLayout.objects.get(user_id=request.user.id, project_id=request.data['project'])
 
-        # obj.user_id = request.user.id
-        # obj.project_id = request.data['project']
-        # obj.layout_json = ''   
-
-        # 2020-05-20     added projectUser, subProjectUser
-        # SHMapping.objects.filter(projectUser_id=projectUser_id).delete()
         myProjectUser_id = request.data['myProjectUser']
         SHMapping.objects.filter(projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id).delete()
 
         for i in range(len(shMyCategories)):
-            # new_obj = ProjectUser.objects.get(id=projectUser_id)
-            # obj.projectUser.add(new_obj)
-
             try:
-                # 2020-05-20
-                # shObj = SHMapping.objects.get(shCategory_id=shMyCategories[i], projectUser_id=projectUser_id)
                 shObj = SHMapping.objects.get(shCategory_id=shMyCategories[i], projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id)
             except SHMapping.DoesNotExist:
-                # 2020-05-20
-                # mapObj = SHMapping(shCategory_id=shMyCategories[i], projectUser_id=projectUser_id, relationshipStatus="")
                 mapObj = SHMapping(shCategory_id=shMyCategories[i], projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id, relationshipStatus="")
                 mapObj.save()
         
-        # obj.save()
-
         shProjectCategories = request.data['shProjectCategory']
 
-        # ProjectMapLayout.objects.filter(user_id=request.user.id, project_id=request.data['project']).delete()
         obj1 = ProjectMapLayout.objects.get(user_id=request.user.id, project_id=request.data['project'])
 
-        # obj1.user_id = request.user.id
-        # obj1.project_id = request.data['project']
-        # obj1.layout_json = ''
-
         for j in range(len(shProjectCategories)):
-            # new_obj1 = ProjectUser.objects.get(id=projectUser_id)
-            # obj1.projectUser.add(new_obj1)
-
+            
             try:
-                # 2020-05-20
-                # shObj1 = SHMapping.objects.get(shCategory_id=shProjectCategories[j], projectUser_id=projectUser_id)
                 shObj1 = SHMapping.objects.get(shCategory_id=shProjectCategories[j], projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id)
             except SHMapping.DoesNotExist:
-                # 2020-05-20
-                # mapObj1 = SHMapping(shCategory_id=shProjectCategories[j], projectUser_id=projectUser_id, relationshipStatus="")
                 mapObj1 = SHMapping(shCategory_id=shProjectCategories[j], projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id, relationshipStatus="")
                 mapObj1.save()
-        
-        # obj1.save()
 
         return ret
 
@@ -1965,15 +1583,7 @@ class UserBySurveyViewSet(viewsets.ModelViewSet):
 
             response.data[i]['am_total'] = AMQuestion.objects.filter(filters).filter(survey__id=survey).count()
             response.data[i]['am_response'] = []
-            # 2020-05-20
-            # for item1 in AMResponse.objects.filter(user_id=response.data[i]['user']['id'], project_id=response.data[i]['project']['id']).values('amQuestion'):
-            #     response.data[i]['am_response'].append(item1['amQuestion']) 
-            # response.data[i]['am_answered'] = AMResponse.objects.filter(user_id=response.data[i]['user']['id'], project_id=response.data[i]['project']['id']).count()
-            # response.data[i]['ao_total'] = AOQuestion.objects.count()
-            # response.data[i]['ao_response'] = []
-            # for item2 in AOResponse.objects.filter(subjectUser_id=response.data[i]['user']['id'], project_id=response.data[i]['project']['id']).values('aoQuestion'):
-            #     response.data[i]['ao_response'].append(item2['aoQuestion']) 
-            # response.data[i]['ao_answered'] = AOResponse.objects.filter(subjectUser_id=response.data[i]['user']['id'], project_id=response.data[i]['project']['id']).count()
+
             for item1 in AMResponse.objects.filter(projectUser_id=response.data[i]['id'], latestResponse=True).values('amQuestion'):
                 response.data[i]['am_response'].append(item1['amQuestion']) 
             response.data[i]['am_answered'] = AMResponse.objects.filter(
@@ -1984,9 +1594,8 @@ class UserBySurveyViewSet(viewsets.ModelViewSet):
                 response.data[i]['ao_response'].append(item2['aoQuestion']) 
             response.data[i]['ao_answered'] = AOResponse.objects.filter(subProjectUser_id=response.data[i]['id'], latestResponse=True).count()
 
-            # 2020-05-20
             response.data[i]['shCategory'] = []
-            # for item3 in SHMapping.objects.filter(projectUser_id=response.data[i]['id']).values('shCategory'):
+            
             for item3 in SHMapping.objects.filter(projectUser_id=myProjectUser_id, subProjectUser_id=response.data[i]['id']).values('shCategory'):
                 response.data[i]['shCategory'].append(item3['shCategory'])
 
@@ -1995,27 +1604,16 @@ class UserBySurveyViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = ProjectUser.objects.all()
 
-        # 2020-05-27
-        # project = self.request.query_params.get('project', None)
-        # user = self.request.query_params.get('user', None)
-        
-        # if (project is not None ) & (user is not None):
-        #     queryset = queryset.filter(project__id=project, user__id=user)
-        # elif project is not None:
-        #     queryset = queryset.filter(project__id=project)    
-        # elif user is not None:
-        #     queryset = queryset.filter(user__id=user)
         survey = self.request.query_params.get('survey', None)
         user = self.request.query_params.get('user', None)
         
         if (survey is not None) & (user is not None):
-            # queryset = queryset.filter(survey__id=survey, user__id=user).exclude(user__id=self.request.user.id)
+            
             queryset = queryset.filter(survey__id=survey, user__id=user)
         elif survey is not None:
-            # queryset = queryset.filter(survey__id=survey).exclude(user__id=self.request.user.id)
+            
             queryset = queryset.filter(survey__id=survey)   
         elif user is not None:
-            # queryset = queryset.filter(user__id=user).exclude(user__id=self.request.user.id)
             queryset = queryset.filter(user__id=user)
 
         return queryset
@@ -2067,14 +1665,12 @@ class AMQuestionCountBySHGroup(APIView):
         queryset = queryset.filter(survey__id=survey, driver__driverName=driver)
 
         shgroup = SHGroup.objects.all()
-        # if survey is not None:
         shgroup = shgroup.filter(survey__id=survey)
 
         shgroupserializer = SHGroupSerializer(shgroup, many=True)
         for i in range(len(shgroupserializer.data)):
             shgroupserializer.data[i]['questionCnt'] = queryset.filter(
                 shGroup__id=shgroupserializer.data[i]['id']).count()
-            # shgroupserializer.data[i]['questionTotalCnt'] = queryset.count()
         
         team = Team.objects.all()
         team = team.filter(project__id=project)
@@ -2083,7 +1679,6 @@ class AMQuestionCountBySHGroup(APIView):
         for i in range(len(teamserializer.data)):
             teamserializer.data[i]['questionCnt'] = queryset.filter(
                 survey__project__id=teamserializer.data[i]['project']).count()
-            # teamserializer.data[i]
 
         organization = Organization.objects.all()
         organization = organization.filter(user__id=user)
@@ -2373,7 +1968,6 @@ class WordCloudView(APIView):
             if res[i]['commentTags'] != "":
                 wordstring += ' ' + res[i]['commentTags']
 
-        # wordList = wordstring.split()
         wordList = re.findall(r"[\w\']+", wordstring.lower())
         filteredWordList = [w for w in wordList if w not in stopwords]
         wordfreq = [filteredWordList.count(p) for p in filteredWordList]
@@ -2406,9 +2000,6 @@ class BubbleChartView(APIView):
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
 
         shgroupqueryset = SHGroup.objects.filter(survey__id=survey)
-        # amqueryset = AMResponse.objects.filter(survey__id=survey, subProjectUser__id=projectUser)
-        # aoqueryset = AOResponse.objects.filter(survey__id=survey, subProjectUser__id=projectUser)
-
         shgroupserializer = SHGroupSerializer(shgroupqueryset, many=True)
         
         for i in range(len(shgroupserializer.data)):
@@ -2457,7 +2048,6 @@ class BubbleChartView(APIView):
 # AM - Improvement - Start: What should we start doing?
 # AM - Improvement - Stop: What should we stop doing?
 # AM - Improvement - Change: What should we do differently?
-
 class KeyThemesView(APIView):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
 
@@ -2860,7 +2450,6 @@ class MyMatrixView(APIView):
         # 2: group by "group"
         # 3: group by "team"
         # 4: group by "organisation"
-        # groupBy = self.request.query_params.get('groupby', None)
         projectUser = self.request.query_params.get('projectuser', None)
         survey = self.request.query_params.get('survey', None)
 
@@ -2994,6 +2583,25 @@ class AdvisorInsightsView(APIView):
         if projectUser is None:
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
 
+        # Summary: 
+        # % Response rate from invited Team members
+        # % Response rate from invited stakeholders
+        # Department counts in total
+
+        # Recommended stakeholders: It will be the stakeholders who have the most negative responses for certain questions
+
+        # top positive shteam name and score
+        # top positive shgroup name and score
+
+        # top negative shteam name and score
+        # top negative shgroup name and score
+
+        # optimistic would be the groups with high aws comprehend scores (like top positive)
+        
+        # pessimistic would be the groups with lowest aws comprehend scores (like top negative)
+
+        # "least share to share their opinions" groups with the lowest score for this question
+        
         # Respondant: counts of the SHCategory who have got at least 1 AM or AO response
         myPeersShCategoryId = SHCategory.objects.get(survey=survey, SHCategoryName="My Peers").id
         whoINeedShCategoryId = SHCategory.objects.get(survey=survey, SHCategoryName="Who I Need").id
@@ -3168,33 +2776,23 @@ class DriverAnalysisView(APIView):
         aoresponsereportserializer = AOResponseForDriverAnalysisSerializer(aoresponsereportqueryset, many=True)
         aoresponsereportdata = aoresponsereportserializer.data
 
-        # responsedProjectUser = []
         for i in range(len(amresponsereportdata)):
-            # if amresponsereportdata[i]['projectUser'] not in responsedProjectUser:
-            #     responsedProjectUser.append(amresponsereportdata[i]['projectUser'])
+
             amquestionqueryset = AMQuestion.objects.filter(
                 id=amresponsereportdata[i]['amQuestion'])
             amserializer = AMQuestionSerializer(amquestionqueryset, many=True)
             amresponsereportdata[i]['amQuestionData'] = amserializer.data
 
         for j in range(len(aoresponsereportdata)):
-            # if aoresponsereportdata[j]['projectUser'] not in responsedProjectUser:
-            #     responsedProjectUser.append(aoresponsereportdata[j]['projectUser'])
+
             aoquestionqueryset = AOQuestion.objects.filter(id=aoresponsereportdata[j]['aoQuestion'])
             aoserializer = AOQuestionSerializer(aoquestionqueryset, many=True)
             aoresponsereportdata[j]['aoQuestionData'] = aoserializer.data
 
         projectusercnt = len(ProjectUser.objects.filter(survey=survey))
 
-        # res = []
         res = amresponsereportdata + aoresponsereportdata
-        # res['totalStakeholderCnt'] = projectusercnt
-        # res['responseRate'] = len(responsedProjectUser) * 100 / projectusercnt
 
-        # shgroupqueryset = SHGroup.objects.filter(survey__id=survey)
-        # shgroupserializer = SHGroupSerializer(shgroupqueryset, many=True)
-        # for i in range(len(shgroupserializer.data)):
-        #     shgroupserializer.data[i]['stakeholderCnt'] = 
         return Response(res, status=status.HTTP_200_OK)
 
 # totalshcnt api
