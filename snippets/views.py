@@ -2699,7 +2699,8 @@ class AdvisorInsightsView(APIView):
                 aryShGroupsData[aoresponsereportdata[j]
                                 ['projectUser']['shGroup']['SHGroupName']] = {}
             if (aoresponsereportdata[j]['projectUser']['user']['organization'] is not None):
-                aryOrganizationsData[aoresponsereportdata[j]['projectUser']['user']['organization']['name']] = {}
+                aryOrganizationsData[aoresponsereportdata[j]
+                                     ['projectUser']['user']['organization']['name']] = {}
         # responseData = amresponsereportdata + aoresponsereportdata
 
         recommendedProjectUsersQuerySet = ProjectUser.objects.filter(survey=survey)
