@@ -2639,11 +2639,20 @@ class AdvisorInsightsView(APIView):
         aryTeams = []
         aryProjectUsers = []
         aryDepartments = []
+        aryOrganizations = []
+        aryShGroups = []
+
+        aryTeamsData = {}
+        aryShGroupsData = {}
+        aryOrganizationsData = {}
 
         for i in range(len(amresponsereportdata)):
-            if amresponsereportdata[i]['projectUser']["team"]["id"] not in aryTeams:
+            if amresponsereportdata[i]['projectUser']["team"]["name"] not in aryTeams:
                 aryTeams.append(
-                    amresponsereportdata[i]['projectUser']["team"]["id"])
+                    amresponsereportdata[i]['projectUser']["team"]["name"])
+            if amresponsereportdata[i]['projectUser']['shGroup']['SHGroupName'] not in aryShGroups:
+                aryShGroups.append(
+                    amresponsereportdata[i]['projectUser']['shGroup']['SHGroupName'])
             if amresponsereportdata[i]['projectUser']["id"] not in aryProjectUsers:
                 aryProjectUsers.append(
                     amresponsereportdata[i]['projectUser']["id"])
@@ -2651,12 +2660,18 @@ class AdvisorInsightsView(APIView):
                 if (amresponsereportdata[i]['projectUser']['user']['userteam']['name'] not in aryDepartments):
                     aryDepartments.append(
                         amresponsereportdata[i]['projectUser']['user']['userteam']['name'])
-
+            if (amresponsereportdata[i]['projectUser']['user']['organization'] is not None):
+                if (amresponsereportdata[i]['projectUser']['user']['organization']['name'] not in aryOrganizations):
+                    aryOrganizations.append(
+                        amresponsereportdata[i]['projectUser']['user']['organization']['name'])
 
         for j in range(len(aoresponsereportdata)):
-            if aoresponsereportdata[j]['projectUser']["team"]["id"] not in aryTeams:
+            if aoresponsereportdata[j]['projectUser']["team"]["name"] not in aryTeams:
                 aryTeams.append(
-                    aoresponsereportdata[j]['projectUser']['team']['id'])
+                    aoresponsereportdata[j]['projectUser']['team']['name'])
+            if aoresponsereportdata[j]['projectUser']['shGroup']['SHGroupName'] not in aryShGroups:
+                aryShGroups.append(
+                    aoresponsereportdata[j]['projectUser']['shGroup']['SHGroupName'])
             if aoresponsereportdata[j]['projectUser']["id"] not in aryProjectUsers:
                 aryProjectUsers.append(
                     aoresponsereportdata[j]['projectUser']["id"])
@@ -2664,7 +2679,10 @@ class AdvisorInsightsView(APIView):
                 if (aoresponsereportdata[j]['projectUser']['user']['userteam']['name'] not in aryDepartments):
                     aryDepartments.append(
                         aoresponsereportdata[j]['projectUser']['user']['userteam']['name'])
-
+            if (aoresponsereportdata[j]['projectUser']['user']['organization'] is not None):
+                if (aoresponsereportdata[j]['projectUser']['user']['organization']['name'] not in aryOrganizations):
+                    aryOrganizations.append(
+                        aoresponsereportdata[j]['projectUser']['user']['organization']['name'])
         
         responseData = amresponsereportdata + aoresponsereportdata
 
@@ -2678,7 +2696,6 @@ class AdvisorInsightsView(APIView):
         responseRateFromInvitedTeamMembers = len(aryTeams) * 100 / totalTeamMembersCnt
         responseRateFromInvitedStakeholders = len(aryProjectUsers) * 100 / totalStakeHoldersCnt
         totalDepartments = len(aryDepartments)
-        # totalDepartments = 3
 
         summary = {
             "responseRateFromInvitedTeamMembers": responseRateFromInvitedTeamMembers,
