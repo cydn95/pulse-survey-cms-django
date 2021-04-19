@@ -2647,10 +2647,10 @@ class AdvisorInsightsView(APIView):
             if amresponsereportdata[i]['projectUser']["id"] not in aryProjectUsers:
                 aryProjectUsers.append(
                     amresponsereportdata[i]['projectUser']["id"])
-            # if (amresponsereportdata[i]['projectUser']['user']['userteam'] is not None):
-            #     if (amresponsereportdata[i]['projectUser']['user']['userteam']['name'] not in aryDepartments):
-            #         aryDepartments.append(
-            #             amresponsereportdata[i]['projectUser']['user']['userteam']['name'])
+            if (amresponsereportdata[i]['projectUser']['user']['userteam'] is not None):
+                if (amresponsereportdata[i]['projectUser']['user']['userteam']['name'] not in aryDepartments):
+                    aryDepartments.append(
+                        amresponsereportdata[i]['projectUser']['user']['userteam']['name'])
 
 
         for j in range(len(aoresponsereportdata)):
@@ -2660,10 +2660,10 @@ class AdvisorInsightsView(APIView):
             if aoresponsereportdata[j]['projectUser']["id"] not in aryProjectUsers:
                 aryProjectUsers.append(
                     aoresponsereportdata[j]['projectUser']["id"])
-            # if (aoresponsereportdata[j]['projectUser']['user']['userteam'] is not None):
-            #     if (aoresponsereportdata[j]['projectUser']['user']['userteam']['name'] not in aryDepartments):
-            #         aryDepartments.append(
-            #             aoresponsereportdata[j]['projectUser']['user']['userteam']['name'])
+            if (aoresponsereportdata[j]['projectUser']['user']['userteam'] is not None):
+                if (aoresponsereportdata[j]['projectUser']['user']['userteam']['name'] not in aryDepartments):
+                    aryDepartments.append(
+                        aoresponsereportdata[j]['projectUser']['user']['userteam']['name'])
 
         
         responseData = amresponsereportdata + aoresponsereportdata
