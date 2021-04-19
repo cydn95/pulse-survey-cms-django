@@ -2650,9 +2650,10 @@ class AdvisorInsightsView(APIView):
             if amresponsereportdata[i]['projectUser']["team"]["name"] not in aryTeams:
                 aryTeams.append(
                     amresponsereportdata[i]['projectUser']["team"]["name"])
-            if amresponsereportdata[i]['projectUser']['shGroup']['SHGroupName'] not in aryShGroups:
-                aryShGroups.append(
-                    amresponsereportdata[i]['projectUser']['shGroup']['SHGroupName'])
+            if (amresponsereportdata[i]['projectUser']['shGroup'] is not None):
+                if amresponsereportdata[i]['projectUser']['shGroup']['SHGroupName'] not in aryShGroups:
+                    aryShGroups.append(
+                        amresponsereportdata[i]['projectUser']['shGroup']['SHGroupName'])
             if amresponsereportdata[i]['projectUser']["id"] not in aryProjectUsers:
                 aryProjectUsers.append(
                     amresponsereportdata[i]['projectUser']["id"])
@@ -2669,9 +2670,10 @@ class AdvisorInsightsView(APIView):
             if aoresponsereportdata[j]['projectUser']["team"]["name"] not in aryTeams:
                 aryTeams.append(
                     aoresponsereportdata[j]['projectUser']['team']['name'])
-            if aoresponsereportdata[j]['projectUser']['shGroup']['SHGroupName'] not in aryShGroups:
-                aryShGroups.append(
-                    aoresponsereportdata[j]['projectUser']['shGroup']['SHGroupName'])
+            if (aoresponsereportdata[j]['projectUser']['shGroup'] is not None):
+                if aoresponsereportdata[j]['projectUser']['shGroup']['SHGroupName'] not in aryShGroups:
+                    aryShGroups.append(
+                        aoresponsereportdata[j]['projectUser']['shGroup']['SHGroupName'])
             if aoresponsereportdata[j]['projectUser']["id"] not in aryProjectUsers:
                 aryProjectUsers.append(
                     aoresponsereportdata[j]['projectUser']["id"])
