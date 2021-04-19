@@ -2677,8 +2677,8 @@ class AdvisorInsightsView(APIView):
         totalStakeHoldersCnt = ProjectUser.objects.filter(survey=survey).count()
         responseRateFromInvitedTeamMembers = len(aryTeams) * 100 / totalTeamMembersCnt
         responseRateFromInvitedStakeholders = len(aryProjectUsers) * 100 / totalStakeHoldersCnt
-        # totalDepartments = len(aryDepartments)
-        totalDepartments = 3
+        totalDepartments = len(aryDepartments)
+        # totalDepartments = 3
 
         summary = {
             "responseRateFromInvitedTeamMembers": responseRateFromInvitedTeamMembers,
