@@ -2659,12 +2659,12 @@ class AdvisorInsightsView(APIView):
             if aoresponsereportdata[j]['projectUser']["team"]["id"] not in aryTeams:
                 aryTeams.append(
                     aoresponsereportdata[j]['projectUser']['team']['id'])
-            if aoresponsereportdata[i]['projectUser']["id"] not in aryProjectUsers:
+            if aoresponsereportdata[j]['projectUser']["id"] not in aryProjectUsers:
                 aryProjectUsers.append(
-                    aoresponsereportdata[i]['projectUser']["id"])
-            if aoresponsereportdata[i]['projectUser']['user']['userteam']['name'] not in aryDepartments:
+                    aoresponsereportdata[j]['projectUser']["id"])
+            if aoresponsereportdata[j]['projectUser']['user']['userteam']['name'] not in aryDepartments:
                 aryDepartments.append(
-                    aoresponsereportdata[i]['projectUser']['user']['userteam']['name'])
+                    aoresponsereportdata[j]['projectUser']['user']['userteam']['name'])
             # aoquestionqueryset = AOQuestion.objects.filter(id=aoresponsereportdata[j]['aoQuestion'])
             # aoserializer = AOQuestionSerializer(aoquestionqueryset, many=True)
             # aoresponsereportdata[j]['aoQuestionData'] = aoserializer.data
