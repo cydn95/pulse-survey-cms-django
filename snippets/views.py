@@ -2637,10 +2637,19 @@ class AdvisorInsightsView(APIView):
         aoresponsereportdata = aoresponsereportserializer.data
 
         aryTeams = []
+        aryProjectUsers = []
+        aryDepartments = []
+
         for i in range(len(amresponsereportdata)):
             if amresponsereportdata[i]['projectUser']["team"]["id"] not in aryTeams:
                 aryTeams.append(
                     amresponsereportdata[i]['projectUser']["team"]["id"])
+            if amresponsereportdata[i]['projectUser']["id"] not in aryProjectUsers:
+                aryProjectUsers.append(
+                    amresponsereportdata[i]['projectUser']["id"])
+            if amresponsereportdata[i]['projectUser']['user']['userteam']['name'] not in aryDepartments:
+                aryDepartments.append(
+                    amresponsereportdata[i]['projectUser']['user']['userteam']['name'])
             # amquestionqueryset = AMQuestion.objects.filter(
             #     id=amresponsereportdata[i]['amQuestion'])
             # amserializer = AMQuestionSerializer(amquestionqueryset, many=True)
@@ -2648,8 +2657,14 @@ class AdvisorInsightsView(APIView):
 
         for j in range(len(aoresponsereportdata)):
             if aoresponsereportdata[j]['projectUser']["team"]["id"] not in aryTeams:
-                aryTeams.append(aoresponsereportdata[j]['projectUser']['team']['id'])
-
+                aryTeams.append(
+                    aoresponsereportdata[j]['projectUser']['team']['id'])
+            if aoresponsereportdata[i]['projectUser']["id"] not in aryProjectUsers:
+                aryProjectUsers.append(
+                    aoresponsereportdata[i]['projectUser']["id"])
+            if aoresponsereportdata[i]['projectUser']['user']['userteam']['name'] not in aryDepartments:
+                aryDepartments.append(
+                    aoresponsereportdata[i]['projectUser']['user']['userteam']['name'])
             # aoquestionqueryset = AOQuestion.objects.filter(id=aoresponsereportdata[j]['aoQuestion'])
             # aoserializer = AOQuestionSerializer(aoquestionqueryset, many=True)
             # aoresponsereportdata[j]['aoQuestionData'] = aoserializer.data
@@ -2662,10 +2677,10 @@ class AdvisorInsightsView(APIView):
         
         project = Survey.objects.get(pk=survey).project
         totalTeamMembersCnt = Team.objects.filter(project=project).count()
-
+        totalStakeHoldersCnt = ProjectUser.objects.filter(survey=survey).count()
         responseRateFromInvitedTeamMembers = len(aryTeams) * 100 / totalTeamMembersCnt
-        responseRateFromInvitedStakeholders = 30
-        totalDepartments = 5
+        responseRateFromInvitedStakeholders = len(aryProjectUsers) * 100 / totalStakeHoldersCnt
+        totalDepartments = len(aryDepartments)
 
         summary = {
             "responseRateFromInvitedTeamMembers": responseRateFromInvitedTeamMembers,
@@ -2677,71 +2692,71 @@ class AdvisorInsightsView(APIView):
             "positively": {
                 "team": {
                     "name": "Internal Team",
-                    "score": 7
+                    "score": 7.7
                 },
                 "shgroup": {
                     "name": "Internal Group",
-                    "score": 8
+                    "score": 4.5
                 },
                 "org": {
                     "name": "LMC",
-                    "score": 6
+                    "score": 6.8
                 }
             },
             "negatively": {
                 "team": {
                     "name": "Internal Team",
-                    "score": 7
+                    "score": 7.3
                 },
                 "shgroup": {
                     "name": "Internal Group",
-                    "score": 8
+                    "score": 8.5
                 },
                 "org": {
                     "name": "LMC",
-                    "score": 6
+                    "score": 6.3
                 }
             },
             "optimistic": {
                 "team": {
                     "name": "Internal Team",
-                    "score": 7
+                    "score": 7.9
                 },
                 "shgroup": {
                     "name": "Internal Group",
-                    "score": 8
+                    "score": 8.4
                 },
                 "org": {
                     "name": "LMC",
-                    "score": 6
+                    "score": 6.1
                 }
             },
             "pessimistic": {
                 "team": {
                     "name": "Internal Team",
-                    "score": 7
+                    "score": 3.3
                 },
                 "shgroup": {
                     "name": "Internal Group",
-                    "score": 8
+                    "score": 7.5
                 },
                 "org": {
                     "name": "LMC",
-                    "score": 6
+                    "score": 4.1
                 }
             },
             "leastsafe": {
                 "team": {
                     "name": "Internal Team",
-                    "score": 7
+                    "score": 1.1
                 },
                 "shgroup": {
                     "name": "Internal Group",
-                    "score": 8
+                    "score": 8.6
                 },
                 "org": {
                     "name": "LMC",
-                    "score": 6
+                    "score": 4.7
                 }
             }
         }
