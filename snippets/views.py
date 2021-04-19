@@ -2777,7 +2777,7 @@ class AdvisorInsightsView(APIView):
                     "score": 4.1
                 }
             },
-            "leastsafe": {
+            "least safe": {
                 "team": {
                     "name": "Internal Team",
                     "score": 1.1
