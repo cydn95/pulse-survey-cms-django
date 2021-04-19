@@ -2666,6 +2666,13 @@ class AdvisorInsightsView(APIView):
                     aryOrganizations.append(
                         amresponsereportdata[i]['projectUser']['user']['organization']['name'])
 
+            aryTeamsData[amresponsereportdata[i]['projectUser']["team"]["name"]] = {}
+            if (amresponsereportdata[i]['projectUser']['shGroup'] is not None):
+                aryShGroupsData[amresponsereportdata[i]
+                                ['projectUser']['shGroup']['SHGroupName']] = {}
+            if (amresponsereportdata[i]['projectUser']['user']['organization'] is not None):
+                aryOrganizationsData[amresponsereportdata[i]['projectUser']['user']['organization']] = {}
+
         for j in range(len(aoresponsereportdata)):
             if aoresponsereportdata[j]['projectUser']["team"]["name"] not in aryTeams:
                 aryTeams.append(
@@ -2686,7 +2693,13 @@ class AdvisorInsightsView(APIView):
                     aryOrganizations.append(
                         aoresponsereportdata[j]['projectUser']['user']['organization']['name'])
         
-        responseData = amresponsereportdata + aoresponsereportdata
+            aryTeamsData[aoresponsereportdata[j]['projectUser']["team"]["name"]] = {}
+            if (aoresponsereportdata[j]['projectUser']['shGroup'] is not None):
+                aryShGroupsData[aoresponsereportdata[j]
+                                ['projectUser']['shGroup']['SHGroupName']] = {}
+            if (aoresponsereportdata[j]['projectUser']['user']['organization'] is not None):
+                aryOrganizationsData[aoresponsereportdata[j]['projectUser']['user']['organization']] = {}
+        # responseData = amresponsereportdata + aoresponsereportdata
 
         recommendedProjectUsersQuerySet = ProjectUser.objects.filter(survey=survey)
         recommendedProjectUserSerializer = ProjectUserForReportSerializer(
@@ -2778,7 +2791,7 @@ class AdvisorInsightsView(APIView):
             }
         }
 
-        return Response({"respondents": respondents, "summary": summary, "recommendedProjectUsers": recommendedProjectUserSerializer.data, "detailedData": detailedData}, status=status.HTTP_200_OK)
+        return Response({"respondents": respondents, "summary": summary, "recommendedProjectUsers": recommendedProjectUserSerializer.data, "detailedData": detailedData, "teamsData": aryTeamsData, "shgroupData": aryShGroupsData, "organizationData": aryOrganizationsData}, status=status.HTTP_200_OK)
 
 # driveranalysis api
 class DriverAnalysisView(APIView):
