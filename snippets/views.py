@@ -2647,7 +2647,7 @@ class AdvisorInsightsView(APIView):
             if amresponsereportdata[i]['projectUser']["id"] not in aryProjectUsers:
                 aryProjectUsers.append(
                     amresponsereportdata[i]['projectUser']["id"])
-            if (amresponsereportdata[i]['projectUser']['user']['userteam']['name'] is not None) & (amresponsereportdata[i]['projectUser']['user']['userteam']['name'] not in aryDepartments):
+            if (amresponsereportdata[i]['projectUser']['user']['userteam'] is not None) & (amresponsereportdata[i]['projectUser']['user']['userteam']['name'] not in aryDepartments):
                 aryDepartments.append(
                     amresponsereportdata[i]['projectUser']['user']['userteam']['name'])
             # amquestionqueryset = AMQuestion.objects.filter(
@@ -2662,7 +2662,7 @@ class AdvisorInsightsView(APIView):
             if aoresponsereportdata[j]['projectUser']["id"] not in aryProjectUsers:
                 aryProjectUsers.append(
                     aoresponsereportdata[j]['projectUser']["id"])
-            if (aoresponsereportdata[j]['projectUser']['user']['userteam']['name'] is not None) & (aoresponsereportdata[j]['projectUser']['user']['userteam']['name'] not in aryDepartments):
+            if (aoresponsereportdata[j]['projectUser']['user']['userteam'] is not None) & (aoresponsereportdata[j]['projectUser']['user']['userteam']['name'] not in aryDepartments):
                 aryDepartments.append(
                     aoresponsereportdata[j]['projectUser']['user']['userteam']['name'])
             # aoquestionqueryset = AOQuestion.objects.filter(id=aoresponsereportdata[j]['aoQuestion'])
