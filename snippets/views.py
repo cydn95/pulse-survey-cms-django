@@ -2647,14 +2647,11 @@ class AdvisorInsightsView(APIView):
             if amresponsereportdata[i]['projectUser']["id"] not in aryProjectUsers:
                 aryProjectUsers.append(
                     amresponsereportdata[i]['projectUser']["id"])
-            if (amresponsereportdata[i]['projectUser']['user']['userteam'] is not None):
-                if (amresponsereportdata[i]['projectUser']['user']['userteam']['name'] not in aryDepartments):
-                    aryDepartments.append(
-                        amresponsereportdata[i]['projectUser']['user']['userteam']['name'])
-            # amquestionqueryset = AMQuestion.objects.filter(
-            #     id=amresponsereportdata[i]['amQuestion'])
-            # amserializer = AMQuestionSerializer(amquestionqueryset, many=True)
-            # amresponsereportdata[i]['amQuestionData'] = amserializer.data
+            # if (amresponsereportdata[i]['projectUser']['user']['userteam'] is not None):
+            #     if (amresponsereportdata[i]['projectUser']['user']['userteam']['name'] not in aryDepartments):
+            #         aryDepartments.append(
+            #             amresponsereportdata[i]['projectUser']['user']['userteam']['name'])
+
 
         for j in range(len(aoresponsereportdata)):
             if aoresponsereportdata[j]['projectUser']["team"]["id"] not in aryTeams:
@@ -2663,13 +2660,11 @@ class AdvisorInsightsView(APIView):
             if aoresponsereportdata[j]['projectUser']["id"] not in aryProjectUsers:
                 aryProjectUsers.append(
                     aoresponsereportdata[j]['projectUser']["id"])
-            if (aoresponsereportdata[j]['projectUser']['user']['userteam'] is not None):
-                if (aoresponsereportdata[j]['projectUser']['user']['userteam']['name'] not in aryDepartments):
-                    aryDepartments.append(
-                        aoresponsereportdata[j]['projectUser']['user']['userteam']['name'])
-            # aoquestionqueryset = AOQuestion.objects.filter(id=aoresponsereportdata[j]['aoQuestion'])
-            # aoserializer = AOQuestionSerializer(aoquestionqueryset, many=True)
-            # aoresponsereportdata[j]['aoQuestionData'] = aoserializer.data
+            # if (aoresponsereportdata[j]['projectUser']['user']['userteam'] is not None):
+            #     if (aoresponsereportdata[j]['projectUser']['user']['userteam']['name'] not in aryDepartments):
+            #         aryDepartments.append(
+            #             aoresponsereportdata[j]['projectUser']['user']['userteam']['name'])
+
         
         responseData = amresponsereportdata + aoresponsereportdata
 
@@ -2682,7 +2677,8 @@ class AdvisorInsightsView(APIView):
         totalStakeHoldersCnt = ProjectUser.objects.filter(survey=survey).count()
         responseRateFromInvitedTeamMembers = len(aryTeams) * 100 / totalTeamMembersCnt
         responseRateFromInvitedStakeholders = len(aryProjectUsers) * 100 / totalStakeHoldersCnt
-        totalDepartments = len(aryDepartments)
+        # totalDepartments = len(aryDepartments)
+        totalDepartments = 3
 
         summary = {
             "responseRateFromInvitedTeamMembers": responseRateFromInvitedTeamMembers,
