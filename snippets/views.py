@@ -2646,6 +2646,12 @@ class AdvisorInsightsView(APIView):
         aryShGroupsData = {}
         aryOrganizationsData = {}
 
+        leastSafeTeamName = ""
+        leastSafeTeamScore = ""
+        leastSafeShGroupName = ""
+        leastSafeShGroupScore = ""
+        leastSafeOrgName = ""
+        leastSafeOrgScore = ""
         for i in range(len(amresponsereportdata)):
             if amresponsereportdata[i]['projectUser']["team"]["name"] not in aryTeams:
                 aryTeams.append(
@@ -2673,7 +2679,23 @@ class AdvisorInsightsView(APIView):
             if (amresponsereportdata[i]['projectUser']['user']['organization'] is not None):
                 aryOrganizationsData[amresponsereportdata[i]
                                      ['projectUser']['user']['organization']['name']] = {"totalScore": 0, "cnt": 0, "score": 0, "compTotalScore": 0, "compCnt": 0, "compScore": 0}
-
+            
+            if amresponsereportdata[i]['amQuestionData'][0]['questionText'] == "Is it safe to speak up to share an unpopular opinion?":
+                leastSafeTeamName = amresponsereportdata[i]['projectUser']["team"]["name"]
+                leastSafeTeamScore = amresponsereportdata[i]["integerValue"]
+                
+                leastSafeShGroupName = ""
+                leastSafeShGroupScore = 0
+                if (amresponsereportdata[i]['projectUser']['shGroup'] is not None):
+                    leastSafeShGroupName = amresponsereportdata[i]['projectUser']['shGroup']['SHGroupName']
+                    leastSafeShGroupScore = amresponsereportdata[i]["integerValue"]
+                
+                leastSafeOrgName = ""
+                leastSafeOrgScore = 0
+                if (amresponsereportdata[i]['projectUser']['user']['organization'] is not None):
+                    leastSafeOrgName = amresponsereportdata[i]['projectUser']['user']['organization']['name']
+                    leastSafeOrgScore = amresponsereportdata[i]["integerValue"]
+                
         for j in range(len(aoresponsereportdata)):
             if aoresponsereportdata[j]['projectUser']["team"]["name"] not in aryTeams:
                 aryTeams.append(
@@ -2899,21 +2921,21 @@ class AdvisorInsightsView(APIView):
             },
             "least safe": {
                 "team": {
-                    "name": "Internal Team",
-                    "score": 1.1
+                    "name": leastSafeTeamName,
+                    "score": leastSafeTeamScore
                 },
                 "shgroup": {
-                    "name": "Internal Group",
-                    "score": 8.6
+                    "name": leastSafeShGroupName,
+                    "score": leastSafeShGroupScore
                 },
                 "org": {
-                    "name": "LMC",
-                    "score": 4.7
+                    "name": leastSafeOrgName,
+                    "score": leastSafeOrgScore
                 }
             }
         }
 
-        return Response({"respondents": respondents, "summary": summary, "recommendedProjectUsers": recommendedProjectUserSerializer.data, "detailedData": detailedData, "teamsData": aryTeamsData, "shgroupData": aryShGroupsData, "organizationData": aryOrganizationsData}, status=status.HTTP_200_OK)
+        return Response({"respondents": respondents, "summary": summary, "recommendedProjectUsers": recommendedProjectUserSerializer.data, "detailedData": detailedData}, status=status.HTTP_200_OK)
 
 # driveranalysis api
 class DriverAnalysisView(APIView):
