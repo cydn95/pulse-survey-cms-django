@@ -2762,13 +2762,17 @@ class AdvisorInsightsView(APIView):
             "totalDepartments": totalDepartments
         }
 
-        positivelyTeam = max(aryTeamsData[key]['score']
-                             for key in aryTeamsData)
+        positivelyTeamScore = max(aryTeamsData[key]['score'] for key in aryTeamsData)
+        positivelyTeamName = ""
+        for key, value in aryTeamsData.items():
+            if positivelyTeamScore == value:
+                positivelyTeamName = key
+                
         detailedData = {
             "positively": {
                 "team": {
-                    "name": "Internal Team",
-                    "score": 7.7
+                    "name": positivelyTeamName,
+                    "score": positivelyTeamScore
                 },
                 "shgroup": {
                     "name": "Internal Group",
