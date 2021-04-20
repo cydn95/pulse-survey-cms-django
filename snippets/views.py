@@ -2628,11 +2628,11 @@ class AdvisorInsightsView(APIView):
             "whoNeedsMeCnt": whoNeedsMeCnt
         }
 
-        amresponsereportqueryset = AMResponse.objects.all().filter(survey__id=survey, subProjectUser__id=projectUser)
+        amresponsereportqueryset = AMResponse.objects.all().filter(survey__id=survey, subProjectUser__id=projectUser).order_by('integerValue')
         amresponsereportserializer = AMResponseForDriverAnalysisSerializer(amresponsereportqueryset, many=True)
         amresponsereportdata = amresponsereportserializer.data
 
-        aoresponsereportqueryset = AOResponse.objects.all().filter(survey__id=survey, subProjectUser__id=projectUser)
+        aoresponsereportqueryset = AOResponse.objects.all().filter(survey__id=survey, subProjectUser__id=projectUser).order_by('integerValue')
         aoresponsereportserializer = AOResponseForDriverAnalysisSerializer(aoresponsereportqueryset, many=True)
         aoresponsereportdata = aoresponsereportserializer.data
 
@@ -2801,7 +2801,8 @@ class AdvisorInsightsView(APIView):
                     aryOrganizationsData[aoresponsereportdata[j]['projectUser']['user']['organization']['name']]['compCnt'] += 1
                     aryOrganizationsData[aoresponsereportdata[j]['projectUser']['user']['organization']['name']]['compScore'] = round(aryOrganizationsData[aoresponsereportdata[j]['projectUser']['user']['organization']['name']]['compTotalScore'] / 10 / aryOrganizationsData[aoresponsereportdata[j]['projectUser']['user']['organization']['name']]['compCnt'], 2)
 
-        recommendedProjectUsersQuerySet = ProjectUser.objects.filter(survey=survey)
+        aryFilteredProjectUsers = aryProjectUsers[:3]
+        recommendedProjectUsersQuerySet = ProjectUser.objects.filter(survey=survey, pk__in=aryFilteredProjectUsers)
         recommendedProjectUserSerializer = ProjectUserForReportSerializer(
             recommendedProjectUsersQuerySet, many=True)
         
