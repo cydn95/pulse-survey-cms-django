@@ -2762,6 +2762,8 @@ class AdvisorInsightsView(APIView):
             "totalDepartments": totalDepartments
         }
 
+        positivelyTeam = max(aryTeamsData[key]['score']
+                             for key in aryTeamsData)
         detailedData = {
             "positively": {
                 "team": {
@@ -2835,7 +2837,7 @@ class AdvisorInsightsView(APIView):
             }
         }
 
-        return Response({"respondents": respondents, "summary": summary, "recommendedProjectUsers": recommendedProjectUserSerializer.data, "detailedData": detailedData, "teamsData": aryTeamsData, "shgroupData": aryShGroupsData, "organizationData": aryOrganizationsData}, status=status.HTTP_200_OK)
+        return Response({"respondents": respondents, "posive": positivelyTeam, "summary": summary, "recommendedProjectUsers": recommendedProjectUserSerializer.data, "detailedData": detailedData, "teamsData": aryTeamsData, "shgroupData": aryShGroupsData, "organizationData": aryOrganizationsData}, status=status.HTTP_200_OK)
 
 # driveranalysis api
 class DriverAnalysisView(APIView):
