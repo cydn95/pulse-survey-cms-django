@@ -2693,16 +2693,13 @@ class AdvisorInsightsView(APIView):
                 leastSafeTeamTotalScore += amresponsereportdata[i]["integerValue"]
                 leastSafeTeamCnt += 1
                 leastSafeTeamScore = leastSafeTeamTotalScore / 10 / leastSafeTeamCnt
-                leastSafeShGroupName = ""
-                leastSafeShGroupTotalScore = 0
+                
                 if (amresponsereportdata[i]['projectUser']['shGroup'] is not None):
                     leastSafeShGroupName = amresponsereportdata[i]['projectUser']['shGroup']['SHGroupName']
                     leastSafeShGroupTotalScore += amresponsereportdata[i]["integerValue"]
                     leastSafeShGroupCnt += 1
                     leastSafeShGroupScore = leastSafeShGroupTotalScore / 10 / leastSafeShGroupCnt
                 
-                leastSafeOrgName = ""
-                leastSafeOrgTotalScore = 0
                 if (amresponsereportdata[i]['projectUser']['user']['organization'] is not None):
                     leastSafeOrgName = amresponsereportdata[i]['projectUser']['user']['organization']['name']
                     leastSafeOrgTotalScore += amresponsereportdata[i]["integerValue"]
