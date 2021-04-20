@@ -2717,6 +2717,11 @@ class AdvisorInsightsView(APIView):
                 aryShGroupsData[amresponsereportdata[i]['projectUser']['shGroup']['SHGroupName']]['cnt'] += 1
                 aryShGroupsData[amresponsereportdata[i]['projectUser']['shGroup']['SHGroupName']]['score'] = round(aryShGroupsData[amresponsereportdata[i]['projectUser']['shGroup']['SHGroupName']]['totalScore'] / 10 / aryShGroupsData[amresponsereportdata[i]['projectUser']['shGroup']['SHGroupName']]['cnt'], 2)
         
+            if (amresponsereportdata[i]['projectUser']['user']['organization'] is not None):
+                aryOrganizationsData[amresponsereportdata[i]['projectUser']['user']['organization']['name']]['totalScore'] += amresponsereportdata[i]["integerValue"]
+                aryOrganizationsData[amresponsereportdata[i]['projectUser']['user']['organization']['name']]['cnt'] += 1
+                aryOrganizationsData[amresponsereportdata[i]['projectUser']['user']['organization']['name']]['score'] = round(aryOrganizationsData[amresponsereportdata[i]['projectUser']['user']['organization']['name']]['totalScore'] / 10 / aryOrganizationsData[amresponsereportdata[i]['projectUser']['user']['organization']['name']]['cnt'], 2)
+
         for j in range(len(aoresponsereportdata)):
             aryTeamsData[aoresponsereportdata[j]
                          ['projectUser']["team"]["name"]]["totalScore"] += aoresponsereportdata[j]["integerValue"]
@@ -2734,6 +2739,11 @@ class AdvisorInsightsView(APIView):
                                 ['shGroup']['SHGroupName']]['cnt'] += 1
                 aryShGroupsData[aoresponsereportdata[j]['projectUser']['shGroup']['SHGroupName']]['score'] = round(
                     aryShGroupsData[aoresponsereportdata[j]['projectUser']['shGroup']['SHGroupName']]['totalScore'] / 10 / aryShGroupsData[aoresponsereportdata[j]['projectUser']['shGroup']['SHGroupName']]['cnt'], 2)
+
+            if (aoresponsereportdata[j]['projectUser']['user']['organization'] is not None):
+                aryOrganizationsData[aoresponsereportdata[j]['projectUser']['user']['organization']['name']]['totalScore'] += aoresponsereportdata[j]["integerValue"]
+                aryOrganizationsData[aoresponsereportdata[j]['projectUser']['user']['organization']['name']]['cnt'] += 1
+                aryOrganizationsData[aoresponsereportdata[j]['projectUser']['user']['organization']['name']]['score'] = round(aryOrganizationsData[aoresponsereportdata[j]['projectUser']['user']['organization']['name']]['totalScore'] / 10 / aryOrganizationsData[aoresponsereportdata[j]['projectUser']['user']['organization']['name']]['cnt'], 2)
 
         recommendedProjectUsersQuerySet = ProjectUser.objects.filter(survey=survey)
         recommendedProjectUserSerializer = ProjectUserForReportSerializer(
