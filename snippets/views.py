@@ -2764,9 +2764,9 @@ class AdvisorInsightsView(APIView):
 
         positivelyTeamScore = max(aryTeamsData[key]['score'] for key in aryTeamsData)
         positivelyTeamName = ""
-        for key, value in aryTeamsData.items():
-            if positivelyTeamScore == value:
-                positivelyTeamName = key
+        for k, v in aryTeamsData.items():
+            if v == positivelyTeamScore:
+                positivelyTeamName = k
                 
         detailedData = {
             "positively": {
