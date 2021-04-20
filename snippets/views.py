@@ -2646,6 +2646,8 @@ class AdvisorInsightsView(APIView):
         aryShGroupsData = {}
         aryOrganizationsData = {}
 
+        leastSafeQuestionId = AMQuestion.objects.get(
+            survey__id=survey, questionText="Is it safe to speak up to share an unpopular opinion?").id
         leastSafeTeamName = ""
         leastSafeTeamScore = ""
         leastSafeShGroupName = ""
@@ -2680,7 +2682,7 @@ class AdvisorInsightsView(APIView):
                 aryOrganizationsData[amresponsereportdata[i]
                                      ['projectUser']['user']['organization']['name']] = {"totalScore": 0, "cnt": 0, "score": 0, "compTotalScore": 0, "compCnt": 0, "compScore": 0}
             
-            if amresponsereportdata[i]['amQuestionData'][0]['questionText'] == "Is it safe to speak up to share an unpopular opinion?":
+            if amresponsereportdata[i]['amQuestion'] == leastSafeQuestionId:
                 leastSafeTeamName = amresponsereportdata[i]['projectUser']["team"]["name"]
                 leastSafeTeamScore = amresponsereportdata[i]["integerValue"]
                 
