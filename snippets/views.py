@@ -2763,12 +2763,35 @@ class AdvisorInsightsView(APIView):
         }
 
         positivelyTeamScore = max(aryTeamsData[key]['score'] for key in aryTeamsData)
+        negativelyTeamScore = min(aryTeamsData[key]['score'] for key in aryTeamsData)
         positivelyTeamName = ""
+        negativelyTeamName = ""
         for key in aryTeamsData:
-            
             if aryTeamsData[key]['score'] == positivelyTeamScore:
                 positivelyTeamName = key
-                
+            if aryTeamsData[key]['score'] == negativelyTeamScore:
+                negativelyTeamName = key
+
+        positivelyShGroupScore = max(aryShGroupsData[key]['score'] for key in aryShGroupsData)
+        negativelyShGroupScore = min(aryShGroupsData[key]['score'] for key in aryShGroupsData)
+        positivelyShGroupName = ""
+        negativelyShGroupName = ""
+        for key in aryShGroupsData:
+            if aryShGroupsData[key]['score'] == positivelyShGroupScore:
+                positivelyShGroupName = key
+            if aryShGroupsData[key]['score'] == negativelyShGroupScore:
+                negativelyShGroupName = key
+
+        positivelyOrgScore = max(aryOrganizationsData[key]['score'] for key in aryOrganizationsData)
+        negativelyOrgScore = min(aryOrganizationsData[key]['score'] for key in aryOrganizationsData)
+        positivelyOrgName = ""
+        negativelyOrgName = ""
+        for key in aryOrganizationsData:
+            if aryOrganizationsData[key]['score'] == positivelyOrgScore:
+                positivelyOrgName = key
+            if aryOrganizationsData[key]['score'] == negativelyOrgScore:
+                negativelyOrgName = key
+
         detailedData = {
             "positively": {
                 "team": {
@@ -2776,26 +2799,26 @@ class AdvisorInsightsView(APIView):
                     "score": positivelyTeamScore
                 },
                 "shgroup": {
-                    "name": "Internal Group",
-                    "score": 4.5
+                    "name": positivelyShGroupName,
+                    "score": positivelyShGroupScore
                 },
                 "org": {
-                    "name": "LMC",
-                    "score": 6.8
+                    "name": positivelyOrgName,
+                    "score": positivelyOrgScore
                 }
             },
             "negatively": {
                 "team": {
-                    "name": "Internal Team",
-                    "score": 7.3
+                    "name": negativelyTeamName,
+                    "score": negativelyTeamScore
                 },
                 "shgroup": {
-                    "name": "Internal Group",
-                    "score": 8.5
+                    "name": negativelyShGroupName,
+                    "score": negativelyShGroupScore
                 },
                 "org": {
-                    "name": "LMC",
-                    "score": 6.3
+                    "name": negativelyOrgName,
+                    "score": negativelyOrgScore
                 }
             },
             "optimistic": {
