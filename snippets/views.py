@@ -2649,11 +2649,17 @@ class AdvisorInsightsView(APIView):
         leastSafeQuestionId = AMQuestion.objects.get(
             survey__id=survey, questionText="Is it safe to speak up to share an unpopular opinion?").id
         leastSafeTeamName = ""
-        leastSafeTeamScore = ""
+        leastSafeTeamTotalScore = 0
+        leastSafeTeamCnt = 0
+        leastSafeTeamScore = 0
         leastSafeShGroupName = ""
-        leastSafeShGroupScore = ""
+        leastSafeShGroupTotalScore = 0
+        leastSafeShGroupCnt = 0
+        leastSafeShGroupScore = 0
         leastSafeOrgName = ""
-        leastSafeOrgScore = ""
+        leastSafeOrgTotalScore = 0
+        leastSafeOrgCnt = 0
+        leastSafeOrgScore = 0
         for i in range(len(amresponsereportdata)):
             if amresponsereportdata[i]['projectUser']["team"]["name"] not in aryTeams:
                 aryTeams.append(
@@ -2684,19 +2690,24 @@ class AdvisorInsightsView(APIView):
             
             if amresponsereportdata[i]['amQuestion'] == leastSafeQuestionId:
                 leastSafeTeamName = amresponsereportdata[i]['projectUser']["team"]["name"]
-                leastSafeTeamScore = amresponsereportdata[i]["integerValue"] / 10
-                
+                leastSafeTeamTotalScore += amresponsereportdata[i]["integerValue"]
+                leastSafeTeamCnt += 1
+                leastSafeTeamScore = leastSafeTeamTotalScore / 10 / leastSafeTeamCnt
                 leastSafeShGroupName = ""
-                leastSafeShGroupScore = 0
+                leastSafeShGroupTotalScore = 0
                 if (amresponsereportdata[i]['projectUser']['shGroup'] is not None):
                     leastSafeShGroupName = amresponsereportdata[i]['projectUser']['shGroup']['SHGroupName']
-                    leastSafeShGroupScore = amresponsereportdata[i]["integerValue"] / 10
+                    leastSafeShGroupTotalScore += amresponsereportdata[i]["integerValue"]
+                    leastSafeShGroupCnt += 1
+                    leastSafeShGroupScore = leastSafeShGroupTotalScore / 10 / leastSafeShGroupCnt
                 
                 leastSafeOrgName = ""
-                leastSafeOrgScore = 0
+                leastSafeOrgTotalScore = 0
                 if (amresponsereportdata[i]['projectUser']['user']['organization'] is not None):
                     leastSafeOrgName = amresponsereportdata[i]['projectUser']['user']['organization']['name']
-                    leastSafeOrgScore = amresponsereportdata[i]["integerValue"] / 10
+                    leastSafeOrgTotalScore += amresponsereportdata[i]["integerValue"]
+                    leastSafeOrgCnt += 1
+                    leastSafeOrgScore = leastSafeOrgTotalScore / 10 / leastSafeOrgCnt
                 
         for j in range(len(aoresponsereportdata)):
             if aoresponsereportdata[j]['projectUser']["team"]["name"] not in aryTeams:
