@@ -2684,19 +2684,19 @@ class AdvisorInsightsView(APIView):
             
             if amresponsereportdata[i]['amQuestion'] == leastSafeQuestionId:
                 leastSafeTeamName = amresponsereportdata[i]['projectUser']["team"]["name"]
-                leastSafeTeamScore = amresponsereportdata[i]["integerValue"]
+                leastSafeTeamScore = amresponsereportdata[i]["integerValue"] / 10
                 
                 leastSafeShGroupName = ""
                 leastSafeShGroupScore = 0
                 if (amresponsereportdata[i]['projectUser']['shGroup'] is not None):
                     leastSafeShGroupName = amresponsereportdata[i]['projectUser']['shGroup']['SHGroupName']
-                    leastSafeShGroupScore = amresponsereportdata[i]["integerValue"]
+                    leastSafeShGroupScore = amresponsereportdata[i]["integerValue"] / 10
                 
                 leastSafeOrgName = ""
                 leastSafeOrgScore = 0
                 if (amresponsereportdata[i]['projectUser']['user']['organization'] is not None):
                     leastSafeOrgName = amresponsereportdata[i]['projectUser']['user']['organization']['name']
-                    leastSafeOrgScore = amresponsereportdata[i]["integerValue"]
+                    leastSafeOrgScore = amresponsereportdata[i]["integerValue"] / 10
                 
         for j in range(len(aoresponsereportdata)):
             if aoresponsereportdata[j]['projectUser']["team"]["name"] not in aryTeams:
@@ -2937,7 +2937,7 @@ class AdvisorInsightsView(APIView):
             }
         }
 
-        return Response({"respondents": respondents, "summary": summary, "recommendedProjectUsers": recommendedProjectUserSerializer.data, "detailedData": detailedData}, status=status.HTTP_200_OK)
+        return Response({"respondents": respondents, "summary": summary, "recommendedProjectUsers": recommendedProjectUserSerializer.data[:3], "detailedData": detailedData}, status=status.HTTP_200_OK)
 
 # driveranalysis api
 class DriverAnalysisView(APIView):
