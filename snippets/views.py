@@ -2694,14 +2694,25 @@ class AdvisorInsightsView(APIView):
                     aryOrganizations.append(
                         aoresponsereportdata[j]['projectUser']['user']['organization']['name'])
         
-            aryTeamsData[aoresponsereportdata[j]['projectUser']["team"]["name"]] = {}
+            aryTeamsData[aoresponsereportdata[j]['projectUser']["team"]["name"]] = {"totalScore": 0, "cnt": 0}
             if (aoresponsereportdata[j]['projectUser']['shGroup'] is not None):
                 aryShGroupsData[aoresponsereportdata[j]
-                                ['projectUser']['shGroup']['SHGroupName']] = {}
+                                ['projectUser']['shGroup']['SHGroupName']] = {"totalScore": 0, "cnt": 0}
             if (aoresponsereportdata[j]['projectUser']['user']['organization'] is not None):
                 aryOrganizationsData[aoresponsereportdata[j]
-                                     ['projectUser']['user']['organization']['name']] = {}
+                                     ['projectUser']['user']['organization']['name']] = {"totalScore": 0, "cnt": 0}
         # responseData = amresponsereportdata + aoresponsereportdata
+
+        for i in range(len(amresponsereportdata)):
+            aryTeamsData[amresponsereportdata[i]
+                         ['projectUser']["team"]["name"]]["totalScore"] += amresponsereportdata[i]["integerValue"]
+            aryTeamsData[amresponsereportdata[i]
+                         ['projectUser']["team"]["name"]]["cnt"] += 1
+        for j in range(len(aoresponsereportdata)):
+            aryTeamsData[aoresponsereportdata[j]
+                         ['projectUser']["team"]["name"]]["totalScore"] += aoresponsereportdata[j]["integerValue"]
+            aryTeamsData[aoresponsereportdata[j]
+                         ['projectUser']["team"]["name"]]["cnt"] += 1
 
         recommendedProjectUsersQuerySet = ProjectUser.objects.filter(survey=survey)
         recommendedProjectUserSerializer = ProjectUserForReportSerializer(
