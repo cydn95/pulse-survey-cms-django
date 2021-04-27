@@ -694,17 +694,17 @@ class AOResponseTopPositiveNegativeViewSet(viewsets.ModelViewSet):
             res = response.data
 
             wordstring = ''
-            # for i in range(len(res)):
-            #     if res[i]['topicValue'] != "":
-            #         wordstring += ' ' + res[i]['topicValue']
-            #     if res[i]['commentValue'] != "":
-            #         wordstring += ' ' + res[i]['commentValue']
-            #     if res[i]['skipValue'] != "":
-            #         wordstring += ' ' + res[i]['skipValue']
-            #     if res[i]['topicTags'] != "":
-            #         wordstring += ' ' + res[i]['topicTags']
-            #     if res[i]['commentTags'] != "":
-            #         wordstring += ' ' + res[i]['commentTags']
+            for i in range(len(res)):
+                if res[i]['topicValue'] != "":
+                    wordstring += ' ' + res[i]['topicValue']
+                if res[i]['commentValue'] != "":
+                    wordstring += ' ' + res[i]['commentValue']
+                if res[i]['skipValue'] != "":
+                    wordstring += ' ' + res[i]['skipValue']
+                if res[i]['topicTags'] != "":
+                    wordstring += ' ' + res[i]['topicTags']
+                if res[i]['commentTags'] != "":
+                    wordstring += ' ' + res[i]['commentTags']
 
             # wordList = re.findall(r"[\w\']+", wordstring.lower())
             # filteredWordList = [w for w in wordList if w not in stopwords]
@@ -719,7 +719,7 @@ class AOResponseTopPositiveNegativeViewSet(viewsets.ModelViewSet):
             # ret = {'topPositive': response.data[:3], 'topNegative': response.data[-3:]}
             # ret = {'topPositive': aux[:3], 'topNegative': aux[-3:]}
 
-            return Response(res, status=status.HTTP_200_OK)
+            return Response(wordstring, status=status.HTTP_200_OK)
         except Exception as error:
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
 
