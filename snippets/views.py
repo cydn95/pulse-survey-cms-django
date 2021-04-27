@@ -706,10 +706,10 @@ class AOResponseTopPositiveNegativeViewSet(viewsets.ModelViewSet):
                 if res[i]['commentTags'] != "":
                     wordstring += ' ' + res[i]['commentTags']
 
-            # wordList = re.findall(r"[\w\']+", wordstring.lower())
-            # filteredWordList = [w for w in wordList if w not in stopwords]
-            # wordfreq = [filteredWordList.count(p) for p in finteredWordList]
-            # dictionary = dict(list(zip(filteredWordList, wordfreq)))
+            wordList = re.findall(r"[\w\']+", wordstring.lower())
+            filteredWordList = [w for w in wordList if w not in stopwords]
+            wordfreq = [filteredWordList.count(p) for p in finteredWordList]
+            dictionary = dict(list(zip(filteredWordList, wordfreq)))
 
             # aux = [(dictionary[key], key) for key in dictionary]
             # aux.sort()
@@ -719,7 +719,7 @@ class AOResponseTopPositiveNegativeViewSet(viewsets.ModelViewSet):
             # ret = {'topPositive': response.data[:3], 'topNegative': response.data[-3:]}
             # ret = {'topPositive': aux[:3], 'topNegative': aux[-3:]}
 
-            return Response(wordstring, status=status.HTTP_200_OK)
+            return Response(dictionary, status=status.HTTP_200_OK)
         except Exception as error:
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
 
