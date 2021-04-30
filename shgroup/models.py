@@ -137,7 +137,7 @@ class ProjectUser(models.Model):
                 email.attach(image_connect)
                 image_connect.add_header('Content-ID', f"<{image_name_connect}>")
 
-            email.send()
+            # email.send()
 
 # class ProjectUserForm(ModelForm):
 #     userPermission = forms.ModelMultipleChoiceField(queryset=Permission.objects.all(), required=False)
