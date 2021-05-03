@@ -1,16 +1,28 @@
 import os
 import re
+import boto3
+import json
+
+from django.http import HttpResponse
+from django.middleware import csrf
+from django.core.mail import send_mail, EmailMultiAlternatives
+from django.template.loader import get_template, render_to_string
+from django.conf import settings
+
 from pathlib import Path
 from email.mime.image import MIMEImage
 
 from snippets.serializers import AMResponseForDriverAnalysisSerializer, AOResponseForDriverAnalysisSerializer, AOResponseTopPositiveNegativeSerializer, KeyThemeUpDownVoteSerializer, AMResponseAcknowledgementSerializer, AOResponseForMatrixSerializer, AOResponseAcknowledgementSerializer, AMResponseForReportSerializer, AOResponseForReportSerializer, ProjectUserForReportSerializer, AMQuestionSubDriverSerializer, AOQuestionSubDriverSerializer, DriverSubDriverSerializer, ProjectSerializer, ToolTipGuideSerializer, SurveySerializer, NikelMobilePageSerializer, ConfigPageSerializer, UserAvatarSerializer, SHMappingSerializer, ProjectVideoUploadSerializer, AMQuestionSerializer, AOQuestionSerializer, StakeHolderSerializer, SHCategorySerializer, MyMapLayoutStoreSerializer, ProjectMapLayoutStoreSerializer, UserBySurveySerializer, SurveyByUserSerializer, SkipOptionSerializer, DriverSerializer, AOQuestionSerializer, OrganizationSerializer, OptionSerializer, ProjectUserSerializer, SHGroupSerializer, UserSerializer, PageSettingSerializer, PageSerializer, AMResponseSerializer, AMResponseTopicSerializer, AOResponseSerializer, AOResponseTopicSerializer, AOPageSerializer, TeamSerializer
-from rest_framework import generics, permissions
-from django.contrib.auth.models import User
+
+from rest_framework import generics, permissions, renderers, viewsets, status, filters
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
-from rest_framework import renderers
-from rest_framework import viewsets
+from rest_framework.views import APIView
+from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.authtoken.models import Token
+
+from django.contrib.auth.models import User
 from page_setting.models import PageSetting
 from cms.models import Page
 from aboutme.models import AMResponseAcknowledgement, AMQuestion, AMResponse, AMResponseTopic, AMQuestionSHGroup
@@ -18,28 +30,14 @@ from aboutothers.models import AOResponseAcknowledgement, AOResponse, AOResponse
 from team.models import Team
 from shgroup.models import KeyThemeUpDownVote, SHGroup, ProjectUser, MyMapLayout, ProjectMapLayout, SHCategory, SHMapping
 from option.models import Option, SkipOption
-from rest_framework import status
 from organization.models import Organization, UserAvatar, UserTeam, UserGuideMode
 from aboutothers.models import AOQuestion
 from survey.models import ToolTipGuide, Survey, Driver, Project, ProjectVideoUpload, ConfigPage, NikelMobilePage
-from rest_framework.views import APIView
 from django.forms.models import model_to_dict
 from django.db.models import Q, Count, Avg
 
-from rest_framework.authtoken.views import ObtainAuthToken
-from rest_framework.authtoken.models import Token
-from rest_framework import filters
-from django.http import HttpResponse
-from django.middleware import csrf
-
 from drf_renderer_xlsx.mixins import XLSXFileMixin
 from drf_renderer_xlsx.renderers import XLSXRenderer
-
-from django.core.mail import send_mail, EmailMultiAlternatives
-from django.template.loader import get_template, render_to_string
-from django.conf import settings
-import boto3
-import json
 
 #initialize comprehend module
 comprehend = boto3.client(service_name='comprehend', region_name='us-east-2')
