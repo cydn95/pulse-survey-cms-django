@@ -56,7 +56,6 @@ class UserGuideModeSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class UserSerializer(serializers.ModelSerializer):
-    #snippets = serializers.HyperlinkedRelatedField(many=True, view_name='snippet-detail', read_only=True)
     organization = OrganizationSerializer()
     avatar = UserAvatarSerializer()
     userteam = UserTeamSerializer()
@@ -65,42 +64,9 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        # fields = ['url', 'id', 'username', 'last_login', 'first_name', 'last_name', 'email', 'is_superuser', 'is_staff', 'is_active', 'snippets', 'organization', 'avatar', 'userteam', 'usertitle', 'guidemode']
         fields = ['id', 'username', 'last_login', 'first_name', 'last_name', 'email', 'is_superuser',
                   'is_staff', 'is_active', 'snippets', 'organization', 'avatar', 'userteam', 'usertitle', 'guidemode']
         
-    # def create(self, validated_data):
-    #     organizations = Organization.objects.create(**(validated_data.pop('organization')))
-    #     avatars = UserAvatar.objects.create(**(validated_data.pop('avatar')))
-    #     userteams = UserTeam.objects.create(**(validated_data.pop('userteam')))
-    #     usertitles = UserTitle.objects.create(**(validated_data.pop('usertitle')))
-    #     guidemodes = UserGuideMode.objects.create(**(validated_data.pop('guidemode')))
-
-    #     user = User.objects.create(**validated_data, organization=organizations, avatar=avatars, userteam=userteams, usertitle=usertitles, guidemode=guidemodes)
-
-    #     return user
-
-
-    # def update(self, instance, validated_data):
-        # organization, _ = Organization.objects.update_or_create(id=instance.organization.id, defaults=validated_data.pop('organization'))
-        # avatar, _ = UserAvatar.objects.update_or_create(id=instance.avatar.id, defaults=validated_data.pop('avatar'))
-        # userteam, _ = UserTeam.objects.update_or_create(id=instance.userteam.id, defaults=validated_data.pop('userteam'))
-        # usertitle, _ = UserTitle.objects.update_or_create(id=instance.usertitle.id, defaults=validated_data.pop('usertitle'))
-        # guidemode, _ = UserGuideMode.objects.update_or_create(id=instance.guidemode.id, defaults=validated_data.pop('guidemode'))
-
-        # new_instance, _ = User.objects.update_or_create(id=instance.id, defaults=validated_data)
-        
-        # return new_instance
-
-
-# class SnippetSerializer(serializers.HyperlinkedModelSerializer):
-#     owner = serializers.ReadOnlyField(source='owner.username')
-#     highlight = serializers.HyperlinkedIdentityField(view_name='snippet-highlight', format='html')
-
-#     class Meta:
-#         model = Snippet
-#         fields = ['url', 'id', 'highlight', 'owner', 'title', 'code', 'linenos', 'language', 'style']
-
 class AMResponseSerializer(serializers.ModelSerializer):
     class Meta:
         model = AMResponse
@@ -156,7 +122,6 @@ class AMQuestionSerializer(serializers.ModelSerializer):
     survey = SurveySerializer()
     class Meta:
         model = AMQuestion
-        # fields = '__all__'
         fields = ['id', 'subdriver', 'questionText', 'questionSequence', 
         'sliderTextLeft', 'sliderTextRight', 'skipOptionYN',  
         'topicPrompt', 'commentPrompt', 'survey', 'driver', 'controlType', 
@@ -247,13 +212,10 @@ class SurveySerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class SurveyByUserSerializer(serializers.ModelSerializer):
-    # project = ProjectSerializer()
     survey = SurveySerializer()
 
     class Meta:
         model = ProjectUser
-        # 2020-05-27
-        # fields = ['id', 'user', 'project', 'shGroup']
         fields = ['id', 'user', 'survey', 'shGroup']
 
 class SHCategorySerializer(serializers.ModelSerializer):
@@ -262,20 +224,15 @@ class SHCategorySerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class UserBySurveySerializer(serializers.ModelSerializer):
-    # project = ProjectSerializer()
     survey = SurveySerializer()
     user = UserSerializer()
     team = TeamSerializer()
     shGroup = SHGroupSerializer()
     class Meta:
         model = ProjectUser
-        # 2020-05-27
-        # fields = ['id', 'project', 'projectUserTitle', 'user', 'team', 'shGroup']
         fields = ['id', 'survey', 'projectUserTitle', 'user', 'team', 'shGroup', 'sendInvite']
 
 class ProjectUserSerializer(serializers.ModelSerializer):
-    #project = ProjectSerializer()
-
     class Meta:
         model = ProjectUser
         fields = '__all__'
@@ -306,7 +263,7 @@ class StakeHolderSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user_data = validated_data.pop('user')
         user = StakeHolderUserSerializer.create(StakeHolderUserSerializer(), validated_data=user_data)
-        #Token.objects.create(user=user)
+
         stakeHolder, created = Organization.objects.update_or_create(user=user, name=validated_data.pop('name'))
         
         return stakeHolder
@@ -314,7 +271,6 @@ class StakeHolderSerializer(serializers.ModelSerializer):
 class SHMappingSerializer(serializers.ModelSerializer):
     class Meta:
         model = SHMapping
-        # fields = '__all__'
         fields = ['shCategory', 'projectUser', 'subProjectUser', 'relationshipStatus']
 
 class NikelMobilePageSerializer(serializers.ModelSerializer):
@@ -335,7 +291,6 @@ class ProjectUserForReportSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProjectUser
-        # fields = '__all__'
         fields = ['id', 'user', 'team', 'shGroup', 'isTeamMember', 'isCGroup1', 'isCGroup2', 'isCGroup3']
 
 class AMResponseForDriverAnalysisSerializer(serializers.ModelSerializer):
@@ -363,8 +318,6 @@ class AMResponseForReportSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = AMResponse
-        # fields = '__all__'
-        # fields = ['id', 'controlType', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags', 'created_at', 'updated_at', 'projectUser', 'subProjectUser', 'survey', 'project', 'amQuestion']
         fields = ['id', 'controlType', 'integerValue', 'topicValue', 'commentValue', 'created_at', 'updated_at',
                   'projectUser', 'subProjectUser', 'survey', 'project', 'amQuestion', 'latestResponse']
 
@@ -396,7 +349,6 @@ class AMResponseForBubbleChartSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = AMResponse
-        # fields = '__all__'
         fields = ['id', 'controlType', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags',
                   'commentTags', 'created_at', 'updated_at', 'projectUser', 'subProjectUser', 'survey', 'project', 'amQuestion', 'latestResponse']
 
@@ -426,16 +378,3 @@ class KeyThemeUpDownVoteSerializer(serializers.ModelSerializer):
     class Meta:
         model = KeyThemeUpDownVote
         fields = '__all__'
-        
-# class AMResponseReportSerializer(serializers.ModelSerializer):
-#     amQuestion = AMQuestionSerializer
-#     print(amQuestion)
-#     class Meta:
-#         model = AMResponse
-#         fields = ['id', 'controlType', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags', 'created_at', 'updated_at', 'projectUser', 'subProjectUser', 'survey', 'project', 'amQuestion']
-
-# class AOResponseReportSerializer(serializers.ModelSerializer):
-#     aoQuestion = AOQuestionSerializer
-#     class Meta:
-#         model = AOResponse
-#         fields = ['id', 'controlType', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags', 'created_at', 'updated_at', 'projectUser', 'subProjectUser', 'survey', 'project', 'aoQuestion']

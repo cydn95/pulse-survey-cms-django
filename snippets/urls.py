@@ -9,7 +9,6 @@ from django.contrib.auth import views as auth_views
 # Create a router and register our viewsets with it.
 router = DefaultRouter()
 
-# router.register(r'acknowledgement', views.AOResponseAcknowledgementViewSet)
 router.register(r'acknowledgement', views.AMResponseAcknowledgementViewSet)
 router.register(r'amresponse', views.AMResponseViewSet)
 router.register(r'amresponsetopic', views.AMResponseTopicViewSet)
@@ -46,7 +45,6 @@ router.register(r'userbysurvey', views.UserBySurveyViewSet)
 router.register(r'useravatar', views.UserAvatarViewSet)
 # WIP
 
-
 # The API URLs are now determined automatically by the router.
 urlpatterns = [
     url('', include(router.urls)),
@@ -74,7 +72,6 @@ urlpatterns += format_suffix_patterns([
     url(r'userprofile', views.UserProfileView.as_view()),
     url(r'userguidemode', views.UserGuideModeView.as_view()),
     url(r'wordcloud', views.WordCloudView.as_view()),
-
     # WIP
     url(r'advisorinsights', views.AdvisorInsightsView.as_view()),
     url(r'driveranalysis', views.DriverAnalysisView.as_view()),
