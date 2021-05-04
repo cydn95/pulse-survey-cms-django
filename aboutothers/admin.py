@@ -25,16 +25,12 @@ class AOQuestionList(ChangeList):
             list_per_page, list_max_show_all, list_editable,
             model_admin)
 
-        # these need to be defined here, and not in MovieAdmin
         self.list_display = ['action_checkbox', 'aoqOrder', 'questionText', 'survey', 'driver', 'subdriver', 'controlType', 'sliderTextLeft', 'sliderTextRight', 'shGroup']
         self.list_display_links = ['questionText']
         self.list_editable = ['shGroup', 'option', 'skipOption']
 
 class AOQuestionAdmin(SortableAdminMixin, admin.ModelAdmin):
-
-    # Search
     search_fields = ['questionText']
-    # Filter
     list_filter = ['driver', 'controlType', 'shGroup']
     model = AOQuestion
     list_display = ['aoqOrder', 'questionText', 'survey', 'driver', 'subdriver', 'controlType', 'sliderTextLeft', 'sliderTextRight', 'longForm', 'shortForm']
@@ -51,11 +47,6 @@ class AOQuestionAdmin(SortableAdminMixin, admin.ModelAdmin):
 
     def drivers_for_survey(self, request):
         if request.GET and 'survey_id' in request.GET:
-            # objs = Driver.objects.filter(survey=request.GET['survey_id'])
-            # print(objs)
-            # ret = []
-            # for o in objs:
-            #     ret.append({'id': o.id, 'name': o.driverName})
             data = serialize('json', Driver.objects.filter(survey=request.GET['survey_id']))
 
             return HttpResponse(data, content_type="text/plain")
@@ -78,61 +69,7 @@ class AOQuestionAdmin(SortableAdminMixin, admin.ModelAdmin):
 
         return form
 
-#class AOResponseAdmin(admin.ModelAdmin):
 class AOResponseAdmin(ImportExportModelAdmin):
-    # old version
-    # list_display = ['aoQuestion', 'user', 'subjectUser', 'project', 'survey', 'integerValue', 'topicValue', 'commentValue', 'skipValue']
-    # fileds = ['user', 'subjectUser', 'survey', 'project', 'aoQuestion', 'controlType', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags']
-    # readonly_fields = ['user', 'subjectUser', 'survey', 'project', 'aoQuestion', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags']
-    
-    # search_fields = ['aoQuestion']
-    # list_filter = ['user', 'subjectUser', 'project', 'survey']
-    # model = AOResponse
-
-    # def has_add_permission(self, request):
-    #     return False
-    
-    # def get_form(self, request, obj=None, **kwargs):
-    #     form = super(AOResponseAdmin, self).get_form(request, obj, **kwargs)
-
-    #     controlType = getattr(obj, 'controlType')
-    #     skipValue = getattr(obj, 'skipValue')
-    #     if controlType == 'TEXT':
-    #         if skipValue != '':
-    #             self.fields = ['user', 'subjectUser', 'survey', 'project', 'aoQuestion', 'skipValue']
-    #         else:
-    #             self.fields = ['user', 'subjectUser', 'survey', 'project', 'aoQuestion', 'topicValue', 'commentValue']
-    #     elif controlType == 'SLIDER':
-    #         if skipValue != '':
-    #             self.fields = ['user', 'subjectUser', 'survey', 'project', 'aoQuestion', 'skipValue']
-    #         else:
-    #             self.fields = ['user', 'subjectUser', 'survey', 'project', 'aoQuestion', 'integerValue', 'commentValue']
-    #     elif controlType == 'TWO_OPTIONS':
-    #         if skipValue != '':
-    #             self.fields = ['user', 'subjectUser', 'survey', 'project', 'aoQuestion', 'skipValue']
-    #         else:
-    #             self.fields = ['user', 'subjectUser', 'survey', 'project', 'aoQuestion', 'topicValue', 'commentValue']
-    #     elif controlType == 'MULTI_OPTIONS':
-    #         if skipValue != '':
-    #             self.fields = ['user', 'subjectUser', 'survey', 'project', 'aoQuestion', 'skipValue']
-    #         else:
-    #             self.fields = ['user', 'subjectUser', 'survey', 'project', 'aoQuestion', 'topicValue', 'commentValue']
-    #     elif controlType == 'MULTI_TOPICS':
-    #         if skipValue != '':
-    #             self.fields = ['user', 'subjectUser', 'survey', 'project', 'aoQuestion', 'skipValue']
-    #         else:
-    #             self.fields = ['user', 'subjectUser', 'survey', 'project', 'aoQuestion', 'topicValue', 'commentValue']
-    #     elif controlType == 'SMART_TEXT':
-    #         if skipValue != '':
-    #             self.fields = ['user', 'subjectUser', 'survey', 'project', 'aoQuestion', 'skipValue']
-    #         else:
-    #             self.fields = ['user', 'subjectUser', 'survey', 'project', 'aoQuestion', 'topicValue', 'commentValue']
-    #     else:
-    #         self.fields = ['user', 'subjectUser', 'survey', 'project', 'aoQuestion', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags']
-
-    #     return form
-
-    # update user, subjectuser to projectUser, subjectProjectUser     2020-05-20
     list_display = ['aoQuestion', 'projectUser', 'subProjectUser', 'shCategory', 'project', 'survey', 'integerValue', 'topicValue', 'commentValue', 'skipValue']
     fileds = ['projectUser', 'subProjectUser', 'shCategory', 'survey', 'project', 'aoQuestion', 'controlType', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags']
     readonly_fields = ['projectUser', 'subProjectUser', 'shCategory', 'survey', 'project', 'aoQuestion', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags']
@@ -186,7 +123,6 @@ class AOResponseAdmin(ImportExportModelAdmin):
 
         return form
 
-# Register your models here.
 admin.site.register(AOQuestion, AOQuestionAdmin)
 admin.site.register(AOQuestionSHGroup)
 admin.site.register(AOQuestionOption)

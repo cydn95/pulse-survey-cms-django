@@ -1,7 +1,6 @@
 from django.contrib import admin
-from .models import SHGroup, SHCategory, SHMapping, ProjectUser, MapType#, ProjectUserForm
+from .models import SHGroup, SHCategory, SHMapping, ProjectUser, MapType
 from jet.admin import CompactInline
-#from gremlin import deleteVertex
 from django.forms import CheckboxSelectMultiple
 from django.contrib import messages
 import json
@@ -11,20 +10,10 @@ from django.http import HttpResponse
 from django.http.response import JsonResponse
 
 class SHGroupAdmin(admin.ModelAdmin):
-    fieldset = [
-        (None, {'fields': ('SHGroupName', 'SHGroupAbbrev', 'survey')})
-    ]
+    fieldset = [(None, {'fields': ('SHGroupName', 'SHGroupAbbrev', 'survey')})]
 
     list_display = ('SHGroupName', 'SHGroupAbbrev', 'survey')
-    # fieldset = [
-    #     (None, {'fields': ('SHGroupName', 'SHGroupAbbrev')})
-    # ]
-
-    # list_display = ('SHGroupName', 'SHGroupAbbrev')
-
-    # Search
     search_fields = ['SHGroupName', 'SHGroupAbbrev']
-    # Filter
     list_filter = ['SHGroupName']
     list_per_page = 10
 
@@ -39,22 +28,12 @@ class SHGroupAdmin(admin.ModelAdmin):
         survey.widget.can_delete_related = False
 
         return form
-    # action = ['delete_model']
-
-    # def delete_model(self, request, obj):
-    #     if obj.id is not None:
-    #         id = 'stakeholder-{0}'.format(obj.id)
-    #         deleteVertex(id)
-    #     obj.delete()
 
 class SHCategoryAdmin(admin.ModelAdmin):
     list_display = ('SHCategoryName', 'survey', 'mapType', 'icon')
     model = SHCategory
-    # action = ['delete_model']
 
-    # Search
     search_fields = ['SHCategoryName']
-    # Filter
     list_filter = ['SHCategoryName', 'survey']
     list_per_page = 10
 
@@ -75,33 +54,20 @@ class SHCategoryAdmin(admin.ModelAdmin):
         return form
 
 class ProjectUserAdmin(admin.ModelAdmin):
-    # 2020-05-27
-    # list_display = ('user', 'projectUserTitle', 'project', 'team', 'shGroup')
     list_display = ('user', 'projectUserTitle', 'survey', 'team', 'shGroup')
     model = ProjectUser
 
-    # Search
-    # 2020-05-27
-    # search_fields = ['user', 'projectUserTitle', 'project', 'team', 'shGroup']
     search_fields = ['user__email', 'projectUserTitle', 'survey__surveyTitle', 'team__name', 'shGroup__SHGroupName']
 
-    # Filter
-    # 2020-05-27
-    # list_filter = ['user', 'project', 'team', 'shGroup']
     list_filter = ['user', 'survey', 'team', 'shGroup']
     list_per_page = 10
 
-    #action = ['delete_model']
-
-    # def get_changelist_form(self, request, **kwargs):
-    #     return ProjectUserForm
     def get_urls(self):
         urls = super().get_urls()
         my_urls = [
             url(r'shgroups_for_survey', self.shgroups_for_survey),
         ]
 
-        # print(my_urls + urls)
         return my_urls + urls
     
     def shgroups_for_survey(self, request):
@@ -122,15 +88,9 @@ class ProjectUserAdmin(admin.ModelAdmin):
         form = super().get_form(request, obj, **kwargs)
         team = form.base_fields['team']
         user = form.base_fields['user']
-        # 2020-05-27
-        # project = form.base_fields['project']
         survey = form.base_fields['survey']
         shGroup = form.base_fields['shGroup']
 
-        # 2020-05-27
-        # project.widget.can_add_related = False
-        # project.widget.can_change_related = False
-        # project.widget.can_delete_related = False
         survey.widget.can_add_related = False
         survey.widget.can_change_related = False
         survey.widget.can_delete_related = False
@@ -157,9 +117,7 @@ class ProjectUserAdmin(admin.ModelAdmin):
 class SHMappingAdmin(admin.ModelAdmin):
     list_display = ('shCategory', 'projectUser', 'subProjectUser', 'relationshipStatus')
 
-    # Search
     search_fields = ['shCategory__SHCategoryName', 'projectUser__projectUserTitle', 'subProjectUser__projectUserTitle']
-    # Filter
     list_filter = ['shCategory', 'projectUser', 'subProjectUser']
     list_per_page = 10
     

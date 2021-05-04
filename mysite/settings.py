@@ -329,17 +329,9 @@ JET_SIDE_MENU_ITEMS = [ # A list of application or custom item dicts
         {'name':'survey.nikelmobilepage', 'label': 'Nikel Tower(for mobile)'},
         {'name':'survey.tooltipguide', 'label': 'Tooltip'},
     ]},
-    # {'label': 'Configuration', 'app_label': 'survey.client', 'url': '/admin/survey/client', 'items': []}
     {'label': 'Configuration', 'items': [
         {'name':'survey.survey', 'label': 'Configurations'}
     ]}
-    # {'label': 'Configuration', 'items': [
-    #     {'name':'shgroup.projectuser', 'label': 'Project Users'},
-    #     {'name':'survey.driver', 'label': 'Drivers'},
-    #     {'name':'aboutme.amquestion', 'label': 'AM Questions'},
-    #     {'name':'aboutothers.aoquestion', 'label': 'AO Questions'},
-    #     {''}
-    # ]}
 ]
 
 APPEND_SLASH = True
@@ -416,7 +408,6 @@ TINYMCE_DEFAULT_CONFIG = {
     'image_caption': True,
     'image_advtab': True,
     'custom_undo_redo_levels': 10,
-    #'file_browser_callback': "myFileBrowser"
 }
 
 DATA_UPLOAD_MAX_MEMORY_SIZE = 100000000

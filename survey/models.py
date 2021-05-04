@@ -1,5 +1,4 @@
 from django.db import models
-#from gremlin import addVertex
 from tinymce.models import HTMLField
 from rgbfield.fields import RGBColorField
 from colorfield.fields import ColorField
@@ -36,7 +35,6 @@ class Survey(models.Model):
         super(Survey, self).save(*args, **kwargs)
 
 class ConfigPage(models.Model):
-    # project = models.ForeignKey(Project, on_delete=models.CASCADE)
     survey = models.ForeignKey(Survey, on_delete=models.CASCADE)
     tabName = models.CharField(max_length=40)
     pageName = models.CharField(max_length=200)
@@ -46,7 +44,6 @@ class ConfigPage(models.Model):
         return self.pageName
 
 class NikelMobilePage(models.Model):
-    # project = models.ForeignKey(Project, on_delete=models.CASCADE)
     survey = models.ForeignKey(Survey, on_delete=models.CASCADE)
     pageName = models.CharField(max_length=50)
     pageText = models.CharField(max_length=500, blank=True)

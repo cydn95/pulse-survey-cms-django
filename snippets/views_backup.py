@@ -1115,13 +1115,13 @@ class UserBySurveyViewSet(viewsets.ModelViewSet):
         user = self.request.query_params.get('user', None)
         
         if (survey is not None) & (user is not None):
-            # queryset = queryset.filter(survey__id=survey, user__id=user).exclude(user__id=self.request.user.id)
+            
             queryset = queryset.filter(survey__id=survey, user__id=user)
         elif survey is not None:
-            # queryset = queryset.filter(survey__id=survey).exclude(user__id=self.request.user.id)
+            
             queryset = queryset.filter(survey__id=survey)   
         elif user is not None:
-            # queryset = queryset.filter(user__id=user).exclude(user__id=self.request.user.id)
+            
             queryset = queryset.filter(user__id=user)
 
         return queryset
@@ -1800,13 +1800,12 @@ class AMResponseFeedbackSummaryForEngagementViewset(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
 
         response = super().list(request, *args, **kwargs)
-        # print(response.data)
+        
         for i in range(len(response.data)):
             amquestion_queryset = AMQuestion.objects.filter(id=response.data[i]['amQuestion'])
             am_serializer = AMQuestionSerializer(amquestion_queryset, many=True)
             response.data[i]['amQuestionData'] = am_serializer.data
-            # response.data[i]['amQuestionData'] = AMQuestion.objects.filter(id=response.data[i]['amQuestion']).values()[0]
-            # response.data[i]['shGroups'] = AMQuestionSHGroup.objects.filter(amQuestion=response.data[i]['amQuestion']).values_list('shGroup')
+            
             response.data[i]['report'] = {
                 "Sentiment": "ERROR",
                 "MixedScore": 0,
@@ -1849,12 +1848,9 @@ class AMResponseFeedbackSummaryForInterestViewset(viewsets.ModelViewSet):
         queryset = AMResponse.objects.filter(amQuestion__driver__driverName="Interest")
         
         survey = self.request.query_params.get('survey', None)
-        # startDate = self.request.query_params.get('stdt', None)
-        # endDate = self.request.query_params.get('eddt', None)
+        
         if survey is not None:
-            # queryset = queryset.filter(
-            #     survey__id=survey, amQuestion__driver__driverName="Interest", updated_at__range=[startDate, endDate]
-            # )
+
             queryset = queryset.filter(
                 survey__id=survey, amQuestion__driver__driverName="Interest"
             )
@@ -1921,15 +1917,7 @@ class UserBySurveyv2ViewSet(viewsets.ModelViewSet):
 
             response.data[i]['am_total'] = AMQuestion.objects.filter(filters).filter(survey__id=survey).count()
             response.data[i]['am_response'] = []
-            # 2020-05-20
-            # for item1 in AMResponse.objects.filter(user_id=response.data[i]['user']['id'], project_id=response.data[i]['project']['id']).values('amQuestion'):
-            #     response.data[i]['am_response'].append(item1['amQuestion']) 
-            # response.data[i]['am_answered'] = AMResponse.objects.filter(user_id=response.data[i]['user']['id'], project_id=response.data[i]['project']['id']).count()
-            # response.data[i]['ao_total'] = AOQuestion.objects.count()
-            # response.data[i]['ao_response'] = []
-            # for item2 in AOResponse.objects.filter(subjectUser_id=response.data[i]['user']['id'], project_id=response.data[i]['project']['id']).values('aoQuestion'):
-            #     response.data[i]['ao_response'].append(item2['aoQuestion']) 
-            # response.data[i]['ao_answered'] = AOResponse.objects.filter(subjectUser_id=response.data[i]['user']['id'], project_id=response.data[i]['project']['id']).count()
+            
             for item1 in AMResponse.objects.filter(projectUser_id=response.data[i]['id']).values('amQuestion'):
                 response.data[i]['am_response'].append(item1['amQuestion']) 
             response.data[i]['am_answered'] = AMResponse.objects.filter(projectUser_id=response.data[i]['id']).count()
@@ -1939,9 +1927,9 @@ class UserBySurveyv2ViewSet(viewsets.ModelViewSet):
                 response.data[i]['ao_response'].append(item2['aoQuestion']) 
             response.data[i]['ao_answered'] = AOResponse.objects.filter(subProjectUser_id=response.data[i]['id']).count()
 
-            # 2020-05-20
+            
             response.data[i]['shCategory'] = []
-            # for item3 in SHMapping.objects.filter(projectUser_id=response.data[i]['id']).values('shCategory'):
+            
             for item3 in SHMapping.objects.filter(projectUser_id=myProjectUser_id, subProjectUser_id=response.data[i]['id']).values('shCategory'):
                 response.data[i]['shCategory'].append(item3['shCategory'])
 
@@ -1950,33 +1938,22 @@ class UserBySurveyv2ViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = ProjectUser.objects.all()
 
-        # 2020-05-27
-        # project = self.request.query_params.get('project', None)
-        # user = self.request.query_params.get('user', None)
         
-        # if (project is not None ) & (user is not None):
-        #     queryset = queryset.filter(project__id=project, user__id=user)
-        # elif project is not None:
-        #     queryset = queryset.filter(project__id=project)    
-        # elif user is not None:
-        #     queryset = queryset.filter(user__id=user)
         survey = self.request.query_params.get('survey', None)
         user = self.request.query_params.get('user', None)
         
         if (survey is not None) & (user is not None):
-            # queryset = queryset.filter(survey__id=survey, user__id=user).exclude(user__id=self.request.user.id)
+            
             queryset = queryset.filter(survey__id=survey, user__id=user)
         elif survey is not None:
-            # queryset = queryset.filter(survey__id=survey).exclude(user__id=self.request.user.id)
+            
             queryset = queryset.filter(survey__id=survey)   
         elif user is not None:
-            # queryset = queryset.filter(user__id=user).exclude(user__id=self.request.user.id)
+            
             queryset = queryset.filter(user__id=user)
 
         return queryset
         
-
-# temporary test
 class ProjectUserv2ViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
     queryset = ProjectUser.objects.all()
@@ -2377,7 +2354,6 @@ class WordCloudView(APIView):
             if res[i]['commentTags'] != "":
                 wordstring += ' ' + res[i]['commentTags']
 
-        # wordList = wordstring.split()
         wordList = re.findall(r"[\w\']+", wordstring.lower())
         filteredWordList = [w for w in wordList if w not in stopwords]
         wordfreq = [filteredWordList.count(p) for p in filteredWordList]
@@ -2403,7 +2379,6 @@ class BubbleChartView(APIView):
         survey = self.request.query_params.get('survey', None)
         projectUser = self.request.query_params.get('projectUser', None)
     
-    ### t
     def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
         survey = self.request.query_params.get('survey', None)
@@ -2438,7 +2413,6 @@ class BubbleChartView(APIView):
                     response.data[i]['subdriver'].append(item['subdriver'])
 
         return response
-    ### t
     
 class SubDriverViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]

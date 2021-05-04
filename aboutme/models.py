@@ -10,7 +10,6 @@ from django.forms.widgets import CheckboxSelectMultiple
 from django import forms
 from django.utils import timezone
 
-# Create your models here.
 class AMQuestion(models.Model):
     survey = models.ForeignKey(Survey, on_delete=models.CASCADE)
     driver = models.ForeignKey(Driver, on_delete=models.SET_NULL, null=True, blank=True)
@@ -21,7 +20,6 @@ class AMQuestion(models.Model):
     sliderTextLeft = models.CharField(max_length=50, blank=True)
     sliderTextRight = models.CharField(max_length=50, blank=True)
     skipOptionYN = models.BooleanField(default=True)
-    #skipResponses = models.CharField(max_length=1000, blank=True)
     topicPrompt = models.CharField(max_length=255, blank=True)
     commentPrompt = models.CharField(max_length=255, blank=True)
     shGroup = models.ManyToManyField(SHGroup, blank=True)
@@ -39,7 +37,6 @@ class AMQuestion(models.Model):
         return self.questionText
 
 class AMQuestionForm(ModelForm):
-    # here we only need to define the field we want to be editable
     shGroup = forms.ModelMultipleChoiceField(queryset=SHGroup.objects.all(), required=False)
     option = forms.ModelMultipleChoiceField(queryset=Option.objects.all(), required=False)
     skipOption = forms.ModelMultipleChoiceField(queryset=SkipOption.objects.all(), required=False)
@@ -57,9 +54,6 @@ class AMQuestionSkipOption(models.Model):
     amQuestion = models.ForeignKey(AMQuestion, on_delete=models.CASCADE)
     
 class AMResponse(models.Model):
-    # update user, subjectuser to projectUser, subjectProjectUser     2020-05-20
-    # user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="amUser")
-    # subjectUser = models.ForeignKey(User, on_delete=models.CASCADE, related_name="amSubjectUser")
     projectUser = models.ForeignKey(ProjectUser, on_delete=models.CASCADE, related_name="amProjectUser")
     subProjectUser = models.ForeignKey(ProjectUser, on_delete=models.CASCADE, related_name="amSubProjectUser")
     survey = models.ForeignKey(Survey, on_delete=models.CASCADE)
@@ -72,7 +66,6 @@ class AMResponse(models.Model):
     skipValue = models.TextField(blank=True, verbose_name='Answer(Skip)')
     topicTags = models.TextField(blank=True)
     commentTags = models.TextField(blank=True)
-    # new field for history 2021-04-01
     latestResponse = models.BooleanField(default=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
@@ -93,25 +86,6 @@ class AMResponseAcknowledgement(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-# # working
-# # 1: like
-# # 2: dislike
-# # 3: Thanks for sharing
-# # 4: Great idea
-# # 5: Working on it
-# # 6: Would love to talk in person
-# # 7: I agree
-# # 8: 
-# class AMResponseAcknowledgement(models.Model):
-#     amResponse = models.ForeignKey(AMResponse, on_delete=models.CASCADE)
-#     # survey = models.ForeignKey(Survey, on_delete=models.CASCADE)
-#     # project = models.ForeignKey(Project, on_delete=models.CASCADE)
-#     actionText = models.CharField(max_length=10)
-#     actionType = models.PositiveIntegerField(default=0, blank=False, null=False)
-    
-#     created_at = models.DateTimeField(auto_now_add=True)
-#     updated_at = models.DateTimeField(auto_now=True)
-
 class AMResponseSentiment(models.Model):
     amResponse = models.ForeignKey(AMResponse, on_delete=models.CASCADE)
     sentiment = models.CharField(max_length=30, blank=True)
@@ -124,7 +98,6 @@ class AMResponseSentiment(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
 class AMResponseTopic(models.Model):
-    # amResponse = models.ForeignKey(AMResponse, on_delete=models.CASCADE)
     amQuestion = models.ForeignKey(AMQuestion, on_delete=models.CASCADE)
     responseUser = models.ForeignKey(ProjectUser, on_delete=models.CASCADE)
     topicName = models.CharField(max_length=255, blank=True)

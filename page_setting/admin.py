@@ -29,7 +29,7 @@ class PageSettingAdmin(admin.ModelAdmin):
     readonly_fields = []
     
     def get_readonly_fields(self, request, obj=None):
-        if obj: # editing an existing object
+        if obj:
             return self.readonly_fields + ['page']
         return self.readonly_fields
 

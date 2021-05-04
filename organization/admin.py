@@ -51,7 +51,6 @@ class UserGuideModeInline(admin.StackedInline):
 class EmailRequiredMixin(object):
     def __init__(self, *args, **kwargs):
         super(EmailRequiredMixin, self).__init__(*args, **kwargs)
-        # make user email field required
 
         self.fields['email'].required = True
 
@@ -76,7 +75,6 @@ class UserAdmin(BaseUserAdmin):
     BaseUserAdmin.exclude = ('username',)
     BaseUserAdmin.list_display = ('email', 'first_name', 'last_name', 'is_active', 'date_joined', 'is_staff', 'is_superuser')
     BaseUserAdmin.fieldsets = (
-        # (None, {'fields': ('username', 'email', 'password')}),
         (None, {'fields': ('email', 'password')}),
         (_('Personal info'), {'fields': ('first_name', 'last_name')}),
         (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser',
@@ -88,16 +86,9 @@ class UserAdmin(BaseUserAdmin):
             'description': (
                 "Enter the new user's email address and click save."
             ),
-            # 'fields': ('email', 'username', 'password1', 'password2'),
             'fields': ('email', 'password1', 'password2'),
         }),
-        # ('Password', {
-        #     'description': "Optionally, you may set the user's password here.",
-        #     'fields': ('password1', 'password2'),
-        #     'classes': ('collapse', 'collapse-closed'),
-        # }),
     )
-    # inlines = (OrganizationInline, UserAvatarInline, UserTitleInline, UserTeamInline, UserGuideModeInline)
     inlines = (OrganizationInline, UserAvatarInline, UserTitleInline, UserTeamInline)
 
 # Register your models here.

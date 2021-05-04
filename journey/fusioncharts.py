@@ -30,7 +30,7 @@ class FusionCharts:
         self.constructorOptions['height'] = height
         self.constructorOptions['renderAt'] = renderAt
         self.constructorOptions['dataFormat'] = dataFormat
-        #dataSource = unicode(dataSource, errors='replace')
+
         if isinstance(dataSource, TimeSeries):
             self.timeSeriesObject = dataSource
             self.constructorOptions['dataSource'] = "__TS__"

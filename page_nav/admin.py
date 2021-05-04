@@ -4,12 +4,9 @@ from cms.models import Title, Page
 from django.http import HttpResponse, JsonResponse
 import json
 
-# admin.site.site_header = 'ProjectAI Dashboard'
-# admin.site.site_title = 'ProjectAI Administration'
 class PageNavAdmin(admin.ModelAdmin):
             
     def changelist_view(self, request, extra_context=None):
-        # response
         published_cms_pages = PageNav.objects.filter(page__publisher_is_draft=False).order_by('order')
         unpublished_cms_pages = Title.objects.filter(publisher_is_draft=False)
 

@@ -1,27 +1,14 @@
 from django.contrib import admin
 from .models import Team
-#from gremlin import deleteVertex
 
 class TeamAdmin(admin.ModelAdmin):
 
-    # Search
     search_fields = ['project__projectName', 'name']
-    # Filter
     list_filter = ['project', 'name']
-    # list
     list_display = ['project', 'name']
-    # Edit
-    # list_editable = ['project']
 
     model = Team
     list_per_page = 10
-    # actions = ['delete_model']
-
-    # def delete_model(self, request, obj):
-    #     if obj.id is not None:
-    #         id = 'team-{0}'.format(obj.id)
-    #         deleteVertex(id)
-    #     obj.delete()
 
     def get_form(self, request, obj=None, **kwargs):
         form = super().get_form(request, obj, ** kwargs)
@@ -33,5 +20,4 @@ class TeamAdmin(admin.ModelAdmin):
 
         return form
 
-# Register your models here.
 admin.site.register(Team, TeamAdmin)

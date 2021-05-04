@@ -3,7 +3,6 @@ from shgroup.models import ProjectUser, SHGroup, SHCategory
 from aboutme.models import AMQuestion, AMQuestionSHGroup, AMQuestionOption, AMQuestionSkipOption
 from aboutothers.models import AOQuestion, AOQuestionSHGroup, AOQuestionOption, AOQuestionSkipOption
 from .models import Survey, Client, Project, Driver, ConfigPage, NikelMobilePage, ToolTipGuide
-#from gremlin import deleteVertex
 from adminsortable2.admin import SortableAdminMixin, SortableInlineAdminMixin
 from django.utils.html import format_html
 from django.core.urlresolvers import reverse
@@ -26,18 +25,12 @@ from django.db.models import Q
 
 class ProjectAdmin(admin.ModelAdmin):
 
-    # Search
     search_fields = ['client__clientName', 'projectName']
-    # Filter
     list_filter = ['client', 'projectName']
-    # list
     list_display = ['client', 'projectName']
-    # Edit
-    #list_editable = ['projectName']
     list_per_page = 10
 
     model = Project
-    # actions = ['delete_model']
         
 class DriverAdmin(SortableAdminMixin, admin.ModelAdmin):
     search_fields = ['driverName']
@@ -58,8 +51,6 @@ class ProjectUserInline(InlineActionsMixin, admin.TabularInline):
     list_per_page = 10
     extra = 0
 
-    # readonly_fields = ['send_invite']
-    #fields = ('user', 'projectUserTitle', 'team', 'shGroup', 'invite_button')
     inline_actions = ['send_invite']
 
     def send_invite(self, request, obj, parent_obj=None):
@@ -188,12 +179,6 @@ class SHCategoryInline(admin.TabularInline):
 
         return formfield
 
-# class ProjectTeamInline(admin.TabularInline):
-#     model = Team
-#     extra = 0
-#     list_per_page = 10
-
-
 class ConfigPageInline(admin.StackedInline):
     model = ConfigPage
     extra = 0
@@ -205,8 +190,6 @@ class AMDriverForm(forms.Form):
 class AODriverForm(forms.Form):
     ao_driver = forms.ModelChoiceField(queryset=None)
 
-# class SurveyAdmin(InlineActionsModelAdminMixin, admin.ModelAdmin):
-# class SurveyAdmin(AdminBooleanMixin, admin.ModelAdmin):
 class SurveyAdmin(admin.ModelAdmin):
     list_display = ['surveyTitle', 'get_client', 'project', 'survey_status']
     search_fields = ['surveyTitle', 'project__projectName']
@@ -215,7 +198,6 @@ class SurveyAdmin(admin.ModelAdmin):
     list_per_page = 10
     
     def survey_status(self, obj):
-        # return '<div><label class="switch"><input type="checkbox"><span class="slider round"></span></label></div>'
         if obj.isActive:
             return '<a onclick="activeSurvey(%s, 0)"><label class="switch"><input type="checkbox" name="project_%s" checked><span class="slider round"></span></label></a>' % (obj.id, obj.project_id)
         else:
@@ -381,7 +363,7 @@ class SurveyAdmin(admin.ModelAdmin):
                 
                 if current_survey.id != std_survey.id:
                     AMQuestion.objects.filter(survey_id=current_survey.id).delete()
-                    # AOQuestion.objects.filter(survey_id=current_survey.id).delete()
+                    
                     if reset == 1:
                         Driver.objects.filter(survey_id=current_survey.id, isStandard=False).delete()
                     
@@ -419,9 +401,6 @@ class SurveyAdmin(admin.ModelAdmin):
                                             skipOptionYN=std_amq[j].skipOptionYN,
                                             topicPrompt=std_amq[j].topicPrompt,
                                             commentPrompt=std_amq[j].commentPrompt,
-                                            #shGroup=std_amq[j].shGroup,
-                                            #option=std_amq[j].option,
-                                            #skipOption=std_amq[j].skipOption,
                                             amqOrder=std_amq[j].amqOrder,
                                             shortForm=std_amq[j].shortForm,
                                             longForm=std_amq[j].longForm,
@@ -462,11 +441,8 @@ class SurveyAdmin(admin.ModelAdmin):
                 
                 if current_survey.id != std_survey.id:
                     AMQuestion.objects.filter(survey_id=current_survey.id).delete()
-                    # AOQuestion.objects.filter(survey_id=current_survey.id).delete()
                     if reset == 1:
                         Driver.objects.filter(survey_id=current_survey.id, isStandard=False).delete()
-                    
-                    
 
                     std_driver = Driver.objects.filter(survey_id=std_survey.id).values()
                     if std_driver.count() == 0:
@@ -502,9 +478,6 @@ class SurveyAdmin(admin.ModelAdmin):
                                             skipOptionYN=std_amq[j].skipOptionYN,
                                             topicPrompt=std_amq[j].topicPrompt,
                                             commentPrompt=std_amq[j].commentPrompt,
-                                            #shGroup=std_amq[j].shGroup,
-                                            #option=std_amq[j].option,
-                                            #skipOption=std_amq[j].skipOption,
                                             amqOrder=std_amq[j].amqOrder,
                                             shortForm=False,
                                             longForm=True,
@@ -545,7 +518,6 @@ class SurveyAdmin(admin.ModelAdmin):
                 
                 if current_survey.id != std_survey.id:
                     AMQuestion.objects.filter(survey_id=current_survey.id).delete()
-                    # AOQuestion.objects.filter(survey_id=current_survey.id).delete()
                     if reset == 1:
                         Driver.objects.filter(survey_id=current_survey.id, isStandard=False).delete()
                     
@@ -583,9 +555,6 @@ class SurveyAdmin(admin.ModelAdmin):
                                             skipOptionYN=std_amq[j].skipOptionYN,
                                             topicPrompt=std_amq[j].topicPrompt,
                                             commentPrompt=std_amq[j].commentPrompt,
-                                            #shGroup=std_amq[j].shGroup,
-                                            #option=std_amq[j].option,
-                                            #skipOption=std_amq[j].skipOption,
                                             amqOrder=std_amq[j].amqOrder,
                                             shortForm=True,
                                             longForm=False,
@@ -625,7 +594,6 @@ class SurveyAdmin(admin.ModelAdmin):
                 std_survey = Survey.objects.get(isStandard=True)
 
                 if current_survey.id != std_survey.id:
-                    # AMQuestion.objects.filter(survey_id=current_survey.id).delete()
                     AOQuestion.objects.filter(survey_id=current_survey.id).delete()
                     if reset == 1:
                         Driver.objects.filter(survey_id=current_survey.id, isStandard=False).delete()
@@ -702,7 +670,6 @@ class SurveyAdmin(admin.ModelAdmin):
                 std_survey = Survey.objects.get(isStandard=True)
 
                 if current_survey.id != std_survey.id:
-                    # AMQuestion.objects.filter(survey_id=current_survey.id).delete()
                     AOQuestion.objects.filter(survey_id=current_survey.id).delete()
                     if reset == 1:
                         Driver.objects.filter(survey_id=current_survey.id, isStandard=False).delete()
@@ -779,7 +746,6 @@ class SurveyAdmin(admin.ModelAdmin):
                 std_survey = Survey.objects.get(isStandard=True)
 
                 if current_survey.id != std_survey.id:
-                    # AMQuestion.objects.filter(survey_id=current_survey.id).delete()
                     AOQuestion.objects.filter(survey_id=current_survey.id).delete()
                     if reset == 1:
                         Driver.objects.filter(survey_id=current_survey.id, isStandard=False).delete()
@@ -854,7 +820,6 @@ class SurveyAdmin(admin.ModelAdmin):
     
 
 class ClientAdmin(admin.ModelAdmin):
-    #list_display = ['clientName', 'client_actions']
     list_display = ['clientName']
     model = Client
     list_per_page = 10
