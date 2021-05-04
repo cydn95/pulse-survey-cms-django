@@ -2631,6 +2631,20 @@ class AdvisorInsightsView(APIView):
         survey = self.request.query_params.get('survey', None)
         projectUser = self.request.query_params.get('projectuser', None)
 
+        # prefix check
+        # the logged in user has to response fully
+        # amresponsereportqueryset = AMResponse.objects.all().filter(survey__id=survey, subProjectUser__id=projectUser).order_by('integerValue')
+        # amresponsereportserializer = AMResponseForDriverAnalysisSerializer(amresponsereportqueryset, many=True)
+        # amresponsereportdata = amresponsereportserializer.data
+
+        # aoresponsereportqueryset = AOResponse.objects.all().filter(survey__id=survey, subProjectUser__id=projectUser).order_by('integerValue')
+        # aoresponsereportserializer = AOResponseForDriverAnalysisSerializer(aoresponsereportqueryset, many=True)
+        # aoresponsereportdata = aoresponsereportserializer.data
+
+        # 3 people response to this user
+        
+        # prefix check
+
         if survey is None:
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
         if projectUser is None:
