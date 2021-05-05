@@ -2641,8 +2641,10 @@ class AdvisorInsightsView(APIView):
         # aoresponsereportserializer = AOResponseForDriverAnalysisSerializer(aoresponsereportqueryset, many=True)
         # aoresponsereportdata = aoresponsereportserializer.data
 
-        # 3 people response to this user
-        
+        # 3 people has to response to this user
+        prefTestResult = AOResponse.objects.all().filter(survey__id=survey, subProjectUser__id=projectUser).annotate(Count('projectUser__id', distinct=True))
+        return Response({"testresult": prefTestResult}, status=status.HTTP_200_OK)
+
         # prefix check
 
         if survey is None:
