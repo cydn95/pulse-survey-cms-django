@@ -167,7 +167,8 @@ stopwords += ['viz', 'vs', 'want', 'wants', 'way']
 stopwords += ['welcome', 'went', 'willing', 'wish', 'wonder']
 stopwords += ['yes', 'zero']
 
-def preApiCheck(survey, projectuser):
+
+def preApiCheck(survey, projectUser):
     # prefix check
     # the logged in user has to response fully
     prefAmQuestionQueryset = AMQuestion.objects.filter(survey__id=survey)
@@ -2667,7 +2668,7 @@ class AdvisorInsightsView(APIView):
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
 
         # prefix check
-        prefCode = preApiCheck(survey, projectuser)
+        prefCode = preApiCheck(survey, projectUser)
         if prefCode == 228:
             return Response({"text": "no data yet"}, status=228)
         elif prefCode == 227:
