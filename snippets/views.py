@@ -2641,7 +2641,7 @@ class AdvisorInsightsView(APIView):
             try:
                 ret = AMResponse.objects.get(
                     projectUser_id=projectUser, survey_id=survey, amQuestion_id=prefAmQuestionData[i]['id'], latestResponse=True)
-                return Response({"text": "no data yet"}, status=228)    
+                return Response({"text": "no data yet"}, status=228)
             except AMResponse.DoesNotExist:
                 return Response({"text": "no data yet"}, status=228)
 
