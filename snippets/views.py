@@ -3161,32 +3161,11 @@ class CheckDashboardStatusView(APIView):
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
 
         # prefix check
-        # the logged in user has to response fully
-        prefAmQuestionQueryset = AMQuestion.objects.filter(survey__id=survey)
-        prefAmQuestionSerializer = AMQuestionSerializer(prefAmQuestionQueryset, many=True)
-        prefAmQuestionData = prefAmQuestionSerializer.data
-
-        for i in range(len(prefAmQuestionData)):
-            try:
-                ret = AMResponse.objects.get(
-                    projectUser_id=projectUser, survey_id=survey, amQuestion_id=prefAmQuestionData[i]['id'], latestResponse=True)
-            except AMResponse.DoesNotExist:
-                return Response({"text": "no data yet"}, status=228)
-
-        # 3 people has to response to this user
-        prefAryProjectUsers = []
-        prefTestResultQueryset = AOResponse.objects.all().filter(survey__id=survey, subProjectUser__id=projectUser)
-        prefTestResultSerializer = AOResponseForDriverAnalysisSerializer(prefTestResultQueryset, many=True)
-        prefTestResultData = prefTestResultSerializer.data
-
-        for i in range(len(prefTestResultData)): 
-            if prefTestResultData[i]['projectUser']["id"] not in prefAryProjectUsers:
-                    prefAryProjectUsers.append(
-                        prefTestResultData[i]['projectUser']["id"])
-        
-        if (len(prefAryProjectUsers) < 3):
+        prefCode = preApiCheck(survey, projectUser)
+        if prefCode == 228:
+            return Response({"text": "no data yet"}, status=228)
+        elif prefCode == 227:
             return Response({"text": "no data yet"}, status=227)
             
-
         return Response({"text": "pass"}, status=status.HTP_200_OK)
         
