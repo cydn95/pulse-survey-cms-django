@@ -2633,13 +2633,16 @@ class AdvisorInsightsView(APIView):
 
         # prefix check
         # the logged in user has to response fully
-        # amresponsereportqueryset = AMResponse.objects.all().filter(survey__id=survey, subProjectUser__id=projectUser).order_by('integerValue')
-        # amresponsereportserializer = AMResponseForDriverAnalysisSerializer(amresponsereportqueryset, many=True)
-        # amresponsereportdata = amresponsereportserializer.data
+        prefAmQuestionQueryset = AMQuestion.objects.filter(survey__id=survey)
+        prefAmQuestionSerializer = AMQuestionSerializer(prefAmQuestionQueryset, many=True)
+        prefAmQuestionData = prefAmQuestionSerializer.data
 
-        # aoresponsereportqueryset = AOResponse.objects.all().filter(survey__id=survey, subProjectUser__id=projectUser).order_by('integerValue')
-        # aoresponsereportserializer = AOResponseForDriverAnalysisSerializer(aoresponsereportqueryset, many=True)
-        # aoresponsereportdata = aoresponsereportserializer.data
+        for i in range(len(prefAmQuestionData)):
+            try:
+                ret = AMResponse.objects.get(
+                    projectUser_id=projectUser, survey_id=survey, amQuestion_id=prefAmQuestionData[i]['id'], latestResponse=True)
+            except AMResponse.DoesNotExist:
+                return Response({"text": "no data yet"}, status=228)
 
         # 3 people has to response to this user
         prefAryProjectUsers = []
@@ -2652,9 +2655,8 @@ class AdvisorInsightsView(APIView):
                     prefAryProjectUsers.append(
                         prefTestResultData[i]['projectUser']["id"])
         
-        return Response({"testresult": prefAryProjectUsers}, status=status.HTTP_200_OK)
-
-        # prefix check
+        if (len(prefAryProjectUsers) < 3):
+            return Response({"text": "no data yet"}, status=227)
 
         if survey is None:
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
