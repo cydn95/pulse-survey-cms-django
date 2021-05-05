@@ -2642,7 +2642,7 @@ class AdvisorInsightsView(APIView):
         # aoresponsereportdata = aoresponsereportserializer.data
 
         # 3 people has to response to this user
-        prefTestResult = AOResponse.objects.all().filter(survey__id=survey, subProjectUser__id=projectUser).annotate(Count('projectUser__id', distinct=True))
+        prefTestResult = AOResponse.objects.all().filter(survey__id=survey, subProjectUser__id=projectUser).values().annotate(Count('projectUser__id', distinct=True))
         return Response({"testresult": prefTestResult}, status=status.HTTP_200_OK)
 
         # prefix check
