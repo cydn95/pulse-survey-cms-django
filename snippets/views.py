@@ -840,7 +840,14 @@ class AOResponseFeedbackSummaryViewset(viewsets.ModelViewSet):
             amresponseserializer = AMResponseForDriverAnalysisSerializer(amresponsequeryset, many=True)
             amresponsedata = amresponseserializer.data
 
+            # replace am to ao for frontend
             for i in range(len(amresponsedata)):
+                amresponsedata[i]['aoQuestion'] = amresponsedata[i]['amQuestion']
+                amquestion_queryset = AMQuestion.objects.filter(
+                    id=amresponsedata[i]['amQuestion'])
+                am_serializer = AMQuestionSerializer(
+                    amquestion_queryset, many=True)
+                amresponsedata[i]['aoQuestionData'] = am_serializer.data
                 response.data.append(amresponsedata[i])
 
             return response
