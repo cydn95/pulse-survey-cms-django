@@ -2642,8 +2642,17 @@ class AdvisorInsightsView(APIView):
         # aoresponsereportdata = aoresponsereportserializer.data
 
         # 3 people has to response to this user
-        prefTestResult = AOResponse.objects.all().filter(survey__id=survey, subProjectUser__id=projectUser).values().annotate(Count('projectUser__id', distinct=True))
-        return Response({"testresult": prefTestResult}, status=status.HTTP_200_OK)
+        prefAryProjectUsers = []
+        prefTestResultQueryset = AOResponse.objects.all().filter(survey__id=survey, subProjectUser__id=projectUser)
+        prefTestResultSerializer = AOResponseForDriverAnalysisSerializer(prefTestResultQueryset, many=True)
+        prefTestResultData = prefTestResultSerializer.data
+
+        for i in range(len(prefTestResultData)): 
+            if prefTestResultData[i]['projectUser']["id"] not in prefAryProjectUsers:
+                    prefAryProjectUsers.append(
+                        prefTestResultData[i]['projectUser']["id"])
+        
+        return Response({"testresult": prefAryProjectUsers}, status=status.HTTP_200_OK)
 
         # prefix check
 
