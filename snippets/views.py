@@ -816,12 +816,32 @@ class AOResponseFeedbackSummaryViewset(viewsets.ModelViewSet):
         try:
             response = super().list(request, *args, **kwargs)
             
+            survey = self.request.GET.get('survey', None)
+            subProjectUser = self.request.GET.get('projectuser', None)
+            startDate = self.request.GET.get('stdt', None)
+            endDate = self.request.GET.get('eddt', None)
+
             for i in range(len(response.data)):
                 aoquestion_queryset = AOQuestion.objects.filter(
                     id=response.data[i]['aoQuestion'])
                 ao_serializer = AOQuestionSerializer(
                     aoquestion_queryset, many=True)
                 response.data[i]['aoQuestionData'] = ao_serializer.data
+
+            # add amresponse data
+            amresponsequeryset = AMResponse.objects.all()
+            if (survey is not None) & (subProjectUser is not None) & (startDate is not None) & (endDate is not None):
+                amresponsequeryset = amresponsequeryset.filter(survey_id=survey, subProjectUser_id=subProjectUser, created_at__range=[startDate, endDate])
+            elif (survey is not None) & (subProjectUser is not None):
+                amresponsequeryset = amresponsequeryset.filter(survey_id=survey, subProjectUser_id=subProjectUser)
+            elif (survey is not None) & (startDate is not None) & (endDate is not None):
+                amresponsequeryset = amresponsequeryset.filter(survey_id=survey, created_at__range=[startDate, endDate])
+
+            amresponseserializer = AMResponseForDriverAnalysisSerializer(amresponsequeryset, many=True)
+            amresponsedata = amresponseserializer.data
+
+            for i in range(len(amresponsedata)):
+                response.data.append(amresponsedata[i])
 
             return response
         except Exception as error:
