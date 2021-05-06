@@ -2570,11 +2570,11 @@ class MyMatrixView(APIView):
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
 
         # prefix check
-        prefCode = preApiCheck(survey, projectUser)
-        if prefCode == 228:
-            return Response({"text": "no data yet"}, status=228)
-        elif prefCode == 227:
-            return Response({"text": "no data yet"}, status=227)
+        # prefCode = preApiCheck(survey, projectUser)
+        # if prefCode == 228:
+        #     return Response({"text": "no data yet"}, status=228)
+        # elif prefCode == 227:
+        #     return Response({"text": "no data yet"}, status=227)
 
         driverqueryset = Driver.objects.all().filter(survey__id=survey, isStandard=True).order_by('driveOrder')
         driverserializer = DriverSerializer(driverqueryset, many=True)
@@ -2640,11 +2640,11 @@ class ProjectMatrixView(APIView):
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
 
         # prefix check
-        prefCode = preApiCheck(survey, projectUser)
-        if prefCode == 228:
-            return Response({"text": "no data yet"}, status=228)
-        elif prefCode == 227:
-            return Response({"text": "no data yet"}, status=227)
+        # prefCode = preApiCheck(survey, projectUser)
+        # if prefCode == 228:
+        #     return Response({"text": "no data yet"}, status=228)
+        # elif prefCode == 227:
+        #     return Response({"text": "no data yet"}, status=227)
 
         driverqueryset = Driver.objects.all().filter(
             survey__id=survey, isStandard=True).order_by('driveOrder')
@@ -2712,11 +2712,11 @@ class AdvisorInsightsView(APIView):
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
 
         # prefix check
-        prefCode = preApiCheck(survey, projectUser)
-        if prefCode == 228:
-            return Response({"text": "no data yet"}, status=228)
-        elif prefCode == 227:
-            return Response({"text": "no data yet"}, status=227)
+        # prefCode = preApiCheck(survey, projectUser)
+        # if prefCode == 228:
+        #     return Response({"text": "no data yet"}, status=228)
+        # elif prefCode == 227:
+        #     return Response({"text": "no data yet"}, status=227)
 
         # Summary: 
         # % Response rate from invited Team members
@@ -3113,11 +3113,11 @@ class DriverAnalysisView(APIView):
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
 
         # prefix check
-        prefCode = preApiCheck(survey, projectUser)
-        if prefCode == 228:
-            return Response({"text": "no data yet"}, status=228)
-        elif prefCode == 227:
-            return Response({"text": "no data yet"}, status=227)
+        # prefCode = preApiCheck(survey, projectUser)
+        # if prefCode == 228:
+        #     return Response({"text": "no data yet"}, status=228)
+        # elif prefCode == 227:
+        #     return Response({"text": "no data yet"}, status=227)
             
         amresponsereportqueryset = AMResponse.objects.all().filter(controlType=controlType, survey__id=survey, subProjectUser__id=projectUser, amQuestion__driver__driverName=driver, created_at__range=[startDate, endDate])
         amresponsereportserializer = AMResponseForDriverAnalysisSerializer(
