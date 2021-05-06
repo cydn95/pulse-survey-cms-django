@@ -2954,10 +2954,11 @@ class AdvisorInsightsView(APIView):
             "totalDepartments": totalDepartments
         }
 
-        positivelyTeamScore = max(aryTeamsData[key]['score'] for key in aryTeamsData, default=0)
-        negativelyTeamScore = min(aryTeamsData[key]['score'] for key in aryTeamsData, default=0)
-        optimisticTeamScore = max(aryTeamsData[key]['compScore'] for key in aryTeamsData, default=0)
-        pessimisticTeamScore = min(aryTeamsData[key]['compScore'] for key in aryTeamsData, default=0)
+        positivelyTeamScore = max(aryTeamsData[key]['score'] for key in aryTeamsData) if len(aryTeamsData) > 0 else 0
+        negativelyTeamScore = min(aryTeamsData[key]['score'] for key in aryTeamsData) if len(aryTeamsData) > 0 else 0
+        optimisticTeamScore = max(aryTeamsData[key]['compScore'] for key in aryTeamsData) if len(aryTeamsData) > 0 else 0
+        pessimisticTeamScore = min(
+            aryTeamsData[key]['compScore'] for key in aryTeamsData) if len(aryTeamsData) > 0 else 0
         positivelyTeamName = ""
         negativelyTeamName = ""
         optimisticTeamName = ""
@@ -2972,10 +2973,10 @@ class AdvisorInsightsView(APIView):
             if aryTeamsData[key]['compScore'] == pessimisticTeamScore:
                 pessimisticTeamName = key
 
-        positivelyShGroupScore = max(aryShGroupsData[key]['score'] for key in aryShGroupsData, default=0)
-        negativelyShGroupScore = min(aryShGroupsData[key]['score'] for key in aryShGroupsData, default=0)
-        optimisticShGroupScore = max(aryShGroupsData[key]['compScore'] for key in aryShGroupsData, default=0)
-        pessimisticShGroupScore = min(aryShGroupsData[key]['compScore'] for key in aryShGroupsData, default=0)
+        positivelyShGroupScore = max(aryShGroupsData[key]['score'] for key in aryShGroupsData) if len(aryShGroupsData) > 0 else 0
+        negativelyShGroupScore = min(aryShGroupsData[key]['score'] for key in aryShGroupsData) if len(aryShGroupsData) > 0 else 0
+        optimisticShGroupScore = max(aryShGroupsData[key]['compScore'] for key in aryShGroupsData) if len(aryShGroupsData) > 0 else 0
+        pessimisticShGroupScore = min(aryShGroupsData[key]['compScore'] for key in aryShGroupsData) if len(aryShGroupsData) > 0 else 0
         positivelyShGroupName = ""
         negativelyShGroupName = ""
         optimisticShGroupName = ""
@@ -2990,10 +2991,10 @@ class AdvisorInsightsView(APIView):
             if aryShGroupsData[key]['compScore'] == pessimisticShGroupScore:
                 pessimisticShGroupName = key
 
-        positivelyOrgScore = max(aryOrganizationsData[key]['score'] for key in aryOrganizationsData, default=0)
-        negativelyOrgScore = min(aryOrganizationsData[key]['score'] for key in aryOrganizationsData, default=0)
-        optimisticOrgScore = max(aryOrganizationsData[key]['score'] for key in aryOrganizationsData, default=0)
-        pessimisticOrgScore = min(aryOrganizationsData[key]['score'] for key in aryOrganizationsData, default=0)
+        positivelyOrgScore = max(aryOrganizationsData[key]['score'] for key in aryOrganizationsData) if len(aryOrganizationsData) > 0 else 0
+        negativelyOrgScore = min(aryOrganizationsData[key]['score'] for key in aryOrganizationsData) if len(aryOrganizationsData) > 0 else 0
+        optimisticOrgScore = max(aryOrganizationsData[key]['score'] for key in aryOrganizationsData) if len(aryOrganizationsData) > 0 else 0
+        pessimisticOrgScore = min(aryOrganizationsData[key]['score'] for key in aryOrganizationsData) if len(aryOrganizationsData) > 0 else 0
         positivelyOrgName = ""
         negativelyOrgName = ""
         optimisticOrgName = ""
