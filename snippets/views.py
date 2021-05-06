@@ -3195,5 +3195,5 @@ class CheckDashboardStatusView(APIView):
         elif prefCode == 227:
             return Response({"text": "no data yet"}, status=227)
             
-        return Response({"text": "pass"}, status=status.HTP_200_OK)
+        return Response({"text": "pass"}, status=status.HTTP_200_OK)
         
