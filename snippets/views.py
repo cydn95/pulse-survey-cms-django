@@ -2738,30 +2738,30 @@ class AdvisorInsightsView(APIView):
         # "least share to share their opinions" groups with the lowest score for this question
 
         # Respondant: counts of the SHCategory who have got at least 1 AM or AO response
-        myPeersShCategoryId = SHCategory.objects.get(survey=survey, SHCategoryName="My Peers").id
-        whoINeedShCategoryId = SHCategory.objects.get(survey=survey, SHCategoryName="Who I Need").id
-        myLeadersShCategoryId = SHCategory.objects.get(survey=survey, SHCategoryName="My Leaders").id
-        myDirectReportsShCategoryId = SHCategory.objects.get(survey=survey, SHCategoryName="My Direct Reports").id
-        whoNeedsMeShCategoryId = SHCategory.objects.get(survey=survey, SHCategoryName="Who Needs Me").id
+        # myPeersShCategoryId = SHCategory.objects.get(survey=survey, SHCategoryName="My Peers").id
+        # whoINeedShCategoryId = SHCategory.objects.get(survey=survey, SHCategoryName="Who I Need").id
+        # myLeadersShCategoryId = SHCategory.objects.get(survey=survey, SHCategoryName="My Leaders").id
+        # myDirectReportsShCategoryId = SHCategory.objects.get(survey=survey, SHCategoryName="My Direct Reports").id
+        # whoNeedsMeShCategoryId = SHCategory.objects.get(survey=survey, SHCategoryName="Who Needs Me").id
 
-        myPeersCnt = SHMapping.objects.filter(
-            subProjectUser=projectUser, shCategory=myPeersShCategoryId).count()
-        whoINeedCnt = SHMapping.objects.filter(
-            subProjectUser=projectUser, shCategory=whoINeedShCategoryId).count()
-        myLeadersCnt = SHMapping.objects.filter(
-            subProjectUser=projectUser, shCategory=myLeadersShCategoryId).count()
-        myDirectReportsCnt = SHMapping.objects.filter(
-            subProjectUser=projectUser, shCategory=myDirectReportsShCategoryId).count()
-        whoNeedsMeCnt = SHMapping.objects.filter(
-            subProjectUser=projectUser, shCategory=whoNeedsMeShCategoryId).count()
+        # myPeersCnt = SHMapping.objects.filter(
+        #     subProjectUser=projectUser, shCategory=myPeersShCategoryId).count()
+        # whoINeedCnt = SHMapping.objects.filter(
+        #     subProjectUser=projectUser, shCategory=whoINeedShCategoryId).count()
+        # myLeadersCnt = SHMapping.objects.filter(
+        #     subProjectUser=projectUser, shCategory=myLeadersShCategoryId).count()
+        # myDirectReportsCnt = SHMapping.objects.filter(
+        #     subProjectUser=projectUser, shCategory=myDirectReportsShCategoryId).count()
+        # whoNeedsMeCnt = SHMapping.objects.filter(
+        #     subProjectUser=projectUser, shCategory=whoNeedsMeShCategoryId).count()
 
-        respondents = {
-            "myPeersCnt": myPeersCnt,
-            "whoINeedCnt": whoINeedCnt,
-            "myLeadersCnt": myLeadersCnt,
-            "myDirectReportsCnt": myDirectReportsCnt,
-            "whoNeedsMeCnt": whoNeedsMeCnt
-        }
+        # respondents = {
+        #     "myPeersCnt": myPeersCnt,
+        #     "whoINeedCnt": whoINeedCnt,
+        #     "myLeadersCnt": myLeadersCnt,
+        #     "myDirectReportsCnt": myDirectReportsCnt,
+        #     "whoNeedsMeCnt": whoNeedsMeCnt
+        # }
 
         amresponsereportqueryset = AMResponse.objects.all().filter(survey__id=survey, subProjectUser__id=projectUser).order_by('integerValue')
         amresponsereportserializer = AMResponseForDriverAnalysisSerializer(amresponsereportqueryset, many=True)
@@ -3081,7 +3081,8 @@ class AdvisorInsightsView(APIView):
             }
         }
 
-        return Response({"respondents": respondents, "summary": summary, "recommendedProjectUsers": recommendedProjectUserSerializer.data[:3], "detailedData": detailedData}, status=status.HTTP_200_OK)
+        # return Response({"respondents": respondents, "summary": summary, "recommendedProjectUsers": recommendedProjectUserSerializer.data[:3], "detailedData": detailedData}, status=status.HTTP_200_OK)
+        return Response({"summary": summary, "recommendedProjectUsers": recommendedProjectUserSerializer.data[:3], "detailedData": detailedData}, status=status.HTTP_200_OK)
 
 # driveranalysis api
 class DriverAnalysisView(APIView):
