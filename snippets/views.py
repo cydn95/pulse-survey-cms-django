@@ -2920,6 +2920,11 @@ class AdvisorInsightsView(APIView):
         recommendedProjectUserSerializer = ProjectUserForReportSerializer(
             recommendedProjectUsersQuerySet, many=True)
         
+        # test data for catchup
+        aryFilteredCatchupProjectUsers = aryProjectUsers
+        recommendedCatchupProjectUsersQuerySet = ProjectUser.objects.filter(survey=survey, pk__in=aryFilteredCatchupProjectUsers)
+        recommendedCatchupProjectUserSerializer = ProjectUserForReportSerializer(recommendedCatchupProjectUsersQuerySet, many=True)
+
         project = Survey.objects.get(pk=survey).project
         totalTeamMembersCnt = Team.objects.filter(project=project).count()
         totalStakeHoldersCnt = ProjectUser.objects.filter(survey=survey).count()
@@ -3062,7 +3067,7 @@ class AdvisorInsightsView(APIView):
         }
 
         # return Response({"respondents": respondents, "summary": summary, "recommendedProjectUsers": recommendedProjectUserSerializer.data[:3], "detailedData": detailedData}, status=status.HTTP_200_OK)
-        return Response({"summary": summary, "recommendedProjectUsers": recommendedProjectUserSerializer.data[:3], "detailedData": detailedData}, status=status.HTTP_200_OK)
+        return Response({"summary": summary, "catchupProjectUsers": recommendedCatchupProjectUserSerializer.data, "recommendedProjectUsers": recommendedProjectUserSerializer.data[:3], "detailedData": detailedData}, status=status.HTTP_200_OK)
 
 # driveranalysis api
 class DriverAnalysisView(APIView):
