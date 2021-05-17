@@ -5,8 +5,8 @@ import json
 comprehend = boto3.client(service_name='comprehend', region_name='us-east-2')
 
 #here is the main part - comprehend.detect_sentiment is called
-Text="Minor cost over-runs to accommodate additional resources that weren't factored in to the project during the planning stage."
-sentimentData = comprehend.detect_sentiment(Text=Text, LanguageCode="en")
+Text=["Minor cost over-runs to accommodate additional resources that weren't factored in to the project during the planning stage.", " ", "Test data", "Test data1"]
+sentimentData = comprehend.batch_detect_sentiment(TextList=Text, LanguageCode="en")
 
 qdata = {
     "Sentiment": "ERROR",
@@ -15,7 +15,7 @@ qdata = {
     "NeutralScore": 0,
     "PositiveScore": 0,
 }
-
+print(sentimentData)
 if "Sentiment" in sentimentData:
     qdata["Sentiment"] = sentimentData["Sentiment"]
 if "SentimentScore" in sentimentData:
@@ -28,4 +28,4 @@ if "SentimentScore" in sentimentData:
     if "Positive" in sentimentData["SentimentScore"]:
         qdata["PositiveScore"] = sentimentData["SentimentScore"]["Positive"]
 
-print(qdata)
+# print(qdata)

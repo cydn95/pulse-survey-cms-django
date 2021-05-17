@@ -515,6 +515,94 @@ class AOResponseViewSet(viewsets.ModelViewSet):
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
+# updated batch comprened aoresponse api
+class AOResponseViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+    queryset = AOResponse.objects.all()
+    serializer_class = AOResponseSerializer
+
+    def create(self, request, *args, **kwargs):
+        data = request.data.get("items") if "items" in request.data else request.data
+        many = isinstance(data, list)
+
+        textList = []
+        sentimentData = {}
+        if many == True:
+            for item in data:
+                textList.append(item['topicValue'] + " " + item['commentValue'])
+            sentimentData = comprehend.batch_detect_sentiment(TextList=textList, LanguageCode="en")
+
+        if many == True:
+            for i in range(len(data)):
+                if data[i]['controlType'] == "TEXT" or data[i]['controlType'] == "MULTI_TOPICS":
+                    data[i]['integerValue'] = int(abs(sentimentData['ResultList'][i]['SentimentScore']['Positive'] * 100))
+                try:
+                    obj = AOResponse.objects.get(survey_id=data[i]['survey'], project_id=data[i]['project'], projectUser_id=data[i]['projectUser'], subProjectUser_id=data[i]['subProjectUser'], aoQuestion_id=data[i]['aoQuestion'], latestResponse=True)
+
+                    if obj.topicValue != data[i]['topicValue'] or obj.commentValue != data[i]['commentValue'] or obj.integerValue != data[i]['integerValue'] or obj.skipValue != data[i]['skipValue'] or obj.topicTags != data[i]['topicTags'] or obj.commentTags != data[i]['commentTags']:
+                        obj.latestResponse = False
+
+                        obj.save()
+                        
+                        obj1 = AOResponse(aoQuestion_id=data[i]['aoQuestion'], projectUser_id=data[i]['projectUser'], subProjectUser_id=data[i]['subProjectUser'], shCategory_id=data[i]['shCategory'], survey_id=data[i]['survey'], project_id=data[i]['project'], controlType=data[i]['controlType'], integerValue=data[i]['integerValue'], topicValue=data[i]['topicValue'], commentValue=data[i]['commentValue'], skipValue=data[i]['skipValue'], topicTags=data[i]['topicTags'], commentTags=data[i]['commentTags'], latestResponse=True)
+                        obj1.save()
+                except AOResponse.DoesNotExist:
+                    obj = AOResponse(aoQuestion_id=data[i]['aoQuestion'], projectUser_id=data[i]['projectUser'], subProjectUser_id=data[i]['subProjectUser'], shCategory_id=data[i]['shCategory'], survey_id=data[i]['survey'], project_id=data[i]['project'], controlType=data[i]['controlType'], integerValue=data[i]['integerValue'], topicValue=data[i]['topicValue'], commentValue=data[i]['commentValue'], skipValue=data[i]['skipValue'], topicTags=data[i]['topicTags'], commentTags=data[i]['commentTags'], latestResponse=True)
+                    obj.save()
+        elif many == False:
+            defaults = data
+            try:
+                obj = AOResponse.objects.get(survey_id=item['survey'], project_id=item['project'], projectUser_id=item['projectUser'], subProjectUser_id=item['subProjectUser'], aoQuestion_id=item['aoQuestion'], latestResponse=True)
+
+                if obj.topicValue != defaults['topicValue'] or obj.commentValue != defaults['commentValue'] or obj.integerValue != defaults['integerValue'] or obj.skipValue != defaults['skipValue'] or obj.topicTags != defaults['topicTags'] or obj.commentTags != defaults['commentTags']:
+                    obj.latestResponse = False
+                    obj.save()
+
+                    if defaults["controlType"] == "TEXT" or defaults["controlType"] == "MULTI_TOPICS":
+                        text = defaults["topicValue"] + \
+                            " " + defaults["commentValue"]
+
+                        sentimentResult = comprehend.detect_sentiment(
+                            Text=text, LanguageCode="en")
+                        defaults["integerValue"] = int(
+                            abs(sentimentResult["SentimentScore"]["Positive"] * 100))
+
+                    obj1 = AOResponse(aoQuestion_id=defaults['aoQuestion'],
+                                    projectUser_id=defaults['projectUser'], subProjectUser_id=defaults['subProjectUser'],
+                                    shCategory_id=defaults['shCategory'],
+                                    survey_id=defaults['survey'], project_id=defaults['project'],
+                                    controlType=defaults['controlType'], integerValue=defaults['integerValue'],
+                                    topicValue=defaults['topicValue'], commentValue=defaults['commentValue'],
+                                    skipValue=defaults['skipValue'], topicTags=defaults['topicTags'],
+                                    commentTags=defaults['commentTags'], latestResponse=True)
+                    obj1.save()
+
+            except AOResponse.DoesNotExist:
+                if defaults["controlType"] == "TEXT" or defaults["controlType"] == "MULTI_TOPICS":
+                    text = defaults["topicValue"] + " " + defaults["commentValue"]
+
+                    sentimentResult = comprehend.detect_sentiment(Text=text, LanguageCode="en")
+                    defaults["integerValue"] = int(abs(sentimentResult["SentimentScore"]["Positive"] * 100))
+
+                obj = AOResponse(aoQuestion_id=defaults['aoQuestion'],
+                            projectUser_id=defaults['projectUser'], subProjectUser_id=defaults['subProjectUser'],
+                            shCategory_id=defaults['shCategory'],
+                            survey_id=defaults['survey'], project_id=defaults['project'],
+                            controlType=defaults['controlType'], integerValue=defaults['integerValue'],
+                            topicValue=defaults['topicValue'], commentValue=defaults['commentValue'],
+                            skipValue=defaults['skipValue'], topicTags=defaults['topicTags'],
+                            commentTags=defaults['commentTags'], latestResponse=True)
+                obj.save()
+        
+        result = AOResponse.objects.all().values('projectUser', 'subProjectUser', 'shCategory', 'survey', 'project', 'aoQuestion', 'controlType', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags', 'latestResponse')
+        
+        list_result = [entry for entry in result]
+
+        serializer = self.get_serializer(data=list_result, many=True)
+        serializer.is_valid(raise_exception=True)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
 # aoresponsetopic api
 class AOResponseTopicViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated,permissions.IsAuthenticatedOrReadOnly]
