@@ -394,7 +394,7 @@ class AMResponseViewSet(viewsets.ModelViewSet):
     queryset = AMResponse.objects.all()
     serializer_class = AMResponseSerializer
 
-    def create(self, request, *args. **kwargs):
+    def create(self, request, *args, **kwargs):
         data = request.data.get("items") if "items" in request.data else request.data
         many = isinstance(data, list)
 
