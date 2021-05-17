@@ -1,0 +1,250 @@
+{% load i18n admin_urls static admin_modify %}
+<div class="inline-group sortable" id="{{ inline_admin_formset.formset.prefix }}-group">
+    <div class="tabular inline-related {% if forloop.last %}last-related{% endif %}">
+        {{ inline_admin_formset.formset.management_form }}
+        <div id="aoq_tabular_row1" class="row" style="padding: 1rem 1rem;">
+            <div style="padding: 1rem 0;">{{ao_driver}}<input type="text" id="aoq_search"
+                    style="margin-left: 1rem; padding-left: 1rem;" placeholder="Search" value="" /></div>
+            <hr style="margin-bottom: 1rem;" />
+            <a class="button" id="open_aoq_dialog" style="cursor:pointer;">Reset to Standard AO Questions</a>
+            
+            <div id="confirmAOQDialog" style="display:none">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4>Reset AO Questions</h4>
+                        </div>
+                        <div class="modal-body">
+                            <a class="button" id="reset_aoq_standard" style="cursor:pointer;"
+                                 >Reset to
+                                Standard AO Questions</a>
+                            <a class="button" id="reset_aoq_long" style="cursor:pointer;"
+                                 >Reset to
+                                Standard AO Questions
+                                with Long-Form</a>
+                            <a class="button" id="reset_aoq_short" style="cursor:pointer;"
+                                 >Reset to
+                                Standard AO Questions
+                                with Short-Form</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <fieldset id="aoq_table" class="module {{ inline_admin_formset.classes }}" style="height: 400px;">
+            <h2>{{ inline_admin_formset.opts.verbose_name_plural|capfirst }}</h2>
+            {{ inline_admin_formset.formset.non_form_errors }}
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>{% trans "Sort" %}</th>
+                        {% for field in inline_admin_formset.fields %}
+                        {% if not field.widget.is_hidden %}
+                        <th{% if forloop.first %} colspan="2" {% endif %}{% if field.required %} class="required"
+                            {% endif %}>{{ field.label|capfirst }}
+                            {% if field.help_text %}&nbsp;<img src="{% static "admin/img/icon-unknown.svg" %}"
+                                class="help help-tooltip" width="10" height="10" alt="({{ field.help_text|striptags }})"
+                                title="{{ field.help_text|striptags }}" />{% endif %}
+                            </th>
+                            {% endif %}
+                            {% endfor %}
+                            {% if inline_admin_formset.formset.can_delete %}<th>{% trans "Delete?" %}</th>{% endif %}
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for inline_admin_form in inline_admin_formset %}
+                    {% if inline_admin_form.form.non_field_errors %}
+                    <tr>
+                        <td colspan="{{ inline_admin_form|cell_count|add:1 }}">
+                            {{ inline_admin_form.form.non_field_errors }}</td>
+                    </tr>
+                    {% endif %}
+                    <tr class="form-row {% cycle "row1" "row2" %} {% if inline_admin_form.original or inline_admin_form.show_url %}has_original{% endif %}{% if forloop.last %} empty-form{% endif %}"
+                        id="{{ inline_admin_formset.formset.prefix }}-{% if not forloop.last %}{{ forloop.counter0 }}{% else %}empty{% endif %}">
+                        <td class="drag">&nbsp;</td>
+                        <td class="original">
+                            {% if inline_admin_form.original or inline_admin_form.show_url %}<p>
+                                {% if inline_admin_form.original %}
+                                {{ inline_admin_form.original }}
+                                {% if inline_admin_form.model_admin.show_change_link and inline_admin_form.model_admin.has_registered_model %}<a
+                                    href="{% url inline_admin_form.model_admin.opts|admin_urlname:'change' inline_admin_form.original.pk|admin_urlquote %}"
+                                    class="inlinechangelink">{% trans "Change" %}</a>{% endif %}
+                                {% endif %}
+                                {% if inline_admin_form.show_url %}<a
+                                    href="{{ inline_admin_form.absolute_url }}">{% trans "View on site" %}</a>{% endif %}
+                            </p>{% endif %}
+                            {% if inline_admin_form.needs_explicit_pk_field %}{{ inline_admin_form.pk_field.field }}{% endif %}
+                            {{ inline_admin_form.fk_field.field }}
+                            {% spaceless %}
+                            {% for fieldset in inline_admin_form %}
+                            {% for line in fieldset %}
+                            {% for field in line %}
+                            {% if field.field.is_hidden %} {{ field.field }} {% endif %}
+                            {% endfor %}
+                            {% endfor %}
+                            {% endfor %}
+                            {% endspaceless %}
+                        </td>
+                        {% for fieldset in inline_admin_form %}
+                        {% for line in fieldset %}
+                        {% for field in line %}
+                        {% if not field.field.is_hidden %}
+                        <td{% if field.field.name %} class="field-{{ field.field.name }}" {% endif %}>
+                            {% if field.is_readonly %}
+                            <p>{{ field.contents }}</p>
+                            {% else %}
+                            {{ field.field.errors.as_ul }}
+                            {{ field.field }}
+                            {% endif %}
+                            </td>
+                            {% endif %}
+                            {% endfor %}
+                            {% endfor %}
+                            {% endfor %}
+                            {% if inline_admin_formset.formset.can_delete %}
+                            <td class="delete">
+                                {% if inline_admin_form.original %}{{ inline_admin_form.deletion_field.field }}{% endif %}
+                            </td>
+                            {% endif %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+        </fieldset>
+    </div>
+</div>
+
+<script type="application/json" class="inline-tabular-config">
+    {
+        "prefix": "{{ inline_admin_formset.formset.prefix|escapejs }}",
+        "addText": "{% filter escapejs %}{% blocktrans with inline_admin_formset.opts.verbose_name|capfirst as verbose_name %}Add another {{ verbose_name }}{% endblocktrans %}{% endfilter %}",
+        "deleteText": "{% filter escapejs %}{% trans 'Remove' %}{% endfilter %}"
+    }
+</script>
+<div class="default_order_field" default_order_field="{{ inline_admin_formset.formset.default_order_field }}"
+    default_order_direction="{{ inline_admin_formset.formset.default_order_direction }}"></div>
+<div id="myModal" class="modal">
+
+    <!-- Modal content -->
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h1 style="text-align: center; margin-top: 30px;">Do you want to reset your Drivers(Non-Standard), too?</h1>
+        <div style="text-align: center; margin-top: 20px;">
+            <a class="button default" id="btnYes" style="min-width: 100px; cursor: pointer;">Yes</a>
+            <a class="button" id="btnNo" style="min-width: 100px; cursor: pointer;">No</a>
+        </div>
+    </div>
+
+</div>
+<script>
+    var filterAOTitle = "";
+    var filterAOText = "";
+    var ao_observer = new MutationObserver(function(mutations) {
+        for (let mutation of mutations) {
+            if (mutation.type === 'childList' && mutation.addedNodes.length == 1) {
+                if (mutation.target.id == "select2-id_ao_driver-container") {
+                    var title = mutation.target.getAttribute("title");
+                    filterAOTitle = title;
+                    ao_filter(filterAOTitle, filterAOText);
+                }
+            }
+        }
+    });
+
+    function ao_filter(title, searchKey) {
+        var alltrs = document.querySelectorAll(`#aoq_table .has_original .field-driver span.select2-selection__rendered`);
+        if (alltrs.length > 0) {
+            if (title == "---------") {
+                for (var tr of alltrs) {
+                    if (searchKey == "")
+                        tr.closest("tr").style.display = "table-row";
+                    else {
+                        var question = tr.closest("tr").querySelector(".field-questionText input").value.toLowerCase();
+                        if (question.indexOf(searchKey.toLowerCase()) == -1)
+                            tr.closest("tr").style.display = "none";
+                        else
+                            tr.closest("tr").style.display = "table-row";
+                    }
+                }
+            } else {
+                for (var tr of alltrs) {
+
+                    if (tr.getAttribute("title") == title) {
+                        var question = tr.closest("tr").querySelector(".field-questionText input").value.toLowerCase();
+                        if (question.indexOf(searchKey.toLowerCase()) == -1)
+                            tr.closest("tr").style.display = "none";
+                        else
+                            tr.closest("tr").style.display = "table-row";
+                    } else
+                    tr.closest("tr").style.display = "none";
+                }
+                // console.log(allspans.closest("tr"));
+            }
+        }
+    }
+
+    var config = {attributes:true, childList: true, subtree: true};
+    var ao_observeNode = document.getElementById("aoq_tabular_row1");
+    ao_observer.observe(ao_observeNode, config);
+
+    var ao_search_item = document.getElementById("aoq_search");
+    ao_search_item.addEventListener("keyup", function(e){
+        filterAOText = e.target.value;
+        ao_filter(filterAOTitle, filterAOText);
+    });
+
+    $('label[for="id_ao_driver"]').html("Filter by : ");
+
+    $("#open_aoq_dialog").click(function () {
+        document.getElementById("confirmAOQDialog").style.display = "block";
+        var modal = document.getElementById("myModal");
+        var span = document.getElementsByClassName("close")[0];
+
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        window.onclick = function(e) {
+        if (e.target == modal) {
+            modal.style.display = "none";
+        }
+        }
+
+        document.getElementById("reset_aoq_standard").onclick = function () {
+            modal.style.display = "block";
+            document.getElementById("btnYes").onclick = function() {
+                location.href="resetaoq/?id={{object_id}}&reset=1";
+                document.getElementById("confirmAOQDialog").style.display = "none";
+            }
+            document.getElementById("btnNo").onclick = function() {
+                location.href="resetaoq/?id={{object_id}}&reset=0";
+                document.getElementById("confirmAOQDialog").style.display = "none";
+            }
+        }
+        document.getElementById("reset_aoq_long").onclick = function () {
+            modal.style.display = "block";
+            document.getElementById("btnYes").onclick = function() {
+                location.href="resetaoqlong/?id={{object_id}}&reset=1";
+                document.getElementById("confirmAOQDialog").style.display = "none";
+            }
+            document.getElementById("btnNo").onclick = function() {
+                location.href="resetaoqlong/?id={{object_id}}&reset=0";
+                document.getElementById("confirmAOQDialog").style.display = "none";
+            }
+        }
+        document.getElementById("reset_aoq_short").onclick = function () {
+            modal.style.display = "block";
+            document.getElementById("btnYes").onclick = function() {
+                location.href="resetaoqshort/?id={{object_id}}&reset=1";
+                document.getElementById("confirmAOQDialog").style.display = "none";
+            }
+            document.getElementById("btnNo").onclick = function() {
+                location.href="resetaoqshort/?id={{object_id}}&reset=0";
+                document.getElementById("confirmAOQDialog").style.display = "none";
+            }
+        }
+    });
+</script>
