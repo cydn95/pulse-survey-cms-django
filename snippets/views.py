@@ -457,7 +457,7 @@ class AMResponseViewSet(viewsets.ModelViewSet):
                 obj = AMResponse(amQuestion_id=defaults['amQuestion'], projectUser_id=defaults['projectUser'], subProjectUser_id=defaults['subProjectUser'], survey_id=defaults['survey'], project_id=defaults['project'], controlType=defaults['controlType'], integerValue=defaults['integerValue'], topicValue=defaults['topicValue'], commentValue=defaults['commentValue'], skipValue=defaults['skipValue'], topicTags=defaults['topicTags'], commentTags=defaults['commentTags'], latestResponse=True)
                 obj.save()
 
-        return Response(sentimentData, status=status.HTTP_201_CREATED)
+        return Response(True, status=status.HTTP_201_CREATED)
 
 # amresponsetopic api
 class AMResponseTopicViewSet(viewsets.ModelViewSet):
@@ -598,16 +598,20 @@ class AOResponseViewSet(viewsets.ModelViewSet):
 
         textList = []
         sentimentData = {}
+
+        tempData = [data[i:i + 25] for i in range(0, len(data), 25)]
         if many == True:
-            for i in range(len(data)):
-                textList.append(data[i]['topicValue'] +
-                                " " + data[i]['commentValue'])
-            sentimentData = comprehend.batch_detect_sentiment(TextList=textList, LanguageCode="en")
+            for i in range(len(tempData)):
+                for item in tempData[i]:
+                    textList.append(item['topicValue'] + " " + item['commentValue'])
+                tempSentimentData = comprehend.batch_detect_sentiment(TextList=textList, LanguageCode="en")
+                sentimentData = sentimentData + tempSentimentData['ResultList']
+                textList = []
 
         if many == True:
             for i in range(len(data)):
                 if data[i]['controlType'] == "TEXT" or data[i]['controlType'] == "MULTI_TOPICS":
-                    data[i]['integerValue'] = int(abs(sentimentData['ResultList'][i]['SentimentScore']['Positive'] * 100))
+                    data[i]['integerValue'] = int(abs(sentimentData[i]['SentimentScore']['Positive'] * 100))
                 try:
                     obj = AOResponse.objects.get(survey_id=data[i]['survey'], project_id=data[i]['project'], projectUser_id=data[i]['projectUser'], subProjectUser_id=data[i]['subProjectUser'], aoQuestion_id=data[i]['aoQuestion'], latestResponse=True)
 
@@ -667,14 +671,6 @@ class AOResponseViewSet(viewsets.ModelViewSet):
                             commentTags=defaults['commentTags'], latestResponse=True)
                 obj.save()
         
-        # result = AOResponse.objects.all().values('projectUser', 'subProjectUser', 'shCategory', 'survey', 'project', 'aoQuestion', 'controlType', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags', 'latestResponse')
-        
-        # list_result = [entry for entry in result]
-
-        # serializer = self.get_serializer(data=list_result, many=True)
-        # serializer.is_valid(raise_exception=True)
-        # headers = self.get_success_headers(serializer.data)
-        # return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
         return Response(True, status=status.HTTP_201_CREATED)
 
 # aoresponsetopic api
