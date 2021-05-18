@@ -399,13 +399,16 @@ class AMResponseViewSet(viewsets.ModelViewSet):
         many = isinstance(data, list)
 
         textList = []
-        sentimentData = {}
+        sentimentData = []
 
         tempData = [data[i:i + 25] for i in range(0, len(data), 25)]
-        # if many == True:
-        #     for item in data:
-        #         textList.append(item['topicValue'] + " " + item['commentValue'])
-        #     sentimentData = comprehend.batch_detect_sentiment(TextList=textList, LanguageCode="en")
+        if many == True:
+            for i in range(len(tempData)):
+                for item in tempData[i]:
+                    textList.append(item['topicValue'] + " " + item['commentValue'])
+                tempSentimentData = comprehend.batch_detect_sentiment(TextList=textList, LanguageCode="en")
+                sentimentData = sentimentData + tempSentimentData['ResultList']
+                textList = []
 
         # if many == True:
         #     for i in range(len(data)):
@@ -454,7 +457,7 @@ class AMResponseViewSet(viewsets.ModelViewSet):
         #         obj = AMResponse(amQuestion_id=defaults['amQuestion'], projectUser_id=defaults['projectUser'], subProjectUser_id=defaults['subProjectUser'], shCategory_id=defaults['shCategory'], survey_id=defaults['survey'], project_id=defaults['project'], controlType=defaults['controlType'], integerValue=defaults['integerValue'], topicValue=defaults['topicValue'], commentValue=defaults['commentValue'], skipValue=defaults['skipValue'], topicTags=defaults['topicTags'], commentTags=defaults['commentTags'], latestResponse=True)
         #         obj.save()
 
-        return Response(tempData, status=status.HTTP_201_CREATED)
+        return Response(sentimentData, status=status.HTTP_201_CREATED)
 
 # amresponsetopic api
 class AMResponseTopicViewSet(viewsets.ModelViewSet):
