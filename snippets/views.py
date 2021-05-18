@@ -452,15 +452,16 @@ class AMResponseViewSet(viewsets.ModelViewSet):
                 obj = AMResponse(amQuestion_id=defaults['amQuestion'], projectUser_id=defaults['projectUser'], subProjectUser_id=defaults['subProjectUser'], shCategory_id=defaults['shCategory'], survey_id=defaults['survey'], project_id=defaults['project'], controlType=defaults['controlType'], integerValue=defaults['integerValue'], topicValue=defaults['topicValue'], commentValue=defaults['commentValue'], skipValue=defaults['skipValue'], topicTags=defaults['topicTags'], commentTags=defaults['commentTags'], latestResponse=True)
                 obj.save()
 
-        result = AMResponse.objects.all().values('projectUser', 'subProjectUser', 'shCategory', 'survey', 'project', 'amQuestion', 'controlType', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags', 'latestResponse')
+        # result = AMResponse.objects.all().values('projectUser', 'subProjectUser', 'shCategory', 'survey', 'project', 'amQuestion', 'controlType', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags', 'latestResponse')
 
-        list_result = [entry for entry in result]
+        # list_result = [entry for entry in result]
 
-        serializer = self.get_serializer(data=list_result, many=True)
-        serializer.is_valid(raise_exception=True)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-
+        # serializer = self.get_serializer(data=list_result, many=True)
+        # serializer.is_valid(raise_exception=True)
+        # headers = self.get_success_headers(serializer.data)
+        # return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        return Response(True, status=status.HTTP_201_CREATED)
+        
 # amresponsetopic api
 class AMResponseTopicViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated,permissions.IsAuthenticatedOrReadOnly]
@@ -601,8 +602,9 @@ class AOResponseViewSet(viewsets.ModelViewSet):
         textList = []
         sentimentData = {}
         if many == True:
-            for item in data:
-                textList.append(item['topicValue'] + " " + item['commentValue'])
+            for i in range(len(data)):
+                textList.append(data[i]['topicValue'] +
+                                " " + data[i]['commentValue'])
             sentimentData = comprehend.batch_detect_sentiment(TextList=textList, LanguageCode="en")
 
         if many == True:
@@ -668,14 +670,15 @@ class AOResponseViewSet(viewsets.ModelViewSet):
                             commentTags=defaults['commentTags'], latestResponse=True)
                 obj.save()
         
-        result = AOResponse.objects.all().values('projectUser', 'subProjectUser', 'shCategory', 'survey', 'project', 'aoQuestion', 'controlType', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags', 'latestResponse')
+        # result = AOResponse.objects.all().values('projectUser', 'subProjectUser', 'shCategory', 'survey', 'project', 'aoQuestion', 'controlType', 'integerValue', 'topicValue', 'commentValue', 'skipValue', 'topicTags', 'commentTags', 'latestResponse')
         
-        list_result = [entry for entry in result]
+        # list_result = [entry for entry in result]
 
-        serializer = self.get_serializer(data=list_result, many=True)
-        serializer.is_valid(raise_exception=True)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        # serializer = self.get_serializer(data=list_result, many=True)
+        # serializer.is_valid(raise_exception=True)
+        # headers = self.get_success_headers(serializer.data)
+        # return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        return Response(True, status=status.HTTP_201_CREATED)
 
 # aoresponsetopic api
 class AOResponseTopicViewSet(viewsets.ModelViewSet):
