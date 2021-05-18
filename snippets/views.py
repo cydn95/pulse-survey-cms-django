@@ -597,7 +597,7 @@ class AOResponseViewSet(viewsets.ModelViewSet):
         many = isinstance(data, list)
 
         textList = []
-        sentimentData = {}
+        sentimentData = []
 
         tempData = [data[i:i + 25] for i in range(0, len(data), 25)]
         if many == True:
