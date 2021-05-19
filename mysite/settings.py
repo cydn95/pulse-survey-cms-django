@@ -422,18 +422,21 @@ CORS_ORIGIN_WHITELIST = [
 ]
 
 # For sendgrid mail
-# SEND_GRID_API_KEY = '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' # old api key
-SENDGRID_API_KEY = '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'
-EMAIL_HOST = 'smtp.sendgrid.net'
+# SENDGRID_API_KEY = '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'   # for send grid
+# EMAIL_HOST = 'smtp.sendgrid.net'   # for send grid
+
 # EMAIL_HOST_USER = 'pulseprojectai'
-EMAIL_HOST_USER = 'apikey'
+# EMAIL_HOST_USER = 'apikey'    # for send grid
 # EMAIL_HOST_PASSWORD = 'RocketMan39'
-EMAIL_HOST_PASSWORD = SENDGRID_API_KEY
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
+# EMAIL_HOST_PASSWORD = SENDGRID_API_KEY
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = 'pulse@projectai.com'
-ACCOUNT_EMAIL_SUBJECT_PREFIX = 'Contact email received from website'
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# ACCOUNT_EMAIL_SUBJECT_PREFIX = 'Contact email received from website'
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'       # for send grid
+EMAIL_BACKEND = 'django_ses.SESBackend'
+AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
 
 AUTHENTICATION_BACKENDS = (
     # Needed to login by username in Django admin, regardless of 'allauth'
