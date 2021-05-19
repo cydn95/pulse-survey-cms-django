@@ -116,7 +116,7 @@ class ProjectUser(models.Model):
                 email.attach(image_connect)
                 image_connect.add_header('Content-ID', f"<{image_name_connect}>")
 
-            email.send()
+            # email.send()
 
 class KeyThemeUpDownVote(models.Model):
     keyTheme = models.TextField(default="", blank=False, null=False)
