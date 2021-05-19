@@ -55,6 +55,9 @@ class ProjectUser(models.Model):
     isCGroup3 = models.BooleanField(default=False)
     sendInvite = models.BooleanField(default=False)
 
+    # added superuser toggle
+    isSuperUser = models.BooleanField(default=False)
+    
     class Meta:
         unique_together = ['survey', 'user']
 
