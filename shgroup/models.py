@@ -20,6 +20,7 @@ from django.utils.safestring import mark_safe
 class SHGroup(models.Model):
     SHGroupName = models.CharField(max_length=255)
     SHGroupAbbrev = models.CharField(max_length=50, blank=True)
+    responsePercent = models.PositiveIntegerField(default=0)        # newly added record
     survey = models.ForeignKey(Survey, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -57,7 +58,7 @@ class ProjectUser(models.Model):
 
     # added superuser toggle
     isSuperUser = models.BooleanField(default=False)
-    
+
     class Meta:
         unique_together = ['survey', 'user']
 
