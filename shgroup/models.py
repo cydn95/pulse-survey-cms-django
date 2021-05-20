@@ -50,14 +50,17 @@ class ProjectUser(models.Model):
     team = models.ForeignKey(Team, null=True, blank=True, verbose_name='Project Team')
     shGroup = models.ForeignKey(SHGroup, null=True, blank=True, verbose_name='SHGroup')
 
+    # added superuser toggle
+    isSuperUser = models.BooleanField(
+        default=False, verbose_name='Reveal Dashboards')
+
     isTeamMember = models.BooleanField(default=False)
     isCGroup1 = models.BooleanField(default=False)
     isCGroup2 = models.BooleanField(default=False)
     isCGroup3 = models.BooleanField(default=False)
     sendInvite = models.BooleanField(default=False)
 
-    # added superuser toggle
-    isSuperUser = models.BooleanField(default=False, verbose_name='Reveal Dashboards')
+    
 
     class Meta:
         unique_together = ['survey', 'user']
