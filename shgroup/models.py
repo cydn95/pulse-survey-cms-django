@@ -57,7 +57,7 @@ class ProjectUser(models.Model):
     sendInvite = models.BooleanField(default=False)
 
     # added superuser toggle
-    isSuperUser = models.BooleanField(default=False)
+    isSuperUser = models.BooleanField(default=False, verbose_name='Reveal Dashboards')
 
     class Meta:
         unique_together = ['survey', 'user']
