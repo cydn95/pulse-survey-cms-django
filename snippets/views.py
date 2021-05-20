@@ -176,7 +176,7 @@ def preApiCheck(survey, projectUser):
         isSuperUser = ProjectUser.objects.get(projectUser__id=projectUser).isSuperUser
 
         if isSuperUser == True:
-            return 200
+            return 201  # super user
     except ProjectUser.DoesNotExist:
         return 404
 
@@ -3339,6 +3339,8 @@ class CheckDashboardStatusView(APIView):
             return Response({"text": "no data yet"}, status=228)
         elif prefCode == 227:
             return Response({"text": "no data yet"}, status=227)
-            
-        return Response({"text": "pass"}, status=status.HTTP_200_OK)
+        elif prefCode == 201:
+            return Response({"text": "superuser", "code": 201}, status=status.HTTP_200_OK)
+
+        return Response({"text": "pass", "code": 200}, status=status.HTTP_200_OK)
         
