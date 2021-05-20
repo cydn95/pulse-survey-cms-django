@@ -171,6 +171,15 @@ stopwords += ['yes', 'zero']
 def preApiCheck(survey, projectUser):
     # prefix check
     # the logged in user has to response fully
+
+    try:
+        isSuperUser = ProjectUser.objects.get(projectUser__id=projectUser).isSuperUser
+
+        if isSuperUser == True:
+            return 200
+    except ProjectUser.DoesNotExist:
+        return 404
+
     prefAmQuestionQueryset = AMQuestion.objects.filter(survey__id=survey)
     prefAmQuestionSerializer = AMQuestionSerializer(prefAmQuestionQueryset, many=True)
     prefAmQuestionData = prefAmQuestionSerializer.data
