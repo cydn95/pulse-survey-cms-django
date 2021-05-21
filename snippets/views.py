@@ -173,7 +173,7 @@ def preApiCheck(survey, projectUser):
     # the logged in user has to response fully
 
     try:
-        isSuperUser = ProjectUser.objects.get(projectUser__id=projectUser)
+        isSuperUser = ProjectUser.objects.get(id=projectUser)
 
         if isSuperUser.isSuperUser == True:
             return 201  # super user
