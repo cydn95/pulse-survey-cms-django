@@ -173,9 +173,9 @@ def preApiCheck(survey, projectUser):
     # the logged in user has to response fully
 
     try:
-        isSuperUser = ProjectUser.objects.get(projectUser__id=projectUser).isSuperUser
+        isSuperUser = ProjectUser.objects.get(projectUser__id=projectUser)
 
-        if isSuperUser == True:
+        if isSuperUser.isSuperUser == True:
             return 201  # super user
     except ProjectUser.DoesNotExist:
         return 404

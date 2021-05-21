@@ -17,10 +17,20 @@ from django.conf import settings
 from django.contrib import messages
 from django.utils.safestring import mark_safe
 
+class InegerPercentageField(models.IntegerField):
+    def __init__(self, verbose_name=None, name=None, min_value=None, max_value=None, **kwargs):
+        self.min_value, self.max_value = min_value, max_value
+        models.IntegerField.__init__(self, verbose_name, name, **kwargs)
+    def formfield(self, **kwargs):
+        defaults = {'min_value': self.min_value, 'max_value': self.max_value}
+        defaults.update(kwargs)
+        return super(InegerPercentageField, self).formfield(**defaults)
+
 class SHGroup(models.Model):
     SHGroupName = models.CharField(max_length=255)
     SHGroupAbbrev = models.CharField(max_length=50, blank=True)
-    responsePercent = models.PositiveIntegerField(default=0)        # newly added record
+    responsePercent = InegerPercentageField(
+        default=0, min_value=0, max_value=100, verbose_name='Throttle % Response')        # newly added record
     survey = models.ForeignKey(Survey, on_delete=models.CASCADE)
 
     def __str__(self):
