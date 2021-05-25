@@ -184,6 +184,12 @@ class ConfigPageInline(admin.StackedInline):
     extra = 0
     list_per_page = 10
 
+
+class NikelMobilePageInline(admin.StackedInline):
+    model = NikelMobilePage
+    extra = 0
+    list_per_page = 10
+
 class AMDriverForm(forms.Form):
     am_driver = forms.ModelChoiceField(queryset=None)
 
@@ -226,7 +232,8 @@ class SurveyAdmin(admin.ModelAdmin):
                 AMQuestionInline,
                 AOQuestionInline,
                 SHCategoryInline,
-                ConfigPageInline
+                ConfigPageInline,
+                NikelMobilePageInline,
             ]
             context = {
                 'object_id': obj.id
