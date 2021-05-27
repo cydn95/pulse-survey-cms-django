@@ -232,7 +232,7 @@ class SurveyAdmin(admin.ModelAdmin):
                 AMQuestionInline,
                 AOQuestionInline,
                 SHCategoryInline,
-                # ConfigPageInline,
+                ConfigPageInline,
                 NikelMobilePageInline,
             ]
             context = {
