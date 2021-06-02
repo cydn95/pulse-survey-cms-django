@@ -2365,10 +2365,37 @@ class KeyThemesMenuCntView(APIView):
         if projectUser is None:
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
         
+        # risk
+        ktamresponsequeryset = AMResponse.objects.all().filter(
+                amQuestion__questionText="What do you see as the biggest risks to the project?",
+                survey__id=survey, controlType="MULTI_TOPICS").order_by('projectUser')
+        ktamresponseserializer = AMResponseSerializer(ktamresponsequeryset, many=True)
+        wordlist = []
+        res = ktamresponseserializer.data
+        for i in range(len(res)):
+            if res[i]['topicValue'] != "":
+                wordlist.append(res[i]['topicValue'])
+
+        wordfreq = [wordlist.count(p) for p in wordlist]
+        dictionary = dict(list(zip(wordlist, wordfreq)))
+        aux = [(dictionary[key], key) for key in dictionary]
+
+        # overall sentiment
+        overallsentimentktamresponsequeryset = AMResponse.objects.all().filter(
+                amQuestion__questionText="How do you feel about this project in your own words?",
+                survey__id=survey).order_by('projectUser')
+        overallsentimentktamresponseserializer = AMResponseForReportSerializer(overallsentimentktamresponsequeryset, many=True)
+
+        # unspoken problem
+        unspokenproblemktamresponsequeryset = AMResponse.objects.all().filter(
+                amQuestion__questionText="Is there a problem that people aren't talking openly about?",
+                survey__id=survey).order_by('projectUser')
+        unspokenproblemktamresponseserializer = AMResponseForReportSerializer(unspokenproblemktamresponsequeryset, many=True)
+
         finalResult = {
-            "risks": 0,
-            "overall_sentiment": 0,
-            "unspoken_problem": 0,
+            "risks": len(aux),
+            "overall_sentiment": len(overallsentimentktamresponseserializer.data),
+            "unspoken_problem": len(unspokenproblemktamresponseserializer.data),
             "project_interest": 0,
             "personal_interest": 0,
             "improvement_keep": 0,
