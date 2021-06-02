@@ -2360,10 +2360,10 @@ class KeyThemesMenuCntView(APIView):
         projectUser = self.request.query_params.get('projectuser', None)
         survey = self.request.query_params.get('survey', None)
         
-        if survey is None:
-            return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
-        if projectUser is None:
-            return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
+        # if survey is None:
+        #     return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
+        # if projectUser is None:
+        #     return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
         
         finalResult = {
             "risks": 0,
