@@ -2468,6 +2468,19 @@ class KeyThemesMenuCntView(APIView):
         ispaux = [(ispdictionary[key], key) for key in ispdictionary]
 
         # improvement - change
+        icktamresponsequeryset = AMResponse.objects.all().filter(
+            amQuestion__questionText="What should we do differently?",
+            survey__id=survey, controlType="MULTI_TOPICS").order_by('projectUser')
+        icktamresponseserializer = AMResponseSerializer(
+            icktamresponsequeryset, many=True)
+        icwordlist = []
+        icres = icktamresponseserializer.data
+        for i in range(len(icres)):
+            if icres[i]['topicValue'] != "":
+                icwordlist.append(icres[i]['topicValue'])
+        icwordfreq = [icwordlist.count(p) for p in icwordlist]
+        icdictionary = dict(list(zip(icwordlist, icwordfreq)))
+        icaux = [(icdictionary[key], key) for key in icdictionary]
 
         finalResult = {
             "risks": len(aux),
@@ -2477,7 +2490,7 @@ class KeyThemesMenuCntView(APIView):
             "personal_interest": len(peiaux),
             "improvement_keep": len(ipaux),
             "improvement_start": len(istaux),
-            "improvement_change": 0,
+            "improvement_change": len(icaux),
             "improvement_stop": len(ispaux)
         }
 
