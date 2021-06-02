@@ -2362,7 +2362,7 @@ class KeyThemesMenuCntView(APIView):
         
         if survey is None:
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
-        if projectuser is None:
+        if projectUser is None:
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
         
         finalResult = {
