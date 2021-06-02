@@ -2453,6 +2453,19 @@ class KeyThemesMenuCntView(APIView):
         istaux = [(istdictionary[key], key) for key in istdictionary]
 
         # improvement - stop
+        ispktamresponsequeryset = AMResponse.objects.all().filter(
+            amQuestion__questionText="What should we stop doing?",
+            survey__id=survey, controlType="MULTI_TOPICS").order_by('projectUser')
+        ispktamresponseserializer = AMResponseSerializer(
+            ispktamresponsequeryset, many=True)
+        ispwordlist = []
+        ispres = ispktamresponseserializer.data
+        for i in range(len(ispres)):
+            if ispres[i]['topicValue'] != "":
+                ispwordlist.append(ispres[i]['topicValue'])
+        ispwordfreq = [ispwordlist.count(p) for p in ispwordlist]
+        ispdictionary = dict(list(zip(ispwordlist, ispwordfreq)))
+        ispaux = [(ispdictionary[key], key) for key in ispdictionary]
 
         # improvement - change
 
@@ -2465,7 +2478,7 @@ class KeyThemesMenuCntView(APIView):
             "improvement_keep": len(ipaux),
             "improvement_start": len(istaux),
             "improvement_change": 0,
-            "improvement_stop": 0
+            "improvement_stop": len(ispaux)
         }
 
         return Response(finalResult, status=status.HTTP_200_OK)
