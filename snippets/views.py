@@ -2348,6 +2348,37 @@ class BubbleChartView(APIView):
 
 #         return Response({"text": "pass", "code": 200, "data": shgroupserializer.data}, status=status.HTTP_200_OK)
 
+# keythemesmenucnt api
+class KeyThemesMenuCntView(APIView):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+
+    @classmethod
+    def get_extra_actions(cls):
+        return []
+
+    def get(self, format=None):
+        projectUser = self.request.query_params.get('projectuser', None)
+        survey = self.request.query_params.get('survey', None)
+        
+        if survey is None:
+            return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
+        if projectuser is None:
+            return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
+        
+        finalResult = {
+            "risks": 0,
+            "overall_sentiment": 0,
+            "unspoken_problem": 0,
+            "project_interest": 0,
+            "personal_interest": 0,
+            "improvement_keep": 0,
+            "improvement_start": 0,
+            "improvement_change": 0,
+            "improvement_stop": 0
+        }
+
+        return Response(finalResult, status=status.HTTP_200_OK)
+
 # keytheme api
 # AM - Confidence - Risk: What do you see as the biggest risks to the project?
 # AM - Sentiment - Own Words: How do you feel about this project in your own words?
