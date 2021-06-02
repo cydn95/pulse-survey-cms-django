@@ -2398,24 +2398,36 @@ class KeyThemesMenuCntView(APIView):
                 survey__id=survey, controlType="MULTI_TOPICS").order_by('projectUser')
         piktamresponseserializer = AMResponseSerializer(
             piktamresponsequeryset, many=True)
-
         piwordlist = []
         pires = piktamresponseserializer.data
         for i in range(len(pires)):
             if pires[i]['topicValue'] != "":
                 piwordlist.append(pires[i]['topicValue'])
-
         piwordfreq = [piwordlist.count(p) for p in piwordlist]
         pidictionary = dict(list(zip(piwordlist, piwordfreq)))
-
         piaux = [(pidictionary[key], key) for key in pidictionary]
         
+        # personal interest
+        peiktamresponsequeryset = AMResponse.objects.all().filter(
+            amQuestion__questionText="What do you personally want to get out of this project?",
+            survey__id=survey, controlType="MULTI_TOPICS").order_by('projectUser')
+        peiktamresponseserializer = AMResponseSerializer(
+            peiktamresponsequeryset, many=True)
+        peiwordlist = []
+        peires = peiktamresponseserializer.data
+        for i in range(len(peires)):
+            if peires[i]['topicValue'] != "":
+                peiwordlist.append(peires[i]['topicValue'])
+        peiwordfreq = [peiwordlist.count(p) for p in peiwordlist]
+        peidictionary = dict(list(zip(peiwordlist, peiwordfreq)))
+        peiaux = [(peidictionary[key], key) for key in peidictionary]
+
         finalResult = {
             "risks": len(aux),
             "overall_sentiment": len(overallsentimentktamresponseserializer.data),
             "unspoken_problem": len(unspokenproblemktamresponseserializer.data),
             "project_interest": len(piaux),
-            "personal_interest": 0,
+            "personal_interest": len(peiaux),
             "improvement_keep": 0,
             "improvement_start": 0,
             "improvement_change": 0,
