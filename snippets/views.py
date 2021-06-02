@@ -3473,6 +3473,34 @@ class DriverAnalysisView(APIView):
 
         return Response(res, status=status.HTTP_200_OK)
 
+# danalysiscnt api
+class DriverAnalysisCntView(APIView):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+
+    @classmethod
+    def get_extra_actions(cls):
+        return []
+
+    def get(self, format=None):
+        survey = self.request.query_params.get('survey', None)
+        projectUser = self.request.query_params.get('projectuser', None)
+        driver = self.request.query_params.get('driver', None)
+        startDate = self.request.query_params.get('stdt', None)
+        endDate = self.request.query_params.get('eddt', None)
+        controlType = self.request.query_params.get('controltype', None)
+
+        if survey is None:
+            return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
+        if projectUser is None:
+            return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
+        if driver is None:
+            return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
+        if startDate is None:
+            return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
+        if endDate is None:
+            return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
+            
+
 # totalshcnt api
 class TotalStakeHolderView(APIView):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
