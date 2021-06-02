@@ -2422,14 +2422,48 @@ class KeyThemesMenuCntView(APIView):
         peidictionary = dict(list(zip(peiwordlist, peiwordfreq)))
         peiaux = [(peidictionary[key], key) for key in peidictionary]
 
+        # improvement - positives
+        ipktamresponsequeryset = AMResponse.objects.all().filter(
+            amQuestion__questionText="In your opinion, what is going well on the project?",
+            survey__id=survey, controlType="MULTI_TOPICS").order_by('projectUser')
+        ipktamresponseserializer = AMResponseSerializer(
+            ipktamresponsequeryset, many=True)
+        ipwordlist = []
+        ipres = ipktamresponseserializer.data
+        for i in range(len(ipres)):
+            if ipres[i]['topicValue'] != "":
+                ipwordlist.append(ipres[i]['topicValue'])
+        ipwordfreq = [ipwordlist.count(p) for p in ipwordlist]
+        ipdictionary = dict(list(zip(ipwordlist, ipwordfreq)))
+        ipaux = [(ipdictionary[key], key) for key in ipdictionary]
+
+        # improvement - start
+        istktamresponsequeryset = AMResponse.objects.all().filter(
+            amQuestion__questionText="What should we start doing?",
+            survey__id=survey, controlType="MULTI_TOPICS").order_by('projectUser')
+        istktamresponseserializer = AMResponseSerializer(
+            istktamresponsequeryset, many=True)
+        istwordlist = []
+        istres = istktamresponseserializer.data
+        for i in range(len(istres)):
+            if istres[i]['topicValue'] != "":
+                istwordlist.append(istres[i]['topicValue'])
+        istwordfreq = [istwordlist.count(p) for p in istwordlist]
+        istdictionary = dict(list(zip(istwordlist, istwordfreq)))
+        istaux = [(istdictionary[key], key) for key in istdictionary]
+
+        # improvement - stop
+
+        # improvement - change
+
         finalResult = {
             "risks": len(aux),
             "overall_sentiment": len(overallsentimentktamresponseserializer.data),
             "unspoken_problem": len(unspokenproblemktamresponseserializer.data),
             "project_interest": len(piaux),
             "personal_interest": len(peiaux),
-            "improvement_keep": 0,
-            "improvement_start": 0,
+            "improvement_keep": len(ipaux),
+            "improvement_start": len(istaux),
             "improvement_change": 0,
             "improvement_stop": 0
         }
