@@ -3467,7 +3467,7 @@ class DriverAnalysisView(APIView):
             aoserializer = AOQuestionSerializer(aoquestionqueryset, many=True)
             aoresponsereportdata[j]['aoQuestionData'] = aoserializer.data
 
-        projectusercnt = len(ProjectUser.objects.filter(survey=survey))
+        # projectusercnt = len(ProjectUser.objects.filter(survey=survey))
 
         res = amresponsereportdata + aoresponsereportdata
 
@@ -3484,7 +3484,6 @@ class DriverAnalysisCntView(APIView):
     def get(self, format=None):
         survey = self.request.query_params.get('survey', None)
         projectUser = self.request.query_params.get('projectuser', None)
-        driver = self.request.query_params.get('driver', None)
         startDate = self.request.query_params.get('stdt', None)
         endDate = self.request.query_params.get('eddt', None)
         controlType = self.request.query_params.get('controltype', None)
@@ -3493,13 +3492,28 @@ class DriverAnalysisCntView(APIView):
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
         if projectUser is None:
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
-        if driver is None:
-            return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
         if startDate is None:
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
         if endDate is None:
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
-            
+        if controlType is None:
+            return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
+
+        amEngagementCnt = AMResponse.objects.filter(controlType=controlType, survey__id=survey, subProjectUser__id=projectUser,
+                                                    amQuestion__driver__driverName="Engagement", created_at__range=[startDate, endDate]).count()
+        aoEngagementCnt = AOResponse.objects.filter(controlType=controlType, survey__id=survey, subProjectUser__id=projectUser,
+                                                    aoQuestion__driver__driverName="Engagement", created_at__range=[startDate, endDate]).count()
+        retValue = {
+            "Engagement": amEngagementCnt + aoEngagementCnt,
+            "Culture": 0,
+            "Sentiment": 0,
+            "Interest": 0,
+            "Confidence": 0,
+            "Relationships": 0,
+            "Improvement": 0
+        }
+
+        return Response(retValue, status=status.HTTP_200_OK)
 
 # totalshcnt api
 class TotalStakeHolderView(APIView):
