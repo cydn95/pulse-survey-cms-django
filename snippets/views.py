@@ -3519,14 +3519,29 @@ class DriverAnalysisCntView(APIView):
         aoInterestCnt = AOResponse.objects.filter(controlType=controlType, survey__id=survey, subProjectUser__id=projectUser,
                                                     aoQuestion__driver__driverName="Interest", created_at__range=[startDate, endDate]).count()
 
+        amConfidenceCnt = AMResponse.objects.filter(controlType=controlType, survey__id=survey, subProjectUser__id=projectUser,
+                                                    amQuestion__driver__driverName="Confidence", created_at__range=[startDate, endDate]).count()
+        aoConfidenceCnt = AOResponse.objects.filter(controlType=controlType, survey__id=survey, subProjectUser__id=projectUser,
+                                                    aoQuestion__driver__driverName="Confidence", created_at__range=[startDate, endDate]).count()
+
+        amRelationshipsCnt = AMResponse.objects.filter(controlType=controlType, survey__id=survey, subProjectUser__id=projectUser,
+                                                    amQuestion__driver__driverName="Relationships", created_at__range=[startDate, endDate]).count()
+        aoRelationshipsCnt = AOResponse.objects.filter(controlType=controlType, survey__id=survey, subProjectUser__id=projectUser,
+                                                    aoQuestion__driver__driverName="Relationships", created_at__range=[startDate, endDate]).count()
+        
+        amImprovementCnt = AMResponse.objects.filter(controlType=controlType, survey__id=survey, subProjectUser__id=projectUser,
+                                                    amQuestion__driver__driverName="Improvement", created_at__range=[startDate, endDate]).count()
+        aoImprovementCnt = AOResponse.objects.filter(controlType=controlType, survey__id=survey, subProjectUser__id=projectUser,
+                                                    aoQuestion__driver__driverName="Improvement", created_at__range=[startDate, endDate]).count()
+
         retValue = {
             "Engagement": amEngagementCnt + aoEngagementCnt,
             "Culture": amCultureCnt + aoCultureCnt,
             "Sentiment": amSentimentCnt + aoSentimentCnt,
             "Interest": amInterestCnt + aoInterestCnt,
-            "Confidence": 0,
-            "Relationships": 0,
-            "Improvement": 0
+            "Confidence": amConfidenceCnt + aoConfidenceCnt,
+            "Relationships": amRelationshipsCnt + aoRelationshipsCnt,
+            "Improvement": amImprovementCnt + aoImprovementCnt
         }
 
         return Response(retValue, status=status.HTTP_200_OK)
