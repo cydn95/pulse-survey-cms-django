@@ -3503,11 +3503,27 @@ class DriverAnalysisCntView(APIView):
                                                     amQuestion__driver__driverName="Engagement", created_at__range=[startDate, endDate]).count()
         aoEngagementCnt = AOResponse.objects.filter(controlType=controlType, survey__id=survey, subProjectUser__id=projectUser,
                                                     aoQuestion__driver__driverName="Engagement", created_at__range=[startDate, endDate]).count()
+        
+        amCultureCnt = AMResponse.objects.filter(controlType=controlType, survey__id=survey, subProjectUser__id=projectUser,
+                                                    amQuestion__driver__driverName="Culture", created_at__range=[startDate, endDate]).count()
+        aoCultureCnt = AOResponse.objects.filter(controlType=controlType, survey__id=survey, subProjectUser__id=projectUser,
+                                                    aoQuestion__driver__driverName="Culture", created_at__range=[startDate, endDate]).count()
+
+        amSentimentCnt = AMResponse.objects.filter(controlType=controlType, survey__id=survey, subProjectUser__id=projectUser,
+                                                    amQuestion__driver__driverName="Sentiment", created_at__range=[startDate, endDate]).count()
+        aoSentimentCnt = AOResponse.objects.filter(controlType=controlType, survey__id=survey, subProjectUser__id=projectUser,
+                                                    aoQuestion__driver__driverName="Sentiment", created_at__range=[startDate, endDate]).count()
+
+        amInterestCnt = AMResponse.objects.filter(controlType=controlType, survey__id=survey, subProjectUser__id=projectUser,
+                                                    amQuestion__driver__driverName="Interest", created_at__range=[startDate, endDate]).count()
+        aoInterestCnt = AOResponse.objects.filter(controlType=controlType, survey__id=survey, subProjectUser__id=projectUser,
+                                                    aoQuestion__driver__driverName="Interest", created_at__range=[startDate, endDate]).count()
+
         retValue = {
             "Engagement": amEngagementCnt + aoEngagementCnt,
-            "Culture": 0,
-            "Sentiment": 0,
-            "Interest": 0,
+            "Culture": amCultureCnt + aoCultureCnt,
+            "Sentiment": amSentimentCnt + aoSentimentCnt,
+            "Interest": amInterestCnt + aoInterestCnt,
             "Confidence": 0,
             "Relationships": 0,
             "Improvement": 0
