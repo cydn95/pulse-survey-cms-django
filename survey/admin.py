@@ -106,7 +106,7 @@ class AMQuestionInline(SortableInlineAdminMixin, admin.TabularInline):
         
         self_pub_id = request.resolver_match.args[0]
 
-        if db_field.name in ['driver', 'controlType', 'shGroup', 'option', 'skipOption']:
+        if db_field.name in ['driver', 'controlType', 'shGroup', 'skipOption']:
             formfield.widget.can_add_related = False
             formfield.widget.can_change_related = False
             formfield.widget.can_delete_related = False
@@ -118,6 +118,12 @@ class AMQuestionInline(SortableInlineAdminMixin, admin.TabularInline):
                 formfield.queryset = formfield.queryset.none()
 
         if db_field.name == 'shGroup':
+            if self_pub_id is not None:
+                formfield.queryset = formfield.queryset.filter(survey_id=self_pub_id)
+            else:
+                formfield.queryset = formfield.queryset.none()
+
+        if db_field.name == 'option':
             if self_pub_id is not None:
                 formfield.queryset = formfield.queryset.filter(survey_id=self_pub_id)
             else:
@@ -139,7 +145,7 @@ class AOQuestionInline(SortableInlineAdminMixin, admin.TabularInline):
         
         self_pub_id = request.resolver_match.args[0]
 
-        if db_field.name in ['driver', 'controlType', 'shGroup', 'option', 'skipOption']:
+        if db_field.name in ['driver', 'controlType', 'shGroup', 'skipOption']:
             formfield.widget.can_add_related = False
             formfield.widget.can_change_related = False
             formfield.widget.can_delete_related = False
@@ -156,6 +162,12 @@ class AOQuestionInline(SortableInlineAdminMixin, admin.TabularInline):
             else:
                 formfield.queryset = formfield.queryset.none()
 
+        if db_field.name == 'option':
+            if self_pub_id is not None:
+                formfield.queryset = formfield.queryset.filter(survey_id=self_pub_id)
+            else:
+                formfield.queryset = formfield.queryset.none()
+                
         return formfield
 
 class SHGroupInline(admin.TabularInline):
