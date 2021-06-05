@@ -91,8 +91,7 @@ class DriverInline(SortableInlineAdminMixin, admin.TabularInline):
     list_per_page = 10
     exclude = ['isStandard']
     template = "admin/survey/edit_inline/driver_tabular.html"
-
-        
+      
 class AMQuestionInline(SortableInlineAdminMixin, admin.TabularInline):
     model = AMQuestion
     ordering = ['driver', 'questionText']
@@ -196,7 +195,6 @@ class ConfigPageInline(admin.StackedInline):
     extra = 0
     list_per_page = 10
 
-
 class NikelMobilePageInline(admin.StackedInline):
     model = NikelMobilePage
     extra = 0
@@ -247,9 +245,11 @@ class SurveyAdmin(admin.ModelAdmin):
                 ConfigPageInline,
                 NikelMobilePageInline,
             ]
+
             context = {
                 'object_id': obj.id
             }
+            
         else:
             self.inlines = []
 
