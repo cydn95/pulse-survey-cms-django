@@ -429,14 +429,24 @@ CORS_ORIGIN_WHITELIST = [
 # EMAIL_HOST_USER = 'apikey'    # for send grid
 # EMAIL_HOST_PASSWORD = 'RocketMan39'
 # EMAIL_HOST_PASSWORD = SENDGRID_API_KEY
-# EMAIL_PORT = 587
-# EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = 'pulse@projectai.com'
+# DEFAULT_FROM_EMAIL = 'jaclindev99@gmail.com'
 # ACCOUNT_EMAIL_SUBJECT_PREFIX = 'Contact email received from website'
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'       # for send grid
-EMAIL_BACKEND = 'django_ses.SESBackend'
+# EMAIL_BACKEND = 'django_ses.SESBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'jaclindev99@gmail.com'
+EMAIL_HOST_PASSWORD = 'piggy41294'
+
 AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
+# AWS_ACCESS_KEY_ID = 'AKIASKYV22E36XZSVO2X'
+# AWS_SECRET_ACCESS_KEY = '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'
+# AWS_SES_REGION_NAME = 'ap-southeast-2'
+# AWS_SES_REGION_ENDPOINT = 'email.ap-southeast-2.amazonaws.com'
 
 AUTHENTICATION_BACKENDS = (
     # Needed to login by username in Django admin, regardless of 'allauth'
