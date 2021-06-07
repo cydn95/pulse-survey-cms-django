@@ -439,7 +439,7 @@ DEFAULT_FROM_EMAIL = 'pulse@projectai.com'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'jaclindev99@gmail.com'
-EMAIL_HOST_PASSWORD = 'piggy41294'
+EMAIL_HOST_PASSWORD = 'zvujltulyzihnauy'
 
 AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
