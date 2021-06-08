@@ -230,7 +230,7 @@ class UserBySurveySerializer(serializers.ModelSerializer):
     shGroup = SHGroupSerializer()
     class Meta:
         model = ProjectUser
-        fields = ['id', 'survey', 'projectUserTitle', 'user', 'team', 'shGroup', 'sendInvite']
+        fields = ['id', 'survey', 'projectUserTitle', 'user', 'team', 'shGroup', 'sendInvite', 'isSuperUser', 'isTeamMember', 'isCGroup1', 'isCGroup2', 'isCGroup3']
 
 class ProjectUserSerializer(serializers.ModelSerializer):
     class Meta:
