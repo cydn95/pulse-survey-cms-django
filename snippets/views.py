@@ -3577,19 +3577,22 @@ class TotalStakeHolderView(APIView):
         arySHGroups = []
         aryOrgs = []
         
-        # for i in range(len(projectuserdata)):
-        #     if projectuserdata[i]['team']['name'] not in aryTeams:
-        #         aryTeams.append(projectuserdata[i]['team']['name'])
-        #         ret['team'][projectuserdata[i]['team']['name']] = 0
-        #     else:
-        #         ret['team'][projectuserdata[i]['team']['name']] += 1
+        for i in range(len(projectuserdata)):
+            if projectuserdata[i]['team'] is not None:
+                if projectuserdata[i]['team']['name'] not in aryTeams:
+                    aryTeams.append(projectuserdata[i]['team']['name'])
+                    ret['team'][projectuserdata[i]['team']['name']] = 0
+                else:
+                    ret['team'][projectuserdata[i]['team']['name']] += 1
 
-        #     if projectuserdata[i]['shGroup']['SHGroupName'] not in arySHGroups:
-        #         arySHGroups.append(projectuserdata[i]['shGroup']['SHGroupName'])
-        #     if projectuserdata[i]['user']['organization'] is not None:
-        #         if projectuserdata[i]['user']['organization']['name'] not in aryOrgs:
-        #             aryOrgs.append(
-        #                 projectuserdata[i]['user']['organization']['name'])
+            if projectuserdata[i]['shGroup'] is not None:
+                if projectuserdata[i]['shGroup']['SHGroupName'] not in arySHGroups:
+                    arySHGroups.append(projectuserdata[i]['shGroup']['SHGroupName'])
+                    
+            if projectuserdata[i]['user']['organization'] is not None:
+                if projectuserdata[i]['user']['organization']['name'] not in aryOrgs:
+                    aryOrgs.append(
+                        projectuserdata[i]['user']['organization']['name'])
 
         # for i in range(len(aryTeams)):
         #     ret['team'][aryTeams[i]] = len(
@@ -3599,7 +3602,7 @@ class TotalStakeHolderView(APIView):
         # for i in range(len(aryOrgs)):
         #     ret['org'][aryOrgs[i]] = len(ProjectUser.objects.filter(survey=survey, user__organization__name=aryOrgs[i]))
 
-        return Response(projectuserdata, status=status.HTTP_200_OK)
+        return Response(ret, status=status.HTTP_200_OK)
 
 # checkdashboardstatus api
 class CheckDashboardStatusView(APIView):
