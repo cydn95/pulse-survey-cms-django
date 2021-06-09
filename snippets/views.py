@@ -3562,7 +3562,7 @@ class TotalStakeHolderView(APIView):
 
         projectusercnt = len(ProjectUser.objects.filter(survey=survey))
         projectuserqueryset = ProjectUser.objects.all().filter(survey__id=survey)
-        projectuserserializer = ProjectUserSerializer(projectuserqueryset, many=True)
+        projectuserserializer = UserBySurveySerializer(projectuserqueryset, many=True)
         projectuserdata = projectuserserializer.data
 
         ret = ''
