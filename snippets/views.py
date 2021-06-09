@@ -3595,7 +3595,7 @@ class TotalStakeHolderView(APIView):
         for i in range(len(aryOrgs)):
             ret['org'][aryOrgs[i]] = len(ProjectUser.objects.filter(survey=survey, user__organization__name=aryOrgs[i]))
 
-        return Response(ret, status=status.HTTP_200_OK)
+        return Response(projectuserdata, status=status.HTTP_200_OK)
 
 # checkdashboardstatus api
 class CheckDashboardStatusView(APIView):
