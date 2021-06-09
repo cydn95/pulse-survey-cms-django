@@ -3559,13 +3559,41 @@ class TotalStakeHolderView(APIView):
 
         if survey is None:
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
-        
+
         projectusercnt = len(ProjectUser.objects.filter(survey=survey))
+        projectuserqueryset = ProjectUser.objects.all().filter(survey__id=survey)
+        projectuserserializer = ProjectUserSerializer(projectuserqueryset, many=True)
+        projectuserdata = projectuserserializer.data
 
         ret = ''
         ret = {
-            "stakeHolderCount": projectusercnt
+            "stakeHolderCount": projectusercnt,
+            "shgroup": {},
+            "team": {},
+            "org": {}
         }
+
+        aryTeams = []
+        arySHGroups = []
+        aryOrgs = []
+        
+        for i in range(len(projectuserdata)):
+            if projectuserdata[i]['team']['name'] not in aryTeams:
+                aryTeams.append(projectuserdata[i]['team']['name'])
+            if projectuserdata[i]['shGroup']['SHGroupName'] not in arySHGroups:
+                arySHGroups.append(projectuserdata[i]['shGroup']['SHGroupName'])
+            if projectuserdata[i]['user']['organization'] is not None:
+                if projectuserdata[i]['user']['organization']['name'] not in aryOrgs:
+                    aryOrgs.append(
+                        projectuserdata[i]['user']['organization']['name'])
+
+        for i in range(len(aryTeams)):
+            ret['team'][aryTeams[i]] = len(
+                ProjectUser.objects.filter(survey=survey, team__name=aryTeams[i]))
+        for i in range(len(arySHGroups)):
+            ret['shgroup'][arySHGroups[i]] = len(ProjectUser.objects.filter(survey=survey, shGroup__SHGroupName=arySHGroups[i]))
+        for i in range(len(aryOrgs)):
+            ret['org'][aryOrgs[i]] = len(ProjectUser.objects.filter(survey=survey, user__organization__name=aryOrgs[i]))
 
         return Response(ret, status=status.HTTP_200_OK)
 
