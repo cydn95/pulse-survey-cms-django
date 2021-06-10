@@ -58,7 +58,7 @@ class ProjectUserInline(InlineActionsMixin, admin.TabularInline):
         print("Send Invite Test")
         print(self)
         print(obj)
-        obj.save()
+        # obj.save()
         messages.info(request, 'Email invitation has been sent.')
 
 
