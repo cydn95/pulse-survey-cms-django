@@ -16,6 +16,7 @@ from django.template.loader import get_template, render_to_string
 from django.conf import settings
 from django.contrib import messages
 from django.utils.safestring import mark_safe
+from smtplib import SMTPException
 
 class InegerPercentageField(models.IntegerField):
     def __init__(self, verbose_name=None, name=None, min_value=None, max_value=None, **kwargs):
@@ -133,7 +134,10 @@ class ProjectUser(models.Model):
                 email.attach(image_connect)
                 image_connect.add_header('Content-ID', f"<{image_name_connect}>")
 
-            email.send()
+            try:
+                email.send()
+            except SMTPException as e:
+                print('There was an error sending an email: ', e)
 
 class KeyThemeUpDownVote(models.Model):
     keyTheme = models.TextField(default="", blank=False, null=False)
