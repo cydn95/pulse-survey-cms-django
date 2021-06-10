@@ -57,6 +57,8 @@ class ProjectUserInline(InlineActionsMixin, admin.TabularInline):
         # temporary commented 2021-03-24
         print("Send Invite Test")
         print(self)
+        print(obj)
+        obj.sendInvite = True
         obj.save()
         messages.info(request, 'Email invitation has been sent.')
 
@@ -206,7 +208,7 @@ class AMDriverForm(forms.Form):
 class AODriverForm(forms.Form):
     ao_driver = forms.ModelChoiceField(queryset=None)
 
-class SurveyAdmin(admin.ModelAdmin):
+class SurveyAdmin(InlineActionsModelAdminMixin, admin.ModelAdmin):
     list_display = ['surveyTitle', 'get_client', 'project', 'survey_status']
     search_fields = ['surveyTitle', 'project__projectName']
     list_filter = ['project']
