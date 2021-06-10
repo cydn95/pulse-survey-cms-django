@@ -79,7 +79,7 @@ class ProjectUser(models.Model):
         return '{0} - {1}'.format(self.survey, self.user.username)
 
     def save(self, *args, **kwargs):
-        # self.sendInvite = False
+        self.sendInvite = False
 
         # blocked sendinvite
         if not self.pk:
