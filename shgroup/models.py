@@ -62,8 +62,7 @@ class ProjectUser(models.Model):
     shGroup = models.ForeignKey(SHGroup, null=True, blank=True, verbose_name='SHGroup')
 
     # added superuser toggle
-    isSuperUser = models.BooleanField(
-        default=False, verbose_name='Reveal Dashboards')
+    isSuperUser = models.BooleanField(default=False, verbose_name='Reveal Dashboards')
     projectOrganization = models.CharField(max_length=200, verbose_name='Project Organization', blank=True, default='')
 
     isTeamMember = models.BooleanField(default=False)
