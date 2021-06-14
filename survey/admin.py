@@ -345,7 +345,6 @@ class SurveyAdmin(admin.ModelAdmin):
                     AOQuestion.objects.filter(survey_id=current_survey.id, isStandard=True).delete()
                     Driver.objects.filter(survey_id=current_survey.id).delete()
                     
-                    
                     std_driver = Driver.objects.filter(survey_id=std_survey.id).values()
                     
                     if std_driver.count() == 0:
