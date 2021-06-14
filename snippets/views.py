@@ -2082,38 +2082,6 @@ class BubbleChartView(APIView):
 
         return Response(res, status=status.HTTP_200_OK)
 
-# # checkdashboardstatus api
-# class CheckDashboardStatusView(APIView):
-#     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
-
-#     @classmethod
-#     def get_extra_actions(cls):
-#         return []
-
-#     def get(self, format=None):
-#         survey = self.request.query_params.get('survey', None)
-#         projectUser = self.request.query_params.get('projectuser', None)
-        
-#         if survey is None:
-#             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
-#         if projectUser is None:
-#             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
-
-#         # prefix check
-#         prefCode = preApiCheck(survey, projectUser)
-
-#         shgroupqueryset = SHGroup.objects.filter(survey__id=survey)
-#         shgroupserializer = SHGroupSerializer(shgroupqueryset, many=True)
-
-#         if prefCode == 228:
-#             return Response({"text": "no data yet"}, status=228)
-#         elif prefCode == 227:
-#             return Response({"text": "no data yet"}, status=227)
-#         elif prefCode == 201:
-#             return Response({"text": "superuser", "code": 201}, status=status.HTTP_200_OK)
-
-#         return Response({"text": "pass", "code": 200, "data": shgroupserializer.data}, status=status.HTTP_200_OK)
-
 # keymenucnt api
 class KeyThemesMenuCntView(APIView):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
