@@ -27,5 +27,3 @@ if "SentimentScore" in sentimentData:
         qdata["NeutralScore"] = sentimentData["SentimentScore"]["Neutral"]
     if "Positive" in sentimentData["SentimentScore"]:
         qdata["PositiveScore"] = sentimentData["SentimentScore"]["Positive"]
-
-# print(qdata)
