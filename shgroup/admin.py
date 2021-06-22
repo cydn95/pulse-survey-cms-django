@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import SHGroup, SHCategory, SHMapping, ProjectUser, MapType
+from .models import SHGroup, SHCategory, SHMapping, ProjectUser, MapType, SHType
 from jet.admin import CompactInline
 from django.forms import CheckboxSelectMultiple
 from django.contrib import messages
@@ -148,3 +148,4 @@ admin.site.register(ProjectUser, ProjectUserAdmin)
 admin.site.register(SHCategory, SHCategoryAdmin)
 admin.site.register(SHMapping, SHMappingAdmin)
 admin.site.register(MapType)
+admin.site.register(SHType)

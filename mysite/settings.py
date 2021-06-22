@@ -326,6 +326,7 @@ JET_SIDE_MENU_ITEMS = [ # A list of application or custom item dicts
         {'name':'shgroup.projectuser', 'label': 'Project Users'},
         {'name':'team.team', 'label': 'Project Teams'},
         {'name':'shgroup.shmapping', 'label': 'SHMapping'},
+        {'name':'shgroup.shtype', 'label': 'SHType'},
         {'name':'survey.configpage', 'label': 'Pages'},
         {'name':'survey.nikelmobilepage', 'label': 'Nikel Tower(for mobile)'},
         {'name':'survey.tooltipguide', 'label': 'Tooltip'},
