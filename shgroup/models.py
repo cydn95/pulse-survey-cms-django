@@ -65,7 +65,8 @@ class ProjectUser(models.Model):
     isSuperUser = models.BooleanField(default=False, verbose_name='Reveal Dashboards')
     projectOrganization = models.CharField(max_length=200, verbose_name='Project Organization', blank=True, default='')
 
-    isTeamMember = models.BooleanField(default=False)
+    # commented for isteammember
+    # isTeamMember = models.BooleanField(default=False)
     isCGroup1 = models.BooleanField(default=False)
     isCGroup2 = models.BooleanField(default=False)
     isCGroup3 = models.BooleanField(default=False)
