@@ -54,6 +54,13 @@ class SHCategory(models.Model):
     def __str__(self):
         return self.SHCategoryName
 
+class SHType(models.Model):
+    survey = models.ForeignKey(Survey, on_delete=models.CASCADE)
+    shTypeName = models.CharField(max_length=50, blank=True)
+
+    def __str__(self):
+        return self.shTypeName
+
 class ProjectUser(models.Model):
     survey = models.ForeignKey(Survey, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -67,17 +74,18 @@ class ProjectUser(models.Model):
 
     # commented for isteammember
     # isTeamMember = models.BooleanField(default=False)
-    TEAMMEMBER = 0
-    STAKEHOLDER = 1
-    SH_CHOICES = (
-        (TEAMMEMBER, 'Team Member'),
-        (STAKEHOLDER, 'Stakeholder'),
-    )
-    shType = models.CharField(
-        max_length=1,
-        choices=SH_CHOICES,
-        default=TEAMMEMBER,
-    )
+    # TEAMMEMBER = 0
+    # STAKEHOLDER = 1
+    # SH_CHOICES = (
+    #     (TEAMMEMBER, 'Team Member'),
+    #     (STAKEHOLDER, 'Stakeholder'),
+    # )
+    # shType = models.CharField(
+    #     max_length=1,
+    #     choices=SH_CHOICES,
+    #     default=TEAMMEMBER,
+    # )
+    shType = models.ForeignKey(SHType, null=True, blank=True, verbose_name='SHType')
 
     isCGroup1 = models.BooleanField(default=False)
     isCGroup2 = models.BooleanField(default=False)

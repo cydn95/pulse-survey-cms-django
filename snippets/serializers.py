@@ -7,7 +7,7 @@ from aboutme.models import AMResponseAcknowledgement, PageAMQuestion, AMQuestion
 from aboutothers.models import AOResponseAcknowledgement, PageAOQuestion, AOQuestion, AOResponse, AOResponseTopic, AOPage
 from page_nav.models import PageNav
 from team.models import Team
-from shgroup.models import KeyThemeUpDownVote, SHGroup, ProjectUser, MyMapLayout, ProjectMapLayout, SHCategory, SHMapping
+from shgroup.models import KeyThemeUpDownVote, SHGroup, SHType, ProjectUser, MyMapLayout, ProjectMapLayout, SHCategory, SHMapping
 from option.models import Option, SkipOption
 from organization.models import Organization, UserAvatar, UserTeam, UserTitle, UserGuideMode
 from survey.models import ToolTipGuide, Driver, Project, Survey, ProjectVideoUpload, Client, ConfigPage, NikelMobilePage
@@ -211,8 +211,14 @@ class SurveySerializer(serializers.ModelSerializer):
         model = Survey
         fields = '__all__'
 
+class SHTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SHType
+        fields = '__all__'
+        
 class SurveyByUserSerializer(serializers.ModelSerializer):
     survey = SurveySerializer()
+    shType = SHTypeSerializer()
 
     class Meta:
         model = ProjectUser
@@ -229,6 +235,8 @@ class UserBySurveySerializer(serializers.ModelSerializer):
     user = UserSerializer()
     team = TeamSerializer()
     shGroup = SHGroupSerializer()
+    shType = SHTypeSerializer()
+
     class Meta:
         model = ProjectUser
 
@@ -293,6 +301,7 @@ class ProjectUserForReportSerializer(serializers.ModelSerializer):
     user = UserSerializer()
     team = TeamSerializer()
     shGroup = SHGroupSerializer()
+    shType = SHTypeSerializer()
 
     class Meta:
         model = ProjectUser
