@@ -216,7 +216,7 @@ class SurveyByUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProjectUser
-        fields = ['id', 'user', 'survey', 'shGroup']
+        fields = ['id', 'user', 'survey', 'shGroup', 'projectOrganization']
 
 class SHCategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -234,7 +234,7 @@ class UserBySurveySerializer(serializers.ModelSerializer):
         # commented for isteammember
         # fields = ['id', 'survey', 'projectUserTitle', 'user', 'team', 'shGroup', 'sendInvite', 'isSuperUser', 'isTeamMember', 'isCGroup1', 'isCGroup2', 'isCGroup3']
         fields = ['id', 'survey', 'projectUserTitle', 'user', 'team', 'shGroup',
-                  'sendInvite', 'isSuperUser', 'isCGroup1', 'isCGroup2', 'isCGroup3']
+                  'sendInvite', 'isSuperUser', 'isCGroup1', 'isCGroup2', 'isCGroup3', 'projectOrganization']
 
 class ProjectUserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -298,7 +298,8 @@ class ProjectUserForReportSerializer(serializers.ModelSerializer):
 
         # commented for isteammember
         # fields = ['id', 'user', 'team', 'shGroup', 'isTeamMember', 'isCGroup1', 'isCGroup2', 'isCGroup3']
-        fields = ['id', 'user', 'team', 'shGroup', 'isCGroup1', 'isCGroup2', 'isCGroup3']
+        fields = ['id', 'user', 'team', 'shGroup',
+                  'projectOrganization', 'isCGroup1', 'isCGroup2', 'isCGroup3']
 
 class AMResponseForDriverAnalysisSerializer(serializers.ModelSerializer):
     projectUser = ProjectUserForReportSerializer()

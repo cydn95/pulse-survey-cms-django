@@ -67,6 +67,18 @@ class ProjectUser(models.Model):
 
     # commented for isteammember
     # isTeamMember = models.BooleanField(default=False)
+    TEAMMEMBER = 0
+    STAKEHOLDER = 1
+    SH_CHOICES = (
+        (TEAMMEMBER, 'Team Member'),
+        (STAKEHOLDER, 'Stakeholder'),
+    )
+    shType = models.CharField(
+        max_length=1,
+        choices=SH_CHOICES,
+        default=TEAMMEMBER,
+    )
+
     isCGroup1 = models.BooleanField(default=False)
     isCGroup2 = models.BooleanField(default=False)
     isCGroup3 = models.BooleanField(default=False)
