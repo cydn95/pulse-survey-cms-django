@@ -29,6 +29,24 @@ class SHGroupAdmin(admin.ModelAdmin):
 
         return form
 
+class SHTypeAdmin(admin.ModelAdmin):
+    list_display = ('survey', 'shTypeName')
+    model = SHType
+
+    search_fields = ['shTypeName']
+    list_filter = ['shTypeName', 'survey']
+    list_per_page = 10
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        survey = form.base_fields['survey']
+
+        survey.widget.can_add_related = True
+        survey.widget.can_change_related = False
+        survey.widget.can_delete_related = False
+
+        return form
+
 class SHCategoryAdmin(admin.ModelAdmin):
     list_display = ('SHCategoryName', 'survey', 'mapType', 'icon')
     model = SHCategory
@@ -148,4 +166,4 @@ admin.site.register(ProjectUser, ProjectUserAdmin)
 admin.site.register(SHCategory, SHCategoryAdmin)
 admin.site.register(SHMapping, SHMappingAdmin)
 admin.site.register(MapType)
-admin.site.register(SHType)
+admin.site.register(SHType, SHTypeAdmin)
