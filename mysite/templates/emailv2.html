@@ -1,6 +1,11 @@
 {% load static inlinecss %}
 {% inlinecss "email/css/emailv2.css" %}
 <html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Pulse</title>
+</head>
 <body>
     <style type="text/css">
     @import url('https://fonts.googleapis.com/css?family=Poppins');
@@ -10,8 +15,9 @@
     </style>
     <div class="container">
         <div class="header">
+            <img class="middle-img" src="../assets/email/email-3-top.png"/>
             <h1>Hi {{ first_name }} {{ last_name }}</h1>
-            <p>Youu have been nominated as a stakeholder<br/>on the <strong>{{ project_name }} project</strong></p>
+            <p>Youu have been nominated as a stakeholder<br />on the <strong>{{ project_name }} </strong> project</p>
         </div>
         <p class="description">
             We want to create the kind of project where<br/><span class="green">everyone</span> can freely share their thoughts<br/>feelings and ideas. We want this project to succeed, and to<br/>do that, we need your<br/>honest input.
