@@ -126,7 +126,7 @@ class ProjectUser(models.Model):
             image_name_middle = Path(image_path_middle).name
 
             subject = 'Welcome to Pulse'
-            message = get_template('email.html').render(
+            message = get_template('emailv2.html').render(
                 {
                     'project_name': project,
                     'survey_name': survey,
@@ -168,7 +168,7 @@ class ProjectUser(models.Model):
                 image_middle = MIMEImage(f_middle.read())
                 email.attach(image_middle)
                 image_middle.add_header('Content-ID', f"<{image_name_middle}>")
-                
+
             try:
                 email.send()
             except SMTPException as e:
