@@ -86,16 +86,16 @@ class AMResponseAcknowledgement(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-class AMResponseSentiment(models.Model):
-    amResponse = models.ForeignKey(AMResponse, on_delete=models.CASCADE)
-    sentiment = models.CharField(max_length=30, blank=True)
-    positiveValue = models.FloatField(blank=True)
-    neutralValue = models.FloatField(blank=True)
-    negativeValue = models.FloatField(blank=True)
-    mixedValue = models.FloatField(blank=True)
+# class AMResponseSentiment(models.Model):
+#     amResponse = models.ForeignKey(AMResponse, on_delete=models.CASCADE)
+#     sentiment = models.CharField(max_length=30, blank=True)
+#     positiveValue = models.FloatField(blank=True)
+#     neutralValue = models.FloatField(blank=True)
+#     negativeValue = models.FloatField(blank=True)
+#     mixedValue = models.FloatField(blank=True)
 
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+#     created_at = models.DateTimeField(auto_now_add=True)
+#     updated_at = models.DateTimeField(auto_now=True)
 
 class AMResponseTopic(models.Model):
     amQuestion = models.ForeignKey(AMQuestion, on_delete=models.CASCADE)
