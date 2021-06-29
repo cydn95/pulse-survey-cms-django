@@ -3147,7 +3147,6 @@ class AdvisorInsightsView(APIView):
             }
         }
 
-        # return Response({"respondents": respondents, "summary": summary, "recommendedProjectUsers": recommendedProjectUserSerializer.data[:3], "detailedData": detailedData}, status=status.HTTP_200_OK)
         return Response({"summary": summary, "catchupProjectUsers": recommendedCatchupProjectUserSerializer.data, "recommendedProjectUsers": recommendedProjectUserSerializer.data[:3], "detailedData": detailedData}, status=status.HTTP_200_OK)
 
 # driveranalysis api
@@ -3200,8 +3199,6 @@ class DriverAnalysisView(APIView):
             aoquestionqueryset = AOQuestion.objects.filter(id=aoresponsereportdata[j]['aoQuestion'])
             aoserializer = AOQuestionSerializer(aoquestionqueryset, many=True)
             aoresponsereportdata[j]['aoQuestionData'] = aoserializer.data
-
-        # projectusercnt = len(ProjectUser.objects.filter(survey=survey))
 
         res = amresponsereportdata + aoresponsereportdata
 
