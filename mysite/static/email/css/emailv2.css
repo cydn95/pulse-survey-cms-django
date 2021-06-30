@@ -28,16 +28,23 @@ body {
 }
 
 .header h1 {
+    position: absolute;
+    top: 135px;
+    text-align: center;
+    width: 414px;
     font-size: 30px;
     line-height: 21px;
     padding: 0px;
-    margin-top: "-103px";
     margin-left: 0px;
     margin-right: 0px;
     margin-bottom: 0px;
 }
 
 .header p {
+    position: absolute;
+    top: 184px;
+    width: 414px;
+    text-align: center;
     font-size: 13px;
     line-height: 15px;
 }
