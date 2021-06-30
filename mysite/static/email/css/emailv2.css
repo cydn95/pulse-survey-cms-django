@@ -57,6 +57,10 @@ body {
 }
 
 .action-button {
+    display: inline-block;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-decoration: none;
     background: #62B6A8;
     font-size: 18px;
     width: 80%;
@@ -64,7 +68,7 @@ body {
     border: none;
     outline: none;
     color: #FFFFFF;
-    height: 61px;
+    /* height: 61px; */
     margin-top: 28px;
     margin-bottom: 31px;
 }
