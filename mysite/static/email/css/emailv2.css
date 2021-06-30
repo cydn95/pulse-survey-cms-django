@@ -31,8 +31,10 @@ body {
     font-size: 30px;
     line-height: 21px;
     padding: 0px;
-    margin: 0px;
-    margin-top: -103px;
+    margin-left: 0px;
+    margin-right: 0px;
+    margin-bottom: 0px;
+    margin-top: -103px !important;
 }
 
 .header p {
