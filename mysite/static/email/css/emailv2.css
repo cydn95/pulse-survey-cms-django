@@ -28,8 +28,8 @@ body {
 }
 
 .header h1 {
-    position: absolute;
-    top: 135px;
+    position: absolute !important;
+    top: 135px !important;
     text-align: center;
     width: 414px;
     font-size: 30px;
@@ -41,8 +41,8 @@ body {
 }
 
 .middle-title {
-    position: absolute;
-    top: 135px;
+    position: absolute !important;
+    top: 135px !important;
     text-align: center;
     width: 414px;
     font-size: 30px;
@@ -54,8 +54,8 @@ body {
 }
 
 .middle-content {
-    position: absolute;
-    top: 184px;
+    position: absolute !important;
+    top: 184px !important;
     width: 414px;
     text-align: center;
     font-size: 13px;
@@ -63,8 +63,8 @@ body {
 }
 
 .header p {
-    position: absolute;
-    top: 184px;
+    position: absolute !important;
+    top: 184px !important;
     width: 414px;
     text-align: center;
     font-size: 13px;
