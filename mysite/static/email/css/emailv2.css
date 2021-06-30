@@ -5,7 +5,6 @@ body {
     overflow-y: auto;
     font-family: Poppins;
     background-color: #FFFFFF;
-    background-image: url('static/email/img/connect.png');
 }
 
 .container {
@@ -21,6 +20,7 @@ body {
     height: 233px;
     color: #FFFFFF;
     margin-bottom: 20px;
+    background-image: url('https://pulse.projectai.com/static/email/img/email-3-top.png');
 }
 
 .header img {
