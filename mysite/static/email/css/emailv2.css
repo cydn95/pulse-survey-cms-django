@@ -32,13 +32,11 @@ body {
 }
 
 .header h1 {
-    position: absolute !important;
-    top: 135px !important;
     text-align: center;
     width: 414px;
     font-size: 30px;
     line-height: 21px;
-    padding: 0px;
+    padding-top: 130px;
     margin-left: 0px;
     margin-right: 0px;
     margin-bottom: 0px;
@@ -63,8 +61,6 @@ body {
 }
 
 .header p {
-    position: absolute !important;
-    top: 184px !important;
     width: 414px;
     text-align: center;
     font-size: 13px;
