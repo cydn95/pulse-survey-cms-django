@@ -21,6 +21,9 @@ body {
     color: #FFFFFF;
     margin-bottom: 20px;
     background-image: url('https://pulse.projectai.com/static/email/img/email-3-top.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
 }
 
 .header img {
