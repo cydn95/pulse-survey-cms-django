@@ -5,6 +5,7 @@ body {
     overflow-y: auto;
     font-family: Poppins;
     background-color: #FFFFFF;
+    background-image: url('static/email/img/connect.png');
 }
 
 .container {
