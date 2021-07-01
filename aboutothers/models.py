@@ -86,17 +86,6 @@ class AOResponseAcknowledgement(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-# class AOResponseSentiment(models.Model):
-#     aoResponse = models.ForeignKey(AOResponse, on_delete=models.CASCADE)
-#     sentiment = models.CharField(max_length=30, blank=True)
-#     positiveValue = models.FloatField(blank=True)
-#     neutralValue = models.FloatField(blank=True)
-#     negativeValue = models.FloatField(blank=True)
-#     mixedValue = models.FloatField(blank=True)
-
-#     created_at = models.DateTimeField(auto_now_add=True)
-#     updated_at = models.DateTimeField(auto_now=True)
-
 class AOResponseTopic(models.Model):
     aoQuestion = models.ForeignKey(AOQuestion, on_delete=models.CASCADE)
     responseUser = models.ForeignKey(ProjectUser, on_delete=models.CASCADE)
