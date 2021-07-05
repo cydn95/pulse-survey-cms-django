@@ -47,6 +47,8 @@ router.register(r'useravatar', views.UserAvatarViewSet)
 router.register(r'adminproject', views.ProjectViewSet)
 router.register(r'adminprojectuser', views.ProjectUserViewSet)
 router.register(r'adminuser', views.UserViewSet)
+# router.register(r'adminprojectuserdetail', views.ProjectUserDetailViewSet)
+# router.register(r'adminprojectuserconfig', views.ProjectUserConfigViewSet)
 
 # The API URLs are now determined automatically by the router.
 urlpatterns = [
