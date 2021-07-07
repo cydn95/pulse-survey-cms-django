@@ -3351,7 +3351,7 @@ class CheckDashboardStatusView(APIView):
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
 
         # prefix check
-        prefCode = preApiCheck(survey, projectUser)
+        prefCode = preApiCheck(survey, projectUser) 
 
         shgroupqueryset = SHGroup.objects.filter(survey__id=survey)
         shgroupserializer = SHGroupSerializer(shgroupqueryset, many=True)
