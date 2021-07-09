@@ -51,7 +51,7 @@ class ProjectUserInline(InlineActionsMixin, admin.TabularInline):
     list_per_page = 10
     extra = 0
 
-    inline_actions = ['send_invite']
+    # inline_actions = ['send_invite']
 
     def send_invite(self, request, obj, parent_obj=None):
         # temporary commented 2021-03-24
