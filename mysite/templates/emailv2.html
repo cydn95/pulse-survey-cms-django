@@ -13,14 +13,22 @@
         font-family: 'Poppins', 'Arial';
     }
     </style>
-    <!--[if !mso]>-->
+
     <div class="container">
-        <div class="header">
-            <!-- <img class="middle-img" src="cid:{{image_name_top}}"/> -->
+        <!-- <div class="header">
             <h1 class="middle-title">Hi {{ first_name }} {{ last_name }}</h1>
             <p class="middle-content">You have been nominated as a stakeholder<br />on the
                 <strong>{{ project_name }} </strong> project</p>
-        </div>
+        </div> -->
+        <table class="header" height="233" width="100%" cellpadding="0" cellspacing="0" border="0">
+            <tr>
+                <td valign="top" align="left" background="https://pulse.projectai.com/static/email/img/email-3-top.png">
+                    <h1 class="middle-title">Hi {{ first_name }} {{ last_name }}</h1>
+                    <p class="middle-content">You have been nominated as a stakeholder<br />on the
+                        <strong>{{ project_name }} </strong> project</p>
+                </td>
+            </tr>
+        </table>
         <p class="description">
             We want to create the kind of project where<br/><span class="green">everyone</span> can freely share their thoughts<br/>feelings and ideas. We want this project to succeed, and to<br/>do that, we need your<br/>honest input.
         </p>
@@ -34,16 +42,6 @@
         </p>
         <img class="logo" src="cid:{{image_name_logo}}" height="90" />
     </div>
-    <!--<![endif]-->
-    <!--[if mso]>-->
-    <div class="container">
-        <table height="233" width="100%" cellpadding="0" cellspacing="0" border="0">
-            <tr>
-                <td valign="top" align="left" background="https://pulse.projectai.com/static/email/img/email-3-top.png">Test</td>
-            </tr>
-        </table>
-    </div>
-    <!--<![endif]-->
 </body>
 </html>
 {% endinlinecss %}
