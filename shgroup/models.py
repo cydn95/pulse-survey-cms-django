@@ -104,10 +104,11 @@ class ProjectUser(models.Model):
         # blocked sendinvite
         # if not self.pk:
         #     self.sendInvite = True
+        print(self)
 
         super(ProjectUser, self).save(*args, **kwargs)
 
-        if (not self.pk) & (self.sendInvite):
+        if self.sendInvite:
             project = Project.objects.get(id=self.survey.project.id)
             survey = Survey.objects.get(id=self.survey.id)
             user = User.objects.get(id=self.user.id)
