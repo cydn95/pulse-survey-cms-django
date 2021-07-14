@@ -5,7 +5,7 @@ from rest_framework.urlpatterns import format_suffix_patterns
 from allauth.account.views import confirm_email
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
-from django.urls import reverse_lazy
+# from django.urls import reverse_lazy
 
 # Create a router and register our viewsets with it.
 router = DefaultRouter()
@@ -56,11 +56,11 @@ urlpatterns = [
     url('', include(router.urls)),
     url(r'^rest-auth/', include('rest_auth.urls')),
     url(r'^rest-auth/registration/', include('rest_auth.registration.urls')),
-    # url(r'^password_reset/', auth_views.password_reset, name='password_reset'),
-    url(r'^password_reset/', auth_views.PasswordResetView.as_view(success_url=reverse_lazy('users:password_reset_done')), name='password_reset'),
-    url(r'^password_reset/done/', auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'),
-    url(r'^reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
-    url(r'^reset/done/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
+    url(r'^password_reset/', include('django_rest_passwordreset.urls', namespace='password_reset')),
+    # url(r'^password_reset/$', auth_views.password_reset, name='password_reset'),
+    # url(r'^password_reset/done/$', auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'),
+    # url(r'^reset/<uidb64>/<token>/$', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+    # url(r'^reset/done/$', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
     url(r'^api-token-auth/', views.CustomAuthToken.as_view()),
     url(r'^account/', include('allauth.urls')),
     url(r'^get_csrf/?$', views.get_csrf, name="get_csrf"),
