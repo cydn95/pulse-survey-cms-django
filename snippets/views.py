@@ -43,6 +43,7 @@ from django.db.models import Q, Count, Avg
 
 from drf_renderer_xlsx.mixins import XLSXFileMixin
 from drf_renderer_xlsx.renderers import XLSXRenderer
+from smtplib import SMTPException
 
 #initialize comprehend module
 comprehend = boto3.client(service_name='comprehend', region_name='us-east-2')
@@ -192,22 +193,37 @@ def password_reset_token_created(sender, instance, reset_password_token, *args, 
         'reset_password_url': "{}?token={}".format(instance.request.build_absolute_uri(reverse('password_reset:reset-password-confirm')), reset_password_token.key)
     }
 
-    # render email text
-    email_html_message = render_to_string('email/user_reset_password.html', context)
-    email_plaintext_message = render_to_string('email/user_reset_password.txt', context)
+    subject = 'Password reset'
+    message = get_template('emailv3.html').render(context)
+    email_from = settings.DEFAULT_FROM_EMAIL
+    recipient_list = [reset_password_token.user.email]
 
-    msg = EmailMultiAlternatives(
-        # title:
-        "Password Reset for {title}".format(title="Some website title"),
-        # message:
-        email_plaintext_message,
-        # from:
-        "pulse@projectai.com",
-        # to:
-        [reset_password_token.user.email]
-    )
-    msg.attach_alternative(email_html_message, "text/html")
-    msg.send()
+    email = EmailMultiAlternatives(subject=subject, body=message, from_email=email_from, to=recipient_list)
+    email.attach_alternative(message, "text/html")
+    email.content_subtype = 'html'
+    email.mixed_subtype = 'related'
+
+    try:
+        email.send()
+    except SMTPException as e:
+        print('There was an error sending an email: ', e)
+
+    # # render email text
+    # email_html_message = render_to_string('email/user_reset_password.html', context)
+    # email_plaintext_message = render_to_string('email/user_reset_password.txt', context)
+
+    # msg = EmailMultiAlternatives(
+    #     # title:
+    #     "Password Reset for {title}".format(title="Some website title"),
+    #     # message:
+    #     email_plaintext_message,
+    #     # from:
+    #     "pulse@projectai.com",
+    #     # to:
+    #     [reset_password_token.user.email]
+    # )
+    # msg.attach_alternative(email_html_message, "text/html")
+    # msg.send()
 
 def preApiCheck(survey, projectUser):
     # prefix check

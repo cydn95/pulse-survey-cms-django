@@ -1,0 +1,28 @@
+{% load static inlinecss %}
+{% inlinecss "email/css/emailv3.css" %}
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Pulse</title>
+</head>
+<body>
+    <style type="text/css">
+    @import url('https://fonts.googleapis.com/css?family=Poppins');
+    body {
+        font-family: 'Poppins', 'Arial';
+    }
+    </style>
+
+    <div class="container">
+        <div class="header">
+            <h1 class="middle-title">Hello {{ current_user }}</h1>
+            <p class="middle-content">need to update your password? Click the button below.</p>
+        </div>
+        <p class="description1">
+            <a href="{{ reset_password_url }}" class="action-button">Reset my password</a>
+        </p>
+    </div>
+</body>
+</html>
+{% endinlinecss %}
