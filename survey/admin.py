@@ -435,17 +435,29 @@ class SurveyAdmin(admin.ModelAdmin):
                             amq_obj.save()
                             stdamq_shgroup = std_amq[j].shGroup.all()
                             for a in range(len(stdamq_shgroup)):
-                                tempItem = SHGroup(SHGroupName=stdamq_shgroup[a].SHGroupName,
-                                                   SHGroupAbbrev=stdamq_shgroup[a].SHGroupAbbrev,
-                                                   responsePercent=stdamq_shgroup[a].responsePercent,
-                                                   survey=current_survey)
-                                tempItem.save()
+                                tempItem = None
+                                try:
+                                    tempItem = SHGroup.objects.get(SHGroupName=stdamq_shgroup[a].SHGroupName,
+                                                                   SHGroupAbbrev=stdamq_shgroup[a].SHGroupAbbrev,
+                                                                   responsePercent=stdamq_shgroup[a].responsePercent,
+                                                                   survey=current_survey)
+                                except SHGroup.DoesNotExist:
+                                    tempItem = SHGroup(SHGroupName=stdamq_shgroup[a].SHGroupName,
+                                                    SHGroupAbbrev=stdamq_shgroup[a].SHGroupAbbrev,
+                                                    responsePercent=stdamq_shgroup[a].responsePercent,
+                                                    survey=current_survey)
+                                    tempItem.save()
                                 amq_obj.shGroup.add(tempItem)
                             stdamq_option = std_amq[j].option.all()
                             for b in range(len(stdamq_option)):
-                                tempOptionItem = Option(survey=current_survey,
-                                                    optionName=stdamq_option[b].optionName)
-                                tempOptionItem.save()
+                                tempOptionItem = None
+                                try:
+                                    tempOptionItem = Option.objects.get(survey=current_survey,
+                                                                        optionName=stdamq_option[b].optionName)
+                                except Option.DoesNotExist:
+                                    tempOptionItem = Option(survey=current_survey,
+                                                        optionName=stdamq_option[b].optionName)
+                                    tempOptionItem.save()
                                 amq_obj.option.add(tempOptionItem)
                             stdamq_skipoption = std_amq[j].skipOption.all()
                             for c in range(len(stdamq_skipoption)):
@@ -520,17 +532,29 @@ class SurveyAdmin(admin.ModelAdmin):
                             amq_obj.save()
                             stdamq_shgroup = std_amq[j].shGroup.all()
                             for a in range(len(stdamq_shgroup)):
-                                tempItem = SHGroup(SHGroupName=stdamq_shgroup[a].SHGroupName,
-                                                   SHGroupAbbrev=stdamq_shgroup[a].SHGroupAbbrev,
-                                                   responsePercent=stdamq_shgroup[a].responsePercent,
-                                                   survey=current_survey)
-                                tempItem.save()
+                                tempItem = None
+                                try:
+                                    tempItem = SHGroup.objects.get(SHGroupName=stdamq_shgroup[a].SHGroupName,
+                                                                   SHGroupAbbrev=stdamq_shgroup[a].SHGroupAbbrev,
+                                                                   responsePercent=stdamq_shgroup[a].responsePercent,
+                                                                   survey=current_survey)
+                                except SHGroup.DoesNotExist:
+                                    tempItem = SHGroup(SHGroupName=stdamq_shgroup[a].SHGroupName,
+                                                       SHGroupAbbrev=stdamq_shgroup[a].SHGroupAbbrev,
+                                                       responsePercent=stdamq_shgroup[a].responsePercent,
+                                                       survey=current_survey)
+                                    tempItem.save()
                                 amq_obj.shGroup.add(tempItem)
                             stdamq_option = std_amq[j].option.all()
                             for b in range(len(stdamq_option)):
-                                tempOptionItem = Option(survey=current_survey,
-                                                        optionName=stdamq_option[b].optionName)
-                                tempOptionItem.save()
+                                tempOptionItem = None
+                                try:
+                                    tempOptionItem = Option.objects.get(survey=current_survey,
+                                                                        optionName=stdamq_option[b].optionName)
+                                except Option.DoesNotExist:
+                                    tempOptionItem = Option(survey=current_survey,
+                                                            optionName=stdamq_option[b].optionName)
+                                    tempOptionItem.save()
                                 amq_obj.option.add(tempOptionItem)
                             stdamq_skipoption = std_amq[j].skipOption.all()
                             for c in range(len(stdamq_skipoption)):
@@ -605,17 +629,29 @@ class SurveyAdmin(admin.ModelAdmin):
                             amq_obj.save()
                             stdamq_shgroup = std_amq[j].shGroup.all()
                             for a in range(len(stdamq_shgroup)):
-                                tempItem = SHGroup(SHGroupName=stdamq_shgroup[a].SHGroupName,
-                                                   SHGroupAbbrev=stdamq_shgroup[a].SHGroupAbbrev,
-                                                   responsePercent=stdamq_shgroup[a].responsePercent,
-                                                   survey=current_survey)
-                                tempItem.save()
+                                tempItem = None
+                                try:
+                                    tempItem = SHGroup.objects.get(SHGroupName=stdamq_shgroup[a].SHGroupName,
+                                                                   SHGroupAbbrev=stdamq_shgroup[a].SHGroupAbbrev,
+                                                                   responsePercent=stdamq_shgroup[a].responsePercent,
+                                                                   survey=current_survey)
+                                except SHGroup.DoesNotExist:
+                                    tempItem = SHGroup(SHGroupName=stdamq_shgroup[a].SHGroupName,
+                                                       SHGroupAbbrev=stdamq_shgroup[a].SHGroupAbbrev,
+                                                       responsePercent=stdamq_shgroup[a].responsePercent,
+                                                       survey=current_survey)
+                                    tempItem.save()
                                 amq_obj.shGroup.add(tempItem)
                             stdamq_option = std_amq[j].option.all()
                             for b in range(len(stdamq_option)):
-                                tempOptionItem = Option(survey=current_survey,
-                                                        optionName=stdamq_option[b].optionName)
-                                tempOptionItem.save()
+                                tempOptionItem = None
+                                try:
+                                    tempOptionItem = Option.objects.get(survey=current_survey,
+                                                                        optionName=stdamq_option[b].optionName)
+                                except Option.DoesNotExist:
+                                    tempOptionItem = Option(survey=current_survey,
+                                                            optionName=stdamq_option[b].optionName)
+                                    tempOptionItem.save()
                                 amq_obj.option.add(tempOptionItem)
                             stdamq_skipoption = std_amq[j].skipOption.all()
                             for c in range(len(stdamq_skipoption)):
@@ -689,17 +725,29 @@ class SurveyAdmin(admin.ModelAdmin):
                             aoq_obj.save()
                             stdaoq_shgroup = std_aoq[k].shGroup.all()
                             for a in range(len(stdaoq_shgroup)):
-                                tempItem = SHGroup(SHGroupName=stdaoq_shgroup[a].SHGroupName,
-                                                   SHGroupAbbrev=stdaoq_shgroup[a].SHGroupAbbrev,
-                                                   responsePercent=stdaoq_shgroup[a].responsePercent,
-                                                   survey=current_survey)
-                                tempItem.save()
+                                tempItem = None
+                                try:
+                                    tempItem = SHGroup.objects.get(SHGroupName=stdaoq_shgroup[a].SHGroupName,
+                                                                   SHGroupAbbrev=stdaoq_shgroup[a].SHGroupAbbrev,
+                                                                   responsePercent=stdaoq_shgroup[a].responsePercent,
+                                                                   survey=current_survey)
+                                except SHGroup.DoesNotExist:
+                                    tempItem = SHGroup(SHGroupName=stdaoq_shgroup[a].SHGroupName,
+                                                    SHGroupAbbrev=stdaoq_shgroup[a].SHGroupAbbrev,
+                                                    responsePercent=stdaoq_shgroup[a].responsePercent,
+                                                    survey=current_survey)
+                                    tempItem.save()
                                 aoq_obj.shGroup.add(tempItem)
                             stdaoq_option = std_aoq[k].option.all()
                             for b in range(len(stdaoq_option)):
-                                tempOptionItem = Option(survey=current_survey,
-                                                        optionName=stdaoq_option[b].optionName)
-                                tempOptionItem.save()
+                                tempOptionItem = None
+                                try:
+                                    tempOptionItem = Option.objects.get(survey=current_survey,
+                                                                        optionName=stdaoq_option[b].optionName)
+                                except Option.DoesNotExist:
+                                    tempOptionItem = Option(survey=current_survey,
+                                                            optionName=stdaoq_option[b].optionName)
+                                    tempOptionItem.save()
                                 aoq_obj.option.add(tempOptionItem)
                             stdaoq_skipoption = std_aoq[k].skipOption.all()
                             for c in range(len(stdaoq_skipoption)):
@@ -773,17 +821,29 @@ class SurveyAdmin(admin.ModelAdmin):
                             aoq_obj.save()
                             stdaoq_shgroup = std_aoq[k].shGroup.all()
                             for a in range(len(stdaoq_shgroup)):
-                                tempItem = SHGroup(SHGroupName=stdaoq_shgroup[a].SHGroupName,
-                                                   SHGroupAbbrev=stdaoq_shgroup[a].SHGroupAbbrev,
-                                                   responsePercent=stdaoq_shgroup[a].responsePercent,
-                                                   survey=current_survey)
-                                tempItem.save()
+                                tempItem = None
+                                try:
+                                    tempItem = SHGroup.objects.get(SHGroupName=stdaoq_shgroup[a].SHGroupName,
+                                                                   SHGroupAbbrev=stdaoq_shgroup[a].SHGroupAbbrev,
+                                                                   responsePercent=stdaoq_shgroup[a].responsePercent,
+                                                                   survey=current_survey)
+                                except SHGroup.DoesNotExist:
+                                    tempItem = SHGroup(SHGroupName=stdaoq_shgroup[a].SHGroupName,
+                                                       SHGroupAbbrev=stdaoq_shgroup[a].SHGroupAbbrev,
+                                                       responsePercent=stdaoq_shgroup[a].responsePercent,
+                                                       survey=current_survey)
+                                    tempItem.save()
                                 aoq_obj.shGroup.add(tempItem)
                             stdaoq_option = std_aoq[k].option.all()
                             for b in range(len(stdaoq_option)):
-                                tempOptionItem = Option(survey=current_survey,
-                                                        optionName=stdaoq_option[b].optionName)
-                                tempOptionItem.save()
+                                tempOptionItem = None
+                                try:
+                                    tempOptionItem = Option.objects.get(survey=current_survey,
+                                                                        optionName=stdaoq_option[b].optionName)
+                                except Option.DoesNotExist:
+                                    tempOptionItem = Option(survey=current_survey,
+                                                            optionName=stdaoq_option[b].optionName)
+                                    tempOptionItem.save()
                                 aoq_obj.option.add(tempOptionItem)
                             stdaoq_skipoption = std_aoq[k].skipOption.all()
                             for c in range(len(stdaoq_skipoption)):
@@ -857,17 +917,29 @@ class SurveyAdmin(admin.ModelAdmin):
                             aoq_obj.save()
                             stdaoq_shgroup = std_aoq[k].shGroup.all()
                             for a in range(len(stdaoq_shgroup)):
-                                tempItem = SHGroup(SHGroupName=stdaoq_shgroup[a].SHGroupName,
-                                                   SHGroupAbbrev=stdaoq_shgroup[a].SHGroupAbbrev,
-                                                   responsePercent=stdaoq_shgroup[a].responsePercent,
-                                                   survey=current_survey)
-                                tempItem.save()
+                                tempItem = None
+                                try:
+                                    tempItem = SHGroup.objects.get(SHGroupName=stdaoq_shgroup[a].SHGroupName,
+                                                                   SHGroupAbbrev=stdaoq_shgroup[a].SHGroupAbbrev,
+                                                                   responsePercent=stdaoq_shgroup[a].responsePercent,
+                                                                   survey=current_survey)
+                                except SHGroup.DoesNotExist:
+                                    tempItem = SHGroup(SHGroupName=stdaoq_shgroup[a].SHGroupName,
+                                                       SHGroupAbbrev=stdaoq_shgroup[a].SHGroupAbbrev,
+                                                       responsePercent=stdaoq_shgroup[a].responsePercent,
+                                                       survey=current_survey)
+                                    tempItem.save()
                                 aoq_obj.shGroup.add(tempItem)
                             stdaoq_option = std_aoq[k].option.all()
                             for b in range(len(stdaoq_option)):
-                                tempOptionItem = Option(survey=current_survey,
-                                                        optionName=stdaoq_option[b].optionName)
-                                tempOptionItem.save()
+                                tempOptionItem = None
+                                try:
+                                    tempOptionItem = Option.objects.get(survey=current_survey,
+                                                                        optionName=stdaoq_option[b].optionName)
+                                except Option.DoesNotExist:
+                                    tempOptionItem = Option(survey=current_survey,
+                                                            optionName=stdaoq_option[b].optionName)
+                                    tempOptionItem.save()
                                 aoq_obj.option.add(tempOptionItem)
                             stdaoq_skipoption = std_aoq[k].skipOption.all()
                             for c in range(len(stdaoq_skipoption)):
