@@ -1157,36 +1157,84 @@ class ProjectUserViewSet(viewsets.ModelViewSet):
         projectUser_id = ret.data['id']
 
         shMyCategories = request.data['shMyCategory']
-
-        obj = MyMapLayout.objects.get(
-            user_id=request.user.id, project_id=request.data['project'])
-
         myProjectUser_id = request.data['myProjectUser']
-        SHMapping.objects.filter(
-            projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id).delete()
 
-        for i in range(len(shMyCategories)):
-            try:
-                shObj = SHMapping.objects.get(
-                    shCategory_id=shMyCategories[i], projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id)
-            except SHMapping.DoesNotExist:
-                mapObj = SHMapping(
-                    shCategory_id=shMyCategories[i], projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id, relationshipStatus="")
-                mapObj.save()
+        try:
+            obj = MyMapLayout.objects.get(
+                user_id=request.user.id, project_id=request.data['project'])
+            new_obj = ProjectUser.objects.get(id=projectUser_id)
+            obj.projectUser.add(new_obj)
+            
+            SHMapping.objects.filter(
+                projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id).delete()
+
+            for i in range(len(shMyCategories)):
+                try:
+                    shObj = SHMapping.objects.get(
+                        shCategory_id=shMyCategories[i], projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id)
+                except SHMapping.DoesNotExist:
+                    mapObj = SHMapping(
+                        shCategory_id=shMyCategories[i], projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id, relationshipStatus="")
+                    mapObj.save()
+
+            obj.save()
+
+        except MyMapLayout.DoesNotExist:
+            obj = MyMayLayout.objects.create(user_id=request.user.id, project_id=request.data['project'])
+            obj.user_id = request.user.id
+            obj.project_id = data['project']
+            obj.layout_json = ''
+
+            new_obj = ProjectUser.objects.get(id=projectUser_id)
+            obj.projectUser.add(new_obj)
+
+            for i in range(len(shMyCategories)):
+                try:
+                    shObj = SHMapping.objects.get(
+                        shCategory_id=shMyCategories[i], projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id)
+                except SHMapping.DoesNotExist:
+                    mapObj = SHMapping(
+                        shCategory_id=shMyCategories[i], projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id, relationshipStatus="")
+                    mapObj.save()
+
+            obj.save()
 
         shProjectCategories = request.data['shProjectCategory']
 
-        obj1 = ProjectMapLayout.objects.get(
-            user_id=request.user.id, project_id=request.data['project'])
+        try:
+            obj1 = ProjectMapLayout.objects.get(
+                user_id=request.user.id, project_id=request.data['project'])
+            new_obj1 = ProjectUser.objects.get(id=projectUser_id)
+            obj1.projectUser.add(new_obj1)
 
-        for j in range(len(shProjectCategories)):
-            try:
-                shObj1 = SHMapping.objects.get(
-                    shCategory_id=shProjectCategories[j], projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id)
-            except SHMapping.DoesNotExist:
-                mapObj1 = SHMapping(
-                    shCategory_id=shProjectCategories[j], projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id, relationshipStatus="")
-                mapObj1.save()
+            for j in range(len(shProjectCategories)):
+                try:
+                    shObj1 = SHMapping.objects.get(
+                        shCategory_id=shProjectCategories[j], projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id)
+                except SHMapping.DoesNotExist:
+                    mapObj1 = SHMapping(
+                        shCategory_id=shProjectCategories[j], projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id, relationshipStatus="")
+                    mapObj1.save()
+            obj1.save()
+
+        except ProjectMapLayout.DoesNotExist:
+            obj1 = ProjectMapLayout.objects.create(user_id=request.user.id, project_id=request.data['project'])
+            obj1.user_id = request.user.id
+            obj1.project_id = data['project']
+            obj1.layout_json = ''
+
+            new_obj1 = ProjectUser.objects.get(id=projectUser_id)
+            obj1.projectUser.add(new_obj1)
+
+            for j in range(len(shProjectCategories)):
+                try:
+                    shObj1 = SHMapping.objects.get(
+                        shCategory_id=shProjectCategories[j], projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id)
+                except SHMapping.DoesNotExist:
+                    mapObj1 = SHMapping(
+                        shCategory_id=shProjectCategories[j], projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id, relationshipStatus="")
+                    mapObj1.save()
+            obj1.save()
 
         return ret
 
