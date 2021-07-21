@@ -1182,7 +1182,7 @@ class ProjectUserViewSet(viewsets.ModelViewSet):
         except MyMapLayout.DoesNotExist:
             obj = MyMapLayout.objects.create(user_id=request.user.id, project_id=request.data['project'])
             obj.user_id = request.user.id
-            obj.project_id = data['project']
+            obj.project_id = request.data['project']
             obj.layout_json = ''
 
             new_obj = ProjectUser.objects.get(id=projectUser_id)
@@ -1220,7 +1220,7 @@ class ProjectUserViewSet(viewsets.ModelViewSet):
         except ProjectMapLayout.DoesNotExist:
             obj1 = ProjectMapLayout.objects.create(user_id=request.user.id, project_id=request.data['project'])
             obj1.user_id = request.user.id
-            obj1.project_id = data['project']
+            obj1.project_id = request.data['project']
             obj1.layout_json = ''
 
             new_obj1 = ProjectUser.objects.get(id=projectUser_id)
