@@ -1180,7 +1180,7 @@ class ProjectUserViewSet(viewsets.ModelViewSet):
             obj.save()
 
         except MyMapLayout.DoesNotExist:
-            obj = MyMayLayout.objects.create(user_id=request.user.id, project_id=request.data['project'])
+            obj = MyMapLayout.objects.create(user_id=request.user.id, project_id=request.data['project'])
             obj.user_id = request.user.id
             obj.project_id = data['project']
             obj.layout_json = ''
