@@ -98,17 +98,22 @@ class ProjectUser(models.Model):
     def __str__(self):
         return '{0} - {1}'.format(self.survey, self.user.username)
 
+    def __init__(self, *args, **kwargs):
+        super(ProjectUser, self).__init__(*args, **kwargs)
+        self.old_sendInvite = self.sendInvite
+
     def save(self, *args, **kwargs):
         # self.sendInvite = False
 
         # blocked sendinvite
         # if not self.pk:
         #     self.sendInvite = True
-        print(self)
-
+        
+        print("old data => ", self.old_sendInvite)
+        print("new data => ", self.sendInvite)
         super(ProjectUser, self).save(*args, **kwargs)
 
-        if self.sendInvite:
+        if (self.old_sendInvite != self.sendInvite) & (self.sendInvite):
             project = Project.objects.get(id=self.survey.project.id)
             survey = Survey.objects.get(id=self.survey.id)
             user = User.objects.get(id=self.user.id)
