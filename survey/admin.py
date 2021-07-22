@@ -418,7 +418,7 @@ class SurveyAdmin(admin.ModelAdmin):
             messages.error(request, 'Unknown errors. Please try again.')
             return HttpResponseRedirect("../#/tab/inline_7/")
 
-        messages.success(request, 'Driver has been reset.')
+        messages.success(request, 'Nickel Tour has been reset.')
         return HttpResponseRedirect("../#/tab/inline_7/")
 
     def reset_amq(self, request):
