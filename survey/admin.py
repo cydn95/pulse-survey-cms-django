@@ -208,6 +208,8 @@ class NikelMobilePageInline(admin.StackedInline):
     extra = 0
     list_per_page = 10
 
+    template = "admin/survey/edit_inline/nickel_stacked.html"
+
 class AMDriverForm(forms.Form):
     am_driver = forms.ModelChoiceField(queryset=None)
 
@@ -275,6 +277,7 @@ class SurveyAdmin(admin.ModelAdmin):
             url(r'resetaoqlong/', self.reset_aoq_long),
             url(r'resetaoqshort/', self.reset_aoq_short),
             url(r'resetshcategory/', self.reset_shcategory),
+            url(r'resetnickel/', self.reset_nickel),
             url(r'activesurvey/', self.active_survey),
         ]
         return my_urls + urls
@@ -378,6 +381,45 @@ class SurveyAdmin(admin.ModelAdmin):
 
         messages.success(request, 'Driver has been reset.')
         return HttpResponseRedirect("../#/tab/inline_2/")
+
+    def reset_nickel(self, request):
+        current_survey_id = request.GET['id']
+
+        try:
+            current_survey = Survey.objects.get(id=current_survey_id)
+            try:
+                std_survey = Survey.objects.get(isStandard=True)
+
+                if current_survey.id != std_survey.id:
+                    NikelMobilePage.objects.filter(survey_id=current_survey.id).delete()
+
+                    std_nikel = NikelMobilePage.objects.filter(survey_id=std_survey.id).values()
+
+                    if std_nikel.count() == 0:
+                        messages.error(request, "Standard Nickel Tour doesn\'t exist.")
+                        return HttpResponseRedirect("../#/tab/inline_7/")
+
+                    for i in range(len(std_nikel)):
+                        obj = NikelMobilePage(survey_id=current_survey.id,
+                                pageName=std_nikel[i]['pageName'],
+                                pageText=std_nikel[i]['pageText'],
+                                backgroundColor=std_nikel[i]['backgroundColor'],
+                                pageContent=std_nikel[i]['pageContent'],
+                                pageOrder=std_nikel[i]['pageOrder'],
+                                img=std_nikel[i]['img'])
+                        obj.save()
+                else:
+                    messages.info(request, 'This is the standard survey.')
+                    return HttpResponseRedirect("../#/tab/inline_7/")
+            except Survey.DoesNotExist:
+                messages.error(request, 'Unknown errors. Please try again.')
+                return HttpResponseRedirect("../#/tab/inline_7/")
+        except Survey.DoesNotExist:
+            messages.error(request, 'Unknown errors. Please try again.')
+            return HttpResponseRedirect("../#/tab/inline_7/")
+
+        messages.success(request, 'Driver has been reset.')
+        return HttpResponseRedirect("../#/tab/inline_7/")
 
     def reset_amq(self, request):
         current_survey_id = request.GET['id']
