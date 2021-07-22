@@ -1029,13 +1029,18 @@ class PageViewSet(viewsets.ReadOnlyModelViewSet):
         for i in range(len(list_drivers)):
             if survey_param and isinstance(survey_param, int):
                 
-                amquestion_queryset = AMQuestion.objects.filter(driver_id=list_drivers[i]['id'], survey_id=survey_param)
-                am_serializer = AMQuestionSerializer(amquestion_queryset, many=True)
-                list_drivers[i]['amquestion'] = am_serializer.data
+                # 2020-07-22 add shgroup filter
+                # amquestion_queryset = AMQuestion.objects.filter(driver_id=list_drivers[i]['id'], survey_id=survey_param)
+                # am_serializer = AMQuestionSerializer(amquestion_queryset, many=True)
+                # list_drivers[i]['amquestion'] = am_serializer.data
 
                 if projectuser_param and isinstance(projectuser_param, int):
                     try:
                         projectuser = ProjectUser.objects.get(id=projectuser_param)
+
+                        amquestion_queryset = AMQuestion.objects.filter(driver_id=list_drivers[i]['id'], survey_id=survey_param, shGroup__in=[projectuser.shGroup_id])
+                        am_serializer = AMQuestionSerializer(amquestion_queryset, many=True)
+                        list_drivers[i]['amquestion'] = am_serializer.data
 
                         for j in range(len(list_drivers[i]['amquestion'])):
                             amresponsetopic_queryset = AMResponseTopic.objects.filter(amQuestion_id=list_drivers[i]['amquestion'][j]['id'], responseUser_id=projectuser_param)
@@ -1054,14 +1059,19 @@ class PageViewSet(viewsets.ReadOnlyModelViewSet):
                     except ProjectUser.DoesNotExist:
                         projectuser = None
 
-                aoquestion_queryset = AOQuestion.objects.filter(driver_id=list_drivers[i]['id'], survey_id=survey_param)
-                ao_serializer = AOQuestionSerializer(aoquestion_queryset, many=True)
-                list_drivers[i]['aoquestion'] = ao_serializer.data
+                # 2020-07-22 add shgroup filter
+                # aoquestion_queryset = AOQuestion.objects.filter(driver_id=list_drivers[i]['id'], survey_id=survey_param)
+                # ao_serializer = AOQuestionSerializer(aoquestion_queryset, many=True)
+                # list_drivers[i]['aoquestion'] = ao_serializer.data
 
                 if projectuser_param and isinstance(projectuser_param, int):
                     try:
                         projectuser = ProjectUser.objects.get(id=projectuser_param)
 
+                        aoquestion_queryset = AOQuestion.objects.filter(driver_id=list_drivers[i]['id'], survey_id=survey_param, shGroup__in=[projectuser.shGroup_id])
+                        ao_serializer = AOQuestionSerializer(aoquestion_queryset, many=True)
+                        list_drivers[i]['aoquestion'] = ao_serializer.data
+                        
                         for j in range(len(list_drivers[i]['aoquestion'])):
                             aoresponsetopic_queryset = AOResponseTopic.objects.filter(aoQuestion_id=list_drivers[i]['aoquestion'][j]['id'], responseUser_id=projectuser_param)
                             aoresponsetopic_serializer = AOResponseTopicSerializer(aoresponsetopic_queryset, many=True)
@@ -1083,13 +1093,18 @@ class PageViewSet(viewsets.ReadOnlyModelViewSet):
                         projectuser = None
 
             else:
-                amquestion_queryset = AMQuestion.objects.filter(driver_id=list_drivers[i]['id'])
-                am_serializer = AMQuestionSerializer(amquestion_queryset, many=True)
-                list_drivers[i]['amquestion'] = am_serializer.data
+                # 2020-07-22 add shgroup filter
+                # amquestion_queryset = AMQuestion.objects.filter(driver_id=list_drivers[i]['id'])
+                # am_serializer = AMQuestionSerializer(amquestion_queryset, many=True)
+                # list_drivers[i]['amquestion'] = am_serializer.data
 
                 if projectuser_param and isinstance(projectuser_param, int):
                     try:
                         projectuser = ProjectUser.objects.get(id=projectuser_param)
+
+                        amquestion_queryset = AMQuestion.objects.filter(driver_id=list_drivers[i]['id'], shGroup__in=[projectuser.shGroup_id])
+                        am_serializer = AMQuestionSerializer(amquestion_queryset, many=True)
+                        list_drivers[i]['amquestion'] = am_serializer.data
 
                         for j in range(len(list_drivers[i]['amquestion'])):
                             amresponsetopic_queryset = AMResponseTopic.objects.filter(amQuestion_id=list_drivers[i]['amquestion'][j]['id'], responseUser_id=projectuser_param)
@@ -1108,13 +1123,18 @@ class PageViewSet(viewsets.ReadOnlyModelViewSet):
                     except ProjectUser.DoesNotExist:
                         projectuser = None
 
-                aoquestion_queryset = AOQuestion.objects.filter(driver_id=list_drivers[i]['id'])
-                ao_serializer = AOQuestionSerializer(aoquestion_queryset, many=True)
-                list_drivers[i]['aoquestion'] = ao_serializer.data
+                # 2020-07-22 add shgroup filter
+                # aoquestion_queryset = AOQuestion.objects.filter(driver_id=list_drivers[i]['id'])
+                # ao_serializer = AOQuestionSerializer(aoquestion_queryset, many=True)
+                # list_drivers[i]['aoquestion'] = ao_serializer.data
 
                 if projectuser_param and isinstance(projectuser_param, int):
                     try:
                         projectuser = ProjectUser.objects.get(id=projectuser_param)
+                        
+                        aoquestion_queryset = AOQuestion.objects.filter(driver_id=list_drivers[i]['id'], shGroup__in=[projectuser.shGroup_id])
+                        ao_serializer = AOQuestionSerializer(aoquestion_queryset, many=True)
+                        list_drivers[i]['aoquestion'] = ao_serializer.data
 
                         for j in range(len(list_drivers[i]['aoquestion'])):
                             aoresponsetopic_queryset = AOResponseTopic.objects.filter(aoQuestion_id=list_drivers[i]['aoquestion'][j]['id'], responseUser_id=projectuser_param)
