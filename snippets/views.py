@@ -243,10 +243,12 @@ def preApiCheck(survey, projectUser):
     prefAmQuestionData = prefAmQuestionSerializer.data
 
     for i in range(len(prefAmQuestionData)):
-        try:
-            ret = AMResponse.objects.get(
+        
+        ret = AMResponse.objects.filter(
                 projectUser_id=projectUser, survey_id=survey, amQuestion_id=prefAmQuestionData[i]['id'], latestResponse=True)
-        except AMResponse.DoesNotExist:
+        if (len(ret) > 0):
+            pass
+        else:
             return 228
 
     # 3 people has to response to this user
@@ -1040,11 +1042,12 @@ class PageViewSet(viewsets.ReadOnlyModelViewSet):
                             amresponsetopic_serializer = AMResponseTopicSerializer(amresponsetopic_queryset, many=True)
                             list_drivers[i]['amquestion'][j]['topic'] = amresponsetopic_serializer.data
                             
-                            try:
-                                ret = AMResponse.objects.get(projectUser_id=projectuser_param, survey_id=survey_param, amQuestion_id=list_drivers[i]['amquestion'][j]['id'], latestResponse=True)
+                            
+                            ret = AMResponse.objects.filter(projectUser_id=projectuser_param, survey_id=survey_param, amQuestion_id=list_drivers[i]['amquestion'][j]['id'], latestResponse=True)
+                            if (len(ret) > 0):
                                 list_drivers[i]['amquestion'][j]['responsestatus'] = True
-                                list_drivers[i]['amquestion'][j]['response'] = model_to_dict(ret)
-                            except AMResponse.DoesNotExist:
+                                list_drivers[i]['amquestion'][j]['response'] = model_to_dict(ret[0])
+                            else:
                                 ret = None
                                 list_drivers[i]['amquestion'][j]['responsestatus'] = False
                                 list_drivers[i]['amquestion'][j]['response'] = []
@@ -1093,11 +1096,12 @@ class PageViewSet(viewsets.ReadOnlyModelViewSet):
                             amresponsetopic_serializer = AMResponseTopicSerializer(amresponsetopic_queryset, many=True)
                             list_drivers[i]['amquestion'][j]['topic'] = amresponsetopic_serializer.data
 
-                            try:
-                                ret = AMResponse.objects.get(projectUser_id=projectuser_param, survey_id=survey_param, amQuestion_id=list_drivers[i]['amquestion'][j]['id'], latestResponse=True)
+                            
+                            ret = AMResponse.objects.filter(projectUser_id=projectuser_param, survey_id=survey_param, amQuestion_id=list_drivers[i]['amquestion'][j]['id'], latestResponse=True)
+                            if (len(ret) > 0):
                                 list_drivers[i]['amquestion'][j]['responsestatus'] = True
                                 list_drivers[i]['amquestion'][j]['response'] = model_to_dict(ret)
-                            except AMResponse.DoesNotExist:
+                            else:
                                 ret = None
                                 list_drivers[i]['amquestion'][j]['responsestatus'] = False
                                 list_drivers[i]['amquestion'][j]['response'] = []
