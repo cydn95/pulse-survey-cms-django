@@ -833,7 +833,7 @@ class AOResponseFeedbackSummaryViewset(viewsets.ModelViewSet):
                 amresponsequeryset = amresponsequeryset.filter(survey_id=survey, created_at__range=[startDate, endDate])
             elif (survey is not None):
                 amresponsequeryset = amresponsequeryset.filter(survey_id=survey)
-                
+
             amresponseserializer = AMResponseForDriverAnalysisSerializer(amresponsequeryset, many=True)
             amresponsedata = amresponseserializer.data
 
@@ -979,6 +979,25 @@ class OverallSentimentReportViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         try:
             response = super().list(request, *args, **kwargs)
+
+            survey = self.request.GET.get('survey', None)
+            startDate = self.request.GET.get('stdt', None)
+            endDate = self.request.GET.get('eddt', None)
+
+            # add amresponse data
+            aoresponsequeryset = AOResponse.objects.all()
+            if (survey is not None) & (startDate is not None) & (endDate is not None):
+                aoresponsequeryset = aoresponsequeryset.filter(
+                    survey_id=survey, created_at__range=[startDate, endDate])
+            elif (survey is not None):
+                aoresponsequeryset = aoresponsequeryset.filter(
+                    survey_id=survey)
+            aoresponseserializer = AOResponseSerializer(aoresponsequeryset, many=True)
+            aoresponsedata = aoresponseserializer.data
+
+            for i in range(len(aoresponsedata)):
+                response.data.append(aoresponsedata[i])
+                
             total = 0
             for i in range(len(response.data)):
                 total = total + response.data[i]['integerValue']
