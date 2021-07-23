@@ -25,6 +25,8 @@ class Survey(models.Model):
     customGroup2 = models.CharField(max_length=100, blank=True, default="")
     customGroup3 = models.CharField(max_length=100, blank=True, default="")
 
+    anonymityThreshold = models.PositiveIntegerField(default=3)         # newly added
+
     def __str__(self):
         return self.surveyTitle
 
