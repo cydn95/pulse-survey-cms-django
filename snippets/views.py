@@ -800,7 +800,9 @@ class AOResponseFeedbackSummaryViewset(viewsets.ModelViewSet):
                     survey_id=survey, subProjectUser_id=subProjectUser)
             elif (survey is not None) & (startDate is not None) & (endDate is not None):
                 queryset = queryset.filter(survey_id=survey, created_at__range=[startDate, endDate])
-
+            elif (survey is not None):
+                queryset = queryset.filter(survey_id=survey)
+                
             return queryset
         except:
             return None
