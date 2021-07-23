@@ -802,7 +802,7 @@ class AOResponseFeedbackSummaryViewset(viewsets.ModelViewSet):
                 queryset = queryset.filter(survey_id=survey, created_at__range=[startDate, endDate])
             elif (survey is not None):
                 queryset = queryset.filter(survey_id=survey)
-                
+
             return queryset
         except:
             return None
@@ -831,7 +831,9 @@ class AOResponseFeedbackSummaryViewset(viewsets.ModelViewSet):
                 amresponsequeryset = amresponsequeryset.filter(survey_id=survey, subProjectUser_id=subProjectUser)
             elif (survey is not None) & (startDate is not None) & (endDate is not None):
                 amresponsequeryset = amresponsequeryset.filter(survey_id=survey, created_at__range=[startDate, endDate])
-
+            elif (survey is not None):
+                amresponsequeryset = amresponsequeryset.filter(survey_id=survey)
+                
             amresponseserializer = AMResponseForDriverAnalysisSerializer(amresponsequeryset, many=True)
             amresponsedata = amresponseserializer.data
 
