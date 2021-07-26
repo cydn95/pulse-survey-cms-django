@@ -352,6 +352,14 @@ class AOResponseTopPositiveNegativeSerializer(serializers.ModelSerializer):
         model = AOResponse
         fields = '__all__'
 
+class AMResponseForMatrixSerializer(serializers.ModelSerializer):
+    projectUser = ProjectUserForReportSerializer()
+    subProjectUser = ProjectUserForReportSerializer()
+
+    class Meta:
+        model = AMResponse
+        fields = ['controlType', 'integerValue', 'topicValue', 'commentValue', 'created_at', 'updated_at',
+                  'projectUser', 'subProjectUser', 'survey', 'project', 'amQuestion', 'latestResponse']
 
 class AOResponseForMatrixSerializer(serializers.ModelSerializer):
     projectUser = ProjectUserForReportSerializer()

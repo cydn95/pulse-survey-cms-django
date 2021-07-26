@@ -17,7 +17,7 @@ from django.conf import settings
 from pathlib import Path
 from email.mime.image import MIMEImage
 
-from snippets.serializers import AMResponseForDriverAnalysisSerializer, AOResponseForDriverAnalysisSerializer, AOResponseTopPositiveNegativeSerializer, KeyThemeUpDownVoteSerializer, AMResponseAcknowledgementSerializer, AOResponseForMatrixSerializer, AOResponseAcknowledgementSerializer, AMResponseForReportSerializer, AOResponseForReportSerializer, ProjectUserForReportSerializer, AMQuestionSubDriverSerializer, AOQuestionSubDriverSerializer, DriverSubDriverSerializer, ProjectSerializer, ToolTipGuideSerializer, SurveySerializer, NikelMobilePageSerializer, ConfigPageSerializer, UserAvatarSerializer, SHMappingSerializer, ProjectVideoUploadSerializer, AMQuestionSerializer, AOQuestionSerializer, StakeHolderSerializer, SHCategorySerializer, MyMapLayoutStoreSerializer, ProjectMapLayoutStoreSerializer, UserBySurveySerializer, SurveyByUserSerializer, SkipOptionSerializer, DriverSerializer, AOQuestionSerializer, OrganizationSerializer, OptionSerializer, ProjectUserSerializer, SHGroupSerializer, UserSerializer, PageSettingSerializer, PageSerializer, AMResponseSerializer, AMResponseTopicSerializer, AOResponseSerializer, AOResponseTopicSerializer, AOPageSerializer, TeamSerializer
+from snippets.serializers import AMResponseForMatrixSerializer, AMResponseForDriverAnalysisSerializer, AOResponseForDriverAnalysisSerializer, AOResponseTopPositiveNegativeSerializer, KeyThemeUpDownVoteSerializer, AMResponseAcknowledgementSerializer, AOResponseForMatrixSerializer, AOResponseAcknowledgementSerializer, AMResponseForReportSerializer, AOResponseForReportSerializer, ProjectUserForReportSerializer, AMQuestionSubDriverSerializer, AOQuestionSubDriverSerializer, DriverSubDriverSerializer, ProjectSerializer, ToolTipGuideSerializer, SurveySerializer, NikelMobilePageSerializer, ConfigPageSerializer, UserAvatarSerializer, SHMappingSerializer, ProjectVideoUploadSerializer, AMQuestionSerializer, AOQuestionSerializer, StakeHolderSerializer, SHCategorySerializer, MyMapLayoutStoreSerializer, ProjectMapLayoutStoreSerializer, UserBySurveySerializer, SurveyByUserSerializer, SkipOptionSerializer, DriverSerializer, AOQuestionSerializer, OrganizationSerializer, OptionSerializer, ProjectUserSerializer, SHGroupSerializer, UserSerializer, PageSettingSerializer, PageSerializer, AMResponseSerializer, AMResponseTopicSerializer, AOResponseSerializer, AOResponseTopicSerializer, AOPageSerializer, TeamSerializer
 
 from rest_framework import generics, permissions, renderers, viewsets, status, filters
 from rest_framework.decorators import action
@@ -793,15 +793,89 @@ class DriverViewSet(viewsets.ModelViewSet):
 
 # feedbacksummaryreport api
 # need to consider
+# class AOResponseFeedbackSummaryViewset(viewsets.ModelViewSet):
+#     permission_classes = [permissions.IsAuthenticated,
+#                           permissions.IsAuthenticatedOrReadOnly]
+#     queryset = AOResponse.objects.all()
+#     serializer_class = AOResponseForMatrixSerializer
+
+#     def get_queryset(self):
+#         try:
+#             queryset = AOResponse.objects.all()
+
+#             survey = self.request.query_params.get('survey', None)
+#             subProjectUser = self.request.query_params.get('projectuser', None)
+#             startDate = self.request.query_params.get('stdt', None)
+#             endDate = self.request.query_params.get('eddt', None)
+
+#             if (survey is not None) & (subProjectUser is not None) & (startDate is not None) & (endDate is not None):
+#                 queryset = queryset.filter(
+#                     survey_id=survey, subProjectUser_id=subProjectUser, created_at__range=[startDate, endDate])
+#             elif (survey is not None) & (subProjectUser is not None):
+#                 queryset = queryset.filter(
+#                     survey_id=survey, subProjectUser_id=subProjectUser)
+#             elif (survey is not None) & (startDate is not None) & (endDate is not None):
+#                 queryset = queryset.filter(survey_id=survey, created_at__range=[startDate, endDate])
+#             elif (survey is not None):
+#                 queryset = queryset.filter(survey_id=survey)
+
+#             return queryset
+#         except:
+#             return None
+
+#     def list(self, request, *args, **kwargs):
+#         try:
+#             response = super().list(request, *args, **kwargs)
+            
+#             survey = self.request.GET.get('survey', None)
+#             subProjectUser = self.request.GET.get('projectuser', None)
+#             startDate = self.request.GET.get('stdt', None)
+#             endDate = self.request.GET.get('eddt', None)
+
+#             for i in range(len(response.data)):
+#                 aoquestion_queryset = AOQuestion.objects.filter(
+#                     id=response.data[i]['aoQuestion'])
+#                 ao_serializer = AOQuestionSerializer(
+#                     aoquestion_queryset, many=True)
+#                 response.data[i]['aoQuestionData'] = ao_serializer.data
+
+#             # add amresponse data
+#             amresponsequeryset = AMResponse.objects.all()
+#             if (survey is not None) & (subProjectUser is not None) & (startDate is not None) & (endDate is not None):
+#                 amresponsequeryset = amresponsequeryset.filter(survey_id=survey, subProjectUser_id=subProjectUser, created_at__range=[startDate, endDate])
+#             elif (survey is not None) & (subProjectUser is not None):
+#                 amresponsequeryset = amresponsequeryset.filter(survey_id=survey, subProjectUser_id=subProjectUser)
+#             elif (survey is not None) & (startDate is not None) & (endDate is not None):
+#                 amresponsequeryset = amresponsequeryset.filter(survey_id=survey, created_at__range=[startDate, endDate])
+#             elif (survey is not None):
+#                 amresponsequeryset = amresponsequeryset.filter(survey_id=survey)
+
+#             amresponseserializer = AMResponseForDriverAnalysisSerializer(amresponsequeryset, many=True)
+#             amresponsedata = amresponseserializer.data
+
+#             # replace am to ao for frontend
+#             for i in range(len(amresponsedata)):
+#                 amresponsedata[i]['aoQuestion'] = amresponsedata[i]['amQuestion']
+#                 amquestion_queryset = AMQuestion.objects.filter(
+#                     id=amresponsedata[i]['amQuestion'])
+#                 am_serializer = AMQuestionSerializer(
+#                     amquestion_queryset, many=True)
+#                 amresponsedata[i]['aoQuestionData'] = am_serializer.data
+#                 response.data.append(amresponsedata[i])
+
+#             return response
+#         except Exception as error:
+#             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
+
 class AOResponseFeedbackSummaryViewset(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated,
                           permissions.IsAuthenticatedOrReadOnly]
-    queryset = AOResponse.objects.all()
-    serializer_class = AOResponseForMatrixSerializer
+    queryset = AMResponse.objects.all()
+    serializer_class = AMResponseForMatrixSerializer
 
     def get_queryset(self):
         try:
-            queryset = AOResponse.objects.all()
+            queryset = AMResponse.objects.all()
 
             survey = self.request.query_params.get('survey', None)
             subProjectUser = self.request.query_params.get('projectuser', None)
@@ -833,35 +907,11 @@ class AOResponseFeedbackSummaryViewset(viewsets.ModelViewSet):
             endDate = self.request.GET.get('eddt', None)
 
             for i in range(len(response.data)):
-                aoquestion_queryset = AOQuestion.objects.filter(
-                    id=response.data[i]['aoQuestion'])
-                ao_serializer = AOQuestionSerializer(
-                    aoquestion_queryset, many=True)
-                response.data[i]['aoQuestionData'] = ao_serializer.data
-
-            # add amresponse data
-            amresponsequeryset = AMResponse.objects.all()
-            if (survey is not None) & (subProjectUser is not None) & (startDate is not None) & (endDate is not None):
-                amresponsequeryset = amresponsequeryset.filter(survey_id=survey, subProjectUser_id=subProjectUser, created_at__range=[startDate, endDate])
-            elif (survey is not None) & (subProjectUser is not None):
-                amresponsequeryset = amresponsequeryset.filter(survey_id=survey, subProjectUser_id=subProjectUser)
-            elif (survey is not None) & (startDate is not None) & (endDate is not None):
-                amresponsequeryset = amresponsequeryset.filter(survey_id=survey, created_at__range=[startDate, endDate])
-            elif (survey is not None):
-                amresponsequeryset = amresponsequeryset.filter(survey_id=survey)
-
-            amresponseserializer = AMResponseForDriverAnalysisSerializer(amresponsequeryset, many=True)
-            amresponsedata = amresponseserializer.data
-
-            # replace am to ao for frontend
-            for i in range(len(amresponsedata)):
-                amresponsedata[i]['aoQuestion'] = amresponsedata[i]['amQuestion']
                 amquestion_queryset = AMQuestion.objects.filter(
-                    id=amresponsedata[i]['amQuestion'])
+                    id=response.data[i]['amQuestion'])
                 am_serializer = AMQuestionSerializer(
                     amquestion_queryset, many=True)
-                amresponsedata[i]['aoQuestionData'] = am_serializer.data
-                response.data.append(amresponsedata[i])
+                response.data[i]['amQuestionData'] = am_serializer.data
 
             return response
         except Exception as error:
