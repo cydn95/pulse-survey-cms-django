@@ -1051,18 +1051,18 @@ class OverallSentimentReportViewSet(viewsets.ModelViewSet):
             endDate = self.request.GET.get('eddt', None)
 
             # add amresponse data
-            aoresponsequeryset = AOResponse.objects.all()
-            if (survey is not None) & (startDate is not None) & (endDate is not None):
-                aoresponsequeryset = aoresponsequeryset.filter(
-                    survey_id=survey, created_at__range=[startDate, endDate])
-            elif (survey is not None):
-                aoresponsequeryset = aoresponsequeryset.filter(
-                    survey_id=survey)
-            aoresponseserializer = AOResponseSerializer(aoresponsequeryset, many=True)
-            aoresponsedata = aoresponseserializer.data
+            # aoresponsequeryset = AOResponse.objects.all()
+            # if (survey is not None) & (startDate is not None) & (endDate is not None):
+            #     aoresponsequeryset = aoresponsequeryset.filter(
+            #         survey_id=survey, created_at__range=[startDate, endDate])
+            # elif (survey is not None):
+            #     aoresponsequeryset = aoresponsequeryset.filter(
+            #         survey_id=survey)
+            # aoresponseserializer = AOResponseSerializer(aoresponsequeryset, many=True)
+            # aoresponsedata = aoresponseserializer.data
 
-            for i in range(len(aoresponsedata)):
-                response.data.append(aoresponsedata[i])
+            # for i in range(len(aoresponsedata)):
+            #     response.data.append(aoresponsedata[i])
 
             total = 0
             for i in range(len(response.data)):
