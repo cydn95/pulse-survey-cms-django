@@ -235,26 +235,26 @@ def preApiCheck(survey, projectUser):
 
         if isSuperUser.isSuperUser == True:
             return 201  # super user
+
+        prefAmQuestionQueryset = AMQuestion.objects.filter(survey__id=survey, shGroup__in=[isSuperUser.shGroup_id])
+        prefAmQuestionSerializer = AMQuestionSerializer(prefAmQuestionQueryset, many=True)
+        prefAmQuestionData = prefAmQuestionSerializer.data
+
+        for i in range(len(prefAmQuestionData)):
+            ret = AMResponse.objects.filter(
+                    projectUser_id=projectUser, survey_id=survey, amQuestion_id=prefAmQuestionData[i]['id'], latestResponse=True)
+            if (len(ret) > 0):
+                pass
+            else:
+                return 228
+
     except ProjectUser.DoesNotExist:
         return 404
 
-    prefAmQuestionQueryset = AMQuestion.objects.filter(survey__id=survey)
-    prefAmQuestionSerializer = AMQuestionSerializer(prefAmQuestionQueryset, many=True)
-    prefAmQuestionData = prefAmQuestionSerializer.data
-
-    for i in range(len(prefAmQuestionData)):
-        
-        ret = AMResponse.objects.filter(
-                projectUser_id=projectUser, survey_id=survey, amQuestion_id=prefAmQuestionData[i]['id'], latestResponse=True)
-        if (len(ret) > 0):
-            pass
-        else:
-            return 228
-
     # 3 people has to response to this user
     prefAryProjectUsers = []
-    prefTestResultQueryset = AOResponse.objects.all().filter(survey__id=survey, subProjectUser__id=projectUser)
-    prefTestResultSerializer = AOResponseForDriverAnalysisSerializer(prefTestResultQueryset, many=True)
+    prefTestResultQueryset = AMResponse.objects.all().filter(survey__id=survey)
+    prefTestResultSerializer = AMResponseForDriverAnalysisSerializer(prefTestResultQueryset, many=True)
     prefTestResultData = prefTestResultSerializer.data
 
     for i in range(len(prefTestResultData)): 
