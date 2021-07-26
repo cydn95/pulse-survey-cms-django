@@ -361,7 +361,9 @@ class AMResponseViewSet(viewsets.ModelViewSet):
                 if data[i]['controlType'] == "Text" or data[i]['controlType'] == "MULTI_TOPICS":
                     data[i]['integerValue'] = int(abs(sentimentData[i]['SentimentScore']['Positive'] * 100))
                 try:
-                    obj = AMResponse.objects.get(survey_id=data[i]['survey'], project_id=data[i]['project'], projectUser_id=data[i]['projectUser'], subProjectUser_id=data[i]['subProjectUser'], amQuestion_id=data[i]['amQuestion'], latestResponse=True)
+                    # obj = AMResponse.objects.get(survey_id=data[i]['survey'], project_id=data[i]['project'], projectUser_id=data[i]['projectUser'], subProjectUser_id=data[i]['subProjectUser'], amQuestion_id=data[i]['amQuestion'], latestResponse=True)
+                    obj = AMResponse.objects.filter(survey_id=data[i]['survey'], project_id=data[i]['project'], projectUser_id=data[i]['projectUser'],
+                                                 subProjectUser_id=data[i]['subProjectUser'], amQuestion_id=data[i]['amQuestion'], latestResponse=True)[0]
 
                     if obj.topicValue != data[i]['topicValue'] or obj.commentValue != data[i]['commentValue'] or obj.integerValue != data[i]['integerValue'] or obj.skipValue != data[i]['skipValue'] or obj.topicTags != data[i]['topicTags'] or obj.commentTags != data[i]['commentTags']:
                         obj.latestResponse = False
@@ -377,7 +379,9 @@ class AMResponseViewSet(viewsets.ModelViewSet):
         elif many == False:
             defaults = data
             try:
-                obj = AMResponse.objects.get(survey_id=defaults['survey'], project_id=defaults['project'], projectUser_id=defaults['projectUser'], subProjectUser_id=defaults['subProjectUser'], amQuestion_id=defaults['amQuestion'], latestResponse=True)
+                # obj = AMResponse.objects.get(survey_id=defaults['survey'], project_id=defaults['project'], projectUser_id=defaults['projectUser'], subProjectUser_id=defaults['subProjectUser'], amQuestion_id=defaults['amQuestion'], latestResponse=True)
+                obj = AMResponse.objects.filter(survey_id=defaults['survey'], project_id=defaults['project'], projectUser_id=defaults['projectUser'],
+                                             subProjectUser_id=defaults['subProjectUser'], amQuestion_id=defaults['amQuestion'], latestResponse=True)[0]
 
                 if obj.topicValue != defaults['topicValue'] or obj.commentValue != defaults['commentValue'] or obj.integerValue != defaults['integerValue'] or obj.skipValue != defaults['skipValue'] or obj.topicTags != defaults['topicTags'] or obj.commentTags != defaults['commentTags']:
                     obj.latestResponse = False
@@ -448,7 +452,8 @@ class AOResponseViewSet(viewsets.ModelViewSet):
                 if data[i]['controlType'] == "TEXT" or data[i]['controlType'] == "MULTI_TOPICS":
                     data[i]['integerValue'] = int(abs(sentimentData[i]['SentimentScore']['Positive'] * 100))
                 try:
-                    obj = AOResponse.objects.get(survey_id=data[i]['survey'], project_id=data[i]['project'], projectUser_id=data[i]['projectUser'], subProjectUser_id=data[i]['subProjectUser'], aoQuestion_id=data[i]['aoQuestion'], latestResponse=True)
+                    # obj = AOResponse.objects.get(survey_id=data[i]['survey'], project_id=data[i]['project'], projectUser_id=data[i]['projectUser'], subProjectUser_id=data[i]['subProjectUser'], aoQuestion_id=data[i]['aoQuestion'], latestResponse=True)
+                    obj = AOResponse.objects.filter(survey_id=data[i]['survey'], project_id=data[i]['project'], projectUser_id=data[i]['projectUser'], subProjectUser_id=data[i]['subProjectUser'], aoQuestion_id=data[i]['aoQuestion'], latestResponse=True)[0]
 
                     if obj.topicValue != data[i]['topicValue'] or obj.commentValue != data[i]['commentValue'] or obj.integerValue != data[i]['integerValue'] or obj.skipValue != data[i]['skipValue'] or obj.topicTags != data[i]['topicTags'] or obj.commentTags != data[i]['commentTags']:
                         obj.latestResponse = False
@@ -463,8 +468,10 @@ class AOResponseViewSet(viewsets.ModelViewSet):
         elif many == False:
             defaults = data
             try:
-                obj = AOResponse.objects.get(survey_id=defaults['survey'], project_id=defaults['project'], projectUser_id=defaults['projectUser'],
-                                             subProjectUser_id=defaults['subProjectUser'], aoQuestion_id=defaults['aoQuestion'], latestResponse=True)
+                # obj = AOResponse.objects.get(survey_id=defaults['survey'], project_id=defaults['project'], projectUser_id=defaults['projectUser'],
+                                            #  subProjectUser_id=defaults['subProjectUser'], aoQuestion_id=defaults['aoQuestion'], latestResponse=True)
+                obj = AOResponse.objects.filter(survey_id=defaults['survey'], project_id=defaults['project'], projectUser_id=defaults['projectUser'],
+                                             subProjectUser_id=defaults['subProjectUser'], aoQuestion_id=defaults['aoQuestion'], latestResponse=True)[0]
 
                 if obj.topicValue != defaults['topicValue'] or obj.commentValue != defaults['commentValue'] or obj.integerValue != defaults['integerValue'] or obj.skipValue != defaults['skipValue'] or obj.topicTags != defaults['topicTags'] or obj.commentTags != defaults['commentTags']:
                     obj.latestResponse = False
@@ -997,7 +1004,7 @@ class OverallSentimentReportViewSet(viewsets.ModelViewSet):
 
             for i in range(len(aoresponsedata)):
                 response.data.append(aoresponsedata[i])
-                
+
             total = 0
             for i in range(len(response.data)):
                 total = total + response.data[i]['integerValue']
