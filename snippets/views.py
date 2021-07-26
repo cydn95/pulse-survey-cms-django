@@ -360,11 +360,12 @@ class AMResponseViewSet(viewsets.ModelViewSet):
             for i in range(len(data)):
                 if data[i]['controlType'] == "Text" or data[i]['controlType'] == "MULTI_TOPICS":
                     data[i]['integerValue'] = int(abs(sentimentData[i]['SentimentScore']['Positive'] * 100))
-                try:
+                
                     # obj = AMResponse.objects.get(survey_id=data[i]['survey'], project_id=data[i]['project'], projectUser_id=data[i]['projectUser'], subProjectUser_id=data[i]['subProjectUser'], amQuestion_id=data[i]['amQuestion'], latestResponse=True)
-                    obj = AMResponse.objects.filter(survey_id=data[i]['survey'], project_id=data[i]['project'], projectUser_id=data[i]['projectUser'],
-                                                 subProjectUser_id=data[i]['subProjectUser'], amQuestion_id=data[i]['amQuestion'], latestResponse=True)[0]
-
+                tempItem = AMResponse.objects.filter(survey_id=data[i]['survey'], project_id=data[i]['project'], projectUser_id=data[i]['projectUser'],
+                                                 subProjectUser_id=data[i]['subProjectUser'], amQuestion_id=data[i]['amQuestion'], latestResponse=True)
+                if (len(tempItem) > 0):
+                    obj = tempItem[0]
                     if obj.topicValue != data[i]['topicValue'] or obj.commentValue != data[i]['commentValue'] or obj.integerValue != data[i]['integerValue'] or obj.skipValue != data[i]['skipValue'] or obj.topicTags != data[i]['topicTags'] or obj.commentTags != data[i]['commentTags']:
                         obj.latestResponse = False
 
@@ -373,15 +374,17 @@ class AMResponseViewSet(viewsets.ModelViewSet):
                         obj1 = AMResponse(amQuestion_id=data[i]['amQuestion'], projectUser_id=data[i]['projectUser'], subProjectUser_id=data[i]['subProjectUser'], survey_id=data[i]['survey'], project_id=data[i]['project'],
                         controlType=data[i]['controlType'], integerValue=data[i]['integerValue'], topicValue=data[i]['topicValue'], commentValue=data[i]['commentValue'], skipValue=data[i]['skipValue'], topicTags=data[i]['topicTags'], commentTags=data[i]['commentTags'], latestResponse=True)
                         obj1.save()
-                except AMResponse.DoesNotExist:
+                else:
                     obj = AMResponse(amQuestion_id=data[i]['amQuestion'], projectUser_id=data[i]['projectUser'], subProjectUser_id=data[i]['subProjectUser'], survey_id=data[i]['survey'], project_id=data[i]['project'], controlType=data[i]['controlType'], integerValue=data[i]['integerValue'], topicValue=data[i]['skipValue'], topicTags=data[i]['topicTags'], commentTags=data[i]['commentTags'], latestResponse=True)
                     obj.save()
         elif many == False:
             defaults = data
-            try:
+            
                 # obj = AMResponse.objects.get(survey_id=defaults['survey'], project_id=defaults['project'], projectUser_id=defaults['projectUser'], subProjectUser_id=defaults['subProjectUser'], amQuestion_id=defaults['amQuestion'], latestResponse=True)
-                obj = AMResponse.objects.filter(survey_id=defaults['survey'], project_id=defaults['project'], projectUser_id=defaults['projectUser'],
-                                             subProjectUser_id=defaults['subProjectUser'], amQuestion_id=defaults['amQuestion'], latestResponse=True)[0]
+            tempItem = AMResponse.objects.filter(survey_id=defaults['survey'], project_id=defaults['project'], projectUser_id=defaults['projectUser'],
+                                             subProjectUser_id=defaults['subProjectUser'], amQuestion_id=defaults['amQuestion'], latestResponse=True)
+            if (len(tempItem) > 0):
+                obj = tempItem[0]
 
                 if obj.topicValue != defaults['topicValue'] or obj.commentValue != defaults['commentValue'] or obj.integerValue != defaults['integerValue'] or obj.skipValue != defaults['skipValue'] or obj.topicTags != defaults['topicTags'] or obj.commentTags != defaults['commentTags']:
                     obj.latestResponse = False
@@ -397,7 +400,7 @@ class AMResponseViewSet(viewsets.ModelViewSet):
 
                     obj1 = AMResponse(amQuestion_id=defaults['amQuestion'], projectUser_id=defaults['projectUser'], subProjectUser_id=defaults['subProjectUser'], survey_id=defaults['survey'], project_id=defaults['project'], controlType=defaults['controlType'], integerValue=defaults['integerValue'], topicValue=defaults['topicValue'], commentValue=defaults['commentValue'], skipValue=defaults['skipValue'], topicTags=defaults['topicTags'], commentTags=defaults['commentTags'], latestResponse=True)
                     obj1.save()
-            except AMResponse.DoesNotExist:
+            else:
                 if defaults['controlType'] == "TEXT" or defaults['controlType'] == "MULTI_TOPICS":
                     text = defaults['topicValue'] + " " + defaults['commentValue']
 
@@ -451,9 +454,12 @@ class AOResponseViewSet(viewsets.ModelViewSet):
             for i in range(len(data)):
                 if data[i]['controlType'] == "TEXT" or data[i]['controlType'] == "MULTI_TOPICS":
                     data[i]['integerValue'] = int(abs(sentimentData[i]['SentimentScore']['Positive'] * 100))
-                try:
+                
                     # obj = AOResponse.objects.get(survey_id=data[i]['survey'], project_id=data[i]['project'], projectUser_id=data[i]['projectUser'], subProjectUser_id=data[i]['subProjectUser'], aoQuestion_id=data[i]['aoQuestion'], latestResponse=True)
-                    obj = AOResponse.objects.filter(survey_id=data[i]['survey'], project_id=data[i]['project'], projectUser_id=data[i]['projectUser'], subProjectUser_id=data[i]['subProjectUser'], aoQuestion_id=data[i]['aoQuestion'], latestResponse=True)[0]
+                tempItem = AOResponse.objects.filter(survey_id=data[i]['survey'], project_id=data[i]['project'], projectUser_id=data[i]['projectUser'], subProjectUser_id=data[i]['subProjectUser'], aoQuestion_id=data[i]['aoQuestion'], latestResponse=True)
+
+                if (len(tempItem) > 0):
+                    obj = tempItem[0]
 
                     if obj.topicValue != data[i]['topicValue'] or obj.commentValue != data[i]['commentValue'] or obj.integerValue != data[i]['integerValue'] or obj.skipValue != data[i]['skipValue'] or obj.topicTags != data[i]['topicTags'] or obj.commentTags != data[i]['commentTags']:
                         obj.latestResponse = False
@@ -462,16 +468,19 @@ class AOResponseViewSet(viewsets.ModelViewSet):
                         
                         obj1 = AOResponse(aoQuestion_id=data[i]['aoQuestion'], projectUser_id=data[i]['projectUser'], subProjectUser_id=data[i]['subProjectUser'], shCategory_id=data[i]['shCategory'], survey_id=data[i]['survey'], project_id=data[i]['project'], controlType=data[i]['controlType'], integerValue=data[i]['integerValue'], topicValue=data[i]['topicValue'], commentValue=data[i]['commentValue'], skipValue=data[i]['skipValue'], topicTags=data[i]['topicTags'], commentTags=data[i]['commentTags'], latestResponse=True)
                         obj1.save()
-                except AOResponse.DoesNotExist:
+                else:
                     obj = AOResponse(aoQuestion_id=data[i]['aoQuestion'], projectUser_id=data[i]['projectUser'], subProjectUser_id=data[i]['subProjectUser'], shCategory_id=data[i]['shCategory'], survey_id=data[i]['survey'], project_id=data[i]['project'], controlType=data[i]['controlType'], integerValue=data[i]['integerValue'], topicValue=data[i]['topicValue'], commentValue=data[i]['commentValue'], skipValue=data[i]['skipValue'], topicTags=data[i]['topicTags'], commentTags=data[i]['commentTags'], latestResponse=True)
                     obj.save()
         elif many == False:
             defaults = data
-            try:
+            
                 # obj = AOResponse.objects.get(survey_id=defaults['survey'], project_id=defaults['project'], projectUser_id=defaults['projectUser'],
                                             #  subProjectUser_id=defaults['subProjectUser'], aoQuestion_id=defaults['aoQuestion'], latestResponse=True)
-                obj = AOResponse.objects.filter(survey_id=defaults['survey'], project_id=defaults['project'], projectUser_id=defaults['projectUser'],
+            tempItem = AOResponse.objects.filter(survey_id=defaults['survey'], project_id=defaults['project'], projectUser_id=defaults['projectUser'],
                                              subProjectUser_id=defaults['subProjectUser'], aoQuestion_id=defaults['aoQuestion'], latestResponse=True)[0]
+
+            if (len(tempItem) > 0):
+                obj = tempItem[0]
 
                 if obj.topicValue != defaults['topicValue'] or obj.commentValue != defaults['commentValue'] or obj.integerValue != defaults['integerValue'] or obj.skipValue != defaults['skipValue'] or obj.topicTags != defaults['topicTags'] or obj.commentTags != defaults['commentTags']:
                     obj.latestResponse = False
@@ -496,7 +505,7 @@ class AOResponseViewSet(viewsets.ModelViewSet):
                                     commentTags=defaults['commentTags'], latestResponse=True)
                     obj1.save()
 
-            except AOResponse.DoesNotExist:
+            else:
                 if defaults["controlType"] == "TEXT" or defaults["controlType"] == "MULTI_TOPICS":
                     text = defaults["topicValue"] + " " + defaults["commentValue"]
 
