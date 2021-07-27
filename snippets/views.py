@@ -1046,9 +1046,9 @@ class OverallSentimentReportViewSet(viewsets.ModelViewSet):
         try:
             response = super().list(request, *args, **kwargs)
 
-            survey = self.request.GET.get('survey', None)
-            startDate = self.request.GET.get('stdt', None)
-            endDate = self.request.GET.get('eddt', None)
+            # survey = self.request.GET.get('survey', None)
+            # startDate = self.request.GET.get('stdt', None)
+            # endDate = self.request.GET.get('eddt', None)
 
             # add amresponse data
             # aoresponsequeryset = AOResponse.objects.all()
