@@ -252,7 +252,7 @@ def preApiCheck(survey, projectUser):
         return 404
 
     # 3 people has to response to this user
-    thresholdCnt = Survey.objects.get(id=survey)['anonymityThreshold']
+    thresholdCnt = Survey.objects.get(id=survey).anonymityThreshold
 
     prefAryProjectUsers = []
     prefTestResultQueryset = AMResponse.objects.all().filter(survey__id=survey)
@@ -3572,7 +3572,7 @@ class CheckDashboardStatusView(APIView):
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
 
         # 3 people has to response to this user
-        thresholdCnt = Survey.objects.get(id=survey)['anonymityThreshold']
+        thresholdCnt = Survey.objects.get(id=survey).anonymityThreshold
 
         # prefix check
         prefCode = preApiCheck(survey, projectUser) 
