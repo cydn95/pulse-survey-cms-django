@@ -252,6 +252,8 @@ def preApiCheck(survey, projectUser):
         return 404
 
     # 3 people has to response to this user
+    thresholdCnt = Survey.objects.get(id=survey)['anonymityThreshold']
+
     prefAryProjectUsers = []
     prefTestResultQueryset = AMResponse.objects.all().filter(survey__id=survey)
     prefTestResultSerializer = AMResponseForDriverAnalysisSerializer(prefTestResultQueryset, many=True)
@@ -262,7 +264,7 @@ def preApiCheck(survey, projectUser):
                 prefAryProjectUsers.append(
                     prefTestResultData[i]['projectUser']["id"])
     
-    if (len(prefAryProjectUsers) < 3):
+    if (len(prefAryProjectUsers) < thresholdCnt):
         return 227
 
     return 200
@@ -3569,6 +3571,9 @@ class CheckDashboardStatusView(APIView):
         if projectUser is None:
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
 
+        # 3 people has to response to this user
+        thresholdCnt = Survey.objects.get(id=survey)['anonymityThreshold']
+
         # prefix check
         prefCode = preApiCheck(survey, projectUser) 
 
@@ -3582,4 +3587,4 @@ class CheckDashboardStatusView(APIView):
         elif prefCode == 201:
             return Response({"text": "superuser", "code": 201}, status=status.HTTP_200_OK)
 
-        return Response({"text": "pass", "code": 200, "data": shgroupserializer.data}, status=status.HTTP_200_OK)
+        return Response({"text": "pass", "code": 200, "data": shgroupserializer.data, "thresholdCnt": thresholdCnt}, status=status.HTTP_200_OK)
