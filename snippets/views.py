@@ -896,7 +896,7 @@ class AOResponseFeedbackSummaryViewset(viewsets.ModelViewSet):
             elif (survey is not None):
                 queryset = queryset.filter(survey_id=survey)
 
-            if (trend == 1):
+            if (trend == "1"):
                 queryset = queryset.filter(amQuestion__subdriver="Overall Sentiment")
 
             return queryset
