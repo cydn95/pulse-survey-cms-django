@@ -3581,10 +3581,10 @@ class CheckDashboardStatusView(APIView):
         shgroupserializer = SHGroupSerializer(shgroupqueryset, many=True)
 
         if prefCode == 228:
-            return Response({"text": "no data yet"}, status=228)
+            return Response({"text": "no data yet", "code": 228, "thresholdCnt": thresholdCnt}, status=228)
         elif prefCode == 227:
-            return Response({"text": "no data yet"}, status=227)
+            return Response({"text": "no data yet", "code": 227, "thresholdCnt": thresholdCnt}, status=227)
         elif prefCode == 201:
-            return Response({"text": "superuser", "code": 201}, status=status.HTTP_200_OK)
+            return Response({"text": "superuser", "code": 201, "thresholdCnt": thresholdCnt}, status=status.HTTP_200_OK)
 
         return Response({"text": "pass", "code": 200, "data": shgroupserializer.data, "thresholdCnt": thresholdCnt}, status=status.HTTP_200_OK)
