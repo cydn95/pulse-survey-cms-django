@@ -883,6 +883,7 @@ class AOResponseFeedbackSummaryViewset(viewsets.ModelViewSet):
             subProjectUser = self.request.query_params.get('projectuser', None)
             startDate = self.request.query_params.get('stdt', None)
             endDate = self.request.query_params.get('eddt', None)
+            trend = self.request.query_params.get('trend', None)
 
             if (survey is not None) & (subProjectUser is not None) & (startDate is not None) & (endDate is not None):
                 queryset = queryset.filter(
@@ -894,6 +895,9 @@ class AOResponseFeedbackSummaryViewset(viewsets.ModelViewSet):
                 queryset = queryset.filter(survey_id=survey, created_at__range=[startDate, endDate])
             elif (survey is not None):
                 queryset = queryset.filter(survey_id=survey)
+
+            if (trend == 1):
+                queryset = queryset.filter(amQuestion__subdriver="Overall Sentiment")
 
             return queryset
         except:
