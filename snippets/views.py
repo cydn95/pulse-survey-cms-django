@@ -769,8 +769,7 @@ class AMResponseTopPositiveNegativeViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         try:
-            queryset = AMResponse.objects.all().filter(Q(controlType='TEXT') | Q(controlType='MULTI_TOPICS')).values(
-                'amQuestion__subdriver').annotate(score=Avg('integerValue')).order_by('-score')
+            queryset = AMResponse.objects.all().filter(Q(controlType='TEXT')|Q(controlType='MULTI_TOPICS')).order_by('-integerValue')
 
             survey = self.request.query_params.get('survey', None)
             projectUser = self.request.query_params.get('projectuser', None)
@@ -794,7 +793,8 @@ class AMResponseTopPositiveNegativeViewSet(viewsets.ModelViewSet):
         try:
             response = super().list(request, *args, **kwargs)
 
-            res = response.data
+            res = AMResponse.objects.all().filter(Q(controlType='TEXT') | Q(controlType='MULTI_TOPICS')).values(
+                'amQuestion__subdriver').annotate(score=Avg('integerValue')).order_by('-score')
             # wordstring = ''
             # for i in range(len(res)):
             #     if res[i]['topicValue'] != "":
