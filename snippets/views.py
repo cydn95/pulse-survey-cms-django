@@ -769,7 +769,8 @@ class AMResponseTopPositiveNegativeViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         try:
-            queryset = AMResponse.objects.all().filter(Q(controlType='TEXT')|Q(controlType='MULTI_TOPICS')).order_by('-integerValue')
+            queryset = AMResponse.objects.all().filter(Q(controlType='TEXT') | Q(controlType='MULTI_TOPICS')).values(
+                'amQuestion__subdriver').annotate(score=Avg('integerValue')).order_by('-score')
 
             survey = self.request.query_params.get('survey', None)
             projectUser = self.request.query_params.get('projectuser', None)
@@ -794,26 +795,28 @@ class AMResponseTopPositiveNegativeViewSet(viewsets.ModelViewSet):
             response = super().list(request, *args, **kwargs)
 
             res = response.data
-            wordstring = ''
-            for i in range(len(res)):
-                if res[i]['topicValue'] != "":
-                    wordstring += ' ' + res[i]['topicValue']
-            wordList = re.findall(r"[\w\']+", wordstring.lower())
-            filteredWordList = [w for w in wordList if w not in stopwords]
-            wordfreq = [filteredWordList.count(p) for p in filteredWordList]
-            dictionary = dict(list(zip(filteredWordList, wordfreq)))
+            # wordstring = ''
+            # for i in range(len(res)):
+            #     if res[i]['topicValue'] != "":
+            #         wordstring += ' ' + res[i]['topicValue']
+            # wordList = re.findall(r"[\w\']+", wordstring.lower())
+            # filteredWordList = [w for w in wordList if w not in stopwords]
+            # wordfreq = [filteredWordList.count(p) for p in filteredWordList]
+            # dictionary = dict(list(zip(filteredWordList, wordfreq)))
 
-            aux = [(dictionary[key], key) for key in dictionary]
-            aux.sort()
-            aux.reverse()
+            # aux = [(dictionary[key], key) for key in dictionary]
+            # aux.sort()
+            # aux.reverse()
+            # for i in range(len(res)):
 
-            ret = ''
-            ret = {'topPositive': aux[:3], 'topNegative': aux[-3:]}
 
-            return Response(ret, status=status.HTTP_200_OK)
+            # ret = ''
+            # ret = {'topPositive': aux[:3], 'topNegative': aux[-3:]}
+
+            return Response(res, status=status.HTTP_200_OK)
         except Exception as error:
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
-            
+
 # configpage api
 class ConfigPageViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
