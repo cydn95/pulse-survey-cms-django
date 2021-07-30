@@ -795,7 +795,7 @@ class AMResponseTopPositiveNegativeViewSet(viewsets.ModelViewSet):
 
             survey = self.request.GET.get('survey', None)
 
-            res = AMResponse.objects.all().filter(Q(controlType='TEXT') | Q(controlType='MULTI_TOPICS')).filter(survey__id=survey).values(
+            res = AMResponse.objects.all().filter(Q(controlType='TEXT') | Q(controlType='MULTI_TOPICS')).values(
                 'amQuestion__subdriver').annotate(score=Avg('integerValue')).order_by('-score')
             # wordstring = ''
             # for i in range(len(res)):
