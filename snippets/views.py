@@ -697,14 +697,79 @@ class AOResponseReportViewSet(viewsets.ModelViewSet):
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
 
 # aoresponsetoppositivenegativereport api
-class AOResponseTopPositiveNegativeViewSet(viewsets.ModelViewSet):
+# class AOResponseTopPositiveNegativeViewSet(viewsets.ModelViewSet):
+#     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+#     queryset = AOResponse.objects.all()
+#     serializer_class = AOResponseTopPositiveNegativeSerializer
+
+#     def get_queryset(self):
+#         try:
+#             queryset = AOResponse.objects.all().filter(Q(controlType='TEXT')|Q(controlType='MULTI_TOPICS')).order_by('-integerValue')
+
+#             survey = self.request.query_params.get('survey', None)
+#             projectUser = self.request.query_params.get('projectuser', None)
+#             startDate = self.request.query_params.get('stdt', None)
+#             endDate = self.request.query_params.get('eddt', None)
+
+#             if (survey is not None) & (projectUser is not None) & (startDate is not None) & (endDate is not None):
+#                 queryset = queryset.filter(
+#                     survey__id=survey, subProjectUser__id=projectUser, created_at__range=[startDate, endDate])
+#             elif (survey is not None) & (projectUser is not None):
+#                 queryset = queryset.filter(
+#                     survey__id=survey, subProjectUser__id=projectUser)
+#             elif (survey is not None) & (startDate is not None) & (endDate is not None):
+#                 queryset = queryset.filter(
+#                     survey__id=survey, created_at__range=[startDate, endDate])
+#             elif (survey is not None):
+#                 queryset = queryset.filter(survey__id=survey)
+
+#             return queryset
+#         except:
+#             return None
+    
+#     def list(self, request, *args, **kwargs):
+#         try:
+#             response = super().list(request, *args, **kwargs)
+            
+#             res = response.data
+
+#             wordstring = ''
+#             for i in range(len(res)):
+#                 if res[i]['topicValue'] != "":
+#                     wordstring += ' ' + res[i]['topicValue']
+#                 if res[i]['commentValue'] != "":
+#                     wordstring += ' ' + res[i]['commentValue']
+#                 if res[i]['skipValue'] != "":
+#                     wordstring += ' ' + res[i]['skipValue']
+#                 if res[i]['topicTags'] != "":
+#                     wordstring += ' ' + res[i]['topicTags']
+#                 if res[i]['commentTags'] != "":
+#                     wordstring += ' ' + res[i]['commentTags']
+
+#             wordList = re.findall(r"[\w\']+", wordstring.lower())
+#             filteredWordList = [w for w in wordList if w not in stopwords]
+#             wordfreq = [filteredWordList.count(p) for p in filteredWordList]
+#             dictionary = dict(list(zip(filteredWordList, wordfreq)))
+
+#             aux = [(dictionary[key], key) for key in dictionary]
+#             aux.sort()
+#             aux.reverse()
+
+#             ret = ''
+#             # ret = {'topPositive': response.data[:3], 'topNegative': response.data[-3:]}
+#             ret = {'topPositive': aux[:3], 'topNegative': aux[-3:]}
+
+#             return Response(ret, status=status.HTTP_200_OK)
+#         except Exception as error:
+#             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
+class AMResponseTopPositiveNegativeViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
-    queryset = AOResponse.objects.all()
-    serializer_class = AOResponseTopPositiveNegativeSerializer
+    queryset = AMResponse.objects.all()
+    serializer_class = AMResponseSerializer
 
     def get_queryset(self):
         try:
-            queryset = AOResponse.objects.all().filter(Q(controlType='TEXT')|Q(controlType='MULTI_TOPICS')).order_by('-integerValue')
+            queryset = AMResponse.objects.all().filter(Q(controlType='TEXT')|Q(controlType='MULTI_TOPICS')).order_by('-integerValue')
 
             survey = self.request.query_params.get('survey', None)
             projectUser = self.request.query_params.get('projectuser', None)
@@ -712,14 +777,11 @@ class AOResponseTopPositiveNegativeViewSet(viewsets.ModelViewSet):
             endDate = self.request.query_params.get('eddt', None)
 
             if (survey is not None) & (projectUser is not None) & (startDate is not None) & (endDate is not None):
-                queryset = queryset.filter(
-                    survey__id=survey, subProjectUser__id=projectUser, created_at__range=[startDate, endDate])
+                queryset = queryset.filter(survey__id=survey, subProjectUser__id=projectUser, created_at__range=[startDate, endDate])
             elif (survey is not None) & (projectUser is not None):
-                queryset = queryset.filter(
-                    survey__id=survey, subProjectUser__id=projectUser)
+                queryset = queryset.filter(survey__id=survey, subProjectUser__id=projectUser)
             elif (survey is not None) & (startDate is not None) & (endDate is not None):
-                queryset = queryset.filter(
-                    survey__id=survey, created_at__range=[startDate, endDate])
+                queryset = queryset.filter(survey__id=survey, created_at__range=[startDate, endDate])
             elif (survey is not None):
                 queryset = queryset.filter(survey__id=survey)
 
@@ -730,22 +792,12 @@ class AOResponseTopPositiveNegativeViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         try:
             response = super().list(request, *args, **kwargs)
-            
-            res = response.data
 
+            res = response.data
             wordstring = ''
             for i in range(len(res)):
                 if res[i]['topicValue'] != "":
                     wordstring += ' ' + res[i]['topicValue']
-                if res[i]['commentValue'] != "":
-                    wordstring += ' ' + res[i]['commentValue']
-                if res[i]['skipValue'] != "":
-                    wordstring += ' ' + res[i]['skipValue']
-                if res[i]['topicTags'] != "":
-                    wordstring += ' ' + res[i]['topicTags']
-                if res[i]['commentTags'] != "":
-                    wordstring += ' ' + res[i]['commentTags']
-
             wordList = re.findall(r"[\w\']+", wordstring.lower())
             filteredWordList = [w for w in wordList if w not in stopwords]
             wordfreq = [filteredWordList.count(p) for p in filteredWordList]
@@ -756,13 +808,12 @@ class AOResponseTopPositiveNegativeViewSet(viewsets.ModelViewSet):
             aux.reverse()
 
             ret = ''
-            # ret = {'topPositive': response.data[:3], 'topNegative': response.data[-3:]}
             ret = {'topPositive': aux[:3], 'topNegative': aux[-3:]}
 
             return Response(ret, status=status.HTTP_200_OK)
         except Exception as error:
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
-
+            
 # configpage api
 class ConfigPageViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
