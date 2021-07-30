@@ -772,17 +772,17 @@ class AMResponseTopPositiveNegativeViewSet(viewsets.ModelViewSet):
             queryset = AMResponse.objects.all().filter(Q(controlType='TEXT')|Q(controlType='MULTI_TOPICS')).order_by('-integerValue')
 
             survey = self.request.query_params.get('survey', None)
-            projectUser = self.request.query_params.get('projectuser', None)
-            startDate = self.request.query_params.get('stdt', None)
-            endDate = self.request.query_params.get('eddt', None)
+            # projectUser = self.request.query_params.get('projectuser', None)
+            # startDate = self.request.query_params.get('stdt', None)
+            # endDate = self.request.query_params.get('eddt', None)
 
-            if (survey is not None) & (projectUser is not None) & (startDate is not None) & (endDate is not None):
-                queryset = queryset.filter(survey__id=survey, subProjectUser__id=projectUser, created_at__range=[startDate, endDate])
-            elif (survey is not None) & (projectUser is not None):
-                queryset = queryset.filter(survey__id=survey, subProjectUser__id=projectUser)
-            elif (survey is not None) & (startDate is not None) & (endDate is not None):
-                queryset = queryset.filter(survey__id=survey, created_at__range=[startDate, endDate])
-            elif (survey is not None):
+            # if (survey is not None) & (projectUser is not None) & (startDate is not None) & (endDate is not None):
+            #     queryset = queryset.filter(survey__id=survey, subProjectUser__id=projectUser, created_at__range=[startDate, endDate])
+            # elif (survey is not None) & (projectUser is not None):
+            #     queryset = queryset.filter(survey__id=survey, subProjectUser__id=projectUser)
+            # elif (survey is not None) & (startDate is not None) & (endDate is not None):
+            #     queryset = queryset.filter(survey__id=survey, created_at__range=[startDate, endDate])
+            if (survey is not None):
                 queryset = queryset.filter(survey__id=survey)
 
             return queryset
@@ -793,7 +793,9 @@ class AMResponseTopPositiveNegativeViewSet(viewsets.ModelViewSet):
         try:
             response = super().list(request, *args, **kwargs)
 
-            res = AMResponse.objects.all().filter(Q(controlType='TEXT') | Q(controlType='MULTI_TOPICS')).values(
+            survey = self.request.GET.get('survey', None)
+
+            res = AMResponse.objects.all().filter(Q(controlType='TEXT') | Q(controlType='MULTI_TOPICS')).filter(survey__id=survey).values(
                 'amQuestion__subdriver').annotate(score=Avg('integerValue')).order_by('-score')
             # wordstring = ''
             # for i in range(len(res)):
@@ -813,7 +815,14 @@ class AMResponseTopPositiveNegativeViewSet(viewsets.ModelViewSet):
             # ret = ''
             # ret = {'topPositive': aux[:3], 'topNegative': aux[-3:]}
 
-            return Response(res, status=status.HTTP_200_OK)
+            aux = []
+            for i in range(len(res)):
+                item = [res[i]['score'], res[i]['amQuestion__subdriver']]
+                aux.append(item)
+
+            ret = {'topPositive': aux[:3], 'topNegative': aux[-3:]}
+
+            return Response(ret, status=status.HTTP_200_OK)
         except Exception as error:
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
 
