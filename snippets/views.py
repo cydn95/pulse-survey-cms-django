@@ -448,7 +448,7 @@ class AMResponseViewSet(viewsets.ModelViewSet):
                 obj = AMResponse(amQuestion_id=defaults['amQuestion'], projectUser_id=defaults['projectUser'], subProjectUser_id=defaults['subProjectUser'], survey_id=defaults['survey'], project_id=defaults['project'], controlType=defaults['controlType'], integerValue=defaults['integerValue'], topicValue=defaults['topicValue'], commentValue=defaults['commentValue'], skipValue=defaults['skipValue'], topicTags=defaults['topicTags'], commentTags=defaults['commentTags'], latestResponse=True)
                 obj.save()
 
-        return Response(True, status=status.HTTP_201_CREATED)
+        return Response(sentimentData, status=status.HTTP_201_CREATED)
 
 # amresponsetopic api
 class AMResponseTopicViewSet(viewsets.ModelViewSet):
