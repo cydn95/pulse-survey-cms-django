@@ -3616,7 +3616,8 @@ class TotalStakeHolderView(APIView):
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
 
         projectusercnt = len(ProjectUser.objects.filter(survey=survey, sendInvite=True))
-        projectuserqueryset = ProjectUser.objects.all().filter(survey__id=survey, sendInvite=True)
+        projectuserqueryset = ProjectUser.objects.all().filter(
+            survey__id=survey, sendInvite=True)
         projectuserserializer = UserBySurveySerializer(projectuserqueryset, many=True)
         projectuserdata = projectuserserializer.data
 
@@ -3636,16 +3637,20 @@ class TotalStakeHolderView(APIView):
             if projectuserdata[i]['team'] is not None:
                 if projectuserdata[i]['team']['name'] not in aryTeams:
                     aryTeams.append(projectuserdata[i]['team']['name'])
-                    ret['team'][projectuserdata[i]['team']['name']] = 1
+                    if projectuserdata[i]['shType']['shTypeName'] == "Team Member":
+                        ret['team'][projectuserdata[i]['team']['name']] = 1
                 else:
-                    ret['team'][projectuserdata[i]['team']['name']] += 1
+                    if projectuserdata[i]['shType']['shTypeName'] == "Team Member":
+                        ret['team'][projectuserdata[i]['team']['name']] += 1
 
             if projectuserdata[i]['shGroup'] is not None:
                 if projectuserdata[i]['shGroup']['SHGroupName'] not in arySHGroups:
                     arySHGroups.append(projectuserdata[i]['shGroup']['SHGroupName'])
-                    ret['shgroup'][projectuserdata[i]['shGroup']['SHGroupName']] = 1
+                    if projectuserdata[i]['shType']['shTypeName'] == "Stakeholder":
+                        ret['shgroup'][projectuserdata[i]['shGroup']['SHGroupName']] = 1
                 else:
-                    ret['shgroup'][projectuserdata[i]['shGroup']['SHGroupName']] += 1
+                    if projectuserdata[i]['shType']['shTypeName'] == "Stakeholder":
+                        ret['shgroup'][projectuserdata[i]['shGroup']['SHGroupName']] += 1
 
             if projectuserdata[i]['user']['organization'] is not None:
                 if projectuserdata[i]['user']['organization']['name'] not in aryOrgs:
