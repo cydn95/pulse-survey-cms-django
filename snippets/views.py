@@ -587,7 +587,7 @@ class AOResponseViewSet(viewsets.ModelViewSet):
                             defaults['integerValue'] = 45
                         else:
                             defaults['integerValue'] = 35
-                            
+
                 obj = AOResponse(aoQuestion_id=defaults['aoQuestion'],
                             projectUser_id=defaults['projectUser'], subProjectUser_id=defaults['subProjectUser'],
                             shCategory_id=defaults['shCategory'],
@@ -3698,13 +3698,20 @@ class TotalStakeHolderView(APIView):
                     else:
                         pass
 
-            if projectuserdata[i]['user']['organization'] is not None:
-                if projectuserdata[i]['user']['organization']['name'] not in aryOrgs:
+            # if projectuserdata[i]['user']['organization'] is not None:
+            #     if projectuserdata[i]['user']['organization']['name'] not in aryOrgs:
+            #         aryOrgs.append(
+            #             projectuserdata[i]['user']['organization']['name'])
+            #         ret['org'][projectuserdata[i]['user']['organization']['name']] = 1
+            #     else:
+            #         ret['org'][projectuserdata[i]['user']['organization']['name']] += 1
+            if (projectuserdata[i]['projectOrganization'] is not None) & (projectuserdata[i]['projectOrganization'] != ""):
+                if projectuserdata[i]['projectOrganization'] not in aryOrgs:
                     aryOrgs.append(
-                        projectuserdata[i]['user']['organization']['name'])
-                    ret['org'][projectuserdata[i]['user']['organization']['name']] = 1
+                        projectuserdata[i]['projectOrganization'])
+                    ret['org'][projectuserdata[i]['projectOrganization']] = 1
                 else:
-                    ret['org'][projectuserdata[i]['user']['organization']['name']] += 1
+                    ret['org'][projectuserdata[i]['projectOrganization']] += 1
                     
         return Response(ret, status=status.HTTP_200_OK)
 
