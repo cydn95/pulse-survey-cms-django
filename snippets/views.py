@@ -3737,6 +3737,8 @@ class TotalStakeHolderView(APIView):
                     if (projectuserdata[i]['shType'] is not None):
                         if (projectuserdata[i]['shType']['shTypeName'] == "Team Member"):
                             ret['team'][projectuserdata[i]['team']['name']] = 1
+                        else:
+                            ret['team'][projectuserdata[i]['team']['name']] = 0
                     else:
                         ret['team'][projectuserdata[i]['team']['name']] = 0
                 else:
@@ -3752,6 +3754,8 @@ class TotalStakeHolderView(APIView):
                     if (projectuserdata[i]['shType'] is not None):
                         if (projectuserdata[i]['shType']['shTypeName'] == "Stakeholder"):
                             ret['shgroup'][projectuserdata[i]['shGroup']['SHGroupName']] = 1
+                        else:
+                            ret['shgroup'][projectuserdata[i]['shGroup']['SHGroupName']] = 0
                     else:
                         ret['shgroup'][projectuserdata[i]['shGroup']['SHGroupName']] = 0
                 else:
