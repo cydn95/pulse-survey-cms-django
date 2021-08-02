@@ -361,7 +361,7 @@ class AMResponseViewSet(viewsets.ModelViewSet):
                         amresponsetopic_data = amresponsetopic_serializer.data
                         temptopictext = ""
                         for j in range(len(amresponsetopic_data)):
-                            temptopictext = amresponsetopic_data[j]['topicName'] + " "
+                            temptopictext = temptopictext + " " + amresponsetopic_data[j]['topicName']
                         textList.append(temptopictext)
                     else:
                         textList.append(item['topicValue'] + " " + item['commentValue'])
@@ -496,7 +496,18 @@ class AOResponseViewSet(viewsets.ModelViewSet):
         if many == True:
             for i in range(len(tempData)):
                 for item in tempData[i]:
-                    textList.append(item['topicValue'] + " " + item['commentValue'])
+                    if item['controlType'] == "MULTI_TOPICS":
+                        aoresponsetopic_queryset = AOResponseTopic.objects.filter(
+                            aoQuestion_id=item['aoQuestion'], responseUser_id=item['subProjectUser'])
+                        aoresponsetopic_serializer = AOResponseTopicSerializer(
+                            aoresponsetopic_queryset, many=True)
+                        aoresponsetopic_data = aoresponsetopic_serializer.data
+                        temptopictext = ""
+                        for j in range(len(aoresponsetopic_data)):
+                            temptopictext = temptopictext + " " + aoresponsetopic_data[j]['topicName']
+                        textList.append(temptopictext)
+                    else:
+                        textList.append(item['topicValue'] + " " + item['commentValue'])
                 tempSentimentData = comprehend.batch_detect_sentiment(TextList=textList, LanguageCode="en")
                 sentimentData = sentimentData + tempSentimentData['ResultList']
                 textList = []
