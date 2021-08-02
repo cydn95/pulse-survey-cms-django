@@ -360,7 +360,7 @@ class AMResponseViewSet(viewsets.ModelViewSet):
 
         if many == True:
             for i in range(len(data)):
-                if data[i]['controlType'] == "Text" or data[i]['controlType'] == "MULTI_TOPICS":
+                if data[i]['controlType'] == "TEXT" or data[i]['controlType'] == "MULTI_TOPICS":
                     # 2021-07-31
                     if sentimentData[i]['Sentiment'] == "POSITIVE":
                         # data[i]['integerValue'] = int(abs(sentimentData[i]['SentimentScore']['Positive'] * 100))
