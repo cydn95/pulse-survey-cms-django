@@ -363,11 +363,11 @@ class AMResponseViewSet(viewsets.ModelViewSet):
                 if data[i]['controlType'] == "TEXT" or data[i]['controlType'] == "MULTI_TOPICS":
                     # 2021-07-31
                     if sentimentData[i]['Sentiment'] == "POSITIVE":
-                        # data[i]['integerValue'] = int(abs(sentimentData[i]['SentimentScore']['Positive'] * 100))
-                        data[i]['integerValue'] = 100
+                        data[i]['integerValue'] = int(abs(sentimentData[i]['SentimentScore']['Positive'] * 100))
+                        # data[i]['integerValue'] = 100
                     elif sentimentData[i]['Sentiment'] == "NEGATIVE":
-                        # data[i]['integerValue'] = 100 - int(abs(sentimentData[i]['SentimentScore']['Negative'] * 100))
-                        data[i]['integerValue'] = 10
+                        data[i]['integerValue'] = 100 - int(abs(sentimentData[i]['SentimentScore']['Negative'] * 100))
+                        # data[i]['integerValue'] = 10
                     else:
                         if sentimentData[i]['SentimentScore']['Positive'] > sentimentData[i]['SentimentScore']['Negative']:
                             data[i]['integerValue'] = 55
@@ -493,7 +493,19 @@ class AOResponseViewSet(viewsets.ModelViewSet):
         if many == True:
             for i in range(len(data)):
                 if data[i]['controlType'] == "TEXT" or data[i]['controlType'] == "MULTI_TOPICS":
-                    data[i]['integerValue'] = int(abs(sentimentData[i]['SentimentScore']['Positive'] * 100))
+                    # 2021-07-31
+                    if sentimentData[i]['Sentiment'] == "POSITIVE":
+                        data[i]['integerValue'] = int(abs(sentimentData[i]['SentimentScore']['Positive'] * 100))
+                    elif sentimentData[i]['Sentiment'] == "NEGATIVE":
+                        data[i]['integerValue'] = 100 - int(abs(sentimentData[i]['SentimentScore']['Negative'] * 100))
+                    else:
+                        if sentimentData[i]['SentimentScore']['Positive'] > sentimentData[i]['SentimentScore']['Negative']:
+                            data[i]['integerValue'] = 55
+                        elif sentimentData[i]['SentimentScore']['Positive'] == sentimentData[i]['SentimentScore']['Negative']:
+                            data[i]['integerValue'] = 45
+                        else:
+                            data[i]['integerValue'] = 35
+                    # data[i]['integerValue'] = int(abs(sentimentData[i]['SentimentScore']['Positive'] * 100))
                 
                     # obj = AOResponse.objects.get(survey_id=data[i]['survey'], project_id=data[i]['project'], projectUser_id=data[i]['projectUser'], subProjectUser_id=data[i]['subProjectUser'], aoQuestion_id=data[i]['aoQuestion'], latestResponse=True)
                 tempItem = AOResponse.objects.filter(survey_id=data[i]['survey'], project_id=data[i]['project'], projectUser_id=data[i]['projectUser'], subProjectUser_id=data[i]['subProjectUser'], aoQuestion_id=data[i]['aoQuestion'], latestResponse=True)
@@ -532,8 +544,19 @@ class AOResponseViewSet(viewsets.ModelViewSet):
 
                         sentimentResult = comprehend.detect_sentiment(
                             Text=text, LanguageCode="en")
-                        defaults["integerValue"] = int(
-                            abs(sentimentResult["SentimentScore"]["Positive"] * 100))
+
+                        # 2021-07-31
+                        if sentimentResult['Sentiment'] == "POSITIVE":
+                            defaults['integerValue'] = int(abs(sentimentResult['SentimentScore']['Positive'] * 100))
+                        elif sentimentResult['Sentiment'] == "NEGATIVE":
+                            defaults['integerValue'] = 100 - int(abs(sentimentResult['SentimentScore']['Negative'] * 100))
+                        else:
+                            if sentimentResult['SentimentScore']['Positive'] > sentimentResult['SentimentScore']['Negative']:
+                                defaults['integerValue'] = 55
+                            elif sentimentResult['SentimentScore']['Positive'] == sentimentResult['SentimentScore']['Negative']:
+                                defaults['integerValue'] = 45
+                            else:
+                                defaults['integerValue'] = 35
 
                     obj1 = AOResponse(aoQuestion_id=defaults['aoQuestion'],
                                     projectUser_id=defaults['projectUser'], subProjectUser_id=defaults['subProjectUser'],
@@ -550,8 +573,21 @@ class AOResponseViewSet(viewsets.ModelViewSet):
                     text = defaults["topicValue"] + " " + defaults["commentValue"]
 
                     sentimentResult = comprehend.detect_sentiment(Text=text, LanguageCode="en")
-                    defaults["integerValue"] = int(abs(sentimentResult["SentimentScore"]["Positive"] * 100))
-
+                    # defaults["integerValue"] = int(abs(sentimentResult["SentimentScore"]["Positive"] * 100))
+                    # 2021-07-31
+                    if sentimentResult['Sentiment'] == "POSITIVE":
+                        defaults['integerValue'] = int(
+                            abs(sentimentResult['SentimentScore']['Positive'] * 100))
+                    elif sentimentResult['Sentiment'] == "NEGATIVE":
+                        defaults['integerValue'] = 100 - int(abs(sentimentResult['SentimentScore']['Negative'] * 100))
+                    else:
+                        if sentimentResult['SentimentScore']['Positive'] > sentimentResult['SentimentScore']['Negative']:
+                            defaults['integerValue'] = 55
+                        elif sentimentResult['SentimentScore']['Positive'] == sentimentResult['SentimentScore']['Negative']:
+                            defaults['integerValue'] = 45
+                        else:
+                            defaults['integerValue'] = 35
+                            
                 obj = AOResponse(aoQuestion_id=defaults['aoQuestion'],
                             projectUser_id=defaults['projectUser'], subProjectUser_id=defaults['subProjectUser'],
                             shCategory_id=defaults['shCategory'],
