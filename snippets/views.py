@@ -3637,12 +3637,12 @@ class TotalStakeHolderView(APIView):
             if projectuserdata[i]['team'] is not None:
                 if projectuserdata[i]['team']['name'] not in aryTeams:
                     aryTeams.append(projectuserdata[i]['team']['name'])
-                    if projectuserdata[i]['shType']['shTypeName'] == "Team Member":
+                    if (projectuserdata[i]['shType'] is not None) & (projectuserdata[i]['shType']['shTypeName'] == "Team Member"):
                         ret['team'][projectuserdata[i]['team']['name']] = 1
                     else:
                         pass
                 else:
-                    if projectuserdata[i]['shType']['shTypeName'] == "Team Member":
+                    if (projectuserdata[i]['shType'] is not None) & (projectuserdata[i]['shType']['shTypeName'] == "Team Member"):
                         ret['team'][projectuserdata[i]['team']['name']] += 1
                     else:
                         pass
@@ -3650,12 +3650,12 @@ class TotalStakeHolderView(APIView):
             if projectuserdata[i]['shGroup'] is not None:
                 if projectuserdata[i]['shGroup']['SHGroupName'] not in arySHGroups:
                     arySHGroups.append(projectuserdata[i]['shGroup']['SHGroupName'])
-                    if projectuserdata[i]['shType']['shTypeName'] == "Stakeholder":
+                    if (projectuserdata[i]['shType'] is not None) & (projectuserdata[i]['shType']['shTypeName'] == "Stakeholder"):
                         ret['shgroup'][projectuserdata[i]['shGroup']['SHGroupName']] = 1
                     else:
                         pass
                 else:
-                    if projectuserdata[i]['shType']['shTypeName'] == "Stakeholder":
+                    if (projectuserdata[i]['shType'] is not None) & (projectuserdata[i]['shType']['shTypeName'] == "Stakeholder"):
                         ret['shgroup'][projectuserdata[i]['shGroup']['SHGroupName']] += 1
                     else:
                         pass
