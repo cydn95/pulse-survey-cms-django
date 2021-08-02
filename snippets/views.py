@@ -363,9 +363,11 @@ class AMResponseViewSet(viewsets.ModelViewSet):
                 if data[i]['controlType'] == "Text" or data[i]['controlType'] == "MULTI_TOPICS":
                     # 2021-07-31
                     if sentimentData[i]['Sentiment'] == "POSITIVE":
-                        data[i]['integerValue'] = int(abs(sentimentData[i]['SentimentScore']['Positive'] * 100))
+                        # data[i]['integerValue'] = int(abs(sentimentData[i]['SentimentScore']['Positive'] * 100))
+                        data[i]['integerValue'] = 100
                     elif sentimentData[i]['Sentiment'] == "NEGATIVE":
-                        data[i]['integerValue'] = 100 - int(abs(sentimentData[i]['SentimentScore']['Negative'] * 100))
+                        # data[i]['integerValue'] = 100 - int(abs(sentimentData[i]['SentimentScore']['Negative'] * 100))
+                        data[i]['integerValue'] = 10
                     else:
                         if sentimentData[i]['SentimentScore']['Positive'] > sentimentData[i]['SentimentScore']['Negative']:
                             data[i]['integerValue'] = 55
@@ -448,7 +450,7 @@ class AMResponseViewSet(viewsets.ModelViewSet):
                 obj = AMResponse(amQuestion_id=defaults['amQuestion'], projectUser_id=defaults['projectUser'], subProjectUser_id=defaults['subProjectUser'], survey_id=defaults['survey'], project_id=defaults['project'], controlType=defaults['controlType'], integerValue=defaults['integerValue'], topicValue=defaults['topicValue'], commentValue=defaults['commentValue'], skipValue=defaults['skipValue'], topicTags=defaults['topicTags'], commentTags=defaults['commentTags'], latestResponse=True)
                 obj.save()
 
-        return Response(data, status=status.HTTP_201_CREATED)
+        return Response({'data': data, "sentiment": sentimentData}, status=status.HTTP_201_CREATED)
 
 # amresponsetopic api
 class AMResponseTopicViewSet(viewsets.ModelViewSet):
