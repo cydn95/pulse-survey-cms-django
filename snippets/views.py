@@ -353,7 +353,18 @@ class AMResponseViewSet(viewsets.ModelViewSet):
         if many == True:
             for i in range(len(tempData)):
                 for item in tempData[i]:
-                    textList.append(item['topicValue'] + " " + item['commentValue'])
+                    if item['controlType'] == "MULTI_TOPICS":
+                        amresponsetopic_queryset = AMResponseTopic.objects.filter(
+                            amQuestion_id=item['amQuestion'], responseUser_id=item['subProjectUser'])
+                        amresponsetopic_serializer = AMResponseTopicSerializer(
+                            amresponsetopic_queryset, many=True)
+                        amresponsetopic_data = amresponsetopic_serializer.data
+                        temptopictext = ""
+                        for j in range(len(amresponsetopic_data)):
+                            temptopictext = amresponsetopic_data[j]['topicName'] + " "
+                        textList.append(temptopictext)
+                    else:
+                        textList.append(item['topicValue'] + " " + item['commentValue'])
                 tempSentimentData = comprehend.batch_detect_sentiment(TextList=textList, LanguageCode="en")
                 sentimentData = sentimentData + tempSentimentData['ResultList']
                 textList = []
@@ -3521,7 +3532,7 @@ class DriverAnalysisView(APIView):
 
     def get(self, format=None):
         survey = self.request.query_params.get('survey', None)
-        projectUser = self.request.query_params.get('projectUser', None)
+        # projectUser = self.request.query_params.get('projectUser', None)
         driver = self.request.query_params.get('driver', None)
         startDate = self.request.query_params.get('stdt', None)
         endDate = self.request.query_params.get('eddt', None)
@@ -3529,8 +3540,8 @@ class DriverAnalysisView(APIView):
 
         if survey is None:
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
-        if projectUser is None:
-            return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
+        # if projectUser is None:
+        #     return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
         if driver is None:
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
         if startDate is None:
@@ -3540,12 +3551,14 @@ class DriverAnalysisView(APIView):
         if controlType is None:
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
           
-        amresponsereportqueryset = AMResponse.objects.all().filter(controlType=controlType, survey__id=survey, subProjectUser__id=projectUser, amQuestion__driver__driverName=driver, created_at__range=[startDate, endDate])
+        # amresponsereportqueryset = AMResponse.objects.all().filter(controlType=controlType, survey__id=survey, subProjectUser__id=projectUser, amQuestion__driver__driverName=driver, created_at__range=[startDate, endDate])
+        amresponsereportqueryset = AMResponse.objects.all().filter(controlType=controlType, survey__id=survey, amQuestion__driver__driverName=driver, created_at__range=[startDate, endDate])
         amresponsereportserializer = AMResponseForDriverAnalysisSerializer(
             amresponsereportqueryset, many=True)
         amresponsereportdata = amresponsereportserializer.data
 
-        aoresponsereportqueryset = AOResponse.objects.all().filter(controlType=controlType, survey__id=survey, subProjectUser__id=projectUser, aoQuestion__driver__driverName=driver, created_at__range=[startDate, endDate])
+        # aoresponsereportqueryset = AOResponse.objects.all().filter(controlType=controlType, survey__id=survey, subProjectUser__id=projectUser, aoQuestion__driver__driverName=driver, created_at__range=[startDate, endDate])
+        aoresponsereportqueryset = AOResponse.objects.all().filter(controlType=controlType, survey__id=survey, aoQuestion__driver__driverName=driver, created_at__range=[startDate, endDate])
         aoresponsereportserializer = AOResponseForDriverAnalysisSerializer(aoresponsereportqueryset, many=True)
         aoresponsereportdata = aoresponsereportserializer.data
 
