@@ -554,7 +554,7 @@ class SurveyAdmin(admin.ModelAdmin):
 
                         driver_id = obj.id
 
-                        std_amq = AMQuestion.objects.filter(survey_id=std_survey.id, driver_id=std_driver[i]['id'])
+                        std_amq = AMQuestion.objects.filter(survey_id=std_survey.id, driver_id=std_driver[i]['id'], longForm=True)
 
                         for j in range(len(std_amq)):
                             amq_obj = AMQuestion(survey=current_survey, driver=obj, 
@@ -568,8 +568,8 @@ class SurveyAdmin(admin.ModelAdmin):
                                             topicPrompt=std_amq[j].topicPrompt,
                                             commentPrompt=std_amq[j].commentPrompt,
                                             amqOrder=std_amq[j].amqOrder,
-                                            shortForm=False,
-                                            longForm=True,
+                                            shortForm=std_amq[j].shortForm,
+                                            longForm=std_amq[j].longForm,
                                             isStandard=True)
                             amq_obj.save()
                             stdamq_shgroup = std_amq[j].shGroup.all()
@@ -651,7 +651,7 @@ class SurveyAdmin(admin.ModelAdmin):
 
                         driver_id = obj.id
 
-                        std_amq = AMQuestion.objects.filter(survey_id=std_survey.id, driver_id=std_driver[i]['id'])
+                        std_amq = AMQuestion.objects.filter(survey_id=std_survey.id, driver_id=std_driver[i]['id'], shortForm=True)
 
                         for j in range(len(std_amq)):
                             amq_obj = AMQuestion(survey=current_survey, driver=obj, 
@@ -665,8 +665,8 @@ class SurveyAdmin(admin.ModelAdmin):
                                             topicPrompt=std_amq[j].topicPrompt,
                                             commentPrompt=std_amq[j].commentPrompt,
                                             amqOrder=std_amq[j].amqOrder,
-                                            shortForm=True,
-                                            longForm=False,
+                                            shortForm=std_amq[j].shortForm,
+                                                 longForm=std_amq[j].longForm,
                                             isStandard=True)
                             amq_obj.save()
                             stdamq_shgroup = std_amq[j].shGroup.all()
@@ -844,7 +844,8 @@ class SurveyAdmin(admin.ModelAdmin):
 
                         driver_id = obj.id
                         
-                        std_aoq = AOQuestion.objects.filter(survey_id=std_survey.id, driver_id=std_driver[i]['id'])
+                        std_aoq = AOQuestion.objects.filter(
+                            survey_id=std_survey.id, driver_id=std_driver[i]['id'], longForm=True)
                         for k in range(len(std_aoq)):
                             aoq_obj = AOQuestion(survey=current_survey, driver=obj, 
                                             subdriver=std_aoq[k].subdriver,
@@ -857,8 +858,8 @@ class SurveyAdmin(admin.ModelAdmin):
                                             topicPrompt=std_aoq[k].topicPrompt,
                                             commentPrompt=std_aoq[k].commentPrompt,
                                             aoqOrder=std_aoq[k].aoqOrder,
-                                            shortForm=False,
-                                            longForm=True,
+                                            shortForm=std_aoq[k].shortForm,
+                                            longForm=std_aoq[k].longForm,
                                             isStandard=True)
                             aoq_obj.save()
                             stdaoq_shgroup = std_aoq[k].shGroup.all()
@@ -940,7 +941,7 @@ class SurveyAdmin(admin.ModelAdmin):
 
                         driver_id = obj.id
                         
-                        std_aoq = AOQuestion.objects.filter(survey_id=std_survey.id, driver_id=std_driver[i]['id'])
+                        std_aoq = AOQuestion.objects.filter(survey_id=std_survey.id, driver_id=std_driver[i]['id'], shortForm=True)
                         for k in range(len(std_aoq)):
                             aoq_obj = AOQuestion(survey=current_survey, driver=obj, 
                                             subdriver=std_aoq[k].subdriver,
@@ -953,8 +954,8 @@ class SurveyAdmin(admin.ModelAdmin):
                                             topicPrompt=std_aoq[k].topicPrompt,
                                             commentPrompt=std_aoq[k].commentPrompt,
                                             aoqOrder=std_aoq[k].aoqOrder,
-                                            shortForm=True,
-                                            longForm=False,
+                                            shortForm=std_aoq[k].shortForm,
+                                            longForm=std_aoq[k].longForm,
                                             isStandard=True)
                             aoq_obj.save()
                             stdaoq_shgroup = std_aoq[k].shGroup.all()
