@@ -475,7 +475,8 @@ class SurveyAdmin(admin.ModelAdmin):
                                             longForm=std_amq[j].longForm,
                                             isStandard=True)
                             amq_obj.save()
-                            stdamq_shgroup = std_amq[j].shGroup.all()
+                            # stdamq_shgroup = std_amq[j].shGroup.all()
+                            stdamq_shgroup = SHGroup.objects.filter(survey_id=current_survey)
                             for a in range(len(stdamq_shgroup)):
                                 tempItem = None
                                 try:
@@ -572,7 +573,9 @@ class SurveyAdmin(admin.ModelAdmin):
                                             longForm=std_amq[j].longForm,
                                             isStandard=True)
                             amq_obj.save()
-                            stdamq_shgroup = std_amq[j].shGroup.all()
+                            # stdamq_shgroup = std_amq[j].shGroup.all()
+                            stdamq_shgroup = SHGroup.objects.filter(
+                                survey_id=current_survey)
                             for a in range(len(stdamq_shgroup)):
                                 tempItem = None
                                 try:
@@ -669,7 +672,9 @@ class SurveyAdmin(admin.ModelAdmin):
                                                  longForm=std_amq[j].longForm,
                                             isStandard=True)
                             amq_obj.save()
-                            stdamq_shgroup = std_amq[j].shGroup.all()
+                            # stdamq_shgroup = std_amq[j].shGroup.all()
+                            stdamq_shgroup = SHGroup.objects.filter(
+                                survey_id=current_survey)
                             for a in range(len(stdamq_shgroup)):
                                 tempItem = None
                                 try:
@@ -765,7 +770,9 @@ class SurveyAdmin(admin.ModelAdmin):
                                             longForm=std_aoq[k].longForm,
                                             isStandard=True)
                             aoq_obj.save()
-                            stdaoq_shgroup = std_aoq[k].shGroup.all()
+                            # stdaoq_shgroup = std_aoq[k].shGroup.all()
+                            stdaoq_shgroup = SHGroup.objects.filter(
+                                survey_id=current_survey)
                             for a in range(len(stdaoq_shgroup)):
                                 tempItem = None
                                 try:
@@ -862,7 +869,9 @@ class SurveyAdmin(admin.ModelAdmin):
                                             longForm=std_aoq[k].longForm,
                                             isStandard=True)
                             aoq_obj.save()
-                            stdaoq_shgroup = std_aoq[k].shGroup.all()
+                            # stdaoq_shgroup = std_aoq[k].shGroup.all()
+                            stdaoq_shgroup = SHGroup.objects.filter(
+                                survey_id=current_survey)
                             for a in range(len(stdaoq_shgroup)):
                                 tempItem = None
                                 try:
@@ -958,7 +967,9 @@ class SurveyAdmin(admin.ModelAdmin):
                                             longForm=std_aoq[k].longForm,
                                             isStandard=True)
                             aoq_obj.save()
-                            stdaoq_shgroup = std_aoq[k].shGroup.all()
+                            # stdaoq_shgroup = std_aoq[k].shGroup.all()
+                            stdaoq_shgroup = SHGroup.objects.filter(
+                                survey_id=current_survey)
                             for a in range(len(stdaoq_shgroup)):
                                 tempItem = None
                                 try:
