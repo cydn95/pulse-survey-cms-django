@@ -3782,6 +3782,30 @@ class TotalStakeHolderView(APIView):
                     
         return Response(ret, status=status.HTTP_200_OK)
 
+# checkuserpasswordstatus api
+class CheckUserPasswordStatusView(APIView):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+
+    @classmethod
+    def get_extra_actions(cls):
+        return []
+
+    def get(self, format=None):
+        email = self.request.query_params.get('email', None)
+
+        if email is None:
+            return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            user = User.objects.get(email=email)
+            ret = user.has_usable_password()
+            if ret == True:
+                return Response({"text": "password exist", "code": 200, "passwordstatus": ret}, status=status.HTTP_200_OK)
+            else:
+                return Response({"text": "password not exist", "code": 231, "passwordstatus": ret}, status=status.HTTP_200_OK)
+        except User.DoesNotExist:
+            return Response({"text": "user not exist", "code": 230}, status=status.HTTP_200_OK)
+
 # checkdashboardstatus api
 class CheckDashboardStatusView(APIView):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
