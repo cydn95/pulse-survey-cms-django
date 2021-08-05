@@ -3731,39 +3731,55 @@ class TotalStakeHolderView(APIView):
         aryOrgs = []
         
         for i in range(len(projectuserdata)):
+            # if projectuserdata[i]['team'] is not None:
+            #     if projectuserdata[i]['team']['name'] not in aryTeams:
+            #         aryTeams.append(projectuserdata[i]['team']['name'])
+            #         if (projectuserdata[i]['shType'] is not None):
+            #             if (projectuserdata[i]['shType']['shTypeName'] == "Team Member"):
+            #                 ret['team'][projectuserdata[i]['team']['name']] = 1
+            #             else:
+            #                 ret['team'][projectuserdata[i]['team']['name']] = 0
+            #         else:
+            #             ret['team'][projectuserdata[i]['team']['name']] = 0
+            #     else:
+            #         if (projectuserdata[i]['shType'] is not None):
+            #             if (projectuserdata[i]['shType']['shTypeName'] == "Team Member"):
+            #                 ret['team'][projectuserdata[i]['team']['name']] += 1
+            #         else:
+            #             pass
+
+            # if projectuserdata[i]['shGroup'] is not None:
+            #     if projectuserdata[i]['shGroup']['SHGroupName'] not in arySHGroups:
+            #         arySHGroups.append(projectuserdata[i]['shGroup']['SHGroupName'])
+            #         if (projectuserdata[i]['shType'] is not None):
+            #             if (projectuserdata[i]['shType']['shTypeName'] == "Stakeholder"):
+            #                 ret['shgroup'][projectuserdata[i]['shGroup']['SHGroupName']] = 1
+            #             else:
+            #                 ret['shgroup'][projectuserdata[i]['shGroup']['SHGroupName']] = 0
+            #         else:
+            #             ret['shgroup'][projectuserdata[i]['shGroup']['SHGroupName']] = 0
+            #     else:
+            #         if (projectuserdata[i]['shType'] is not None):
+            #             if (projectuserdata[i]['shType']['shTypeName'] == "Stakeholder"):
+            #                 ret['shgroup'][projectuserdata[i]['shGroup']['SHGroupName']] += 1
+            #         else:
+            #             pass
             if projectuserdata[i]['team'] is not None:
                 if projectuserdata[i]['team']['name'] not in aryTeams:
                     aryTeams.append(projectuserdata[i]['team']['name'])
-                    if (projectuserdata[i]['shType'] is not None):
-                        if (projectuserdata[i]['shType']['shTypeName'] == "Team Member"):
-                            ret['team'][projectuserdata[i]['team']['name']] = 1
-                        else:
-                            ret['team'][projectuserdata[i]['team']['name']] = 0
-                    else:
-                        ret['team'][projectuserdata[i]['team']['name']] = 0
+                    ret['team'][projectuserdata[i]['team']['name']] = 1
                 else:
-                    if (projectuserdata[i]['shType'] is not None):
-                        if (projectuserdata[i]['shType']['shTypeName'] == "Team Member"):
-                            ret['team'][projectuserdata[i]['team']['name']] += 1
-                    else:
-                        pass
+                    ret['team'][projectuserdata[i]['team']['name']] += 1
 
             if projectuserdata[i]['shGroup'] is not None:
                 if projectuserdata[i]['shGroup']['SHGroupName'] not in arySHGroups:
-                    arySHGroups.append(projectuserdata[i]['shGroup']['SHGroupName'])
-                    if (projectuserdata[i]['shType'] is not None):
-                        if (projectuserdata[i]['shType']['shTypeName'] == "Stakeholder"):
-                            ret['shgroup'][projectuserdata[i]['shGroup']['SHGroupName']] = 1
-                        else:
-                            ret['shgroup'][projectuserdata[i]['shGroup']['SHGroupName']] = 0
-                    else:
-                        ret['shgroup'][projectuserdata[i]['shGroup']['SHGroupName']] = 0
+                    arySHGroups.append(
+                        projectuserdata[i]['shGroup']['SHGroupName'])
+                    ret['shgroup'][projectuserdata[i]
+                                   ['shGroup']['SHGroupName']] = 1
                 else:
-                    if (projectuserdata[i]['shType'] is not None):
-                        if (projectuserdata[i]['shType']['shTypeName'] == "Stakeholder"):
-                            ret['shgroup'][projectuserdata[i]['shGroup']['SHGroupName']] += 1
-                    else:
-                        pass
+                    ret['shgroup'][projectuserdata[i]
+                                   ['shGroup']['SHGroupName']] += 1
 
             # if projectuserdata[i]['user']['organization'] is not None:
             #     if projectuserdata[i]['user']['organization']['name'] not in aryOrgs:
