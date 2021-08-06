@@ -3694,56 +3694,18 @@ class DriverAnalysisCntView(APIView):
 
     def get(self, format=None):
         survey = self.request.query_params.get('survey', None)
-        # projectUser = self.request.query_params.get('projectuser', None)
         startDate = self.request.query_params.get('stdt', None)
         endDate = self.request.query_params.get('eddt', None)
         controlType = self.request.query_params.get('controltype', None)
 
         if survey is None:
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
-        # if projectUser is None:
-        #     return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
         if startDate is None:
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
         if endDate is None:
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
         if controlType is None:
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
-
-        # amEngagementCnt = AMResponse.objects.filter(controlType=controlType, survey__id=survey, subProjectUser__id=projectUser,
-        #                                             amQuestion__driver__driverName="Engagement", created_at__range=[startDate, endDate]).count()
-        # aoEngagementCnt = AOResponse.objects.filter(controlType=controlType, survey__id=survey, subProjectUser__id=projectUser,
-        #                                             aoQuestion__driver__driverName="Engagement", created_at__range=[startDate, endDate]).count()
-        
-        # amCultureCnt = AMResponse.objects.filter(controlType=controlType, survey__id=survey, subProjectUser__id=projectUser,
-        #                                             amQuestion__driver__driverName="Culture", created_at__range=[startDate, endDate]).count()
-        # aoCultureCnt = AOResponse.objects.filter(controlType=controlType, survey__id=survey, subProjectUser__id=projectUser,
-        #                                             aoQuestion__driver__driverName="Culture", created_at__range=[startDate, endDate]).count()
-
-        # amSentimentCnt = AMResponse.objects.filter(controlType=controlType, survey__id=survey, subProjectUser__id=projectUser,
-        #                                             amQuestion__driver__driverName="Sentiment", created_at__range=[startDate, endDate]).count()
-        # aoSentimentCnt = AOResponse.objects.filter(controlType=controlType, survey__id=survey, subProjectUser__id=projectUser,
-        #                                             aoQuestion__driver__driverName="Sentiment", created_at__range=[startDate, endDate]).count()
-
-        # amInterestCnt = AMResponse.objects.filter(controlType=controlType, survey__id=survey, subProjectUser__id=projectUser,
-        #                                             amQuestion__driver__driverName="Interest", created_at__range=[startDate, endDate]).count()
-        # aoInterestCnt = AOResponse.objects.filter(controlType=controlType, survey__id=survey, subProjectUser__id=projectUser,
-        #                                             aoQuestion__driver__driverName="Interest", created_at__range=[startDate, endDate]).count()
-
-        # amConfidenceCnt = AMResponse.objects.filter(controlType=controlType, survey__id=survey, subProjectUser__id=projectUser,
-        #                                             amQuestion__driver__driverName="Confidence", created_at__range=[startDate, endDate]).count()
-        # aoConfidenceCnt = AOResponse.objects.filter(controlType=controlType, survey__id=survey, subProjectUser__id=projectUser,
-        #                                             aoQuestion__driver__driverName="Confidence", created_at__range=[startDate, endDate]).count()
-
-        # amRelationshipsCnt = AMResponse.objects.filter(controlType=controlType, survey__id=survey, subProjectUser__id=projectUser,
-        #                                             amQuestion__driver__driverName="Relationships", created_at__range=[startDate, endDate]).count()
-        # aoRelationshipsCnt = AOResponse.objects.filter(controlType=controlType, survey__id=survey, subProjectUser__id=projectUser,
-        #                                             aoQuestion__driver__driverName="Relationships", created_at__range=[startDate, endDate]).count()
-        
-        # amImprovementCnt = AMResponse.objects.filter(controlType=controlType, survey__id=survey, subProjectUser__id=projectUser,
-        #                                             amQuestion__driver__driverName="Improvement", created_at__range=[startDate, endDate]).count()
-        # aoImprovementCnt = AOResponse.objects.filter(controlType=controlType, survey__id=survey, subProjectUser__id=projectUser,
-        #                                             aoQuestion__driver__driverName="Improvement", created_at__range=[startDate, endDate]).count()
 
         amEngagementCnt = AMResponse.objects.filter(controlType=controlType, survey__id=survey, 
                                                     amQuestion__driver__driverName="Engagement", created_at__range=[startDate, endDate]).count()
