@@ -2497,8 +2497,13 @@ class KeyThemesMenuCntView(APIView):
         wordlist = []
         res = ktamresponseserializer.data
         for i in range(len(res)):
-            if res[i]['topicValue'] != "":
-                wordlist.append(res[i]['topicValue'])
+            # if res[i]['topicValue'] != "":
+            #     wordlist.append(res[i]['topicValue'])
+            amresponsetopic_queryset = AMResponseTopic.objects.filter(amQuestion_id=res[i]['amQuestion'], responseUser_id=res[i]['subProjectUser'])
+            amresponsetopic_serializer = AMResponseTopicSerializer(amresponsetopic_queryset, many=True)
+            amresponsetopic_data = amresponsetopic_serializer.data
+            for j in range(len(amresponsetopic_data)):
+                wordlist.append(amresponsetopic_data[j]['topicName'])
 
         wordfreq = [wordlist.count(p) for p in wordlist]
         dictionary = dict(list(zip(wordlist, wordfreq)))
@@ -2525,8 +2530,14 @@ class KeyThemesMenuCntView(APIView):
         piwordlist = []
         pires = piktamresponseserializer.data
         for i in range(len(pires)):
-            if pires[i]['topicValue'] != "":
-                piwordlist.append(pires[i]['topicValue'])
+            # if pires[i]['topicValue'] != "":
+            #     piwordlist.append(pires[i]['topicValue'])
+            amresponsetopic_queryset = AMResponseTopic.objects.filter(amQuestion_id=pires[i]['amQuestion'], responseUser_id=pires[i]['subProjectUser'])
+            amresponsetopic_serializer = AMResponseTopicSerializer(amresponsetopic_queryset, many=True)
+            amresponsetopic_data = amresponsetopic_serializer.data
+            for j in range(len(amresponsetopic_data)):
+                piwordlist.append(amresponsetopic_data[j]['topicName'])
+
         piwordfreq = [piwordlist.count(p) for p in piwordlist]
         pidictionary = dict(list(zip(piwordlist, piwordfreq)))
         piaux = [(pidictionary[key], key) for key in pidictionary]
@@ -2540,8 +2551,14 @@ class KeyThemesMenuCntView(APIView):
         peiwordlist = []
         peires = peiktamresponseserializer.data
         for i in range(len(peires)):
-            if peires[i]['topicValue'] != "":
-                peiwordlist.append(peires[i]['topicValue'])
+            # if peires[i]['topicValue'] != "":
+            #     peiwordlist.append(peires[i]['topicValue'])
+            amresponsetopic_queryset = AMResponseTopic.objects.filter(amQuestion_id=peires[i]['amQuestion'], responseUser_id=peires[i]['subProjectUser'])
+            amresponsetopic_serializer = AMResponseTopicSerializer(amresponsetopic_queryset, many=True)
+            amresponsetopic_data = amresponsetopic_serializer.data
+            for j in range(len(amresponsetopic_data)):
+                peiwordlist.append(amresponsetopic_data[j]['topicName'])
+
         peiwordfreq = [peiwordlist.count(p) for p in peiwordlist]
         peidictionary = dict(list(zip(peiwordlist, peiwordfreq)))
         peiaux = [(peidictionary[key], key) for key in peidictionary]
@@ -2555,8 +2572,16 @@ class KeyThemesMenuCntView(APIView):
         ipwordlist = []
         ipres = ipktamresponseserializer.data
         for i in range(len(ipres)):
-            if ipres[i]['topicValue'] != "":
-                ipwordlist.append(ipres[i]['topicValue'])
+            # if ipres[i]['topicValue'] != "":
+            #     ipwordlist.append(ipres[i]['topicValue'])
+            amresponsetopic_queryset = AMResponseTopic.objects.filter(
+                amQuestion_id=ipres[i]['amQuestion'], responseUser_id=ipres[i]['subProjectUser'])
+            amresponsetopic_serializer = AMResponseTopicSerializer(
+                amresponsetopic_queryset, many=True)
+            amresponsetopic_data = amresponsetopic_serializer.data
+            for j in range(len(amresponsetopic_data)):
+                ipwordlist.append(amresponsetopic_data[j]['topicName'])
+
         ipwordfreq = [ipwordlist.count(p) for p in ipwordlist]
         ipdictionary = dict(list(zip(ipwordlist, ipwordfreq)))
         ipaux = [(ipdictionary[key], key) for key in ipdictionary]
@@ -2570,8 +2595,14 @@ class KeyThemesMenuCntView(APIView):
         istwordlist = []
         istres = istktamresponseserializer.data
         for i in range(len(istres)):
-            if istres[i]['topicValue'] != "":
-                istwordlist.append(istres[i]['topicValue'])
+            # if istres[i]['topicValue'] != "":
+            #     istwordlist.append(istres[i]['topicValue'])
+            amresponsetopic_queryset = AMResponseTopic.objects.filter(amQuestion_id=istres[i]['amQuestion'], responseUser_id=istres[i]['subProjectUser'])
+            amresponsetopic_serializer = AMResponseTopicSerializer(amresponsetopic_queryset, many=True)
+            amresponsetopic_data = amresponsetopic_serializer.data
+            for j in range(len(amresponsetopic_data)):
+                istwordlist.append(amresponsetopic_data[j]['topicName'])
+
         istwordfreq = [istwordlist.count(p) for p in istwordlist]
         istdictionary = dict(list(zip(istwordlist, istwordfreq)))
         istaux = [(istdictionary[key], key) for key in istdictionary]
@@ -2585,8 +2616,14 @@ class KeyThemesMenuCntView(APIView):
         ispwordlist = []
         ispres = ispktamresponseserializer.data
         for i in range(len(ispres)):
-            if ispres[i]['topicValue'] != "":
-                ispwordlist.append(ispres[i]['topicValue'])
+            # if ispres[i]['topicValue'] != "":
+            #     ispwordlist.append(ispres[i]['topicValue'])
+            amresponsetopic_queryset = AMResponseTopic.objects.filter(amQuestion_id=ispres[i]['amQuestion'], responseUser_id=ispres[i]['subProjectUser'])
+            amresponsetopic_serializer = AMResponseTopicSerializer(amresponsetopic_queryset, many=True)
+            amresponsetopic_data = amresponsetopic_serializer.data
+            for j in range(len(amresponsetopic_data)):
+                ispwordlist.append(amresponsetopic_data[j]['topicName'])
+
         ispwordfreq = [ispwordlist.count(p) for p in ispwordlist]
         ispdictionary = dict(list(zip(ispwordlist, ispwordfreq)))
         ispaux = [(ispdictionary[key], key) for key in ispdictionary]
@@ -2600,8 +2637,14 @@ class KeyThemesMenuCntView(APIView):
         icwordlist = []
         icres = icktamresponseserializer.data
         for i in range(len(icres)):
-            if icres[i]['topicValue'] != "":
-                icwordlist.append(icres[i]['topicValue'])
+            # if icres[i]['topicValue'] != "":
+            #     icwordlist.append(icres[i]['topicValue'])
+            amresponsetopic_queryset = AMResponseTopic.objects.filter(amQuestion_id=icres[i]['amQuestion'], responseUser_id=icres[i]['subProjectUser'])
+            amresponsetopic_serializer = AMResponseTopicSerializer(amresponsetopic_queryset, many=True)
+            amresponsetopic_data = amresponsetopic_serializer.data
+            for j in range(len(amresponsetopic_data)):
+                icwordlist.append(amresponsetopic_data[j]['topicName'])
+
         icwordfreq = [icwordlist.count(p) for p in icwordlist]
         icdictionary = dict(list(zip(icwordlist, icwordfreq)))
         icaux = [(icdictionary[key], key) for key in icdictionary]
@@ -2663,8 +2706,13 @@ class KeyThemesView(APIView):
             wordlist = []
             res = ktamresponseserializer.data
             for i in range(len(res)):
-                if res[i]['topicValue'] != "":
-                    wordlist.append(res[i]['topicValue'])
+                # if res[i]['topicValue'] != "":
+                #     wordlist.append(res[i]['topicValue'])
+                amresponsetopic_queryset = AMResponseTopic.objects.filter(amQuestion_id=res[i]['amQuestion'], responseUser_id=res[i]['subProjectUser'])
+                amresponsetopic_serializer = AMResponseTopicSerializer(amresponsetopic_queryset, many=True)
+                amresponsetopic_data = amresponsetopic_serializer.data
+                for j in range(len(amresponsetopic_data)):
+                    wordlist.append(amresponsetopic_data[j]['topicName'])
 
             wordfreq = [wordlist.count(p) for p in wordlist]
             dictionary = dict(list(zip(wordlist, wordfreq)))
@@ -2785,8 +2833,13 @@ class KeyThemesView(APIView):
             wordlist = []
             res = ktamresponseserializer.data
             for i in range(len(res)):
-                if res[i]['topicValue'] != "":
-                    wordlist.append(res[i]['topicValue'])
+                # if res[i]['topicValue'] != "":
+                #     wordlist.append(res[i]['topicValue'])
+                amresponsetopic_queryset = AMResponseTopic.objects.filter(amQuestion_id=res[i]['amQuestion'], responseUser_id=res[i]['subProjectUser'])
+                amresponsetopic_serializer = AMResponseTopicSerializer(amresponsetopic_queryset, many=True)
+                amresponsetopic_data = amresponsetopic_serializer.data
+                for j in range(len(amresponsetopic_data)):
+                    wordlist.append(amresponsetopic_data[j]['topicName'])
 
             wordfreq = [wordlist.count(p) for p in wordlist]
             dictionary = dict(list(zip(wordlist, wordfreq)))
@@ -2826,8 +2879,15 @@ class KeyThemesView(APIView):
             wordlist = []
             res = ktamresponseserializer.data
             for i in range(len(res)):
-                if res[i]['topicValue'] != "":
-                    wordlist.append(res[i]['topicValue'])
+                # if res[i]['topicValue'] != "":
+                #     wordlist.append(res[i]['topicValue'])
+                amresponsetopic_queryset = AMResponseTopic.objects.filter(
+                    amQuestion_id=res[i]['amQuestion'], responseUser_id=res[i]['subProjectUser'])
+                amresponsetopic_serializer = AMResponseTopicSerializer(
+                    amresponsetopic_queryset, many=True)
+                amresponsetopic_data = amresponsetopic_serializer.data
+                for j in range(len(amresponsetopic_data)):
+                    wordlist.append(amresponsetopic_data[j]['topicName'])
 
             wordfreq = [wordlist.count(p) for p in wordlist]
             dictionary = dict(list(zip(wordlist, wordfreq)))
@@ -2867,8 +2927,15 @@ class KeyThemesView(APIView):
             wordlist = []
             res = ktamresponseserializer.data
             for i in range(len(res)):
-                if res[i]['topicValue'] != "":
-                    wordlist.append(res[i]['topicValue'])
+                # if res[i]['topicValue'] != "":
+                #     wordlist.append(res[i]['topicValue'])
+                amresponsetopic_queryset = AMResponseTopic.objects.filter(
+                    amQuestion_id=res[i]['amQuestion'], responseUser_id=res[i]['subProjectUser'])
+                amresponsetopic_serializer = AMResponseTopicSerializer(
+                    amresponsetopic_queryset, many=True)
+                amresponsetopic_data = amresponsetopic_serializer.data
+                for j in range(len(amresponsetopic_data)):
+                    wordlist.append(amresponsetopic_data[j]['topicName'])
 
             wordfreq = [wordlist.count(p) for p in wordlist]
             dictionary = dict(list(zip(wordlist, wordfreq)))
@@ -2908,8 +2975,15 @@ class KeyThemesView(APIView):
             wordlist = []
             res = ktamresponseserializer.data
             for i in range(len(res)):
-                if res[i]['topicValue'] != "":
-                    wordlist.append(res[i]['topicValue'])
+                # if res[i]['topicValue'] != "":
+                #     wordlist.append(res[i]['topicValue'])
+                amresponsetopic_queryset = AMResponseTopic.objects.filter(
+                    amQuestion_id=res[i]['amQuestion'], responseUser_id=res[i]['subProjectUser'])
+                amresponsetopic_serializer = AMResponseTopicSerializer(
+                    amresponsetopic_queryset, many=True)
+                amresponsetopic_data = amresponsetopic_serializer.data
+                for j in range(len(amresponsetopic_data)):
+                    wordlist.append(amresponsetopic_data[j]['topicName'])
 
             wordfreq = [wordlist.count(p) for p in wordlist]
             dictionary = dict(list(zip(wordlist, wordfreq)))
@@ -2948,8 +3022,15 @@ class KeyThemesView(APIView):
             wordlist = []
             res = ktamresponseserializer.data
             for i in range(len(res)):
-                if res[i]['topicValue'] != "":
-                    wordlist.append(res[i]['topicValue'])
+                # if res[i]['topicValue'] != "":
+                #     wordlist.append(res[i]['topicValue'])
+                amresponsetopic_queryset = AMResponseTopic.objects.filter(
+                    amQuestion_id=res[i]['amQuestion'], responseUser_id=res[i]['subProjectUser'])
+                amresponsetopic_serializer = AMResponseTopicSerializer(
+                    amresponsetopic_queryset, many=True)
+                amresponsetopic_data = amresponsetopic_serializer.data
+                for j in range(len(amresponsetopic_data)):
+                    wordlist.append(amresponsetopic_data[j]['topicName'])
 
             wordfreq = [wordlist.count(p) for p in wordlist]
             dictionary = dict(list(zip(wordlist, wordfreq)))
@@ -2989,8 +3070,15 @@ class KeyThemesView(APIView):
             wordlist = []
             res = ktamresponseserializer.data
             for i in range(len(res)):
-                if res[i]['topicValue'] != "":
-                    wordlist.append(res[i]['topicValue'])
+                # if res[i]['topicValue'] != "":
+                #     wordlist.append(res[i]['topicValue'])
+                amresponsetopic_queryset = AMResponseTopic.objects.filter(
+                    amQuestion_id=res[i]['amQuestion'], responseUser_id=res[i]['subProjectUser'])
+                amresponsetopic_serializer = AMResponseTopicSerializer(
+                    amresponsetopic_queryset, many=True)
+                amresponsetopic_data = amresponsetopic_serializer.data
+                for j in range(len(amresponsetopic_data)):
+                    wordlist.append(amresponsetopic_data[j]['topicName'])
 
             wordfreq = [wordlist.count(p) for p in wordlist]
             dictionary = dict(list(zip(wordlist, wordfreq)))
