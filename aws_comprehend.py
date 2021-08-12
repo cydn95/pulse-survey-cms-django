@@ -5,7 +5,7 @@ import json
 comprehend = boto3.client(service_name='comprehend', region_name='us-east-2')
 
 #here is the main part - comprehend.detect_sentiment is called
-Text=["Testing"]
+Text=[" ", " ", " "]
 # Text = "I'm going to test this api"
 sentimentData = comprehend.batch_detect_sentiment(TextList=Text, LanguageCode="en")
 # sentimentData = comprehend.detect_sentiment(
