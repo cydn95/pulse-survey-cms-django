@@ -362,9 +362,10 @@ class AMResponseViewSet(viewsets.ModelViewSet):
                         temptopictext = ""
                         for j in range(len(amresponsetopic_data)):
                             temptopictext = temptopictext + " " + amresponsetopic_data[j]['topicName']
-                        textList.append(temptopictext)
+                        textList = textList + temptopictext
                     else:
-                        textList.append(item['topicValue'] + " " + item['commentValue'] + ".")
+                        temptopictext = item['topicValue'] + " " + item['commentValue']
+                        textList = textList + temptopictext
                 tempSentimentData = comprehend.batch_detect_sentiment(TextList=textList, LanguageCode="en")
                 sentimentData = sentimentData + tempSentimentData['ResultList']
                 textList = []
