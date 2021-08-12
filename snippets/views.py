@@ -359,7 +359,7 @@ class AMResponseViewSet(viewsets.ModelViewSet):
                         amresponsetopic_serializer = AMResponseTopicSerializer(
                             amresponsetopic_queryset, many=True)
                         amresponsetopic_data = amresponsetopic_serializer.data
-                        temptopictext = ""
+                        temptopictext = " "
                         for j in range(len(amresponsetopic_data)):
                             temptopictext = temptopictext + " " + amresponsetopic_data[j]['topicName']
                         textList = textList + [temptopictext]
