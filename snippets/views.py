@@ -503,7 +503,7 @@ class AOResponseViewSet(viewsets.ModelViewSet):
                         aoresponsetopic_serializer = AOResponseTopicSerializer(
                             aoresponsetopic_queryset, many=True)
                         aoresponsetopic_data = aoresponsetopic_serializer.data
-                        temptopictext = ""
+                        temptopictext = " "
                         for j in range(len(aoresponsetopic_data)):
                             temptopictext = temptopictext + " " + aoresponsetopic_data[j]['topicName']
                         textList.append(temptopictext)
