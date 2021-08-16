@@ -3250,12 +3250,12 @@ class AdvisorInsightsView(APIView):
 
     def get(self, format=None):
         survey = self.request.query_params.get('survey', None)
-        projectUser = self.request.query_params.get('projectuser', None)
+        # projectUser = self.request.query_params.get('projectuser', None)
 
         if survey is None:
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
-        if projectUser is None:
-            return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
+        # if projectUser is None:
+        #     return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
 
         # Summary: 
         # % Response rate from invited Team members
@@ -3302,13 +3302,21 @@ class AdvisorInsightsView(APIView):
         #     "whoNeedsMeCnt": whoNeedsMeCnt
         # }
 
-        amresponsereportqueryset = AMResponse.objects.all().filter(survey__id=survey, subProjectUser__id=projectUser).order_by('integerValue')
+        # amresponsereportqueryset = AMResponse.objects.all().filter(survey__id=survey, subProjectUser__id=projectUser).order_by('integerValue')
+        # amresponsereportserializer = AMResponseForDriverAnalysisSerializer(amresponsereportqueryset, many=True)
+        # amresponsereportdata = amresponsereportserializer.data
+
+        # aoresponsereportqueryset = AOResponse.objects.all().filter(survey__id=survey, subProjectUser__id=projectUser).order_by('integerValue')
+        # aoresponsereportserializer = AOResponseForDriverAnalysisSerializer(aoresponsereportqueryset, many=True)
+        # aoresponsereportdata = aoresponsereportserializer.data
+
+        amresponsereportqueryset = AMResponse.objects.all().filter(survey__id=survey).order_by('integerValue')
         amresponsereportserializer = AMResponseForDriverAnalysisSerializer(amresponsereportqueryset, many=True)
         amresponsereportdata = amresponsereportserializer.data
 
-        aoresponsereportqueryset = AOResponse.objects.all().filter(survey__id=survey, subProjectUser__id=projectUser).order_by('integerValue')
-        aoresponsereportserializer = AOResponseForDriverAnalysisSerializer(aoresponsereportqueryset, many=True)
-        aoresponsereportdata = aoresponsereportserializer.data
+        # aoresponsereportqueryset = AOResponse.objects.all().filter(survey__id=survey).order_by('integerValue')
+        # aoresponsereportserializer = AOResponseForDriverAnalysisSerializer(aoresponsereportqueryset, many=True)
+        # aoresponsereportdata = aoresponsereportserializer.data
 
         aryTeams = []
         aryProjectUsers = []
@@ -3380,33 +3388,33 @@ class AdvisorInsightsView(APIView):
                     leastSafeOrgCnt += 1
                     leastSafeOrgScore = leastSafeOrgTotalScore / 10 / leastSafeOrgCnt
                 
-        for j in range(len(aoresponsereportdata)):
-            if aoresponsereportdata[j]['projectUser']["team"]["name"] not in aryTeams:
-                aryTeams.append(
-                    aoresponsereportdata[j]['projectUser']['team']['name'])
-            if (aoresponsereportdata[j]['projectUser']['shGroup'] is not None):
-                if aoresponsereportdata[j]['projectUser']['shGroup']['SHGroupName'] not in aryShGroups:
-                    aryShGroups.append(
-                        aoresponsereportdata[j]['projectUser']['shGroup']['SHGroupName'])
-            if aoresponsereportdata[j]['projectUser']["id"] not in aryProjectUsers:
-                aryProjectUsers.append(
-                    aoresponsereportdata[j]['projectUser']["id"])
-            if (aoresponsereportdata[j]['projectUser']['user']['userteam'] is not None):
-                if (aoresponsereportdata[j]['projectUser']['user']['userteam']['name'] not in aryDepartments):
-                    aryDepartments.append(
-                        aoresponsereportdata[j]['projectUser']['user']['userteam']['name'])
-            if (aoresponsereportdata[j]['projectUser']['user']['organization'] is not None):
-                if (aoresponsereportdata[j]['projectUser']['user']['organization']['name'] not in aryOrganizations):
-                    aryOrganizations.append(
-                        aoresponsereportdata[j]['projectUser']['user']['organization']['name'])
+        # for j in range(len(aoresponsereportdata)):
+        #     if aoresponsereportdata[j]['projectUser']["team"]["name"] not in aryTeams:
+        #         aryTeams.append(
+        #             aoresponsereportdata[j]['projectUser']['team']['name'])
+        #     if (aoresponsereportdata[j]['projectUser']['shGroup'] is not None):
+        #         if aoresponsereportdata[j]['projectUser']['shGroup']['SHGroupName'] not in aryShGroups:
+        #             aryShGroups.append(
+        #                 aoresponsereportdata[j]['projectUser']['shGroup']['SHGroupName'])
+        #     if aoresponsereportdata[j]['projectUser']["id"] not in aryProjectUsers:
+        #         aryProjectUsers.append(
+        #             aoresponsereportdata[j]['projectUser']["id"])
+        #     if (aoresponsereportdata[j]['projectUser']['user']['userteam'] is not None):
+        #         if (aoresponsereportdata[j]['projectUser']['user']['userteam']['name'] not in aryDepartments):
+        #             aryDepartments.append(
+        #                 aoresponsereportdata[j]['projectUser']['user']['userteam']['name'])
+        #     if (aoresponsereportdata[j]['projectUser']['user']['organization'] is not None):
+        #         if (aoresponsereportdata[j]['projectUser']['user']['organization']['name'] not in aryOrganizations):
+        #             aryOrganizations.append(
+        #                 aoresponsereportdata[j]['projectUser']['user']['organization']['name'])
         
-            aryTeamsData[aoresponsereportdata[j]['projectUser']["team"]["name"]] = {"totalScore": 0, "cnt": 0, "score": 0, "compTotalScore": 0, "compCnt": 0, "compScore": 0}
-            if (aoresponsereportdata[j]['projectUser']['shGroup'] is not None):
-                aryShGroupsData[aoresponsereportdata[j]
-                                ['projectUser']['shGroup']['SHGroupName']] = {"totalScore": 0, "cnt": 0, "score": 0, "compTotalScore": 0, "compCnt": 0, "compScore": 0}
-            if (aoresponsereportdata[j]['projectUser']['user']['organization'] is not None):
-                aryOrganizationsData[aoresponsereportdata[j]
-                                     ['projectUser']['user']['organization']['name']] = {"totalScore": 0, "cnt": 0, "score": 0, "compTotalScore": 0, "compCnt": 0, "compScore": 0}
+        #     aryTeamsData[aoresponsereportdata[j]['projectUser']["team"]["name"]] = {"totalScore": 0, "cnt": 0, "score": 0, "compTotalScore": 0, "compCnt": 0, "compScore": 0}
+        #     if (aoresponsereportdata[j]['projectUser']['shGroup'] is not None):
+        #         aryShGroupsData[aoresponsereportdata[j]
+        #                         ['projectUser']['shGroup']['SHGroupName']] = {"totalScore": 0, "cnt": 0, "score": 0, "compTotalScore": 0, "compCnt": 0, "compScore": 0}
+        #     if (aoresponsereportdata[j]['projectUser']['user']['organization'] is not None):
+        #         aryOrganizationsData[aoresponsereportdata[j]
+        #                              ['projectUser']['user']['organization']['name']] = {"totalScore": 0, "cnt": 0, "score": 0, "compTotalScore": 0, "compCnt": 0, "compScore": 0}
 
 
         for i in range(len(amresponsereportdata)):
@@ -3445,35 +3453,35 @@ class AdvisorInsightsView(APIView):
                     aryOrganizationsData[amresponsereportdata[i]['projectUser']['user']['organization']['name']]['compCnt'] += 1
                     aryOrganizationsData[amresponsereportdata[i]['projectUser']['user']['organization']['name']]['compScore'] = round(aryOrganizationsData[amresponsereportdata[i]['projectUser']['user']['organization']['name']]['compTotalScore'] / 10 / aryOrganizationsData[amresponsereportdata[i]['projectUser']['user']['organization']['name']]['compCnt'], 2)
 
-        for j in range(len(aoresponsereportdata)):
-            aryTeamsData[aoresponsereportdata[j]['projectUser']["team"]["name"]]["totalScore"] += aoresponsereportdata[j]["integerValue"]
-            aryTeamsData[aoresponsereportdata[j]['projectUser']["team"]["name"]]["cnt"] += 1
-            aryTeamsData[aoresponsereportdata[j]['projectUser']["team"]["name"]]["score"] = round(aryTeamsData[aoresponsereportdata[j]['projectUser']["team"]["name"]]["totalScore"] / 10 / aryTeamsData[aoresponsereportdata[j]['projectUser']["team"]["name"]]["cnt"], 2)
+        # for j in range(len(aoresponsereportdata)):
+        #     aryTeamsData[aoresponsereportdata[j]['projectUser']["team"]["name"]]["totalScore"] += aoresponsereportdata[j]["integerValue"]
+        #     aryTeamsData[aoresponsereportdata[j]['projectUser']["team"]["name"]]["cnt"] += 1
+        #     aryTeamsData[aoresponsereportdata[j]['projectUser']["team"]["name"]]["score"] = round(aryTeamsData[aoresponsereportdata[j]['projectUser']["team"]["name"]]["totalScore"] / 10 / aryTeamsData[aoresponsereportdata[j]['projectUser']["team"]["name"]]["cnt"], 2)
             
-            if (aoresponsereportdata[j]["controlType"] == "TEXT") | (aoresponsereportdata[j]["controlType"] == "MULTI_TOPICS"):
-                aryTeamsData[aoresponsereportdata[j]['projectUser']["team"]["name"]]["compTotalScore"] += aoresponsereportdata[j]["integerValue"]
-                aryTeamsData[aoresponsereportdata[j]['projectUser']["team"]["name"]]["compCnt"] += 1
-                aryTeamsData[aoresponsereportdata[j]['projectUser']["team"]["name"]]["compScore"] = round(aryTeamsData[aoresponsereportdata[j]['projectUser']["team"]["name"]]["compTotalScore"] / 10 / aryTeamsData[aoresponsereportdata[j]['projectUser']["team"]["name"]]["compCnt"], 2)
+        #     if (aoresponsereportdata[j]["controlType"] == "TEXT") | (aoresponsereportdata[j]["controlType"] == "MULTI_TOPICS"):
+        #         aryTeamsData[aoresponsereportdata[j]['projectUser']["team"]["name"]]["compTotalScore"] += aoresponsereportdata[j]["integerValue"]
+        #         aryTeamsData[aoresponsereportdata[j]['projectUser']["team"]["name"]]["compCnt"] += 1
+        #         aryTeamsData[aoresponsereportdata[j]['projectUser']["team"]["name"]]["compScore"] = round(aryTeamsData[aoresponsereportdata[j]['projectUser']["team"]["name"]]["compTotalScore"] / 10 / aryTeamsData[aoresponsereportdata[j]['projectUser']["team"]["name"]]["compCnt"], 2)
 
-            if (aoresponsereportdata[j]['projectUser']['shGroup'] is not None):
-                aryShGroupsData[aoresponsereportdata[j]['projectUser']['shGroup']['SHGroupName']]['totalScore'] += aoresponsereportdata[j]["integerValue"]
-                aryShGroupsData[aoresponsereportdata[j]['projectUser']['shGroup']['SHGroupName']]['cnt'] += 1
-                aryShGroupsData[aoresponsereportdata[j]['projectUser']['shGroup']['SHGroupName']]['score'] = round(aryShGroupsData[aoresponsereportdata[j]['projectUser']['shGroup']['SHGroupName']]['totalScore'] / 10 / aryShGroupsData[aoresponsereportdata[j]['projectUser']['shGroup']['SHGroupName']]['cnt'], 2)
+        #     if (aoresponsereportdata[j]['projectUser']['shGroup'] is not None):
+        #         aryShGroupsData[aoresponsereportdata[j]['projectUser']['shGroup']['SHGroupName']]['totalScore'] += aoresponsereportdata[j]["integerValue"]
+        #         aryShGroupsData[aoresponsereportdata[j]['projectUser']['shGroup']['SHGroupName']]['cnt'] += 1
+        #         aryShGroupsData[aoresponsereportdata[j]['projectUser']['shGroup']['SHGroupName']]['score'] = round(aryShGroupsData[aoresponsereportdata[j]['projectUser']['shGroup']['SHGroupName']]['totalScore'] / 10 / aryShGroupsData[aoresponsereportdata[j]['projectUser']['shGroup']['SHGroupName']]['cnt'], 2)
 
-                if (aoresponsereportdata[j]["controlType"] == "TEXT") | (aoresponsereportdata[j]["controlType"] == "MULTI_TOPICS"):
-                    aryShGroupsData[aoresponsereportdata[j]['projectUser']['shGroup']['SHGroupName']]['compTotalScore'] += aoresponsereportdata[j]["integerValue"]
-                    aryShGroupsData[aoresponsereportdata[j]['projectUser']['shGroup']['SHGroupName']]['compCnt'] += 1
-                    aryShGroupsData[aoresponsereportdata[j]['projectUser']['shGroup']['SHGroupName']]['compScore'] = round(aryShGroupsData[aoresponsereportdata[j]['projectUser']['shGroup']['SHGroupName']]['compTotalScore'] / 10 / aryShGroupsData[aoresponsereportdata[j]['projectUser']['shGroup']['SHGroupName']]['compCnt'], 2)
+        #         if (aoresponsereportdata[j]["controlType"] == "TEXT") | (aoresponsereportdata[j]["controlType"] == "MULTI_TOPICS"):
+        #             aryShGroupsData[aoresponsereportdata[j]['projectUser']['shGroup']['SHGroupName']]['compTotalScore'] += aoresponsereportdata[j]["integerValue"]
+        #             aryShGroupsData[aoresponsereportdata[j]['projectUser']['shGroup']['SHGroupName']]['compCnt'] += 1
+        #             aryShGroupsData[aoresponsereportdata[j]['projectUser']['shGroup']['SHGroupName']]['compScore'] = round(aryShGroupsData[aoresponsereportdata[j]['projectUser']['shGroup']['SHGroupName']]['compTotalScore'] / 10 / aryShGroupsData[aoresponsereportdata[j]['projectUser']['shGroup']['SHGroupName']]['compCnt'], 2)
 
-            if (aoresponsereportdata[j]['projectUser']['user']['organization'] is not None):
-                aryOrganizationsData[aoresponsereportdata[j]['projectUser']['user']['organization']['name']]['totalScore'] += aoresponsereportdata[j]["integerValue"]
-                aryOrganizationsData[aoresponsereportdata[j]['projectUser']['user']['organization']['name']]['cnt'] += 1
-                aryOrganizationsData[aoresponsereportdata[j]['projectUser']['user']['organization']['name']]['score'] = round(aryOrganizationsData[aoresponsereportdata[j]['projectUser']['user']['organization']['name']]['totalScore'] / 10 / aryOrganizationsData[aoresponsereportdata[j]['projectUser']['user']['organization']['name']]['cnt'], 2)
+        #     if (aoresponsereportdata[j]['projectUser']['user']['organization'] is not None):
+        #         aryOrganizationsData[aoresponsereportdata[j]['projectUser']['user']['organization']['name']]['totalScore'] += aoresponsereportdata[j]["integerValue"]
+        #         aryOrganizationsData[aoresponsereportdata[j]['projectUser']['user']['organization']['name']]['cnt'] += 1
+        #         aryOrganizationsData[aoresponsereportdata[j]['projectUser']['user']['organization']['name']]['score'] = round(aryOrganizationsData[aoresponsereportdata[j]['projectUser']['user']['organization']['name']]['totalScore'] / 10 / aryOrganizationsData[aoresponsereportdata[j]['projectUser']['user']['organization']['name']]['cnt'], 2)
 
-                if (aoresponsereportdata[j]["controlType"] == "TEXT") | (aoresponsereportdata[j]["controlType"] == "MULTI_TOPICS"):
-                    aryOrganizationsData[aoresponsereportdata[j]['projectUser']['user']['organization']['name']]['compTotalScore'] += aoresponsereportdata[j]["integerValue"]
-                    aryOrganizationsData[aoresponsereportdata[j]['projectUser']['user']['organization']['name']]['compCnt'] += 1
-                    aryOrganizationsData[aoresponsereportdata[j]['projectUser']['user']['organization']['name']]['compScore'] = round(aryOrganizationsData[aoresponsereportdata[j]['projectUser']['user']['organization']['name']]['compTotalScore'] / 10 / aryOrganizationsData[aoresponsereportdata[j]['projectUser']['user']['organization']['name']]['compCnt'], 2)
+        #         if (aoresponsereportdata[j]["controlType"] == "TEXT") | (aoresponsereportdata[j]["controlType"] == "MULTI_TOPICS"):
+        #             aryOrganizationsData[aoresponsereportdata[j]['projectUser']['user']['organization']['name']]['compTotalScore'] += aoresponsereportdata[j]["integerValue"]
+        #             aryOrganizationsData[aoresponsereportdata[j]['projectUser']['user']['organization']['name']]['compCnt'] += 1
+        #             aryOrganizationsData[aoresponsereportdata[j]['projectUser']['user']['organization']['name']]['compScore'] = round(aryOrganizationsData[aoresponsereportdata[j]['projectUser']['user']['organization']['name']]['compTotalScore'] / 10 / aryOrganizationsData[aoresponsereportdata[j]['projectUser']['user']['organization']['name']]['compCnt'], 2)
 
         aryFilteredProjectUsers = aryProjectUsers[:3]
         recommendedProjectUsersQuerySet = ProjectUser.objects.filter(survey=survey, pk__in=aryFilteredProjectUsers)
