@@ -392,15 +392,19 @@ class AMResponseViewSet(viewsets.ModelViewSet):
                 tempItem = AMResponse.objects.filter(survey_id=data[i]['survey'], project_id=data[i]['project'], projectUser_id=data[i]['projectUser'],
                                                  subProjectUser_id=data[i]['subProjectUser'], amQuestion_id=data[i]['amQuestion'], latestResponse=True)
                 if (len(tempItem) > 0):
-                    obj = tempItem[0]
-                    if obj.topicValue != data[i]['topicValue'] or obj.commentValue != data[i]['commentValue'] or obj.integerValue != data[i]['integerValue'] or obj.skipValue != data[i]['skipValue'] or obj.topicTags != data[i]['topicTags'] or obj.commentTags != data[i]['commentTags']:
+                    for oldItem in tempItem:
+                        obj = oldItem
                         obj.latestResponse = False
-
                         obj.save()
+                    # obj = tempItem[0]
+                    # if obj.topicValue != data[i]['topicValue'] or obj.commentValue != data[i]['commentValue'] or obj.integerValue != data[i]['integerValue'] or obj.skipValue != data[i]['skipValue'] or obj.topicTags != data[i]['topicTags'] or obj.commentTags != data[i]['commentTags']:
+                    #     obj.latestResponse = False
 
-                        obj1 = AMResponse(amQuestion_id=data[i]['amQuestion'], projectUser_id=data[i]['projectUser'], subProjectUser_id=data[i]['subProjectUser'], survey_id=data[i]['survey'], project_id=data[i]['project'],
-                        controlType=data[i]['controlType'], integerValue=data[i]['integerValue'], topicValue=data[i]['topicValue'], commentValue=data[i]['commentValue'], skipValue=data[i]['skipValue'], topicTags=data[i]['topicTags'], commentTags=data[i]['commentTags'], latestResponse=True)
-                        obj1.save()
+                    #     obj.save()
+
+                    obj1 = AMResponse(amQuestion_id=data[i]['amQuestion'], projectUser_id=data[i]['projectUser'], subProjectUser_id=data[i]['subProjectUser'], survey_id=data[i]['survey'], project_id=data[i]['project'],
+                    controlType=data[i]['controlType'], integerValue=data[i]['integerValue'], topicValue=data[i]['topicValue'], commentValue=data[i]['commentValue'], skipValue=data[i]['skipValue'], topicTags=data[i]['topicTags'], commentTags=data[i]['commentTags'], latestResponse=True)
+                    obj1.save()
                 else:
                     obj = AMResponse(amQuestion_id=data[i]['amQuestion'], projectUser_id=data[i]['projectUser'], subProjectUser_id=data[i]['subProjectUser'], survey_id=data[i]['survey'], project_id=data[i]['project'], controlType=data[i]['controlType'], integerValue=data[i]['integerValue'], topicValue=data[i]['skipValue'], topicTags=data[i]['topicTags'], commentTags=data[i]['commentTags'], latestResponse=True)
                     obj.save()
@@ -411,34 +415,39 @@ class AMResponseViewSet(viewsets.ModelViewSet):
             tempItem = AMResponse.objects.filter(survey_id=defaults['survey'], project_id=defaults['project'], projectUser_id=defaults['projectUser'],
                                              subProjectUser_id=defaults['subProjectUser'], amQuestion_id=defaults['amQuestion'], latestResponse=True)
             if (len(tempItem) > 0):
-                obj = tempItem[0]
-
-                if obj.topicValue != defaults['topicValue'] or obj.commentValue != defaults['commentValue'] or obj.integerValue != defaults['integerValue'] or obj.skipValue != defaults['skipValue'] or obj.topicTags != defaults['topicTags'] or obj.commentTags != defaults['commentTags']:
+                for oldItem in tempItem:
+                    obj = oldItem
                     obj.latestResponse = False
                     obj.save()
 
-                    if defaults['controlType'] == "TEXT" or defaults['controlType'] == "MULTI_TOPICS":
-                        text = defaults["topicValue"] + \
-                            " " + defaults["commentValue"]
+                # obj = tempItem[0]
 
-                        sentimentResult = comprehend.detect_sentiment(
-                            Text=text, LanguageCode="en")
-                        # defaults["integerValue"] = int(abs(sentimentResult["SentimentScore"]["Positive"] * 100))
-                        # 2021-07-31
-                        if sentimentResult['Sentiment'] == "POSITIVE":
-                            defaults['integerValue'] = int(abs(sentimentResult['SentimentScore']['Positive'] * 100))
-                        elif sentimentResult['Sentiment'] == "NEGATIVE":
-                            defaults['integerValue'] = 100 - int(abs(sentimentResult['SentimentScore']['Negative'] * 100))
+                # if obj.topicValue != defaults['topicValue'] or obj.commentValue != defaults['commentValue'] or obj.integerValue != defaults['integerValue'] or obj.skipValue != defaults['skipValue'] or obj.topicTags != defaults['topicTags'] or obj.commentTags != defaults['commentTags']:
+                #     obj.latestResponse = False
+                #     obj.save()
+
+                if defaults['controlType'] == "TEXT" or defaults['controlType'] == "MULTI_TOPICS":
+                    text = defaults["topicValue"] + \
+                        " " + defaults["commentValue"]
+
+                    sentimentResult = comprehend.detect_sentiment(
+                        Text=text, LanguageCode="en")
+                    # defaults["integerValue"] = int(abs(sentimentResult["SentimentScore"]["Positive"] * 100))
+                    # 2021-07-31
+                    if sentimentResult['Sentiment'] == "POSITIVE":
+                        defaults['integerValue'] = int(abs(sentimentResult['SentimentScore']['Positive'] * 100))
+                    elif sentimentResult['Sentiment'] == "NEGATIVE":
+                        defaults['integerValue'] = 100 - int(abs(sentimentResult['SentimentScore']['Negative'] * 100))
+                    else:
+                        if sentimentResult['SentimentScore']['Positive'] > sentimentResult['SentimentScore']['Negative']:
+                            defaults['integerValue'] = 55
+                        elif sentimentResult['SentimentScore']['Positive'] == sentimentResult['SentimentScore']['Negative']:
+                            defaults['integerValue'] = 45
                         else:
-                            if sentimentResult['SentimentScore']['Positive'] > sentimentResult['SentimentScore']['Negative']:
-                                defaults['integerValue'] = 55
-                            elif sentimentResult['SentimentScore']['Positive'] == sentimentResult['SentimentScore']['Negative']:
-                                defaults['integerValue'] = 45
-                            else:
-                                defaults['integerValue'] = 35
-                                
-                    obj1 = AMResponse(amQuestion_id=defaults['amQuestion'], projectUser_id=defaults['projectUser'], subProjectUser_id=defaults['subProjectUser'], survey_id=defaults['survey'], project_id=defaults['project'], controlType=defaults['controlType'], integerValue=defaults['integerValue'], topicValue=defaults['topicValue'], commentValue=defaults['commentValue'], skipValue=defaults['skipValue'], topicTags=defaults['topicTags'], commentTags=defaults['commentTags'], latestResponse=True)
-                    obj1.save()
+                            defaults['integerValue'] = 35
+                            
+                obj1 = AMResponse(amQuestion_id=defaults['amQuestion'], projectUser_id=defaults['projectUser'], subProjectUser_id=defaults['subProjectUser'], survey_id=defaults['survey'], project_id=defaults['project'], controlType=defaults['controlType'], integerValue=defaults['integerValue'], topicValue=defaults['topicValue'], commentValue=defaults['commentValue'], skipValue=defaults['skipValue'], topicTags=defaults['topicTags'], commentTags=defaults['commentTags'], latestResponse=True)
+                obj1.save()
             else:
                 if defaults['controlType'] == "TEXT" or defaults['controlType'] == "MULTI_TOPICS":
                     text = defaults['topicValue'] + " " + defaults['commentValue']
@@ -534,15 +543,19 @@ class AOResponseViewSet(viewsets.ModelViewSet):
                 tempItem = AOResponse.objects.filter(survey_id=data[i]['survey'], project_id=data[i]['project'], projectUser_id=data[i]['projectUser'], subProjectUser_id=data[i]['subProjectUser'], aoQuestion_id=data[i]['aoQuestion'], latestResponse=True)
 
                 if (len(tempItem) > 0):
-                    obj = tempItem[0]
-
-                    if obj.topicValue != data[i]['topicValue'] or obj.commentValue != data[i]['commentValue'] or obj.integerValue != data[i]['integerValue'] or obj.skipValue != data[i]['skipValue'] or obj.topicTags != data[i]['topicTags'] or obj.commentTags != data[i]['commentTags']:
+                    for oldItem in tempItem:
+                        obj = oldItem
                         obj.latestResponse = False
-
                         obj.save()
+                    # obj = tempItem[0]
+
+                    # if obj.topicValue != data[i]['topicValue'] or obj.commentValue != data[i]['commentValue'] or obj.integerValue != data[i]['integerValue'] or obj.skipValue != data[i]['skipValue'] or obj.topicTags != data[i]['topicTags'] or obj.commentTags != data[i]['commentTags']:
+                    #     obj.latestResponse = False
+
+                    #     obj.save()
                         
-                        obj1 = AOResponse(aoQuestion_id=data[i]['aoQuestion'], projectUser_id=data[i]['projectUser'], subProjectUser_id=data[i]['subProjectUser'], shCategory_id=data[i]['shCategory'], survey_id=data[i]['survey'], project_id=data[i]['project'], controlType=data[i]['controlType'], integerValue=data[i]['integerValue'], topicValue=data[i]['topicValue'], commentValue=data[i]['commentValue'], skipValue=data[i]['skipValue'], topicTags=data[i]['topicTags'], commentTags=data[i]['commentTags'], latestResponse=True)
-                        obj1.save()
+                    obj1 = AOResponse(aoQuestion_id=data[i]['aoQuestion'], projectUser_id=data[i]['projectUser'], subProjectUser_id=data[i]['subProjectUser'], shCategory_id=data[i]['shCategory'], survey_id=data[i]['survey'], project_id=data[i]['project'], controlType=data[i]['controlType'], integerValue=data[i]['integerValue'], topicValue=data[i]['topicValue'], commentValue=data[i]['commentValue'], skipValue=data[i]['skipValue'], topicTags=data[i]['topicTags'], commentTags=data[i]['commentTags'], latestResponse=True)
+                    obj1.save()
                 else:
                     obj = AOResponse(aoQuestion_id=data[i]['aoQuestion'], projectUser_id=data[i]['projectUser'], subProjectUser_id=data[i]['subProjectUser'], shCategory_id=data[i]['shCategory'], survey_id=data[i]['survey'], project_id=data[i]['project'], controlType=data[i]['controlType'], integerValue=data[i]['integerValue'], topicValue=data[i]['topicValue'], commentValue=data[i]['commentValue'], skipValue=data[i]['skipValue'], topicTags=data[i]['topicTags'], commentTags=data[i]['commentTags'], latestResponse=True)
                     obj.save()
@@ -555,41 +568,45 @@ class AOResponseViewSet(viewsets.ModelViewSet):
                                              subProjectUser_id=defaults['subProjectUser'], aoQuestion_id=defaults['aoQuestion'], latestResponse=True)[0]
 
             if (len(tempItem) > 0):
-                obj = tempItem[0]
+                # obj = tempItem[0]
 
-                if obj.topicValue != defaults['topicValue'] or obj.commentValue != defaults['commentValue'] or obj.integerValue != defaults['integerValue'] or obj.skipValue != defaults['skipValue'] or obj.topicTags != defaults['topicTags'] or obj.commentTags != defaults['commentTags']:
+                # if obj.topicValue != defaults['topicValue'] or obj.commentValue != defaults['commentValue'] or obj.integerValue != defaults['integerValue'] or obj.skipValue != defaults['skipValue'] or obj.topicTags != defaults['topicTags'] or obj.commentTags != defaults['commentTags']:
+                #     obj.latestResponse = False
+                #     obj.save()
+                for oldItem in tempItem:
+                    obj = oldItem
                     obj.latestResponse = False
                     obj.save()
 
-                    if defaults["controlType"] == "TEXT" or defaults["controlType"] == "MULTI_TOPICS":
-                        text = defaults["topicValue"] + \
-                            " " + defaults["commentValue"]
+                if defaults["controlType"] == "TEXT" or defaults["controlType"] == "MULTI_TOPICS":
+                    text = defaults["topicValue"] + \
+                        " " + defaults["commentValue"]
 
-                        sentimentResult = comprehend.detect_sentiment(
-                            Text=text, LanguageCode="en")
+                    sentimentResult = comprehend.detect_sentiment(
+                        Text=text, LanguageCode="en")
 
-                        # 2021-07-31
-                        if sentimentResult['Sentiment'] == "POSITIVE":
-                            defaults['integerValue'] = int(abs(sentimentResult['SentimentScore']['Positive'] * 100))
-                        elif sentimentResult['Sentiment'] == "NEGATIVE":
-                            defaults['integerValue'] = 100 - int(abs(sentimentResult['SentimentScore']['Negative'] * 100))
+                    # 2021-07-31
+                    if sentimentResult['Sentiment'] == "POSITIVE":
+                        defaults['integerValue'] = int(abs(sentimentResult['SentimentScore']['Positive'] * 100))
+                    elif sentimentResult['Sentiment'] == "NEGATIVE":
+                        defaults['integerValue'] = 100 - int(abs(sentimentResult['SentimentScore']['Negative'] * 100))
+                    else:
+                        if sentimentResult['SentimentScore']['Positive'] > sentimentResult['SentimentScore']['Negative']:
+                            defaults['integerValue'] = 55
+                        elif sentimentResult['SentimentScore']['Positive'] == sentimentResult['SentimentScore']['Negative']:
+                            defaults['integerValue'] = 45
                         else:
-                            if sentimentResult['SentimentScore']['Positive'] > sentimentResult['SentimentScore']['Negative']:
-                                defaults['integerValue'] = 55
-                            elif sentimentResult['SentimentScore']['Positive'] == sentimentResult['SentimentScore']['Negative']:
-                                defaults['integerValue'] = 45
-                            else:
-                                defaults['integerValue'] = 35
+                            defaults['integerValue'] = 35
 
-                    obj1 = AOResponse(aoQuestion_id=defaults['aoQuestion'],
-                                    projectUser_id=defaults['projectUser'], subProjectUser_id=defaults['subProjectUser'],
-                                    shCategory_id=defaults['shCategory'],
-                                    survey_id=defaults['survey'], project_id=defaults['project'],
-                                    controlType=defaults['controlType'], integerValue=defaults['integerValue'],
-                                    topicValue=defaults['topicValue'], commentValue=defaults['commentValue'],
-                                    skipValue=defaults['skipValue'], topicTags=defaults['topicTags'],
-                                    commentTags=defaults['commentTags'], latestResponse=True)
-                    obj1.save()
+                obj1 = AOResponse(aoQuestion_id=defaults['aoQuestion'],
+                                projectUser_id=defaults['projectUser'], subProjectUser_id=defaults['subProjectUser'],
+                                shCategory_id=defaults['shCategory'],
+                                survey_id=defaults['survey'], project_id=defaults['project'],
+                                controlType=defaults['controlType'], integerValue=defaults['integerValue'],
+                                topicValue=defaults['topicValue'], commentValue=defaults['commentValue'],
+                                skipValue=defaults['skipValue'], topicTags=defaults['topicTags'],
+                                commentTags=defaults['commentTags'], latestResponse=True)
+                obj1.save()
 
             else:
                 if defaults["controlType"] == "TEXT" or defaults["controlType"] == "MULTI_TOPICS":
