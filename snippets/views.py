@@ -254,10 +254,10 @@ def preApiCheck(survey, projectUser):
     # 3 people has to response to this user
     thresholdCnt = Survey.objects.get(id=survey).anonymityThreshold
 
-    prefAryProjectUsers = []
-    prefTestResultQueryset = AMResponse.objects.all().filter(survey__id=survey)
-    prefTestResultSerializer = AMResponseForDriverAnalysisSerializer(prefTestResultQueryset, many=True)
-    prefTestResultData = prefTestResultSerializer.data
+    # prefAryProjectUsers = []
+    # prefTestResultQueryset = AMResponse.objects.all().filter(survey__id=survey)
+    # prefTestResultSerializer = AMResponseForDriverAnalysisSerializer(prefTestResultQueryset, many=True)
+    # prefTestResultData = prefTestResultSerializer.data
 
     cnt = AMResponse.objects.filter(survey__id=survey).values_list('projectUser', flat=True).distinct().count()
     # for i in range(len(prefTestResultData)): 
