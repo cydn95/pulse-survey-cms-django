@@ -3925,8 +3925,9 @@ class CheckDashboardStatusView(APIView):
         thresholdCnt = Survey.objects.get(id=survey).anonymityThreshold
 
         # prefix check
-        prefCode = preApiCheck(survey, projectUser) 
-
+        # prefCode = preApiCheck(survey, projectUser) 
+        prefCode = 200
+        
         shgroupqueryset = SHGroup.objects.filter(survey__id=survey)
         shgroupserializer = SHGroupSerializer(shgroupqueryset, many=True)
 
