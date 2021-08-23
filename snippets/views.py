@@ -252,20 +252,20 @@ def preApiCheck(survey, projectUser):
         return 404
 
     # 3 people has to response to this user
-    thresholdCnt = Survey.objects.get(id=survey).anonymityThreshold
+    # thresholdCnt = Survey.objects.get(id=survey).anonymityThreshold
 
-    prefAryProjectUsers = []
-    prefTestResultQueryset = AMResponse.objects.all().filter(survey__id=survey)
-    prefTestResultSerializer = AMResponseForDriverAnalysisSerializer(prefTestResultQueryset, many=True)
-    prefTestResultData = prefTestResultSerializer.data
+    # prefAryProjectUsers = []
+    # prefTestResultQueryset = AMResponse.objects.all().filter(survey__id=survey)
+    # prefTestResultSerializer = AMResponseForDriverAnalysisSerializer(prefTestResultQueryset, many=True)
+    # prefTestResultData = prefTestResultSerializer.data
 
-    for i in range(len(prefTestResultData)): 
-        if prefTestResultData[i]['projectUser']["id"] not in prefAryProjectUsers:
-                prefAryProjectUsers.append(
-                    prefTestResultData[i]['projectUser']["id"])
+    # for i in range(len(prefTestResultData)): 
+    #     if prefTestResultData[i]['projectUser']["id"] not in prefAryProjectUsers:
+    #             prefAryProjectUsers.append(
+    #                 prefTestResultData[i]['projectUser']["id"])
     
-    if (len(prefAryProjectUsers) < thresholdCnt):
-        return 227
+    # if (len(prefAryProjectUsers) < thresholdCnt):
+    #     return 227
 
     return 200
 
