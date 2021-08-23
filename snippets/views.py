@@ -255,9 +255,9 @@ def preApiCheck(survey, projectUser):
     thresholdCnt = Survey.objects.get(id=survey).anonymityThreshold
 
     prefAryProjectUsers = []
-    # prefTestResultQueryset = AMResponse.objects.all().filter(survey__id=survey)
-    # prefTestResultSerializer = AMResponseForDriverAnalysisSerializer(prefTestResultQueryset, many=True)
-    # prefTestResultData = prefTestResultSerializer.data
+    prefTestResultQueryset = AMResponse.objects.all().filter(survey__id=survey)
+    prefTestResultSerializer = AMResponseForDriverAnalysisSerializer(prefTestResultQueryset, many=True)
+    prefTestResultData = prefTestResultSerializer.data
 
     # for i in range(len(prefTestResultData)): 
     #     if prefTestResultData[i]['projectUser']["id"] not in prefAryProjectUsers:
