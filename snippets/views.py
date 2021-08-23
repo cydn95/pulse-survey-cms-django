@@ -259,12 +259,14 @@ def preApiCheck(survey, projectUser):
     prefTestResultSerializer = AMResponseForDriverAnalysisSerializer(prefTestResultQueryset, many=True)
     prefTestResultData = prefTestResultSerializer.data
 
+    cnt = AMResponse.objects.filter(survey__id=survey).values_list('projectUser', flat=True).distinct().count()
     # for i in range(len(prefTestResultData)): 
     #     if prefTestResultData[i]['projectUser']["id"] not in prefAryProjectUsers:
     #             prefAryProjectUsers.append(
     #                 prefTestResultData[i]['projectUser']["id"])
     
-    if (len(prefAryProjectUsers) < thresholdCnt):
+    # if (len(prefAryProjectUsers) < thresholdCnt):
+    if cnt < thresholdCnt:
         return 227
 
     return 200
