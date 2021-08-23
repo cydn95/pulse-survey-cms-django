@@ -3691,24 +3691,22 @@ class DriverAnalysisView(APIView):
         amresponsereportdata = amresponsereportserializer.data
 
         # aoresponsereportqueryset = AOResponse.objects.all().filter(controlType=controlType, survey__id=survey, subProjectUser__id=projectUser, aoQuestion__driver__driverName=driver, created_at__range=[startDate, endDate])
-        aoresponsereportqueryset = AOResponse.objects.all().filter(controlType=controlType, survey__id=survey, aoQuestion__driver__driverName=driver, created_at__range=[startDate, endDate])
-        aoresponsereportserializer = AOResponseForDriverAnalysisSerializer(aoresponsereportqueryset, many=True)
-        aoresponsereportdata = aoresponsereportserializer.data
+        # aoresponsereportqueryset = AOResponse.objects.all().filter(controlType=controlType, survey__id=survey, aoQuestion__driver__driverName=driver, created_at__range=[startDate, endDate])
+        # aoresponsereportserializer = AOResponseForDriverAnalysisSerializer(aoresponsereportqueryset, many=True)
+        # aoresponsereportdata = aoresponsereportserializer.data
 
         for i in range(len(amresponsereportdata)):
-
-            amquestionqueryset = AMQuestion.objects.filter(
-                id=amresponsereportdata[i]['amQuestion'])
+            amquestionqueryset = AMQuestion.objects.filter(id=amresponsereportdata[i]['amQuestion'])
             amserializer = AMQuestionSerializer(amquestionqueryset, many=True)
             amresponsereportdata[i]['amQuestionData'] = amserializer.data
 
-        for j in range(len(aoresponsereportdata)):
+        # for j in range(len(aoresponsereportdata)):
+        #     aoquestionqueryset = AOQuestion.objects.filter(id=aoresponsereportdata[j]['aoQuestion'])
+        #     aoserializer = AOQuestionSerializer(aoquestionqueryset, many=True)
+        #     aoresponsereportdata[j]['aoQuestionData'] = aoserializer.data
 
-            aoquestionqueryset = AOQuestion.objects.filter(id=aoresponsereportdata[j]['aoQuestion'])
-            aoserializer = AOQuestionSerializer(aoquestionqueryset, many=True)
-            aoresponsereportdata[j]['aoQuestionData'] = aoserializer.data
-
-        res = amresponsereportdata + aoresponsereportdata
+        # res = amresponsereportdata + aoresponsereportdata
+        res = amresponsereportdata
 
         return Response(res, status=status.HTTP_200_OK)
 
