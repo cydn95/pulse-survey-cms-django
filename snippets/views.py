@@ -2778,7 +2778,7 @@ class KeyThemesView(APIView):
         elif tab == "2":
             ktamresponsequeryset = AMResponse.objects.all().filter(
                 amQuestion__questionText="How do you feel about this project in your own words?",
-                survey__id=survey).order_by('projectUser')
+                survey__id=survey, latestResponse=True).order_by('projectUser')
             ktamresponseserializer = AMResponseForReportSerializer(ktamresponsequeryset, many=True)
 
             ret = ktamresponseserializer.data
@@ -2813,7 +2813,7 @@ class KeyThemesView(APIView):
         elif tab == "3":
             ktamresponsequeryset = AMResponse.objects.all().filter(
                 amQuestion__questionText="Is there a problem that people aren't talking openly about?",
-                survey__id=survey).order_by('projectUser')
+                survey__id=survey, latestResponse=True).order_by('projectUser')
             ktamresponseserializer = AMResponseForReportSerializer(ktamresponsequeryset, many=True)
 
             ret = ktamresponseserializer.data
