@@ -394,19 +394,26 @@ class AMResponseViewSet(viewsets.ModelViewSet):
                 tempItem = AMResponse.objects.filter(survey_id=data[i]['survey'], project_id=data[i]['project'], projectUser_id=data[i]['projectUser'],
                                                  subProjectUser_id=data[i]['subProjectUser'], amQuestion_id=data[i]['amQuestion'], latestResponse=True)
                 if (len(tempItem) > 0):
+                    saveStatus = False
                     for oldItem in tempItem:
                         obj = oldItem
-                        obj.latestResponse = False
-                        obj.save()
+                        if obj.topicValue != data[i]['topicValue'] or obj.commentValue != data[i]['commentValue'] or obj.integerValue != data[i]['integerValue'] or obj.skipValue != data[i]['skipValue'] or obj.topicTags != data[i]['topicTags'] or obj.commentTags != data[i]['commentTags']:
+                            obj.latestResponse = False
+                            obj.save()
+
+                            if saveStatus == False:
+                                obj1 = AMResponse(amQuestion_id=data[i]['amQuestion'], projectUser_id=data[i]['projectUser'], subProjectUser_id=data[i]['subProjectUser'], survey_id=data[i]['survey'], project_id=data[i]['project'],
+                                controlType=data[i]['controlType'], integerValue=data[i]['integerValue'], topicValue=data[i]['topicValue'], commentValue=data[i]['commentValue'], skipValue=data[i]['skipValue'], topicTags=data[i]['topicTags'], commentTags=data[i]['commentTags'], latestResponse=True)
+                                obj1.save()
+
+                                saveStatus = True
                     # obj = tempItem[0]
                     # if obj.topicValue != data[i]['topicValue'] or obj.commentValue != data[i]['commentValue'] or obj.integerValue != data[i]['integerValue'] or obj.skipValue != data[i]['skipValue'] or obj.topicTags != data[i]['topicTags'] or obj.commentTags != data[i]['commentTags']:
                     #     obj.latestResponse = False
 
                     #     obj.save()
 
-                    obj1 = AMResponse(amQuestion_id=data[i]['amQuestion'], projectUser_id=data[i]['projectUser'], subProjectUser_id=data[i]['subProjectUser'], survey_id=data[i]['survey'], project_id=data[i]['project'],
-                    controlType=data[i]['controlType'], integerValue=data[i]['integerValue'], topicValue=data[i]['topicValue'], commentValue=data[i]['commentValue'], skipValue=data[i]['skipValue'], topicTags=data[i]['topicTags'], commentTags=data[i]['commentTags'], latestResponse=True)
-                    obj1.save()
+                    
                 else:
                     obj = AMResponse(amQuestion_id=data[i]['amQuestion'], projectUser_id=data[i]['projectUser'], subProjectUser_id=data[i]['subProjectUser'], survey_id=data[i]['survey'], project_id=data[i]['project'], controlType=data[i]['controlType'], integerValue=data[i]['integerValue'], topicValue=data[i]['skipValue'], topicTags=data[i]['topicTags'], commentTags=data[i]['commentTags'], latestResponse=True)
                     obj.save()
@@ -545,10 +552,18 @@ class AOResponseViewSet(viewsets.ModelViewSet):
                 tempItem = AOResponse.objects.filter(survey_id=data[i]['survey'], project_id=data[i]['project'], projectUser_id=data[i]['projectUser'], subProjectUser_id=data[i]['subProjectUser'], aoQuestion_id=data[i]['aoQuestion'], latestResponse=True)
 
                 if (len(tempItem) > 0):
+                    saveStatus = False
                     for oldItem in tempItem:
                         obj = oldItem
-                        obj.latestResponse = False
-                        obj.save()
+                        if obj.topicValue != data[i]['topicValue'] or obj.commentValue != data[i]['commentValue'] or obj.integerValue != data[i]['integerValue'] or obj.skipValue != data[i]['skipValue'] or obj.topicTags != data[i]['topicTags'] or obj.commentTags != data[i]['commentTags']:
+                            obj.latestResponse = False
+                            obj.save()
+
+                            if saveStatus == False:
+                                obj1 = AOResponse(aoQuestion_id=data[i]['aoQuestion'], projectUser_id=data[i]['projectUser'], subProjectUser_id=data[i]['subProjectUser'], shCategory_id=data[i]['shCategory'], survey_id=data[i]['survey'], project_id=data[i]['project'], controlType=data[i]['controlType'], integerValue=data[i]['integerValue'], topicValue=data[i]['topicValue'], commentValue=data[i]['commentValue'], skipValue=data[i]['skipValue'], topicTags=data[i]['topicTags'], commentTags=data[i]['commentTags'], latestResponse=True)
+                                obj1.save()
+
+                                saveStatus = True
                     # obj = tempItem[0]
 
                     # if obj.topicValue != data[i]['topicValue'] or obj.commentValue != data[i]['commentValue'] or obj.integerValue != data[i]['integerValue'] or obj.skipValue != data[i]['skipValue'] or obj.topicTags != data[i]['topicTags'] or obj.commentTags != data[i]['commentTags']:
@@ -556,8 +571,7 @@ class AOResponseViewSet(viewsets.ModelViewSet):
 
                     #     obj.save()
                         
-                    obj1 = AOResponse(aoQuestion_id=data[i]['aoQuestion'], projectUser_id=data[i]['projectUser'], subProjectUser_id=data[i]['subProjectUser'], shCategory_id=data[i]['shCategory'], survey_id=data[i]['survey'], project_id=data[i]['project'], controlType=data[i]['controlType'], integerValue=data[i]['integerValue'], topicValue=data[i]['topicValue'], commentValue=data[i]['commentValue'], skipValue=data[i]['skipValue'], topicTags=data[i]['topicTags'], commentTags=data[i]['commentTags'], latestResponse=True)
-                    obj1.save()
+                    
                 else:
                     obj = AOResponse(aoQuestion_id=data[i]['aoQuestion'], projectUser_id=data[i]['projectUser'], subProjectUser_id=data[i]['subProjectUser'], shCategory_id=data[i]['shCategory'], survey_id=data[i]['survey'], project_id=data[i]['project'], controlType=data[i]['controlType'], integerValue=data[i]['integerValue'], topicValue=data[i]['topicValue'], commentValue=data[i]['commentValue'], skipValue=data[i]['skipValue'], topicTags=data[i]['topicTags'], commentTags=data[i]['commentTags'], latestResponse=True)
                     obj.save()
