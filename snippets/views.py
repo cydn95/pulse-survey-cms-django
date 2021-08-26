@@ -950,13 +950,28 @@ class AMResponseTopPositiveNegativeViewSet(viewsets.ModelViewSet):
                 item = [res[i]['score'], res[i]['amQuestion__subdriver']]
                 aux.append(item)
 
-            tempTopNegative = aux[-3:]
             topNegative = []
-            topNegative.append(tempTopNegative[2])
-            topNegative.append(tempTopNegative[1])
-            topNegative.append(tempTopNegative[0])
-
-            ret = {'topPositive': aux[:3], 'topNegative': topNegative}
+            topPositive = []
+            if len(aux) >= 3:
+                topPositive = aux[:3]
+                tempTopNegative = aux[-3:]
+                topNegative.append(tempTopNegative[2])
+                topNegative.append(tempTopNegative[1])
+                topNegative.append(tempTopNegative[0])
+            elif len(aux) == 2:
+                topPositive = aux[:2]
+                tempTopNegative = aux[-2:]
+                # topNegative.append(tempTopNegative[2])
+                topNegative.append(tempTopNegative[1])
+                topNegative.append(tempTopNegative[0])
+            elif len(aux) == 1:
+                topPositive = aux[:1]
+                tempTopNegative = aux[-1:]
+                # topNegative.append(tempTopNegative[2])
+                # topNegative.append(tempTopNegative[1])
+                topNegative.append(tempTopNegative[0])
+            
+            ret = {'topPositive': topPositive, 'topNegative': topNegative}
 
             return Response(ret, status=status.HTTP_200_OK)
         except Exception as error:
