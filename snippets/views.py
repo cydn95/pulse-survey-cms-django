@@ -3913,8 +3913,9 @@ class TotalStakeHolderView(APIView):
 
 # checkuserpasswordstatus api
 class CheckUserPasswordStatusView(APIView):
-    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
-
+    # permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.AllowAny]
+    
     @classmethod
     def get_extra_actions(cls):
         return []
