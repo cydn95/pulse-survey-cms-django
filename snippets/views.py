@@ -232,7 +232,8 @@ def preApiCheck(survey, projectUser):
 
     try:
         isSuperUser = ProjectUser.objects.get(id=projectUser)
-
+        responsePercent = SHGroup.objects.get(
+            survey__id=survey, id=isSuperUser.shGroup_id).responsePercent
         if isSuperUser.isSuperUser == True:
             return 201  # super user
 
@@ -240,14 +241,22 @@ def preApiCheck(survey, projectUser):
         prefAmQuestionSerializer = AMQuestionSerializer(prefAmQuestionQueryset, many=True)
         prefAmQuestionData = prefAmQuestionSerializer.data
 
+        totalCnt = 0
+        answeredCnt = 0
         for i in range(len(prefAmQuestionData)):
+            totalCnt = totalCnt + 1
             ret = AMResponse.objects.filter(
                     projectUser_id=projectUser, survey_id=survey, amQuestion_id=prefAmQuestionData[i]['id'], latestResponse=True)
             if (len(ret) > 0):
-                pass
-            else:
-                return 228
+                answeredCnt = answeredCnt + 1
+            # else:
+            #     return 228
 
+        if totalCnt > 0:
+            currentPercent = answeredCnt * 100 / totalCnt
+            if currentPercent < responsePercent:
+                return 228
+                
     except ProjectUser.DoesNotExist:
         return 404
 
@@ -3915,7 +3924,7 @@ class TotalStakeHolderView(APIView):
 class CheckUserPasswordStatusView(APIView):
     # permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
     permission_classes = [permissions.AllowAny]
-    
+
     @classmethod
     def get_extra_actions(cls):
         return []
