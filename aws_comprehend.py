@@ -5,12 +5,20 @@ import json
 comprehend = boto3.client(service_name='comprehend', region_name='us-east-2')
 
 #here is the main part - comprehend.detect_sentiment is called
-Text=[" ", " ", " "]
+Text=[
+    "risk", 
+    "safety", 
+    "earning money",
+    "experience",
+    "quality",
+    "there are lots of issues"
+]
+
 # Text = "I'm going to test this api"
 sentimentData = comprehend.batch_detect_sentiment(TextList=Text, LanguageCode="en")
 # sentimentData = comprehend.detect_sentiment(
     # Text=Text, LanguageCode="en")
-
+print(sentimentData)
 qdata = {
     "Sentiment": "ERROR",
     "MixedScore": 0,
@@ -18,9 +26,10 @@ qdata = {
     "NeutralScore": 0,
     "PositiveScore": 0,
 }
-print(sentimentData)
+
 if "Sentiment" in sentimentData:
     qdata["Sentiment"] = sentimentData["Sentiment"]
+    
 if "SentimentScore" in sentimentData:
     if "Mixed" in sentimentData["SentimentScore"]:
         qdata["MixedScore"] = sentimentData["SentimentScore"]["Mixed"]
