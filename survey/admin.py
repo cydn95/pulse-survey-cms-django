@@ -55,10 +55,6 @@ class ProjectUserInline(InlineActionsMixin, admin.TabularInline):
     inline_actions = ['send_invite']
 
     def send_invite(self, request, obj, parent_obj=None):
-        # temporary commented 2021-03-24
-        # print("Send Invite Test")
-        # print(self)
-        # print(obj)
         obj.old_sendInvite = False
         obj.sendInvite = True
         obj.save()
