@@ -234,12 +234,13 @@ class SurveyAdmin(InlineActionsModelAdminMixin, admin.ModelAdmin):
 
     def change_view(self, request, object_id, form_url='', extra_context=None):
         extra = extra_context or {}
-        # amform = AMDriverForm()
-        # amform.fields['am_driver'].queryset = Driver.objects.filter(survey_id=object_id)
-        # extra['am_driver'] = amform
-        # aoform = AODriverForm()
-        # aoform.fields['ao_driver'].queryset = Driver.objects.filter(survey_id=object_id)
-        # extra['ao_driver'] = aoform
+
+        amform = AMDriverForm()
+        amform.fields['am_driver'].queryset = Driver.objects.filter(survey_id=object_id)
+        extra['am_driver'] = amform
+        aoform = AODriverForm()
+        aoform.fields['ao_driver'].queryset = Driver.objects.filter(survey_id=object_id)
+        extra['ao_driver'] = aoform
 
         return super(SurveyAdmin, self).change_view(request, object_id, form_url, extra_context=extra)
         
