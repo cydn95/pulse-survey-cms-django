@@ -52,7 +52,7 @@ class ProjectUserInline(InlineActionsMixin, admin.TabularInline):
     list_per_page = 10
     extra = 0
 
-    # inline_actions = ['send_invite']
+    inline_actions = ['send_invite']
 
     def send_invite(self, request, obj, parent_obj=None):
         # temporary commented 2021-03-24
@@ -216,8 +216,8 @@ class AMDriverForm(forms.Form):
 class AODriverForm(forms.Form):
     ao_driver = forms.ModelChoiceField(queryset=None)
 
-# class SurveyAdmin(InlineActionsModelAdminMixin, admin.ModelAdmin):
-class SurveyAdmin(admin.ModelAdmin):
+class SurveyAdmin(InlineActionsModelAdminMixin, admin.ModelAdmin):
+# class SurveyAdmin(admin.ModelAdmin):
     list_display = ['surveyTitle', 'get_client', 'project', 'survey_status']
     search_fields = ['surveyTitle', 'project__projectName']
     list_filter = ['project']
