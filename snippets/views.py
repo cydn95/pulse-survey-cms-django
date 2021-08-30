@@ -2550,7 +2550,7 @@ class KeyThemesMenuCntView(APIView):
         # risk
         ktamresponsequeryset = AMResponse.objects.all().filter(
                 amQuestion__questionText="What do you see as the biggest risks to the project?",
-                survey__id=survey, controlType="MULTI_TOPICS").order_by('projectUser')
+                survey__id=survey, controlType="MULTI_TOPICS", latestResponse=True).order_by('projectUser')
         ktamresponseserializer = AMResponseSerializer(ktamresponsequeryset, many=True)
         wordlist = []
         res = ktamresponseserializer.data
@@ -2570,19 +2570,19 @@ class KeyThemesMenuCntView(APIView):
         # overall sentiment
         overallsentimentktamresponsequeryset = AMResponse.objects.all().filter(
                 amQuestion__questionText="How do you feel about this project in your own words?",
-                survey__id=survey).order_by('projectUser')
+            survey__id=survey, latestResponse=True).order_by('projectUser')
         overallsentimentktamresponseserializer = AMResponseForReportSerializer(overallsentimentktamresponsequeryset, many=True)
 
         # unspoken problem
         unspokenproblemktamresponsequeryset = AMResponse.objects.all().filter(
                 amQuestion__questionText="Is there a problem that people aren't talking openly about?",
-                survey__id=survey).order_by('projectUser')
+                survey__id=survey, latestResponse=True).order_by('projectUser')
         unspokenproblemktamresponseserializer = AMResponseForReportSerializer(unspokenproblemktamresponsequeryset, many=True)
 
         # project interest
         piktamresponsequeryset = AMResponse.objects.all().filter(
                 amQuestion__questionText="What do you care most about on this project?",
-                survey__id=survey, controlType="MULTI_TOPICS").order_by('projectUser')
+            survey__id=survey, controlType="MULTI_TOPICS", latestResponse=True).order_by('projectUser')
         piktamresponseserializer = AMResponseSerializer(
             piktamresponsequeryset, many=True)
         piwordlist = []
@@ -2603,7 +2603,7 @@ class KeyThemesMenuCntView(APIView):
         # personal interest
         peiktamresponsequeryset = AMResponse.objects.all().filter(
             amQuestion__questionText="What do you personally want to get out of this project?",
-            survey__id=survey, controlType="MULTI_TOPICS").order_by('projectUser')
+            survey__id=survey, controlType="MULTI_TOPICS", latestResponse=True).order_by('projectUser')
         peiktamresponseserializer = AMResponseSerializer(
             peiktamresponsequeryset, many=True)
         peiwordlist = []
@@ -2624,7 +2624,7 @@ class KeyThemesMenuCntView(APIView):
         # improvement - positives
         ipktamresponsequeryset = AMResponse.objects.all().filter(
             amQuestion__questionText="In your opinion, what is going well on the project?",
-            survey__id=survey, controlType="MULTI_TOPICS").order_by('projectUser')
+            survey__id=survey, controlType="MULTI_TOPICS", latestResponse=True).order_by('projectUser')
         ipktamresponseserializer = AMResponseSerializer(
             ipktamresponsequeryset, many=True)
         ipwordlist = []
@@ -2647,7 +2647,7 @@ class KeyThemesMenuCntView(APIView):
         # improvement - start
         istktamresponsequeryset = AMResponse.objects.all().filter(
             amQuestion__questionText="What should we start doing?",
-            survey__id=survey, controlType="MULTI_TOPICS").order_by('projectUser')
+            survey__id=survey, controlType="MULTI_TOPICS", latestResponse=True).order_by('projectUser')
         istktamresponseserializer = AMResponseSerializer(
             istktamresponsequeryset, many=True)
         istwordlist = []
@@ -2668,7 +2668,7 @@ class KeyThemesMenuCntView(APIView):
         # improvement - stop
         ispktamresponsequeryset = AMResponse.objects.all().filter(
             amQuestion__questionText="What should we stop doing?",
-            survey__id=survey, controlType="MULTI_TOPICS").order_by('projectUser')
+            survey__id=survey, controlType="MULTI_TOPICS", latestResponse=True).order_by('projectUser')
         ispktamresponseserializer = AMResponseSerializer(
             ispktamresponsequeryset, many=True)
         ispwordlist = []
@@ -2689,7 +2689,7 @@ class KeyThemesMenuCntView(APIView):
         # improvement - change
         icktamresponsequeryset = AMResponse.objects.all().filter(
             amQuestion__questionText="What should we do differently?",
-            survey__id=survey, controlType="MULTI_TOPICS").order_by('projectUser')
+            survey__id=survey, controlType="MULTI_TOPICS", latestResponse=True).order_by('projectUser')
         icktamresponseserializer = AMResponseSerializer(
             icktamresponsequeryset, many=True)
         icwordlist = []
