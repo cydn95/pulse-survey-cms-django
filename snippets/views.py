@@ -2758,7 +2758,7 @@ class KeyThemesView(APIView):
         if tab == "1":
             ktamresponsequeryset = AMResponse.objects.all().filter(
                 amQuestion__questionText="What do you see as the biggest risks to the project?",
-                survey__id=survey, controlType="MULTI_TOPICS").order_by('projectUser')
+                survey__id=survey, controlType="MULTI_TOPICS", latestResponse=True).order_by('projectUser')
             ktamresponseserializer = AMResponseSerializer(ktamresponsequeryset, many=True)
 
             wordlist = []
@@ -2884,7 +2884,7 @@ class KeyThemesView(APIView):
         elif tab == "4":
             ktamresponsequeryset = AMResponse.objects.all().filter(
                 amQuestion__questionText="What do you care most about on this project?",
-                survey__id=survey, controlType="MULTI_TOPICS").order_by('projectUser')
+                survey__id=survey, controlType="MULTI_TOPICS", latestResponse=True).order_by('projectUser')
             ktamresponseserializer = AMResponseSerializer(
                 ktamresponsequeryset, many=True)
 
@@ -2978,7 +2978,7 @@ class KeyThemesView(APIView):
         elif tab == "6":
             ktamresponsequeryset = AMResponse.objects.all().filter(
                 amQuestion__questionText="In your opinion, what is going well on the project?",
-                survey__id=survey, controlType="MULTI_TOPICS").order_by('projectUser')
+                survey__id=survey, controlType="MULTI_TOPICS", latestResponse=True).order_by('projectUser')
             ktamresponseserializer = AMResponseSerializer(
                 ktamresponsequeryset, many=True)
 
@@ -3026,7 +3026,7 @@ class KeyThemesView(APIView):
         elif tab == "7":
             ktamresponsequeryset = AMResponse.objects.all().filter(
                 amQuestion__questionText="What should we start doing?",
-                survey__id=survey, controlType="MULTI_TOPICS").order_by('projectUser')
+                survey__id=survey, controlType="MULTI_TOPICS", latestResponse=True).order_by('projectUser')
             ktamresponseserializer = AMResponseSerializer(
                 ktamresponsequeryset, many=True)
 
@@ -3074,7 +3074,7 @@ class KeyThemesView(APIView):
         elif tab == "8":
             ktamresponsequeryset = AMResponse.objects.all().filter(
                 amQuestion__questionText="What should we stop doing?",
-                survey__id=survey, controlType="MULTI_TOPICS").order_by('projectUser')
+                survey__id=survey, controlType="MULTI_TOPICS", latestResponse=True).order_by('projectUser')
             ktamresponseserializer = AMResponseSerializer(ktamresponsequeryset, many=True)
 
             wordlist = []
@@ -3121,7 +3121,7 @@ class KeyThemesView(APIView):
         elif tab == "9":
             ktamresponsequeryset = AMResponse.objects.all().filter(
                 amQuestion__questionText="What should we do differently?",
-                survey__id=survey, controlType="MULTI_TOPICS").order_by('projectUser')
+                survey__id=survey, controlType="MULTI_TOPICS", latestResponse=True).order_by('projectUser')
             ktamresponseserializer = AMResponseSerializer(
                 ktamresponsequeryset, many=True)
 
