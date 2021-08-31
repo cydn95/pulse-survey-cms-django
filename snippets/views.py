@@ -3835,8 +3835,7 @@ class TotalStakeHolderView(APIView):
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
 
         projectusercnt = len(ProjectUser.objects.filter(survey=survey, sendInvite=True))
-        projectuserqueryset = ProjectUser.objects.all().filter(
-            survey__id=survey, sendInvite=True)
+        projectuserqueryset = ProjectUser.objects.all().filter(survey__id=survey, sendInvite=True)
         projectuserserializer = UserBySurveySerializer(projectuserqueryset, many=True)
         projectuserdata = projectuserserializer.data
 
