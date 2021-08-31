@@ -3979,3 +3979,4 @@ class CheckDashboardStatusView(APIView):
             return Response({"text": "superuser", "code": 201, "thresholdCnt": thresholdCnt}, status=status.HTTP_200_OK)
 
         return Response({"text": "pass", "code": 200, "data": shgroupserializer.data, "thresholdCnt": thresholdCnt, "precode": prefCode}, status=status.HTTP_200_OK)
+

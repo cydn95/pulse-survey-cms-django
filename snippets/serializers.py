@@ -243,7 +243,7 @@ class UserBySurveySerializer(serializers.ModelSerializer):
         # commented for isteammember
         # fields = ['id', 'survey', 'projectUserTitle', 'user', 'team', 'shGroup', 'sendInvite', 'isSuperUser', 'isTeamMember', 'isCGroup1', 'isCGroup2', 'isCGroup3']
         fields = ['id', 'survey', 'projectUserTitle', 'user', 'team', 'shGroup',
-                  'sendInvite', 'isSuperUser', 'isCGroup1', 'isCGroup2', 'isCGroup3', 'projectOrganization', 'shType']
+                  'sendInvite', 'sendEmail', 'isSuperUser', 'isCGroup1', 'isCGroup2', 'isCGroup3', 'projectOrganization', 'shType']
 
 class ProjectUserSerializer(serializers.ModelSerializer):
     class Meta:

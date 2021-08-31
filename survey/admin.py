@@ -51,12 +51,14 @@ class ProjectUserInline(InlineActionsMixin, admin.TabularInline):
     model = ProjectUser
     list_per_page = 10
     extra = 0
-
+    exclude = ['sendEmail']
     inline_actions = ['send_invite']
 
     def send_invite(self, request, obj, parent_obj=None):
-        obj.old_sendInvite = False
+        # obj.old_sendInvite = False
         obj.sendInvite = True
+        obj.old_sendEmail = False
+        obj.sendEmail = True
         obj.save()
         messages.info(request, 'Email invitation has been sent.')
 
