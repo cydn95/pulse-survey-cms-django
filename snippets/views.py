@@ -279,30 +279,30 @@ def preApiCheck(survey, projectUser):
     # if (len(prefAryProjectUsers) < thresholdCnt):
 
     totalCompleteCnt = 0
-    tempTest = []
+    # tempTest = []
     for i in range(len(projectUserCnt)):
         tempProjectUserInfo = ProjectUser.objects.get(id=projectUserCnt[i])
-        # tempResponsePercent = SHGroup.objects.get(survey__id=survey, id=tempProjectUserInfo.shGroup_id).responsePercent
-        tempTest.append(tempProjectUserInfo.shGroup_id)
-        # tempAmQuestionQueryset = AMQuestion.objects.filter(
-        #     survey__id=survey, shGroup__in=[tempProjectUserInfo.shGroup_id])
-        # tempAmQuestionSerializer = AMQuestionSerializer(
-        #     tempAmQuestionQueryset, many=True)
-        # tempAmQuestionData = tempAmQuestionSerializer.data
+        tempResponsePercent = SHGroup.objects.get(id=tempProjectUserInfo.shGroup_id).responsePercent
+        # tempTest.append(tempProjectUserInfo.shGroup_id)
+        tempAmQuestionQueryset = AMQuestion.objects.filter(
+            survey__id=survey, shGroup__in=[tempProjectUserInfo.shGroup_id])
+        tempAmQuestionSerializer = AMQuestionSerializer(
+            tempAmQuestionQueryset, many=True)
+        tempAmQuestionData = tempAmQuestionSerializer.data
 
-        # tempCnt = 0
-        # tempAnsweredCnt = 0
-        # for j in range(len(tempAmQuestionData)):
-        #     tempCnt = tempCnt + 1
-        #     tempRet = AMResponse.objects.filter(projectUser_id=projectUserCnt[i], survey_id=survey, amQuestion_id=tempAmQuestionData[j]['id'], latestResponse=True)
-        #     if (len(tempRet) > 0):
-        #         tempAnsweredCnt = tempAnsweredCnt + 1
+        tempCnt = 0
+        tempAnsweredCnt = 0
+        for j in range(len(tempAmQuestionData)):
+            tempCnt = tempCnt + 1
+            tempRet = AMResponse.objects.filter(projectUser_id=projectUserCnt[i], survey_id=survey, amQuestion_id=tempAmQuestionData[j]['id'], latestResponse=True)
+            if (len(tempRet) > 0):
+                tempAnsweredCnt = tempAnsweredCnt + 1
 
-        # if tempCnt > 0:
-        #     tempCurrentPercent = tempAnsweredCnt * 100 / tempCnt
-        #     if tempCurrentPercent >= tempResponsePercent:
-        #         totalCompleteCnt = totalCompleteCnt + 1
-    return tempTest
+        if tempCnt > 0:
+            tempCurrentPercent = tempAnsweredCnt * 100 / tempCnt
+            if tempCurrentPercent >= tempResponsePercent:
+                totalCompleteCnt = totalCompleteCnt + 1
+    # return tempTest
     if totalCompleteCnt < thresholdCnt:
         return 227
 
