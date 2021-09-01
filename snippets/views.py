@@ -252,8 +252,8 @@ def preApiCheck(survey, projectUser):
             # else:
             #     return 228
 
-        return totalCnt
-        
+        return answeredCnt
+
         if totalCnt > 0:
             currentPercent = answeredCnt * 100 / totalCnt
             if currentPercent < responsePercent:
