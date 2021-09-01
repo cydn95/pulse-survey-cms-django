@@ -280,8 +280,8 @@ def preApiCheck(survey, projectUser):
 
     totalCompleteCnt = 0
     for i in range(len(projectUserCnt)):
-        return projectUserCnt[i]
-        # tempProjectUserInfo = ProjectUser.objects.get(id=projectUserCnt[i])
+        tempProjectUserInfo = ProjectUser.objects.get(id=projectUserCnt[i])
+        return tempProjectUserInfo.shGroup_id
         # tempResponsePercent = SHGroup.objects.get(survey__id=survey, id=tempProjectUserInfo.shGroup_id).responsePercent
 
         # tempAmQuestionQueryset = AMQuestion.objects.filter(
