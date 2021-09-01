@@ -256,6 +256,8 @@ def preApiCheck(survey, projectUser):
             currentPercent = answeredCnt * 100 / totalCnt
             if currentPercent < responsePercent:
                 return 228
+        else:
+            return 228
                 
     except ProjectUser.DoesNotExist:
         return 404
