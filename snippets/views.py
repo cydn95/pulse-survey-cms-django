@@ -252,8 +252,6 @@ def preApiCheck(survey, projectUser):
             # else:
             #     return 228
 
-        return answeredCnt
-
         if totalCnt > 0:
             currentPercent = answeredCnt * 100 / totalCnt
             if currentPercent < responsePercent:
@@ -282,6 +280,7 @@ def preApiCheck(survey, projectUser):
     if cnt < thresholdCnt:
         return 227
 
+    return cnt
     return 200
 
 # acknowledgement api
