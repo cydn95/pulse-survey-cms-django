@@ -279,11 +279,11 @@ def preApiCheck(survey, projectUser):
     # if (len(prefAryProjectUsers) < thresholdCnt):
 
     totalCompleteCnt = 0
+    tempTest = []
     for i in range(len(projectUserCnt)):
         tempProjectUserInfo = ProjectUser.objects.get(id=projectUserCnt[i])
-        return tempProjectUserInfo.shGroup_id
-        # tempResponsePercent = SHGroup.objects.get(survey__id=survey, id=tempProjectUserInfo.shGroup_id).responsePercent
-
+        tempResponsePercent = SHGroup.objects.get(survey__id=survey, id=tempProjectUserInfo.shGroup_id).responsePercent
+        tempTest.append(tempResponsePercent)
         # tempAmQuestionQueryset = AMQuestion.objects.filter(
         #     survey__id=survey, shGroup__in=[tempProjectUserInfo.shGroup_id])
         # tempAmQuestionSerializer = AMQuestionSerializer(
@@ -302,7 +302,7 @@ def preApiCheck(survey, projectUser):
         #     tempCurrentPercent = tempAnsweredCnt * 100 / tempCnt
         #     if tempCurrentPercent >= tempResponsePercent:
         #         totalCompleteCnt = totalCompleteCnt + 1
-
+    return tempTest
     if totalCompleteCnt < thresholdCnt:
         return 227
 
