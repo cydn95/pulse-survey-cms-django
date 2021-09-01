@@ -283,7 +283,7 @@ def preApiCheck(survey, projectUser):
     for i in range(len(projectUserCnt)):
         tempProjectUserInfo = ProjectUser.objects.get(id=projectUserCnt[i])
         # tempResponsePercent = SHGroup.objects.get(survey__id=survey, id=tempProjectUserInfo.shGroup_id).responsePercent
-        tempTest.append(tempProjectUserInfo.id)
+        tempTest.append(tempProjectUserInfo.shGroup_id)
         # tempAmQuestionQueryset = AMQuestion.objects.filter(
         #     survey__id=survey, shGroup__in=[tempProjectUserInfo.shGroup_id])
         # tempAmQuestionSerializer = AMQuestionSerializer(
