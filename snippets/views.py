@@ -270,17 +270,41 @@ def preApiCheck(survey, projectUser):
     # prefTestResultSerializer = AMResponseForDriverAnalysisSerializer(prefTestResultQueryset, many=True)
     # prefTestResultData = prefTestResultSerializer.data
 
-    cnt = AMResponse.objects.filter(survey__id=survey).values_list('projectUser', flat=True).distinct().count()
+    projectUserCnt = AMResponse.objects.filter(survey__id=survey).values_list('projectUser', flat=True).distinct()
     # for i in range(len(prefTestResultData)): 
     #     if prefTestResultData[i]['projectUser']["id"] not in prefAryProjectUsers:
     #             prefAryProjectUsers.append(
     #                 prefTestResultData[i]['projectUser']["id"])
     
     # if (len(prefAryProjectUsers) < thresholdCnt):
-    if cnt < thresholdCnt:
+
+    totalCompleteCnt = 0
+    for i in range(len(projectUserCnt)):
+        tempProjectUserInfo = ProjectUser.objects.get(id=projectUserCnt[i])
+        tempResponsePercent = SHGroup.objects.get(survey__id=survey, id=tempProjectUserInfo.shGroup_id).responsePercent
+
+        tempAmQuestionQueryset = AMQuestion.objects.filter(
+            survey__id=survey, shGroup__in=[tempProjectUserInfo.shGroup_id])
+        tempAmQuestionSerializer = AMQuestionSerializer(
+            tempAmQuestionQueryset, many=True)
+        tempAmQuestionData = tempAmQuestionSerializer.data
+
+        tempCnt = 0
+        tempAnsweredCnt = 0
+        for j in range(len(tempAmQuestionData)):
+            tempCnt = tempCnt + 1
+            tempRet = AMResponse.objects.filter(projectUser_id=projectUserCnt[i], survey_id=survey, amQuestion_id=tempAmQuestionData[j]['id'], latestResponse=True)
+            if (len(tempRet) > 0):
+                tempAnsweredCnt = tempAnsweredCnt + 1
+
+        if tempCnt > 0:
+            tempCurrentPercent = tempAnsweredCnt * 100 / tempCnt
+            if tempCurrentPercent >= tempResponsePercent:
+                totalCompleteCnt = totalCompleteCnt + 1
+
+    if totalCompleteCnt < thresholdCnt:
         return 227
 
-    return cnt
     return 200
 
 # acknowledgement api
