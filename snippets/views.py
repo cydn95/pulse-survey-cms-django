@@ -248,7 +248,11 @@ def preApiCheck(survey, projectUser):
             ret = AMResponse.objects.filter(
                     projectUser_id=projectUser, survey_id=survey, amQuestion_id=prefAmQuestionData[i]['id'], latestResponse=True)
             if (len(ret) > 0):
-                answeredCnt = answeredCnt + 1
+                if ret[0].controlType == 'MULTI_TOPICS':
+                    if len(ret[0].topicValue) > 0:
+                        answeredCnt = answeredCnt + 1
+                else:
+                    answeredCnt = answeredCnt + 1
             # else:
             #     return 228
 
@@ -296,7 +300,12 @@ def preApiCheck(survey, projectUser):
             tempCnt = tempCnt + 1
             tempRet = AMResponse.objects.filter(projectUser_id=projectUserCnt[i], survey_id=survey, amQuestion_id=tempAmQuestionData[j]['id'], latestResponse=True)
             if (len(tempRet) > 0):
-                tempAnsweredCnt = tempAnsweredCnt + 1
+                # tempAnsweredCnt = tempAnsweredCnt + 1
+                if tempRet[0].controlType == 'MULTI_TOPICS':
+                    if len(tempRet[0].topicValue) > 0:
+                        tempAnsweredCnt = tempAnsweredCnt + 1
+                else:
+                    tempAnsweredCnt = tempAnsweredCnt + 1
 
         if tempCnt > 0:
             tempCurrentPercent = tempAnsweredCnt * 100 / tempCnt
