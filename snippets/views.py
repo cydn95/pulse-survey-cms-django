@@ -2034,7 +2034,7 @@ class UpdateStakeHolderViewSet(viewsets.ModelViewSet):
 
         shMyCategories = request.data['shMyCategory']
         
-        obj = MyMapLayout.objects.get(user_id=request.user.id, project_id=request.data['project'])
+        # obj = MyMapLayout.objects.get(user_id=request.user.id, project_id=request.data['project'])
 
         myProjectUser_id = request.data['myProjectUser']
         SHMapping.objects.filter(projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id).delete()
@@ -2048,7 +2048,7 @@ class UpdateStakeHolderViewSet(viewsets.ModelViewSet):
         
         shProjectCategories = request.data['shProjectCategory']
 
-        obj1 = ProjectMapLayout.objects.get(user_id=request.user.id, project_id=request.data['project'])
+        # obj1 = ProjectMapLayout.objects.get(user_id=request.user.id, project_id=request.data['project'])
 
         for j in range(len(shProjectCategories)):
             
