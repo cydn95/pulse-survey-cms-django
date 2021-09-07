@@ -3745,7 +3745,7 @@ class NewAdvisorInsightsView(APIView):
         if survey is None:
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
 
-        amresponsereportqueryset = AMResponse.objects.all().filter(Q(survey__id=survey), Q(amQuestion__subdriver='Overall Sentiment') | Q(amQuestion__subdriver='Optimism') | Q(amQuestion__subdriver='Safety')).order_by('integerValue')
+        amresponsereportqueryset = AMResponse.objects.filter(Q(survey__id=survey), Q(amQuestion__subdriver='Overall Sentiment') | Q(amQuestion__subdriver='Optimism') | Q(amQuestion__subdriver='Safety')).order_by('integerValue')
         amresponsereportserializer = AMResponseForDriverAnalysisSerializer(amresponsereportqueryset, many=True)
         amresponsereportdata = amresponsereportserializer.data
 
