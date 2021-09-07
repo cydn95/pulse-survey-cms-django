@@ -3832,7 +3832,7 @@ class NewAdvisorInsightsView(APIView):
             }
         }
 
-        return Response({"summary": summary, "catchupProjectUsers": [], "recommendedProjectUsers": [], "detailedData": detailedData}, status=status.HTTP_200_OK)
+        return Response({"summary": [], "catchupProjectUsers": [], "recommendedProjectUsers": [], "detailedData": detailedData}, status=status.HTTP_200_OK)
 
 # driveranalysis api
 class DriverAnalysisView(APIView):
