@@ -3759,6 +3759,70 @@ class NewAdvisorInsightsView(APIView):
         aryShGroupsData = {}
         aryOrganizationsData = {}
 
+        leastSafeQuestionId = AMQuestion.objects.get(survey__id=survey, subdriver="Safety").id
+        leastSafeTeamName = ""
+        leastSafeTeamTotalScore = 0
+        leastSafeTeamCnt = 0
+        leastSafeTeamScore = 0
+        leastSafeShGroupName = ""
+        leastSafeShGroupTotalScore = 0
+        leastSafeShGroupCnt = 0
+        leastSafeShGroupScore = 0
+        leastSafeOrgName = ""
+        leastSafeOrgTotalScore = 0
+        leastSafeOrgCnt = 0
+        leastSafeOrgScore = 0
+
+        for i in range(len(amresponsereportdata)):
+            if amresponsereportdata[i]['projectUser']["team"]["name"] not in aryTeams:
+                aryTeams.append(amresponsereportdata[i]['projectUser']["team"]["name"])
+            if amresponsereportdata[i]['projectUser']['shGroup'] is not None:
+                if amresponsereportdata[i]['projectUser']['shGroup']['SHGroupName'] not in aryShGroups:
+                    aryShGroups.append(amresponsereportdata[i]['projectUser']['shGroup']['SHGroupName'])
+            if amresponsereportdata[i]['projectUser']["id"] not in aryProjectUsers:
+                aryProjectUsers.append(amresponsereportdata[i]['projectUser']['id'])
+            if amresponsereportdata[i]['projectUser']["user"]["userteam"] is not None:
+                if amresponsereportdata[i]['projectUser']['user']['userteam']['name'] not in aryDepartments:
+                    aryDepartments.append(amresponsereportdata[i]['projectUser']['user']['userteam']['name'])
+            if amresponsereportdata[i]['projectUser']['projectOrganization'] is not None:
+                if amresponsereportdata[i]['projectUser']['projectOrganization'] not in aryOrganizations:
+                    aryOrganizations.append(amresponsereportdata[i]['projectUser']['projectOrganization'])
+            
+            aryTeamsData[amresponsereportdata[i]['projectUser']['team']['name']] = {"totalScore": 0, "cnt": 0, "score": 0, "compTotalScore": 0, "compCnt": 0, "compScore": 0}
+            if amresponsereportdata[i]['projectUser']['shGroup'] is not None:
+                aryShGroupsData[amresponsereportdata[i]['projectUser']['shGroup']['SHGroupName']] = {"totalScore": 0, "cnt": 0, "score": 0, "compTotalScore": 0, "compCnt": 0, "compScore": 0}
+            if amresponsereportdata[i]['projectUser']['projectOrganization'] is not None:
+                aryOrganizationsData[amresponsereportdata[i]['projectUser']['projectOrganization']] = {"totalScore": 0, "cnt": 0, "score": 0, "compTotalScore": 0, "compCnt": 0, "compScore": 0}
+            
+            if amresponsereportdata[i]['amQuestion'] == leastSafeQuestionId:
+                leastSafeTeamName = amresponsereportdata[i]['projectUser']['team']['name']
+                leastSafeTeamTotalScore += amresponseresponsedata[i]['integerValue']
+                leastSafeTeamCnt += 1
+                leastSafeTeamScore = leastSafeTeamTotalScore / 10 / leastSafeTeamCnt
+
+                if amresponsereportdata[i]['projectUser']['shGroup'] is not None:
+                    leastSafeShGroupName = amresponsereportdata[i]['projectUser']['shGroup']['SHGroupName']
+                    leastSafeShGroupTotalScore += amresponsereportdata[i]['integerValue']
+                    leastSafeShGroupCnt += 1
+                    leastSafeShGroupScore = leastSafeShGroupTotalScore / 10 / leastSafeShGroupCnt
+
+                if amresponsereportdata[i]['projectUser']['projectOrganization'] is not None:
+                    leastSafeOrgName = amresponsereportdata[i]['projectUser']['projectOrganization']
+                    leastSafeOrgTotalScore += amresponsereportdata[i]['integerValue']
+                    leastSafeOrgCnt += 1
+                    leastSafeOrgScore = leastSafeOrgTotalScore / 10 / leastSafeOrgCnt
+
+        aryFilteredProjectUsers = aryProjectUsers[:3]
+        recommendedProjectUsersQuerySet = ProjectUser.objects.filter(survey=survey, pk__in=aryFilteredProjectUsers)
+        recommendedProjectUsersSerializer = ProjectUserForReportSerializer(recommendedProjectUsersQuerySet, many=True)
+
+        # test data for catchup
+        aryFilteredCatchupProjectUsers = aryProjectUsers
+        recommendedCatchupProjectUsersQuerySet = ProjectUser.objects.filter(survey=survey, pk__in=aryFilteredCatchupProjectUsers)
+        recommendedCatchupProjectUserSerializer = ProjectUserForReportSerializer(recommendedCatchupProjectUsersQuerySet, many=True)
+
+        project = Survey.objects.get
+
         detailedData = {
             "positively": {
                 "team": {
