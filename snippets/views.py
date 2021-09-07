@@ -3333,7 +3333,7 @@ class ProjectMatrixView(APIView):
         retList.append(perceptionAccuracyDriverItem)
 
         return Response(retList, status=status.HTTP_200_OK)
-
+          
 # advisorinsights api
 class AdvisorInsightsView(APIView):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
@@ -3729,6 +3729,110 @@ class AdvisorInsightsView(APIView):
         }
 
         return Response({"summary": summary, "catchupProjectUsers": recommendedCatchupProjectUserSerializer.data, "recommendedProjectUsers": recommendedProjectUserSerializer.data[:3], "detailedData": detailedData}, status=status.HTTP_200_OK)
+
+# new advisorinsights api
+class NewAdvisorInsightsView(APIView):
+    permission_classes = [permissions.IsAuthenticated,
+                          permissions.IsAuthenticatedOrReadOnly]
+
+    @classmethod
+    def get_extra_actions(cls):
+        return []
+
+    def get(self, format=None):
+        survey = self.request.query_params.get('survey', None)
+
+        if survey is None:
+            return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
+
+        amresponsereportqueryset = AMResponse.objects.all().filter(Q(survey__id=survey), Q(amQuestion__subdriver='Overall Sentiment') | Q(amQuestion__subdriver='Optimism') | Q(amQuestion__subdriver='Safety')).order_by('integerValue')
+        amresponsereportserializer = AMResponseForDriverAnalysisSerializer(amresponsereportqueryset, many=True)
+        amresponsereportdata = amresponsereportserializer.data
+
+        aryTeams = []
+        aryProjectUsers = []
+        aryDepartments = []
+        aryOrganizations = []
+        aryShGroups = []
+
+        aryTeamsData = {}
+        aryShGroupsData = {}
+        aryOrganizationsData = {}
+
+        detailedData = {
+            "positively": {
+                "team": {
+                    "name": "team1",
+                    "score": 1,
+                },
+                "shgroup": {
+                    "name": "shgroup1",
+                    "score": 2,
+                },
+                "org": {
+                    "name": "org1",
+                    "score": 3,
+                }
+            },
+            "negatively": {
+                "team": {
+                    "name": "team2",
+                    "score": 4,
+                },
+                "shgroup": {
+                    "name": "shgroup2",
+                    "score": 5,
+                },
+                "org": {
+                    "name": "org2",
+                    "score": 6,
+                }
+            },
+            "optimistic": {
+                "team": {
+                    "name": "team3",
+                    "score": 7,
+                },
+                "shgroup": {
+                    "name": "shgroup3",
+                    "score": 8,
+                },
+                "org": {
+                    "name": "org3",
+                    "score": 9,
+                }
+            },
+            "pessimistic": {
+                "team": {
+                    "name": "team4",
+                    "score": 10,
+                },
+                "shgroup": {
+                    "name": "shgroup4",
+                    "score": 11,
+                },
+                "org": {
+                    "name": "org4",
+                    "score": 12,
+                }
+            },
+            "least safe": {
+                "team": {
+                    "name": "team5",
+                    "score": 13,
+                },
+                "shgroup": {
+                    "name": "shgroup5",
+                    "score": 14,
+                },
+                "org": {
+                    "name": "org5",
+                    "score": 15,
+                }
+            }
+        }
+
+        return Response({"summary": summary, "catchupProjectUsers": [], "recommendedProjectUsers": [], "detailedData": detailedData}, status=status.HTTP_200_OK)
 
 # driveranalysis api
 class DriverAnalysisView(APIView):
