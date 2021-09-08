@@ -3759,6 +3759,10 @@ class NewAdvisorInsightsView(APIView):
         aryShGroupsData = {}
         aryOrganizationsData = {}
 
+        positivelyNegativelyQuestionId = AMQuestion.objects.get(survey__id=survey, subdriver="Overall Sentiment").id
+        
+        optimisticPessimisticQuestionId = AMQuestion.objects.get(survey__id=survey, subdriver="Optimism").id
+
         leastSafeQuestionId = AMQuestion.objects.get(survey__id=survey, subdriver="Safety").id
         leastSafeTeamName = ""
         leastSafeTeamTotalScore = 0
@@ -3821,7 +3825,20 @@ class NewAdvisorInsightsView(APIView):
         recommendedCatchupProjectUsersQuerySet = ProjectUser.objects.filter(survey=survey, pk__in=aryFilteredCatchupProjectUsers)
         recommendedCatchupProjectUserSerializer = ProjectUserForReportSerializer(recommendedCatchupProjectUsersQuerySet, many=True)
 
-        project = Survey.objects.get
+        # project = Survey.objects.get(pk=survey).project
+        totalTeamMembersCnt = ProjectUser.objects.filter(survey=survey, shType__shTypeName="Team Member").count()
+        totalStakeHoldersCnt = ProjectUser.objects.filter(survey=survey, shType__shTypeName="Stakeholder").count()
+        responseRateFromInvitedTeamMembers = len(aryTeams) * 100 / totalTeamMembersCnt
+        responseRateFromInvitedStakeholders = len(aryProjectUsers) * 100 / totalStakeHoldersCnt
+        totalDepartments = len(aryDepartments)
+
+        summary = {
+            "responseRateFromInvitedTeamMembers": responseRateFromInvitedTeamMembers,
+            "responseRateFromInvitedStakeholders": responseRateFromInvitedStakeholders,
+            "totalDepartments": totalDepartments
+        }
+
+        
 
         detailedData = {
             "positively": {
