@@ -22,21 +22,40 @@
         </div> -->
         <table align="center" height="233" width="414" cellpadding="0" cellspacing="0" border="0">
             <tr>
-                <td class="header" height="233" width="414" background="cid:{{image_name_top}}">
+                <td class="header" height="233" width="414">
+                <!-- <td class="header" height="233" width="414" background="cid:{{image_name_top}}"> -->
                     <!--[if gte mso 9]>
                     <v:background xmlns:v="urn:schemas-microsoft-com:vml" fill="true" stroke="false"
                         style="border:0;display:inline-block;width:414px;height:233px;"
                         src="cid:{{image_name_top}}" >
                     </v:background>
-                    <img src="cid:{{image_name_top}}" height="233" width="414" />
+                    
                     <v:rect xmlns:v="urn:schemas-microsoft-com:vml" fill="true" stroke="false" style="border:0;display:inline-block;position:absolute;width:414px;height:233px;">
                         <v:fill opacity="0%" color="#fff" />
-                            <v:textbox inset="0px,130px,0px,0px">
+                        <v:textbox inset="0px,130px,0px,0px">
+                            <center style="color:black;">
                     <![endif]-->
-                    <h1 class="middle-title">Hi {{ first_name }} {{ last_name }}</h1>
-                    <p class="middle-content">You have been nominated as a stakeholder<br />on the
-                        <strong>{{ project_name }} </strong> project</p>
+                    <h1 class="middle-title">
+                        <!--[if gte mso 9]>
+                            <center style="color:black;">
+                        <![endif]-->
+                        Hi {{ first_name }} {{ last_name }}
+                        <!--[if gte mso 9]>
+                            </center>
+                        <![endif]-->
+                    </h1>
+                    <p class="middle-content">
+                        <!--[if gte mso 9]>
+                            <center style="color:black;">
+                        <![endif]-->
+                        You have been nominated as a stakeholder<br />on the
+                        <strong>{{ project_name }} </strong> project
+                        <!--[if gte mso 9]>
+                            </center>
+                        <![endif]-->
+                    </p>
                     <!--[if gte mso 9]>
+                            </center>
                         </v:textbox>
                     </v:rect>
                     <![endif]-->
@@ -60,7 +79,7 @@
                 class="action-button">
                 <!--[if gte mso 9]>
                 <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word"
-                    style="height:40px;v-text-anchor:middle;width:320px;"
+                    style="height:44px;v-text-anchor:middle;width:320px;"
                     href="http://pulse.projectai.com/set-password?project={{project_name}}&email={{email}}&token={{token}}" 
                     arcsize="16%"
                     strokecolor="#62B6A8"
