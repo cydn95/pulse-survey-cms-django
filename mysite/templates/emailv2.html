@@ -23,7 +23,6 @@
         <table align="center" height="233" width="414" cellpadding="0" cellspacing="0">
             <tr>
                 <td class="header" height="233" align="center" style="text-align: center;">
-                <!-- <td class="header" height="233" width="414" background="cid:{{image_name_top}}"> -->
                     <!--[if gte mso 9]>
                     <v:background xmlns:v="urn:schemas-microsoft-com:vml" fill="true" stroke="false"
                         style="border:0;display:inline-block;width:414px;height:233px;"
@@ -34,12 +33,18 @@
                         <v:fill opacity="0%" color="#fff" />
                             <v:textbox inset="0px,130px,0px,0px">
                     <![endif]-->
-                    <h1 class="middle-title" style="text-align: center;">Hi
-                        {{ first_name }} {{ last_name }}</h1>
-                    <p class="middle-content" style="text-align: center;">You have
-                        been nominated as a
-                        stakeholder<br />on the
-                        <strong>{{ project_name }} </strong> project</p>
+                    <table align="center" height="233" width="414" cellpadding="0" cellspacing="0" border="0" align="center">
+                        <tr>
+                            <td align="center" style="text-align: center;">
+                                <h1 class="middle-title" style="text-align: center;">Hi
+                                    {{ first_name }} {{ last_name }}</h1>
+                                <p class="middle-content" style="text-align: center;">You have
+                                    been nominated as a
+                                    stakeholder<br />on the
+                                    <strong>{{ project_name }} </strong> project</p>
+                            </td>
+                        </tr>
+                    </table>
                     <!--[if gte mso 9]>
                         </v:textbox>
                     </v:rect>
