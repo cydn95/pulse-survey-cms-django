@@ -1,0 +1,33 @@
+<!--[if gte mso 9]>
+                    <v:background xmlns:v="urn:schemas-microsoft-com:vml" fill="true" stroke="false"
+                        style="border:0;display:inline-block;width:414px;height:233px;"
+                        src="cid:{{image_name_top}}" >
+                    </v:background>
+                    <img src="cid:{{image_name_top}}" height="233" width="414" />
+                    <v:rect xmlns:v="urn:schemas-microsoft-com:vml" fill="true" stroke="false" style="border:0;position:absolute;width:414px;height:233px;">
+                        <v:fill opacity="100%" color="#62b5a7" />
+                            <v:textbox inset="50px,130px,50px,0px">
+                    <![endif]-->
+                    <center>
+                    <table width="314" style="width: 314px; min-width: 314px; max-width: 314px;" cellpadding="0"
+                        cellspacing="0" border="0" align="center">
+                        <tr>
+                            <td align="center" width="100%" style="text-align: center;">
+                                <h1 class="middle-title" style="text-align: center;">Hi
+                                    {{ first_name }} {{ last_name }}</h1>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="center" width="100%" style="text-align: center;">
+                                <p class="middle-content" style="text-align: center;">You have
+                                    been nominated as a
+                                    stakeholder<br />on the
+                                    <strong>{{ project_name }} </strong> project</p>
+                            </td>
+                        </tr>
+                    </table>
+                    </center>
+                    <!--[if gte mso 9]>
+                        </v:textbox>
+                    </v:rect>
+                    <![endif]-->
