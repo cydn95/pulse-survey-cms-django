@@ -3936,25 +3936,39 @@ class DriverAnalysisView(APIView):
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
         # if projectUser is None:
         #     return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
-        if driver is None:
-            return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
+        # if driver is None:
+        #     return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
         if startDate is None:
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
         if endDate is None:
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
         if controlType is None:
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
-          
-        # amresponsereportqueryset = AMResponse.objects.all().filter(controlType=controlType, survey__id=survey, subProjectUser__id=projectUser, amQuestion__driver__driverName=driver, created_at__range=[startDate, endDate])
-        amresponsereportqueryset = AMResponse.objects.all().filter(controlType=controlType, survey__id=survey, amQuestion__driver__driverName=driver, created_at__range=[startDate, endDate])
-        amresponsereportserializer = AMResponseForDriverAnalysisSerializer(
-            amresponsereportqueryset, many=True)
-        amresponsereportdata = amresponsereportserializer.data
+        
+        if driver is not None:
+            # amresponsereportqueryset = AMResponse.objects.all().filter(controlType=controlType, survey__id=survey, subProjectUser__id=projectUser, amQuestion__driver__driverName=driver, created_at__range=[startDate, endDate])
+            amresponsereportqueryset = AMResponse.objects.all().filter(controlType=controlType, survey__id=survey, amQuestion__driver__driverName=driver, created_at__range=[startDate, endDate])
+            amresponsereportserializer = AMResponseForDriverAnalysisSerializer(
+                amresponsereportqueryset, many=True)
+            amresponsereportdata = amresponsereportserializer.data
 
-        # aoresponsereportqueryset = AOResponse.objects.all().filter(controlType=controlType, survey__id=survey, subProjectUser__id=projectUser, aoQuestion__driver__driverName=driver, created_at__range=[startDate, endDate])
-        aoresponsereportqueryset = AOResponse.objects.all().filter(controlType=controlType, survey__id=survey, aoQuestion__driver__driverName=driver, created_at__range=[startDate, endDate])
-        aoresponsereportserializer = AOResponseForDriverAnalysisSerializer(aoresponsereportqueryset, many=True)
-        aoresponsereportdata = aoresponsereportserializer.data
+            # aoresponsereportqueryset = AOResponse.objects.all().filter(controlType=controlType, survey__id=survey, subProjectUser__id=projectUser, aoQuestion__driver__driverName=driver, created_at__range=[startDate, endDate])
+            aoresponsereportqueryset = AOResponse.objects.all().filter(controlType=controlType, survey__id=survey, aoQuestion__driver__driverName=driver, created_at__range=[startDate, endDate])
+            aoresponsereportserializer = AOResponseForDriverAnalysisSerializer(aoresponsereportqueryset, many=True)
+            aoresponsereportdata = aoresponsereportserializer.data
+        else:
+            # amresponsereportqueryset = AMResponse.objects.all().filter(controlType=controlType, survey__id=survey, subProjectUser__id=projectUser, amQuestion__driver__driverName=driver, created_at__range=[startDate, endDate])
+            amresponsereportqueryset = AMResponse.objects.all().filter(controlType=controlType, survey__id=survey, created_at__range=[startDate, endDate])
+            amresponsereportserializer = AMResponseForDriverAnalysisSerializer(
+                amresponsereportqueryset, many=True)
+            amresponsereportdata = amresponsereportserializer.data
+
+            # aoresponsereportqueryset = AOResponse.objects.all().filter(controlType=controlType, survey__id=survey, subProjectUser__id=projectUser, aoQuestion__driver__driverName=driver, created_at__range=[startDate, endDate])
+            aoresponsereportqueryset = AOResponse.objects.all().filter(controlType=controlType, survey__id=survey, created_at__range=[startDate, endDate])
+            aoresponsereportserializer = AOResponseForDriverAnalysisSerializer(
+                aoresponsereportqueryset, many=True)
+            aoresponsereportdata = aoresponsereportserializer.data
+        
 
         for i in range(len(amresponsereportdata)):
 
