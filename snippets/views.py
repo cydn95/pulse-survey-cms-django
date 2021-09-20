@@ -266,6 +266,9 @@ def preApiCheck(survey, projectUser):
     except ProjectUser.DoesNotExist:
         return 404
 
+    except SHGroup.DoesNotExist:
+        return 404
+
     # 3 people has to response to this user
     thresholdCnt = Survey.objects.get(id=survey).anonymityThreshold
 
@@ -4215,6 +4218,6 @@ class CheckDashboardStatusView(APIView):
             return Response({"text": "superuser", "code": 201, "thresholdCnt": thresholdCnt}, status=status.HTTP_200_OK)
         elif prefCode == 404:
             return Response({"text": "admin error", "code": 404, "thresholdCnt": thresholdCnt}, status=404)
-            
+
         return Response({"text": "pass", "code": 200, "data": shgroupserializer.data, "thresholdCnt": thresholdCnt, "precode": prefCode}, status=status.HTTP_200_OK)
 
