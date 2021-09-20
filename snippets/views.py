@@ -3978,15 +3978,15 @@ class DriverAnalysisView(APIView):
             # amquestionqueryset = AMQuestion.objects.filter(
             #     id=amresponsereportdata[i]['amQuestion'])
             # amserializer = AMQuestionSerializer(amquestionqueryset, many=True)
-            amserializerdata = AMQuestion.objects.get(
-                id=amresponsereportdata[i]['amQuestion'])
+            amserializerdata = AMQuestion.objects.filter(
+                id=amresponsereportdata[i]['amQuestion']).values_list(flat=True)
             amresponsereportdata[i]['amQuestionData'] = amserializerdata
 
         for j in range(len(aoresponsereportdata)):
 
             # aoquestionqueryset = AOQuestion.objects.filter(id=aoresponsereportdata[j]['aoQuestion'])
             # aoserializer = AOQuestionSerializer(aoquestionqueryset, many=True)
-            aoserializerdata = AOQuestion.objects.get(id=aoresponsereportdata[j]['aoQuestion'])
+            aoserializerdata = AOQuestion.objects.filter(id=aoresponsereportdata[j]['aoQuestion']).values_list(flat=True)
             aoresponsereportdata[j]['aoQuestionData'] = aoserializerdata
 
         res = amresponsereportdata + aoresponsereportdata
