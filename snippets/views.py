@@ -4213,6 +4213,8 @@ class CheckDashboardStatusView(APIView):
             return Response({"text": "no data yet", "code": 227, "thresholdCnt": thresholdCnt}, status=227)
         elif prefCode == 201:
             return Response({"text": "superuser", "code": 201, "thresholdCnt": thresholdCnt}, status=status.HTTP_200_OK)
-
+        elif prefCode == 404:
+            return Response({"text": "admin error", "code": 404, "thresholdCnt": thresholdCnt}, status=404)
+            
         return Response({"text": "pass", "code": 200, "data": shgroupserializer.data, "thresholdCnt": thresholdCnt, "precode": prefCode}, status=status.HTTP_200_OK)
 
