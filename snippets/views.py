@@ -2635,7 +2635,7 @@ class KeyThemesMenuCntView(APIView):
             amresponsetopic_serializer = AMResponseTopicSerializer(amresponsetopic_queryset, many=True)
             amresponsetopic_data = amresponsetopic_serializer.data
             for j in range(len(amresponsetopic_data)):
-                piwordlist.append(amresponsetopic_data[j]['topicName'])
+                piwordlist.append(amresponsetopic_data[j]['topicName'].lower().capitalize())
 
         piwordfreq = [piwordlist.count(p) for p in piwordlist]
         pidictionary = dict(list(zip(piwordlist, piwordfreq)))
@@ -2656,7 +2656,7 @@ class KeyThemesMenuCntView(APIView):
             amresponsetopic_serializer = AMResponseTopicSerializer(amresponsetopic_queryset, many=True)
             amresponsetopic_data = amresponsetopic_serializer.data
             for j in range(len(amresponsetopic_data)):
-                peiwordlist.append(amresponsetopic_data[j]['topicName'])
+                peiwordlist.append(amresponsetopic_data[j]['topicName'].lower().capitalize())
 
         peiwordfreq = [peiwordlist.count(p) for p in peiwordlist]
         peidictionary = dict(list(zip(peiwordlist, peiwordfreq)))
@@ -2679,7 +2679,7 @@ class KeyThemesMenuCntView(APIView):
                 amresponsetopic_queryset, many=True)
             amresponsetopic_data = amresponsetopic_serializer.data
             for j in range(len(amresponsetopic_data)):
-                ipwordlist.append(amresponsetopic_data[j]['topicName'])
+                ipwordlist.append(amresponsetopic_data[j]['topicName'].lower().capitalize())
 
         ipwordfreq = [ipwordlist.count(p) for p in ipwordlist]
         ipdictionary = dict(list(zip(ipwordlist, ipwordfreq)))
@@ -2700,7 +2700,7 @@ class KeyThemesMenuCntView(APIView):
             amresponsetopic_serializer = AMResponseTopicSerializer(amresponsetopic_queryset, many=True)
             amresponsetopic_data = amresponsetopic_serializer.data
             for j in range(len(amresponsetopic_data)):
-                istwordlist.append(amresponsetopic_data[j]['topicName'])
+                istwordlist.append(amresponsetopic_data[j]['topicName'].lower().capitalize())
 
         istwordfreq = [istwordlist.count(p) for p in istwordlist]
         istdictionary = dict(list(zip(istwordlist, istwordfreq)))
@@ -2721,7 +2721,7 @@ class KeyThemesMenuCntView(APIView):
             amresponsetopic_serializer = AMResponseTopicSerializer(amresponsetopic_queryset, many=True)
             amresponsetopic_data = amresponsetopic_serializer.data
             for j in range(len(amresponsetopic_data)):
-                ispwordlist.append(amresponsetopic_data[j]['topicName'])
+                ispwordlist.append(amresponsetopic_data[j]['topicName'].lower().capitalize())
 
         ispwordfreq = [ispwordlist.count(p) for p in ispwordlist]
         ispdictionary = dict(list(zip(ispwordlist, ispwordfreq)))
@@ -2742,7 +2742,7 @@ class KeyThemesMenuCntView(APIView):
             amresponsetopic_serializer = AMResponseTopicSerializer(amresponsetopic_queryset, many=True)
             amresponsetopic_data = amresponsetopic_serializer.data
             for j in range(len(amresponsetopic_data)):
-                icwordlist.append(amresponsetopic_data[j]['topicName'])
+                icwordlist.append(amresponsetopic_data[j]['topicName'].lower().capitalize())
 
         icwordfreq = [icwordlist.count(p) for p in icwordlist]
         icdictionary = dict(list(zip(icwordlist, icwordfreq)))
@@ -2938,7 +2938,7 @@ class KeyThemesView(APIView):
                 amresponsetopic_serializer = AMResponseTopicSerializer(amresponsetopic_queryset, many=True)
                 amresponsetopic_data = amresponsetopic_serializer.data
                 for j in range(len(amresponsetopic_data)):
-                    wordlist.append(amresponsetopic_data[j]['topicName'])
+                    wordlist.append(amresponsetopic_data[j]['topicName'].lower().capitalize())
 
             wordfreq = [wordlist.count(p) for p in wordlist]
             dictionary = dict(list(zip(wordlist, wordfreq)))
@@ -2986,7 +2986,7 @@ class KeyThemesView(APIView):
                     amresponsetopic_queryset, many=True)
                 amresponsetopic_data = amresponsetopic_serializer.data
                 for j in range(len(amresponsetopic_data)):
-                    wordlist.append(amresponsetopic_data[j]['topicName'])
+                    wordlist.append(amresponsetopic_data[j]['topicName'].lower().capitalize())
 
             wordfreq = [wordlist.count(p) for p in wordlist]
             dictionary = dict(list(zip(wordlist, wordfreq)))
@@ -3034,7 +3034,7 @@ class KeyThemesView(APIView):
                     amresponsetopic_queryset, many=True)
                 amresponsetopic_data = amresponsetopic_serializer.data
                 for j in range(len(amresponsetopic_data)):
-                    wordlist.append(amresponsetopic_data[j]['topicName'])
+                    wordlist.append(amresponsetopic_data[j]['topicName'].lower().capitalize())
 
             wordfreq = [wordlist.count(p) for p in wordlist]
             dictionary = dict(list(zip(wordlist, wordfreq)))
@@ -3082,7 +3082,7 @@ class KeyThemesView(APIView):
                     amresponsetopic_queryset, many=True)
                 amresponsetopic_data = amresponsetopic_serializer.data
                 for j in range(len(amresponsetopic_data)):
-                    wordlist.append(amresponsetopic_data[j]['topicName'])
+                    wordlist.append(amresponsetopic_data[j]['topicName'].lower().capitalize())
 
             wordfreq = [wordlist.count(p) for p in wordlist]
             dictionary = dict(list(zip(wordlist, wordfreq)))
@@ -3129,7 +3129,7 @@ class KeyThemesView(APIView):
                     amresponsetopic_queryset, many=True)
                 amresponsetopic_data = amresponsetopic_serializer.data
                 for j in range(len(amresponsetopic_data)):
-                    wordlist.append(amresponsetopic_data[j]['topicName'])
+                    wordlist.append(amresponsetopic_data[j]['topicName'].lower().capitalize())
 
             wordfreq = [wordlist.count(p) for p in wordlist]
             dictionary = dict(list(zip(wordlist, wordfreq)))
@@ -3177,7 +3177,7 @@ class KeyThemesView(APIView):
                     amresponsetopic_queryset, many=True)
                 amresponsetopic_data = amresponsetopic_serializer.data
                 for j in range(len(amresponsetopic_data)):
-                    wordlist.append(amresponsetopic_data[j]['topicName'])
+                    wordlist.append(amresponsetopic_data[j]['topicName'].lower().capitalize())
 
             wordfreq = [wordlist.count(p) for p in wordlist]
             dictionary = dict(list(zip(wordlist, wordfreq)))
