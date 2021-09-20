@@ -2598,7 +2598,7 @@ class KeyThemesMenuCntView(APIView):
             amresponsetopic_serializer = AMResponseTopicSerializer(amresponsetopic_queryset, many=True)
             amresponsetopic_data = amresponsetopic_serializer.data
             for j in range(len(amresponsetopic_data)):
-                wordlist.append(amresponsetopic_data[j]['topicName'])
+                wordlist.append(amresponsetopic_data[j]['topicName'].str.lower().capitalize())
 
         wordfreq = [wordlist.count(p) for p in wordlist]
         dictionary = dict(list(zip(wordlist, wordfreq)))
@@ -2807,7 +2807,7 @@ class KeyThemesView(APIView):
                 amresponsetopic_serializer = AMResponseTopicSerializer(amresponsetopic_queryset, many=True)
                 amresponsetopic_data = amresponsetopic_serializer.data
                 for j in range(len(amresponsetopic_data)):
-                    wordlist.append(amresponsetopic_data[j]['topicName'])
+                    wordlist.append(amresponsetopic_data[j]['topicName'].str.lower().capitalize())
 
             wordfreq = [wordlist.count(p) for p in wordlist]
             dictionary = dict(list(zip(wordlist, wordfreq)))
