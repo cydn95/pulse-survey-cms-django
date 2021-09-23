@@ -3408,7 +3408,7 @@ class AdvisorInsightsView(APIView):
         # aoresponsereportserializer = AOResponseForDriverAnalysisSerializer(aoresponsereportqueryset, many=True)
         # aoresponsereportdata = aoresponsereportserializer.data
 
-        amresponsereportqueryset = AMResponse.objects.all().filter(survey__id=survey).order_by('integerValue')
+        amresponsereportqueryset = AMResponse.objects.all().filter(survey__id=survey, controlType="SLIDER", amQuestion__subdriver__in=["Optimism", "Overall Sentiment", "Safety"]).order_by('integerValue')
         amresponsereportserializer = AMResponseForDriverAnalysisSerializer(amresponsereportqueryset, many=True)
         amresponsereportdata = amresponsereportserializer.data
 
@@ -3426,8 +3426,13 @@ class AdvisorInsightsView(APIView):
         aryShGroupsData = {}
         aryOrganizationsData = {}
 
+        positiveNegativeQuestionId = AMQuestion.objects.get(survey__id=survey, subdriver="Overall Sentiment").id
+        optimisticPessimisticQuestionId = AMQuestion.objects.get(survey__id=survey, subdriver="Optimism").id
+        # leastSafeQuestionId = AMQuestion.objects.get(
+        #     survey__id=survey, questionText="Is it safe to speak up to share an unpopular opinion?").id
         leastSafeQuestionId = AMQuestion.objects.get(
-            survey__id=survey, questionText="Is it safe to speak up to share an unpopular opinion?").id
+            survey__id=survey, subdriver="Safety").id
+            
         leastSafeTeamName = ""
         leastSafeTeamTotalScore = 0
         leastSafeTeamCnt = 0
