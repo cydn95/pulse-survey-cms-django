@@ -3619,12 +3619,46 @@ class AdvisorInsightsView(APIView):
         # project = Survey.objects.get(pk=survey).project
         # totalTeamMembersCnt = Team.objects.filter(project=project).count()
         # totalStakeHoldersCnt = ProjectUser.objects.filter(survey=survey).count()
-        invitedTeamMembers = ProjectUser.objects.filter(survey__id=survey, sendInvite=True, shType__shTypeName="Team Member")
-        invitedStakeholders = ProjectUser.objects.filter(survey__id=survey, sendInvite=True, shType__shTypeName="Stakeholder")
+        responsedTeamMembers = 0
+        responsedStakeholders = 0
+        invitedTeamMembers = ProjectUser.objects.filter(survey__id=survey, sendInvite=True, shType__shTypeName="Team Member").values()
+        invitedStakeholders = ProjectUser.objects.filter(
+            survey__id=survey, sendInvite=True, shType__shTypeName="Stakeholder").values()
 
-        responseRateFromInvitedTeamMembers = len(aryTeams) * 100 / len(invitedTeamMembers)
-        responseRateFromInvitedStakeholders = len(aryProjectUsers) * 100 / len(invitedStakeholders)
+        for k in range(len(invitedTeamMembers)):
+            try:
+                responsePercent = SHGroup.objects.get(
+                    survey__id=survey, id=invitedTeamMembers[k].shGroup_id).responsePercent
+                prefAmQuestionQueryset = AMQuestion.objects.filter(
+                    survey__id=survey, shGroup__in=[invitedTeamMembers[k].shGroup_id])
+                prefAmQuestionSerializer = AMQuestionSerializer(prefAmQuestionQueryset, many=True)
+                prefAmQuestionData = prefAmQuestionSerializer.data
 
+                totalCnt = 0
+                answeredCnt = 0
+                for i in range(len(prefAmQuestionData)):
+                    totalCnt = totalCnt + 1
+                    ret = AMResponse.objects.filter(
+                            projectUser_id=projectUser, survey_id=survey, amQuestion_id=prefAmQuestionData[i]['id'], latestResponse=True)
+                    if (len(ret) > 0):
+                        if ret[0].controlType == 'MULTI_TOPICS':
+                            if len(ret[0].topicValue) > 0:
+                                answeredCnt = answeredCnt + 1
+                        else:
+                            answeredCnt = answeredCnt + 1
+                
+                if totalCnt > 0:
+                    currentPercent = answeredCnt * 100 / totalCnt
+                    if currentPercent >= responsePercent:
+                        responsedTeamMembers = responsedTeamMembers + 1
+
+            except SHGroup.DoesNotExist:
+                continue
+
+        responseRateFromInvitedTeamMembers = len(responsedTeamMembers) * 100 / len(invitedTeamMembers)
+        responseRateFromInvitedStakeholders = len(responsedStakeholders) * 100 / len(invitedStakeholders)
+
+        
         summary = {
             "responseRateFromInvitedTeamMembers": responseRateFromInvitedTeamMembers,
             "responseRateFromInvitedStakeholders": responseRateFromInvitedStakeholders,
