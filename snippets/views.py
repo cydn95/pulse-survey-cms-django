@@ -3616,12 +3616,14 @@ class AdvisorInsightsView(APIView):
         recommendedCatchupProjectUsersQuerySet = ProjectUser.objects.filter(survey=survey, pk__in=aryFilteredCatchupProjectUsers)
         recommendedCatchupProjectUserSerializer = ProjectUserForReportSerializer(recommendedCatchupProjectUsersQuerySet, many=True)
 
-        project = Survey.objects.get(pk=survey).project
-        totalTeamMembersCnt = Team.objects.filter(project=project).count()
-        totalStakeHoldersCnt = ProjectUser.objects.filter(survey=survey).count()
-        responseRateFromInvitedTeamMembers = len(aryTeams) * 100 / totalTeamMembersCnt
-        responseRateFromInvitedStakeholders = len(aryProjectUsers) * 100 / totalStakeHoldersCnt
-        totalDepartments = len(aryDepartments) 
+        # project = Survey.objects.get(pk=survey).project
+        # totalTeamMembersCnt = Team.objects.filter(project=project).count()
+        # totalStakeHoldersCnt = ProjectUser.objects.filter(survey=survey).count()
+        invitedTeamMembers = ProjectUser.objects.filter(survey__id=survey, sendInvite=True, shType__shTypeName="Team Member")
+        invitedStakeholders = ProjectUser.objects.filter(survey__id=survey, sendInvite=True, shType__shTypeName="Stakeholder")
+
+        responseRateFromInvitedTeamMembers = len(aryTeams) * 100 / len(invitedTeamMembers)
+        responseRateFromInvitedStakeholders = len(aryProjectUsers) * 100 / len(invitedStakeholders)
 
         summary = {
             "responseRateFromInvitedTeamMembers": responseRateFromInvitedTeamMembers,
@@ -3757,16 +3759,11 @@ class AdvisorInsightsView(APIView):
             }
         }
 
-        invitedTeamMembers = ProjectUser.objects.filter(survey__id=survey, sendInvite=True, shType__shTypeName="Team Member")
-        invitedStakeholders = ProjectUser.objects.filter(survey__id=survey, sendInvite=True, shType__shTypeName="Stakeholder")
-
         return Response({
             "summary": summary, 
             "catchupProjectUsers": recommendedCatchupProjectUserSerializer.data, 
             "recommendedProjectUsers": recommendedProjectUserSerializer.data[:3], 
-            "detailedData": detailedData,
-            "invitedTeamMember": invitedTeamMembers,
-            "invitedStakeholders": invitedStakeholders
+            "detailedData": detailedData
         }, status=status.HTTP_200_OK)
 
 # new advisorinsights api
