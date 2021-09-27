@@ -3426,12 +3426,26 @@ class AdvisorInsightsView(APIView):
         aryShGroupsData = {}
         aryOrganizationsData = {}
 
-        positiveNegativeQuestionId = AMQuestion.objects.get(survey__id=survey, subdriver="Overall Sentiment").id
-        optimisticPessimisticQuestionId = AMQuestion.objects.get(survey__id=survey, subdriver="Optimism").id
+        positiveNegativeQuestionId = 0
+        optimisticPessimisticQuestionId = 0
+        leastSafeQuestionId = 0
+
+        try:
+            positiveNegativeQuestionId = AMQuestion.objects.get(survey__id=survey, subdriver="Overall Sentiment").id
+        except AMQuestion.DoesNotExist:
+            pass
+
+        try:
+            optimisticPessimisticQuestionId = AMQuestion.objects.get(survey__id=survey, subdriver="Optimism").id
+        except AMQuestion.DoesNotExist:
+            pass
+
         # leastSafeQuestionId = AMQuestion.objects.get(
         #     survey__id=survey, questionText="Is it safe to speak up to share an unpopular opinion?").id
-        leastSafeQuestionId = AMQuestion.objects.get(
-            survey__id=survey, subdriver="Safety").id
+        try:
+            leastSafeQuestionId = AMQuestion.objects.get(survey__id=survey, subdriver="Safety").id
+        except AMQuestion.DoesNotExist:
+            pass
             
         leastSafeTeamName = ""
         leastSafeTeamTotalScore = 0
@@ -3692,7 +3706,7 @@ class AdvisorInsightsView(APIView):
         summary = {
             "responseRateFromInvitedTeamMembers": responseRateFromInvitedTeamMembers,
             "responseRateFromInvitedStakeholders": responseRateFromInvitedStakeholders,
-            "invitedTeamMembers": invitedTeamMembers
+            # "invitedTeamMembers": invitedTeamMembers
             # "totalDepartments": totalDepartments
         }
 
