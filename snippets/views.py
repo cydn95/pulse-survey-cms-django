@@ -3639,7 +3639,7 @@ class AdvisorInsightsView(APIView):
                 for i in range(len(prefAmQuestionData)):
                     totalCnt = totalCnt + 1
                     ret = AMResponse.objects.filter(
-                            projectUser_id=projectUser, survey_id=survey, amQuestion_id=prefAmQuestionData[i]['id'], latestResponse=True)
+                            projectUser_id=invitedTeamMembers[k]['id'], survey_id=survey, amQuestion_id=prefAmQuestionData[i]['id'], latestResponse=True)
                     if (len(ret) > 0):
                         if ret[0].controlType == 'MULTI_TOPICS':
                             if len(ret[0].topicValue) > 0:
