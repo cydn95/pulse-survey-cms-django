@@ -3757,7 +3757,17 @@ class AdvisorInsightsView(APIView):
             }
         }
 
-        return Response({"summary": summary, "catchupProjectUsers": recommendedCatchupProjectUserSerializer.data, "recommendedProjectUsers": recommendedProjectUserSerializer.data[:3], "detailedData": detailedData}, status=status.HTTP_200_OK)
+        invitedTeamMembers = ProjectUser.objects.filter(survey__id=survey, sendInvite=True, shType__shTypeName="Team Member")
+        invitedStakeholders = ProjectUser.objects.filter(survey__id=survey, sendInvite=True, shType__shTypeName="Stakeholder")
+
+        return Response({
+            "summary": summary, 
+            "catchupProjectUsers": recommendedCatchupProjectUserSerializer.data, 
+            "recommendedProjectUsers": recommendedProjectUserSerializer.data[:3], 
+            "detailedData": detailedData,
+            "invitedTeamMember": invitedTeamMembers,
+            "invitedStakeholders": invitedStakeholders
+        }, status=status.HTTP_200_OK)
 
 # new advisorinsights api
 class NewAdvisorInsightsView(APIView):
