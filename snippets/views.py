@@ -3625,35 +3625,35 @@ class AdvisorInsightsView(APIView):
         invitedStakeholders = ProjectUser.objects.filter(
             survey__id=survey, sendInvite=True, shType__shTypeName="Stakeholder").values()
 
-        for k in range(len(invitedTeamMembers)):
-            try:
-                responsePercent = SHGroup.objects.get(
-                    survey__id=survey, id=invitedTeamMembers[k].shGroup_id).responsePercent
-                prefAmQuestionQueryset = AMQuestion.objects.filter(
-                    survey__id=survey, shGroup__in=[invitedTeamMembers[k].shGroup_id])
-                prefAmQuestionSerializer = AMQuestionSerializer(prefAmQuestionQueryset, many=True)
-                prefAmQuestionData = prefAmQuestionSerializer.data
+        # for k in range(len(invitedTeamMembers)):
+        #     try:
+        #         responsePercent = SHGroup.objects.get(
+        #             survey__id=survey, id=invitedTeamMembers[k].shGroup_id).responsePercent
+        #         prefAmQuestionQueryset = AMQuestion.objects.filter(
+        #             survey__id=survey, shGroup__in=[invitedTeamMembers[k].shGroup_id])
+        #         prefAmQuestionSerializer = AMQuestionSerializer(prefAmQuestionQueryset, many=True)
+        #         prefAmQuestionData = prefAmQuestionSerializer.data
 
-                totalCnt = 0
-                answeredCnt = 0
-                for i in range(len(prefAmQuestionData)):
-                    totalCnt = totalCnt + 1
-                    ret = AMResponse.objects.filter(
-                            projectUser_id=projectUser, survey_id=survey, amQuestion_id=prefAmQuestionData[i]['id'], latestResponse=True)
-                    if (len(ret) > 0):
-                        if ret[0].controlType == 'MULTI_TOPICS':
-                            if len(ret[0].topicValue) > 0:
-                                answeredCnt = answeredCnt + 1
-                        else:
-                            answeredCnt = answeredCnt + 1
+        #         totalCnt = 0
+        #         answeredCnt = 0
+        #         for i in range(len(prefAmQuestionData)):
+        #             totalCnt = totalCnt + 1
+        #             ret = AMResponse.objects.filter(
+        #                     projectUser_id=projectUser, survey_id=survey, amQuestion_id=prefAmQuestionData[i]['id'], latestResponse=True)
+        #             if (len(ret) > 0):
+        #                 if ret[0].controlType == 'MULTI_TOPICS':
+        #                     if len(ret[0].topicValue) > 0:
+        #                         answeredCnt = answeredCnt + 1
+        #                 else:
+        #                     answeredCnt = answeredCnt + 1
                 
-                if totalCnt > 0:
-                    currentPercent = answeredCnt * 100 / totalCnt
-                    if currentPercent >= responsePercent:
-                        responsedTeamMembers = responsedTeamMembers + 1
+        #         if totalCnt > 0:
+        #             currentPercent = answeredCnt * 100 / totalCnt
+        #             if currentPercent >= responsePercent:
+        #                 responsedTeamMembers = responsedTeamMembers + 1
 
-            except SHGroup.DoesNotExist:
-                continue
+        #     except SHGroup.DoesNotExist:
+        #         continue
 
         responseRateFromInvitedTeamMembers = len(responsedTeamMembers) * 100 / len(invitedTeamMembers)
         responseRateFromInvitedStakeholders = len(responsedStakeholders) * 100 / len(invitedStakeholders)
@@ -3662,6 +3662,7 @@ class AdvisorInsightsView(APIView):
         summary = {
             "responseRateFromInvitedTeamMembers": responseRateFromInvitedTeamMembers,
             "responseRateFromInvitedStakeholders": responseRateFromInvitedStakeholders,
+            "invitedTeamMembers": invitedTeamMembers
             # "totalDepartments": totalDepartments
         }
 
