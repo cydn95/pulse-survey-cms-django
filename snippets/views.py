@@ -3628,7 +3628,7 @@ class AdvisorInsightsView(APIView):
         summary = {
             "responseRateFromInvitedTeamMembers": responseRateFromInvitedTeamMembers,
             "responseRateFromInvitedStakeholders": responseRateFromInvitedStakeholders,
-            "totalDepartments": totalDepartments
+            # "totalDepartments": totalDepartments
         }
 
         positivelyTeamScore = max(aryTeamsData[key]['score'] for key in aryTeamsData) if len(aryTeamsData) > 0 else 0
