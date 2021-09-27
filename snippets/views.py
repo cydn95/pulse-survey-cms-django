@@ -3655,6 +3655,36 @@ class AdvisorInsightsView(APIView):
             except SHGroup.DoesNotExist:
                 continue
 
+        for k in range(len(invitedStakeholders)):
+            try:
+                responsePercent = SHGroup.objects.get(
+                    survey__id=survey, id=invitedStakeholders[k]['shGroup_id']).responsePercent
+                prefAmQuestionQueryset = AMQuestion.objects.filter(
+                    survey__id=survey, shGroup__in=[invitedStakeholders[k]['shGroup_id']])
+                prefAmQuestionSerializer = AMQuestionSerializer(prefAmQuestionQueryset, many=True)
+                prefAmQuestionData = prefAmQuestionSerializer.data
+
+                totalCnt = 0
+                answeredCnt = 0
+                for i in range(len(prefAmQuestionData)):
+                    totalCnt = totalCnt + 1
+                    ret = AMResponse.objects.filter(
+                            projectUser_id=invitedStakeholders[k]['id'], survey_id=survey, amQuestion_id=prefAmQuestionData[i]['id'], latestResponse=True)
+                    if (len(ret) > 0):
+                        if ret[0].controlType == 'MULTI_TOPICS':
+                            if len(ret[0].topicValue) > 0:
+                                answeredCnt = answeredCnt + 1
+                        else:
+                            answeredCnt = answeredCnt + 1
+                
+                if totalCnt > 0:
+                    currentPercent = answeredCnt * 100 / totalCnt
+                    if currentPercent >= responsePercent:
+                        responsedStakeholders = responsedStakeholders + 1
+
+            except SHGroup.DoesNotExist:
+                continue
+
         responseRateFromInvitedTeamMembers = responsedTeamMembers * 100 / len(invitedTeamMembers)
         responseRateFromInvitedStakeholders = responsedStakeholders * 100 / len(invitedStakeholders)
 
