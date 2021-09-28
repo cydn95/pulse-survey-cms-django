@@ -3701,7 +3701,6 @@ class AdvisorInsightsView(APIView):
 
         responseRateFromInvitedTeamMembers = responsedTeamMembers * 100 / len(invitedTeamMembers)
         responseRateFromInvitedStakeholders = responsedStakeholders * 100 / len(invitedStakeholders)
-
         
         summary = {
             "responseRateFromInvitedTeamMembers": responseRateFromInvitedTeamMembers,
