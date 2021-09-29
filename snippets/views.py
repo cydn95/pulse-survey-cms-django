@@ -1303,9 +1303,9 @@ class OverallSentimentReportViewSet(viewsets.ModelViewSet):
 
             if (survey is not None) & (startDate is not None) & (endDate is not None):
                 queryset = queryset.filter(
-                    survey__id=survey, created_at__range=[startDate, endDate], amQuestion__subdriver="Overall Sentiment")
+                    survey__id=survey, created_at__range=[startDate, endDate], amQuestion__subdriver="Overall Sentiment", latestResponse=True, controlType="SLIDER")
             elif (survey is not None):
-                queryset = queryset.filter(survey__id=survey, amQuestion__subdriver="Overall Sentiment")
+                queryset = queryset.filter(survey__id=survey, amQuestion__subdriver="Overall Sentiment", latestResponse=True, controlType="SLIDER")
 
             return queryset
         except:
