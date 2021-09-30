@@ -1160,7 +1160,7 @@ class AOResponseFeedbackSummaryViewset(viewsets.ModelViewSet):
                 queryset = queryset.filter(survey_id=survey)
 
             if (trend == "1"):
-                queryset = queryset.filter(amQuestion__subdriver="Overall Sentiment")
+                queryset = queryset.filter(amQuestion__subdriver="Overall Sentiment", controlType="SLIDER")
 
             return queryset
         except:
