@@ -4129,40 +4129,59 @@ class DriverAnalysisCntView(APIView):
         if controlType is None:
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
 
+        # engagement
         amEngagementCnt = AMResponse.objects.filter(controlType=controlType, survey__id=survey, 
                                                     amQuestion__driver__driverName="Engagement", created_at__range=[startDate, endDate]).count()
         aoEngagementCnt = AOResponse.objects.filter(controlType=controlType, survey__id=survey, 
                                                     aoQuestion__driver__driverName="Engagement", created_at__range=[startDate, endDate]).count()
         
+        # culture
         amCultureCnt = AMResponse.objects.filter(controlType=controlType, survey__id=survey, 
                                                     amQuestion__driver__driverName="Culture", created_at__range=[startDate, endDate]).count()
         aoCultureCnt = AOResponse.objects.filter(controlType=controlType, survey__id=survey, 
                                                     aoQuestion__driver__driverName="Culture", created_at__range=[startDate, endDate]).count()
 
+        # sentiment
         amSentimentCnt = AMResponse.objects.filter(controlType=controlType, survey__id=survey, 
                                                     amQuestion__driver__driverName="Sentiment", created_at__range=[startDate, endDate]).count()
         aoSentimentCnt = AOResponse.objects.filter(controlType=controlType, survey__id=survey, 
                                                     aoQuestion__driver__driverName="Sentiment", created_at__range=[startDate, endDate]).count()
 
+        # interest
         amInterestCnt = AMResponse.objects.filter(controlType=controlType, survey__id=survey, 
                                                     amQuestion__driver__driverName="Interest", created_at__range=[startDate, endDate]).count()
         aoInterestCnt = AOResponse.objects.filter(controlType=controlType, survey__id=survey, 
                                                     aoQuestion__driver__driverName="Interest", created_at__range=[startDate, endDate]).count()
 
+        # confidence
         amConfidenceCnt = AMResponse.objects.filter(controlType=controlType, survey__id=survey, 
                                                     amQuestion__driver__driverName="Confidence", created_at__range=[startDate, endDate]).count()
         aoConfidenceCnt = AOResponse.objects.filter(controlType=controlType, survey__id=survey, 
                                                     aoQuestion__driver__driverName="Confidence", created_at__range=[startDate, endDate]).count()
 
+        # relationships
         amRelationshipsCnt = AMResponse.objects.filter(controlType=controlType, survey__id=survey, 
                                                     amQuestion__driver__driverName="Relationships", created_at__range=[startDate, endDate]).count()
         aoRelationshipsCnt = AOResponse.objects.filter(controlType=controlType, survey__id=survey, 
                                                     aoQuestion__driver__driverName="Relationships", created_at__range=[startDate, endDate]).count()
         
+        # improvement
         amImprovementCnt = AMResponse.objects.filter(controlType=controlType, survey__id=survey, 
                                                     amQuestion__driver__driverName="Improvement", created_at__range=[startDate, endDate]).count()
         aoImprovementCnt = AOResponse.objects.filter(controlType=controlType, survey__id=survey, 
                                                     aoQuestion__driver__driverName="Improvement", created_at__range=[startDate, endDate]).count()
+
+        # influence
+        amInfluenceCnt = AMResponse.objects.filter(controlType=controlType, survey__id=survey, 
+                                                    amQuestion__driver__driverName="Influence", created_at__range=[startDate, endDate]).count()
+        aoInfluenceCnt = AOResponse.objects.filter(controlType=controlType, survey__id=survey, 
+                                                    aoQuestion__driver__driverName="Influence", created_at__range=[startDate, endDate]).count()
+
+        # about others
+        amAboutOthersCnt = AMResponse.objects.filter(controlType=controlType, survey__id=survey, 
+                                                    amQuestion__driver__driverName="About Others", created_at__range=[startDate, endDate]).count()
+        aoAboutOthersCnt = AOResponse.objects.filter(controlType=controlType, survey__id=survey, 
+                                                    aoQuestion__driver__driverName="About Others", created_at__range=[startDate, endDate]).count()
 
         retValue = {
             "Engagement": amEngagementCnt + aoEngagementCnt,
@@ -4171,7 +4190,9 @@ class DriverAnalysisCntView(APIView):
             "Interest": amInterestCnt + aoInterestCnt,
             "Confidence": amConfidenceCnt + aoConfidenceCnt,
             "Relationships": amRelationshipsCnt + aoRelationshipsCnt,
-            "Improvement": amImprovementCnt + aoImprovementCnt
+            "Improvement": amImprovementCnt + aoImprovementCnt,
+            "Influence": amInfluenceCnt + aoInfluenceCnt,
+            "About Others": amAboutOthersCnt + aoAboutOthersCnt
         }
 
         return Response(retValue, status=status.HTTP_200_OK)
