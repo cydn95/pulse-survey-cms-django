@@ -3360,7 +3360,7 @@ class AdvisorInsightsView(APIView):
         amresponsereportdata = amresponsereportserializer.data
 
         # aryTeams = []
-        # aryProjectUsers = []
+        aryProjectUsers = []
         # aryDepartments = []
         # aryOrganizations = []
         # aryShGroups = []
