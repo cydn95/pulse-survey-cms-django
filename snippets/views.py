@@ -3592,9 +3592,10 @@ class AdvisorInsightsView(APIView):
         summary = {
             "responseRateFromInvitedTeamMembers": responseRateFromInvitedTeamMembers,
             "responseRateFromInvitedStakeholders": responseRateFromInvitedStakeholders,
-            # "positiveNegativeQuestionId": positiveNegativeQuestionId,
-            # "optimisticPessimisticQuestionId": optimisticPessimisticQuestionId,
-            # "leastSafeQuestionId": leastSafeQuestionId
+            "positiveNegativeQuestionId": positiveNegativeQuestionId,
+            "optimisticPessimisticQuestionId": optimisticPessimisticQuestionId,
+            "leastSafeQuestionId": leastSafeQuestionId,
+            "amresponsereportdata": amresponsereportdata
             # "invitedTeamMembers": invitedTeamMembers
             # "totalDepartments": totalDepartments
         }
