@@ -3469,40 +3469,42 @@ class AdvisorInsightsView(APIView):
                 aryPositiveNegativeTeamsData[amresponsereportdata[i]['projectUser']["team"]["name"]]["score"] = round(aryPositiveNegativeTeamsData[amresponsereportdata[i]['projectUser']["team"]["name"]]["totalScore"] / 10 / aryPositiveNegativeTeamsData[amresponsereportdata[i]['projectUser']["team"]["name"]]["cnt"], 2)
                 
                 if (amresponsereportdata[i]['projectUser']['shGroup'] is not None):
-                    aryPositiveNegativeShGroupsData[i]['projectUser']['shGroup']['SHGroupName']]['totalScore'] += amresponsereportdata[i]["integerValue"]
-                    aryPositiveNegativeShGroupsData[i]['projectUser']['shGroup']['SHGroupName']]['cnt'] += 1
-                    aryPositiveNegativeShGroupsData[i]['projectUser']['shGroup']['SHGroupName']]['score'] = round(aryPositiveNegativeShGroupsData[amresponsereportdata[i]['projectUser']['shGroup']['SHGroupName']]['totalScore'] / 10 / aryPositiveNegativeShGroupsData[amresponsereportdata[i]['projectUser']['shGroup']['SHGroupName']]['cnt'], 2)
+                    aryPositiveNegativeShGroupsData[amresponsereportdata[i]['projectUser']['shGroup']
+                                                    ['SHGroupName']]['totalScore'] += amresponsereportdata[i]["integerValue"]
+                    aryPositiveNegativeShGroupsData[amresponsereportdata[i]['projectUser']['shGroup']['SHGroupName']]['cnt'] += 1
+                    aryPositiveNegativeShGroupsData[amresponsereportdata[i]['projectUser']['shGroup']['SHGroupName']]['score'] = round(aryPositiveNegativeShGroupsData[amresponsereportdata[i]['projectUser']['shGroup']['SHGroupName']]['totalScore'] / 10 / aryPositiveNegativeShGroupsData[amresponsereportdata[i]['projectUser']['shGroup']['SHGroupName']]['cnt'], 2)
                 
                 if amresponsereportdata[i]['projectUser']['projectOrganization'] is not None:
-                    aryPositiveNegativeOrganizationsData[i]['projectUser']['projectOrganization']]['totalScore'] += amresponsereportdata[i]["integerValue"]
-                    aryPositiveNegativeOrganizationsData[i]['projectUser']['projectOrganization']]['cnt'] += 1
-                    aryPositiveNegativeOrganizationsData[i]['projectUser']['projectOrganization']]['score'] = round(aryPositiveNegativeOrganizationsData[amresponsereportdata[i]['projectUser']['projectOrganization']]['totalScore'] / 10 / aryPositiveNegativeOrganizationsData[amresponsereportdata[i]['projectUser']['projectOrganization']]['cnt'], 2)
+                    aryPositiveNegativeOrganizationsData[amresponsereportdata[i]['projectUser']['projectOrganization']]['totalScore'] += amresponsereportdata[i]["integerValue"]
+                    aryPositiveNegativeOrganizationsData[amresponsereportdata[i]['projectUser']['projectOrganization']]['cnt'] += 1
+                    aryPositiveNegativeOrganizationsData[amresponsereportdata[i]['projectUser']['projectOrganization']]['score'] = round(aryPositiveNegativeOrganizationsData[amresponsereportdata[i]['projectUser']['projectOrganization']]['totalScore'] / 10 / aryPositiveNegativeOrganizationsData[amresponsereportdata[i]['projectUser']['projectOrganization']]['cnt'], 2)
             
             if optimisticPessimisticQuestionId == amresponsereportdata[i]['amQuestion']:
                 aryOptimisticPessimisticTeamsData[amresponsereportdata[i]['projectUser']["team"]["name"]]["totalScore"] += amresponsereportdata[i]["integerValue"]
                 aryOptimisticPessimisticTeamsData[amresponsereportdata[i]['projectUser']["team"]["name"]]["cnt"] += 1
                 aryOptimisticPessimisticTeamsData[amresponsereportdata[i]['projectUser']["team"]["name"]]["score"] = round(aryOptimisticPessimisticTeamsData[amresponsereportdata[i]['projectUser']["team"]["name"]]["totalScore"] / 10 / aryOptimisticPessimisticTeamsData[amresponsereportdata[i]['projectUser']["team"]["name"]]["cnt"], 2)
                 if (amresponsereportdata[i]['projectUser']['shGroup'] is not None):
-                    aryOptimisticPessimisticShGroupsData[i]['projectUser']['shGroup']['SHGroupName']]['totalScore'] += amresponsereportdata[i]["integerValue"]
-                    aryOptimisticPessimisticShGroupsData[i]['projectUser']['shGroup']['SHGroupName']]['cnt'] += 1
-                    aryOptimisticPessimisticShGroupsData[i]['projectUser']['shGroup']['SHGroupName']]['score'] = round(aryOptimisticPessimisticShGroupsData[amresponsereportdata[i]['projectUser']['shGroup']['SHGroupName']]['totalScore'] / 10 / aryOptimisticPessimisticShGroupsData[amresponsereportdata[i]['projectUser']['shGroup']['SHGroupName']]['cnt'], 2)
+                    aryOptimisticPessimisticShGroupsData[amresponsereportdata[i]['projectUser']['shGroup']['SHGroupName']]['totalScore'] += amresponsereportdata[i]["integerValue"]
+                    aryOptimisticPessimisticShGroupsData[amresponsereportdata[i]['projectUser']['shGroup']['SHGroupName']]['cnt'] += 1
+                    aryOptimisticPessimisticShGroupsData[amresponsereportdata[i]['projectUser']['shGroup']['SHGroupName']]['score'] = round(aryOptimisticPessimisticShGroupsData[amresponsereportdata[i]['projectUser']['shGroup']['SHGroupName']]['totalScore'] / 10 / aryOptimisticPessimisticShGroupsData[amresponsereportdata[i]['projectUser']['shGroup']['SHGroupName']]['cnt'], 2)
                 if amresponsereportdata[i]['projectUser']['projectOrganization'] is not None:
-                    aryOptimisticPessimisticOrganizationsData[i]['projectUser']['projectOrganization']]['totalScore'] += amresponsereportdata[i]["integerValue"]
-                    aryOptimisticPessimisticOrganizationsData[i]['projectUser']['projectOrganization']]['cnt'] += 1
-                    aryOptimisticPessimisticOrganizationsData[i]['projectUser']['projectOrganization']]['score'] = round(aryOptimisticPessimisticOrganizationsData[amresponsereportdata[i]['projectUser']['projectOrganization']]['totalScore'] / 10 / aryOptimisticPessimisticOrganizationsData[amresponsereportdata[i]['projectUser']['projectOrganization']]['cnt'], 2)
+                    aryOptimisticPessimisticOrganizationsData[amresponsereportdata[i]['projectUser']['projectOrganization']]['totalScore'] += amresponsereportdata[i]["integerValue"]
+                    aryOptimisticPessimisticOrganizationsData[amresponsereportdata[i]['projectUser']['projectOrganization']]['cnt'] += 1
+                    aryOptimisticPessimisticOrganizationsData[amresponsereportdata[i]['projectUser']['projectOrganization']]['score'] = round(aryOptimisticPessimisticOrganizationsData[amresponsereportdata[i]['projectUser']['projectOrganization']]['totalScore'] / 10 / aryOptimisticPessimisticOrganizationsData[amresponsereportdata[i]['projectUser']['projectOrganization']]['cnt'], 2)
 
             if leastSafeQuestionId == amresponsereportdata[i]['amQuestion']:
                 aryLeastSafeTeamsData[amresponsereportdata[i]['projectUser']["team"]["name"]]["totalScore"] += amresponsereportdata[i]["integerValue"]
                 aryLeastSafeTeamsData[amresponsereportdata[i]['projectUser']["team"]["name"]]["cnt"] += 1
                 aryLeastSafeTeamsData[amresponsereportdata[i]['projectUser']["team"]["name"]]["score"] = round(aryLeastSafeTeamsData[amresponsereportdata[i]['projectUser']["team"]["name"]]["totalScore"] / 10 / aryLeastSafeTeamsData[amresponsereportdata[i]['projectUser']["team"]["name"]]["cnt"], 2)
                 if (amresponsereportdata[i]['projectUser']['shGroup'] is not None):
-                    aryLeastSafeShGroupsData[i]['projectUser']['shGroup']['SHGroupName']]['totalScore'] += amresponsereportdata[i]["integerValue"]
-                    aryLeastSafeShGroupsData[i]['projectUser']['shGroup']['SHGroupName']]['cnt'] += 1
-                    aryLeastSafeShGroupsData[i]['projectUser']['shGroup']['SHGroupName']]['score'] = round(aryLeastSafeShGroupsData[amresponsereportdata[i]['projectUser']['shGroup']['SHGroupName']]['totalScore'] / 10 / aryLeastSafeShGroupsData[amresponsereportdata[i]['projectUser']['shGroup']['SHGroupName']]['cnt'], 2)
+                    aryLeastSafeShGroupsData[amresponsereportdata[i]['projectUser']['shGroup']['SHGroupName']]['totalScore'] += amresponsereportdata[i]["integerValue"]
+                    aryLeastSafeShGroupsData[amresponsereportdata[i]['projectUser']['shGroup']['SHGroupName']]['cnt'] += 1
+                    aryLeastSafeShGroupsData[amresponsereportdata[i]['projectUser']['shGroup']['SHGroupName']]['score'] = round(
+                        aryLeastSafeShGroupsData[amresponsereportdata[i]['projectUser']['shGroup']['SHGroupName']]['totalScore'] / 10 / aryLeastSafeShGroupsData[amresponsereportdata[i]['projectUser']['shGroup']['SHGroupName']]['cnt'], 2)
                 if amresponsereportdata[i]['projectUser']['projectOrganization'] is not None:
-                    aryLeastSafeOrganizationsData[i]['projectUser']['projectOrganization']]['totalScore'] += amresponsereportdata[i]["integerValue"]
-                    aryLeastSafeOrganizationsData[i]['projectUser']['projectOrganization']]['cnt'] += 1
-                    aryLeastSafeOrganizationsData[i]['projectUser']['projectOrganization']]['score'] = round(aryLeastSafeOrganizationsData[amresponsereportdata[i]['projectUser']['projectOrganization']]['totalScore'] / 10 / aryLeastSafeOrganizationsData[amresponsereportdata[i]['projectUser']['projectOrganization']]['cnt'], 2)s
+                    aryLeastSafeOrganizationsData[amresponsereportdata[i]['projectUser']['projectOrganization']]['totalScore'] += amresponsereportdata[i]["integerValue"]
+                    aryLeastSafeOrganizationsData[amresponsereportdata[i]['projectUser']['projectOrganization']]['cnt'] += 1
+                    aryLeastSafeOrganizationsData[amresponsereportdata[i]['projectUser']['projectOrganization']]['score'] = round(aryLeastSafeOrganizationsData[amresponsereportdata[i]['projectUser']['projectOrganization']]['totalScore'] / 10 / aryLeastSafeOrganizationsData[amresponsereportdata[i]['projectUser']['projectOrganization']]['cnt'], 2)
             
         aryFilteredProjectUsers = aryProjectUsers[:3]
         recommendedProjectUsersQuerySet = ProjectUser.objects.filter(survey=survey, pk__in=aryFilteredProjectUsers)
