@@ -3582,8 +3582,12 @@ class AdvisorInsightsView(APIView):
             except SHGroup.DoesNotExist:
                 continue
 
-        responseRateFromInvitedTeamMembers = responsedTeamMembers * 100 / len(invitedTeamMembers)
-        responseRateFromInvitedStakeholders = responsedStakeholders * 100 / len(invitedStakeholders)
+        responseRateFromInvitedTeamMembers = 0
+        responseRateFromInvitedStakeholders = 0
+        if len(invitedTeamMembers) > 0:
+            responseRateFromInvitedTeamMembers = responsedTeamMembers * 100 / len(invitedTeamMembers)
+        if len(invitedStakeholders) > 0:
+            responseRateFromInvitedStakeholders = responsedStakeholders * 100 / len(invitedStakeholders)
         
         summary = {
             "responseRateFromInvitedTeamMembers": responseRateFromInvitedTeamMembers,
