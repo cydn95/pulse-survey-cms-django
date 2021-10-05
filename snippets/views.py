@@ -3355,77 +3355,40 @@ class AdvisorInsightsView(APIView):
         # if projectUser is None:
         #     return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
 
-        # Summary: 
-        # % Response rate from invited Team members
-        # % Response rate from invited stakeholders
-        # Department counts in total
-
-        # Recommended stakeholders: It will be the stakeholders who have the most negative responses for certain questions
-
-        # top positive shteam name and score
-        # top positive shgroup name and score
-
-        # top negative shteam name and score
-        # top negative shgroup name and score
-
-        # optimistic would be the groups with high aws comprehend scores (like top positive)
-        
-        # pessimistic would be the groups with lowest aws comprehend scores (like top negative)
-
-        # "least share to share their opinions" groups with the lowest score for this question
-
-        # Respondant: counts of the SHCategory who have got at least 1 AM or AO response
-        # myPeersShCategoryId = SHCategory.objects.get(survey=survey, SHCategoryName="My Peers").id
-        # whoINeedShCategoryId = SHCategory.objects.get(survey=survey, SHCategoryName="Who I Need").id
-        # myLeadersShCategoryId = SHCategory.objects.get(survey=survey, SHCategoryName="My Leaders").id
-        # myDirectReportsShCategoryId = SHCategory.objects.get(survey=survey, SHCategoryName="My Direct Reports").id
-        # whoNeedsMeShCategoryId = SHCategory.objects.get(survey=survey, SHCategoryName="Who Needs Me").id
-
-        # myPeersCnt = SHMapping.objects.filter(
-        #     subProjectUser=projectUser, shCategory=myPeersShCategoryId).count()
-        # whoINeedCnt = SHMapping.objects.filter(
-        #     subProjectUser=projectUser, shCategory=whoINeedShCategoryId).count()
-        # myLeadersCnt = SHMapping.objects.filter(
-        #     subProjectUser=projectUser, shCategory=myLeadersShCategoryId).count()
-        # myDirectReportsCnt = SHMapping.objects.filter(
-        #     subProjectUser=projectUser, shCategory=myDirectReportsShCategoryId).count()
-        # whoNeedsMeCnt = SHMapping.objects.filter(
-        #     subProjectUser=projectUser, shCategory=whoNeedsMeShCategoryId).count()
-
-        # respondents = {
-        #     "myPeersCnt": myPeersCnt,
-        #     "whoINeedCnt": whoINeedCnt,
-        #     "myLeadersCnt": myLeadersCnt,
-        #     "myDirectReportsCnt": myDirectReportsCnt,
-        #     "whoNeedsMeCnt": whoNeedsMeCnt
-        # }
-
-        # amresponsereportqueryset = AMResponse.objects.all().filter(survey__id=survey, subProjectUser__id=projectUser).order_by('integerValue')
-        # amresponsereportserializer = AMResponseForDriverAnalysisSerializer(amresponsereportqueryset, many=True)
-        # amresponsereportdata = amresponsereportserializer.data
-
-        # aoresponsereportqueryset = AOResponse.objects.all().filter(survey__id=survey, subProjectUser__id=projectUser).order_by('integerValue')
-        # aoresponsereportserializer = AOResponseForDriverAnalysisSerializer(aoresponsereportqueryset, many=True)
-        # aoresponsereportdata = aoresponsereportserializer.data
-
         amresponsereportqueryset = AMResponse.objects.all().filter(survey__id=survey, controlType="SLIDER", amQuestion__subdriver__in=["Optimism", "Overall Sentiment", "Safety"]).order_by('integerValue')
         amresponsereportserializer = AMResponseForDriverAnalysisSerializer(amresponsereportqueryset, many=True)
         amresponsereportdata = amresponsereportserializer.data
 
-        # aoresponsereportqueryset = AOResponse.objects.all().filter(survey__id=survey).order_by('integerValue')
-        # aoresponsereportserializer = AOResponseForDriverAnalysisSerializer(aoresponsereportqueryset, many=True)
-        # aoresponsereportdata = aoresponsereportserializer.data
+        # aryTeams = []
+        # aryProjectUsers = []
+        # aryDepartments = []
+        # aryOrganizations = []
+        # aryShGroups = []
+        # aryTeamsData = {}
+        # aryShGroupsData = {}
+        # aryOrganizationsData = {}
 
-        aryTeams = []
-        aryProjectUsers = []
-        aryDepartments = []
-        aryOrganizations = []
-        aryShGroups = []
+        aryPositiveNegativeTeams = []
+        aryPositiveNegativeShGroups = []
+        aryPositiveNegativeOrganizations = []
+        aryPositiveNegativeTeamsData = {}
+        aryPositiveNegativeShGroupsData = {}
+        aryPositiveNegativeOrganizationsData = {}
 
-        aryTeamsData = {}
-        aryShGroupsData = {}
-        aryOrganizationsData = {}
+        aryOptimisticPessimisticTeams = []
+        aryOptimisticPessimisticShGroups = []
+        aryOptimisticPessimisticOrganizations = []
+        aryOptimisticPessimisticTeamsData = {}
+        aryOptimisticPessimisticShGroupsData = {}
+        aryOptimisticPessimisticOrganizationsData = {}
 
+        aryLeastSafeTeams = []
+        aryLeastSafeShGroups = []
+        aryLeastSafeOrganizations = []
+        aryLeastSafeTeamsData = {}
+        aryLeastSafeShGroupsData = {}
+        aryLeastSafeOrganizationsData = {}
+        
         positiveNegativeQuestionId = 0
         optimisticPessimisticQuestionId = 0
         leastSafeQuestionId = 0
@@ -3447,179 +3410,100 @@ class AdvisorInsightsView(APIView):
         except AMQuestion.DoesNotExist:
             pass
             
-        leastSafeTeamName = ""
-        leastSafeTeamTotalScore = 0
-        leastSafeTeamCnt = 0
-        leastSafeTeamScore = 0
-        leastSafeShGroupName = ""
-        leastSafeShGroupTotalScore = 0
-        leastSafeShGroupCnt = 0
-        leastSafeShGroupScore = 0
-        leastSafeOrgName = ""
-        leastSafeOrgTotalScore = 0
-        leastSafeOrgCnt = 0
-        leastSafeOrgScore = 0
+        # leastSafeTeamName = ""
+        # leastSafeTeamTotalScore = 0
+        # leastSafeTeamCnt = 0
+        # leastSafeTeamScore = 0
+        # leastSafeShGroupName = ""
+        # leastSafeShGroupTotalScore = 0
+        # leastSafeShGroupCnt = 0
+        # leastSafeShGroupScore = 0
+        # leastSafeOrgName = ""
+        # leastSafeOrgTotalScore = 0
+        # leastSafeOrgCnt = 0
+        # leastSafeOrgScore = 0
         for i in range(len(amresponsereportdata)):
-            if amresponsereportdata[i]['projectUser']["team"]["name"] not in aryTeams:
-                aryTeams.append(
-                    amresponsereportdata[i]['projectUser']["team"]["name"])
-            if (amresponsereportdata[i]['projectUser']['shGroup'] is not None):
-                if amresponsereportdata[i]['projectUser']['shGroup']['SHGroupName'] not in aryShGroups:
-                    aryShGroups.append(
-                        amresponsereportdata[i]['projectUser']['shGroup']['SHGroupName'])
-            if amresponsereportdata[i]['projectUser']["id"] not in aryProjectUsers:
-                aryProjectUsers.append(
-                    amresponsereportdata[i]['projectUser']["id"])
-            if (amresponsereportdata[i]['projectUser']['user']['userteam'] is not None):
-                if (amresponsereportdata[i]['projectUser']['user']['userteam']['name'] not in aryDepartments):
-                    aryDepartments.append(
-                        amresponsereportdata[i]['projectUser']['user']['userteam']['name'])
-            # if (amresponsereportdata[i]['projectUser']['user']['organization'] is not None):
-            #     if (amresponsereportdata[i]['projectUser']['user']['organization']['name'] not in aryOrganizations):
-            #         aryOrganizations.append(
-            #             amresponsereportdata[i]['projectUser']['user']['organization']['name'])
-            if amresponsereportdata[i]['projectUser']['projectOrganization'] is not None:
-                if amresponsereportdata[i]['projectUser']['projectOrganization'] not in aryOrganizations:
-                    aryOrganizations.append(amresponsereportdata[i]['projectUser']['projectOrganization'])
+            # if amresponsereportdata[i]['projectUser']["team"]["name"] not in aryTeams:
+            #     aryTeams.append(
+            #         amresponsereportdata[i]['projectUser']["team"]["name"])
+            # if (amresponsereportdata[i]['projectUser']['shGroup'] is not None):
+            #     if amresponsereportdata[i]['projectUser']['shGroup']['SHGroupName'] not in aryShGroups:
+            #         aryShGroups.append(
+            #             amresponsereportdata[i]['projectUser']['shGroup']['SHGroupName'])
+            # if amresponsereportdata[i]['projectUser']["id"] not in aryProjectUsers:
+            #     aryProjectUsers.append(
+            #         amresponsereportdata[i]['projectUser']["id"])
+            # if (amresponsereportdata[i]['projectUser']['user']['userteam'] is not None):
+            #     if (amresponsereportdata[i]['projectUser']['user']['userteam']['name'] not in aryDepartments):
+            #         aryDepartments.append(
+            #             amresponsereportdata[i]['projectUser']['user']['userteam']['name'])
+            # if amresponsereportdata[i]['projectUser']['projectOrganization'] is not None:
+            #     if amresponsereportdata[i]['projectUser']['projectOrganization'] not in aryOrganizations:
+            #         aryOrganizations.append(amresponsereportdata[i]['projectUser']['projectOrganization'])
 
-            aryTeamsData[amresponsereportdata[i]['projectUser']["team"]["name"]] = {"totalScore": 0, "cnt": 0, "score": 0, "compTotalScore": 0, "compCnt": 0, "compScore": 0}
-            if (amresponsereportdata[i]['projectUser']['shGroup'] is not None):
-                aryShGroupsData[amresponsereportdata[i]
-                                ['projectUser']['shGroup']['SHGroupName']] = {"totalScore": 0, "cnt": 0, "score": 0, "compTotalScore": 0, "compCnt": 0, "compScore": 0}
-            # if (amresponsereportdata[i]['projectUser']['user']['organization'] is not None):
-            #     aryOrganizationsData[amresponsereportdata[i]
-            #                          ['projectUser']['user']['organization']['name']] = {"totalScore": 0, "cnt": 0, "score": 0, "compTotalScore": 0, "compCnt": 0, "compScore": 0}
-            if amresponsereportdata[i]['projectUser']['projectOrganization'] is not None:
-                aryOrganizationsData[amresponsereportdata[i]['projectUser']['projectOrganization']] = {"totalScore": 0, "cnt": 0, "score": 0, "compTotalScore": 0, "compCnt": 0, "compScore": 0}
+            if positiveNegativeQuestionId == amresponsereportdata[i]['amQuestion']:
+                aryPositiveNegativeTeamsData[amresponsereportdata[i]['projectUser']["team"]["name"]] = {"totalScore": 0, "cnt": 0, "score": 0}
+                if (amresponsereportdata[i]['projectUser']['shGroup'] is not None):
+                    aryPositiveNegativeShGroupsData[amresponsereportdata[i]['projectUser']['shGroup']['SHGroupName']] = {"totalScore": 0, "cnt": 0, "score": 0}
+                if amresponsereportdata[i]['projectUser']['projectOrganization'] is not None:
+                    aryPositiveNegativeOrganizationsData[amresponsereportdata[i]['projectUser']['projectOrganization']] = {"totalScore": 0, "cnt": 0, "score": 0}
 
-            if amresponsereportdata[i]['amQuestion'] == leastSafeQuestionId:
-                leastSafeTeamName = amresponsereportdata[i]['projectUser']["team"]["name"]
-                leastSafeTeamTotalScore += amresponsereportdata[i]["integerValue"]
-                leastSafeTeamCnt += 1
-                leastSafeTeamScore = leastSafeTeamTotalScore / 10 / leastSafeTeamCnt
+            if optimisticPessimisticQuestionId == amresponsereportdata[i]['amQuestion']:
+                aryOptimisticPessimisticTeamsData[amresponsereportdata[i]['projectUser']["team"]["name"]] = {"totalScore": 0, "cnt": 0, "score": 0}
+                if (amresponsereportdata[i]['projectUser']['shGroup'] is not None):
+                    aryOptimisticPessimisticShGroupsData[amresponsereportdata[i]['projectUser']['shGroup']['SHGroupName']] = {"totalScore": 0, "cnt": 0, "score": 0}
+                if amresponsereportdata[i]['projectUser']['projectOrganization'] is not None:
+                    aryOptimisticPessimisticOrganizationsData[amresponsereportdata[i]['projectUser']['projectOrganization']] = {"totalScore": 0, "cnt": 0, "score": 0}
+
+            if leastSafeQuestionId == amresponsereportdata[i]['amQuestion']:
+                aryLeastSafeTeamsData[amresponsereportdata[i]['projectUser']["team"]["name"]] = {"totalScore": 0, "cnt": 0, "score": 0}
+                if (amresponsereportdata[i]['projectUser']['shGroup'] is not None):
+                    aryLeastSafeShGroupsData[amresponsereportdata[i]['projectUser']['shGroup']['SHGroupName']] = {"totalScore": 0, "cnt": 0, "score": 0}
+                if amresponsereportdata[i]['projectUser']['projectOrganization'] is not None:
+                    aryLeastSafeOrganizationsData[amresponsereportdata[i]['projectUser']['projectOrganization']] = {"totalScore": 0, "cnt": 0, "score": 0}
+
+        for i in range(len(amresponsereportdata)):
+            if positiveNegativeQuestionId == amresponsereportdata[i]['amQuestion']:
+                aryPositiveNegativeTeamsData[amresponsereportdata[i]['projectUser']["team"]["name"]]["totalScore"] += amresponsereportdata[i]["integerValue"]
+                aryPositiveNegativeTeamsData[amresponsereportdata[i]['projectUser']["team"]["name"]]["cnt"] += 1
+                aryPositiveNegativeTeamsData[amresponsereportdata[i]['projectUser']["team"]["name"]]["score"] = round(aryPositiveNegativeTeamsData[amresponsereportdata[i]['projectUser']["team"]["name"]]["totalScore"] / 10 / aryPositiveNegativeTeamsData[amresponsereportdata[i]['projectUser']["team"]["name"]]["cnt"], 2)
                 
                 if (amresponsereportdata[i]['projectUser']['shGroup'] is not None):
-                    leastSafeShGroupName = amresponsereportdata[i]['projectUser']['shGroup']['SHGroupName']
-                    leastSafeShGroupTotalScore += amresponsereportdata[i]["integerValue"]
-                    leastSafeShGroupCnt += 1
-                    leastSafeShGroupScore = leastSafeShGroupTotalScore / 10 / leastSafeShGroupCnt
+                    aryPositiveNegativeShGroupsData[i]['projectUser']['shGroup']['SHGroupName']]['totalScore'] += amresponsereportdata[i]["integerValue"]
+                    aryPositiveNegativeShGroupsData[i]['projectUser']['shGroup']['SHGroupName']]['cnt'] += 1
+                    aryPositiveNegativeShGroupsData[i]['projectUser']['shGroup']['SHGroupName']]['score'] = round(aryPositiveNegativeShGroupsData[amresponsereportdata[i]['projectUser']['shGroup']['SHGroupName']]['totalScore'] / 10 / aryPositiveNegativeShGroupsData[amresponsereportdata[i]['projectUser']['shGroup']['SHGroupName']]['cnt'], 2)
                 
-                # if (amresponsereportdata[i]['projectUser']['user']['organization'] is not None):
-                #     leastSafeOrgName = amresponsereportdata[i]['projectUser']['user']['organization']['name']
-                #     leastSafeOrgTotalScore += amresponsereportdata[i]["integerValue"]
-                #     leastSafeOrgCnt += 1
-                #     leastSafeOrgScore = leastSafeOrgTotalScore / 10 / leastSafeOrgCnt
                 if amresponsereportdata[i]['projectUser']['projectOrganization'] is not None:
-                    leastSafeOrgName = amresponsereportdata[i]['projectUser']['projectOrganization']
-                    leastSafeOrgTotalScore += amresponsereportdata[i]['integerValue']
-                    leastSafeOrgCnt += 1
-                    leastSafeOrgScore = leastSafeOrgTotalScore / 10 / leastSafeOrgCnt
-
-        # for j in range(len(aoresponsereportdata)):
-        #     if aoresponsereportdata[j]['projectUser']["team"]["name"] not in aryTeams:
-        #         aryTeams.append(
-        #             aoresponsereportdata[j]['projectUser']['team']['name'])
-        #     if (aoresponsereportdata[j]['projectUser']['shGroup'] is not None):
-        #         if aoresponsereportdata[j]['projectUser']['shGroup']['SHGroupName'] not in aryShGroups:
-        #             aryShGroups.append(
-        #                 aoresponsereportdata[j]['projectUser']['shGroup']['SHGroupName'])
-        #     if aoresponsereportdata[j]['projectUser']["id"] not in aryProjectUsers:
-        #         aryProjectUsers.append(
-        #             aoresponsereportdata[j]['projectUser']["id"])
-        #     if (aoresponsereportdata[j]['projectUser']['user']['userteam'] is not None):
-        #         if (aoresponsereportdata[j]['projectUser']['user']['userteam']['name'] not in aryDepartments):
-        #             aryDepartments.append(
-        #                 aoresponsereportdata[j]['projectUser']['user']['userteam']['name'])
-        #     if (aoresponsereportdata[j]['projectUser']['user']['organization'] is not None):
-        #         if (aoresponsereportdata[j]['projectUser']['user']['organization']['name'] not in aryOrganizations):
-        #             aryOrganizations.append(
-        #                 aoresponsereportdata[j]['projectUser']['user']['organization']['name'])
-        
-        #     aryTeamsData[aoresponsereportdata[j]['projectUser']["team"]["name"]] = {"totalScore": 0, "cnt": 0, "score": 0, "compTotalScore": 0, "compCnt": 0, "compScore": 0}
-        #     if (aoresponsereportdata[j]['projectUser']['shGroup'] is not None):
-        #         aryShGroupsData[aoresponsereportdata[j]
-        #                         ['projectUser']['shGroup']['SHGroupName']] = {"totalScore": 0, "cnt": 0, "score": 0, "compTotalScore": 0, "compCnt": 0, "compScore": 0}
-        #     if (aoresponsereportdata[j]['projectUser']['user']['organization'] is not None):
-        #         aryOrganizationsData[aoresponsereportdata[j]
-        #                              ['projectUser']['user']['organization']['name']] = {"totalScore": 0, "cnt": 0, "score": 0, "compTotalScore": 0, "compCnt": 0, "compScore": 0}
-
-
-        for i in range(len(amresponsereportdata)):
-            aryTeamsData[amresponsereportdata[i]
-                         ['projectUser']["team"]["name"]]["totalScore"] += amresponsereportdata[i]["integerValue"]
-            aryTeamsData[amresponsereportdata[i]
-                         ['projectUser']["team"]["name"]]["cnt"] += 1
-            aryTeamsData[amresponsereportdata[i]
-                         ['projectUser']["team"]["name"]]["score"] = round(aryTeamsData[amresponsereportdata[i]['projectUser']["team"]["name"]]["totalScore"] / 10 / aryTeamsData[amresponsereportdata[i]['projectUser']["team"]["name"]]["cnt"], 2)
-
-            if (amresponsereportdata[i]["controlType"] == "TEXT") | (amresponsereportdata[i]["controlType"] == "MULTI_TOPICS"):
-                aryTeamsData[amresponsereportdata[i]
-                         ['projectUser']["team"]["name"]]["compTotalScore"] += amresponsereportdata[i]["integerValue"]
-                aryTeamsData[amresponsereportdata[i]
-                            ['projectUser']["team"]["name"]]["compCnt"] += 1
-                aryTeamsData[amresponsereportdata[i]
-                             ['projectUser']["team"]["name"]]["compScore"] = round(aryTeamsData[amresponsereportdata[i]['projectUser']["team"]["name"]]["compTotalScore"] / 10 / aryTeamsData[amresponsereportdata[i]['projectUser']["team"]["name"]]["compCnt"], 2)
-
-            if (amresponsereportdata[i]['projectUser']['shGroup'] is not None):
-                aryShGroupsData[amresponsereportdata[i]['projectUser']['shGroup']['SHGroupName']]['totalScore'] += amresponsereportdata[i]["integerValue"]
-                aryShGroupsData[amresponsereportdata[i]['projectUser']['shGroup']['SHGroupName']]['cnt'] += 1
-                aryShGroupsData[amresponsereportdata[i]['projectUser']['shGroup']['SHGroupName']]['score'] = round(aryShGroupsData[amresponsereportdata[i]['projectUser']['shGroup']['SHGroupName']]['totalScore'] / 10 / aryShGroupsData[amresponsereportdata[i]['projectUser']['shGroup']['SHGroupName']]['cnt'], 2)
-        
-                if (amresponsereportdata[i]["controlType"] == "TEXT") | (amresponsereportdata[i]["controlType"] == "MULTI_TOPICS"):
-                    aryShGroupsData[amresponsereportdata[i]['projectUser']['shGroup']['SHGroupName']]['compTotalScore'] += amresponsereportdata[i]["integerValue"]
-                    aryShGroupsData[amresponsereportdata[i]['projectUser']['shGroup']['SHGroupName']]['compCnt'] += 1
-                    aryShGroupsData[amresponsereportdata[i]['projectUser']['shGroup']['SHGroupName']]['compScore'] = round(aryShGroupsData[amresponsereportdata[i]['projectUser']['shGroup']['SHGroupName']]['compTotalScore'] / 10 / aryShGroupsData[amresponsereportdata[i]['projectUser']['shGroup']['SHGroupName']]['compCnt'], 2)
-
-            # if (amresponsereportdata[i]['projectUser']['user']['organization'] is not None):
-            #     aryOrganizationsData[amresponsereportdata[i]['projectUser']['user']['organization']['name']]['totalScore'] += amresponsereportdata[i]["integerValue"]
-            #     aryOrganizationsData[amresponsereportdata[i]['projectUser']['user']['organization']['name']]['cnt'] += 1
-            #     aryOrganizationsData[amresponsereportdata[i]['projectUser']['user']['organization']['name']]['score'] = round(aryOrganizationsData[amresponsereportdata[i]['projectUser']['user']['organization']['name']]['totalScore'] / 10 / aryOrganizationsData[amresponsereportdata[i]['projectUser']['user']['organization']['name']]['cnt'], 2)
-
-            #     if (amresponsereportdata[i]["controlType"] == "TEXT") | (amresponsereportdata[i]["controlType"] == "MULTI_TOPICS"):
-            #         aryOrganizationsData[amresponsereportdata[i]['projectUser']['user']['organization']['name']]['compTotalScore'] += amresponsereportdata[i]["integerValue"]
-            #         aryOrganizationsData[amresponsereportdata[i]['projectUser']['user']['organization']['name']]['compCnt'] += 1
-            #         aryOrganizationsData[amresponsereportdata[i]['projectUser']['user']['organization']['name']]['compScore'] = round(aryOrganizationsData[amresponsereportdata[i]['projectUser']['user']['organization']['name']]['compTotalScore'] / 10 / aryOrganizationsData[amresponsereportdata[i]['projectUser']['user']['organization']['name']]['compCnt'], 2)
-
-            if amresponsereportdata[i]['projectUser']['projectOrganization'] is not None:
-                aryOrganizationsData[amresponsereportdata[i]['projectUser']['projectOrganization']]['totalScore'] += amresponsereportdata[i]["integerValue"]
-                aryOrganizationsData[amresponsereportdata[i]['projectUser']['projectOrganization']]['cnt'] += 1
-                aryOrganizationsData[amresponsereportdata[i]['projectUser']['projectOrganization']]['score'] = round(aryOrganizationsData[amresponsereportdata[i]['projectUser']['projectOrganization']]['totalScore'] / 10 / aryOrganizationsData[amresponsereportdata[i]['projectUser']['projectOrganization']]['cnt'], 2)
-
-                if (amresponsereportdata[i]["controlType"] == "TEXT") | (amresponsereportdata[i]["controlType"] == "MULTI_TOPICS"):
-                    aryOrganizationsData[amresponsereportdata[i]['projectUser']['projectOrganization']]['compTotalScore'] += amresponsereportdata[i]["integerValue"]
-                    aryOrganizationsData[amresponsereportdata[i]['projectUser']['projectOrganization']]['compCnt'] += 1
-                    aryOrganizationsData[amresponsereportdata[i]['projectUser']['projectOrganization']]['compScore'] = round(aryOrganizationsData[amresponsereportdata[i]['projectUser']['projectOrganization']]['compTotalScore'] / 10 / aryOrganizationsData[amresponsereportdata[i]['projectUser']['projectOrganization']]['compCnt'], 2)
-
-        # for j in range(len(aoresponsereportdata)):
-        #     aryTeamsData[aoresponsereportdata[j]['projectUser']["team"]["name"]]["totalScore"] += aoresponsereportdata[j]["integerValue"]
-        #     aryTeamsData[aoresponsereportdata[j]['projectUser']["team"]["name"]]["cnt"] += 1
-        #     aryTeamsData[aoresponsereportdata[j]['projectUser']["team"]["name"]]["score"] = round(aryTeamsData[aoresponsereportdata[j]['projectUser']["team"]["name"]]["totalScore"] / 10 / aryTeamsData[aoresponsereportdata[j]['projectUser']["team"]["name"]]["cnt"], 2)
+                    aryPositiveNegativeOrganizationsData[i]['projectUser']['projectOrganization']]['totalScore'] += amresponsereportdata[i]["integerValue"]
+                    aryPositiveNegativeOrganizationsData[i]['projectUser']['projectOrganization']]['cnt'] += 1
+                    aryPositiveNegativeOrganizationsData[i]['projectUser']['projectOrganization']]['score'] = round(aryPositiveNegativeOrganizationsData[amresponsereportdata[i]['projectUser']['projectOrganization']]['totalScore'] / 10 / aryPositiveNegativeOrganizationsData[amresponsereportdata[i]['projectUser']['projectOrganization']]['cnt'], 2)
             
-        #     if (aoresponsereportdata[j]["controlType"] == "TEXT") | (aoresponsereportdata[j]["controlType"] == "MULTI_TOPICS"):
-        #         aryTeamsData[aoresponsereportdata[j]['projectUser']["team"]["name"]]["compTotalScore"] += aoresponsereportdata[j]["integerValue"]
-        #         aryTeamsData[aoresponsereportdata[j]['projectUser']["team"]["name"]]["compCnt"] += 1
-        #         aryTeamsData[aoresponsereportdata[j]['projectUser']["team"]["name"]]["compScore"] = round(aryTeamsData[aoresponsereportdata[j]['projectUser']["team"]["name"]]["compTotalScore"] / 10 / aryTeamsData[aoresponsereportdata[j]['projectUser']["team"]["name"]]["compCnt"], 2)
+            if optimisticPessimisticQuestionId == amresponsereportdata[i]['amQuestion']:
+                aryOptimisticPessimisticTeamsData[amresponsereportdata[i]['projectUser']["team"]["name"]]["totalScore"] += amresponsereportdata[i]["integerValue"]
+                aryOptimisticPessimisticTeamsData[amresponsereportdata[i]['projectUser']["team"]["name"]]["cnt"] += 1
+                aryOptimisticPessimisticTeamsData[amresponsereportdata[i]['projectUser']["team"]["name"]]["score"] = round(aryOptimisticPessimisticTeamsData[amresponsereportdata[i]['projectUser']["team"]["name"]]["totalScore"] / 10 / aryOptimisticPessimisticTeamsData[amresponsereportdata[i]['projectUser']["team"]["name"]]["cnt"], 2)
+                if (amresponsereportdata[i]['projectUser']['shGroup'] is not None):
+                    aryOptimisticPessimisticShGroupsData[i]['projectUser']['shGroup']['SHGroupName']]['totalScore'] += amresponsereportdata[i]["integerValue"]
+                    aryOptimisticPessimisticShGroupsData[i]['projectUser']['shGroup']['SHGroupName']]['cnt'] += 1
+                    aryOptimisticPessimisticShGroupsData[i]['projectUser']['shGroup']['SHGroupName']]['score'] = round(aryOptimisticPessimisticShGroupsData[amresponsereportdata[i]['projectUser']['shGroup']['SHGroupName']]['totalScore'] / 10 / aryOptimisticPessimisticShGroupsData[amresponsereportdata[i]['projectUser']['shGroup']['SHGroupName']]['cnt'], 2)
+                if amresponsereportdata[i]['projectUser']['projectOrganization'] is not None:
+                    aryOptimisticPessimisticOrganizationsData[i]['projectUser']['projectOrganization']]['totalScore'] += amresponsereportdata[i]["integerValue"]
+                    aryOptimisticPessimisticOrganizationsData[i]['projectUser']['projectOrganization']]['cnt'] += 1
+                    aryOptimisticPessimisticOrganizationsData[i]['projectUser']['projectOrganization']]['score'] = round(aryOptimisticPessimisticOrganizationsData[amresponsereportdata[i]['projectUser']['projectOrganization']]['totalScore'] / 10 / aryOptimisticPessimisticOrganizationsData[amresponsereportdata[i]['projectUser']['projectOrganization']]['cnt'], 2)
 
-        #     if (aoresponsereportdata[j]['projectUser']['shGroup'] is not None):
-        #         aryShGroupsData[aoresponsereportdata[j]['projectUser']['shGroup']['SHGroupName']]['totalScore'] += aoresponsereportdata[j]["integerValue"]
-        #         aryShGroupsData[aoresponsereportdata[j]['projectUser']['shGroup']['SHGroupName']]['cnt'] += 1
-        #         aryShGroupsData[aoresponsereportdata[j]['projectUser']['shGroup']['SHGroupName']]['score'] = round(aryShGroupsData[aoresponsereportdata[j]['projectUser']['shGroup']['SHGroupName']]['totalScore'] / 10 / aryShGroupsData[aoresponsereportdata[j]['projectUser']['shGroup']['SHGroupName']]['cnt'], 2)
-
-        #         if (aoresponsereportdata[j]["controlType"] == "TEXT") | (aoresponsereportdata[j]["controlType"] == "MULTI_TOPICS"):
-        #             aryShGroupsData[aoresponsereportdata[j]['projectUser']['shGroup']['SHGroupName']]['compTotalScore'] += aoresponsereportdata[j]["integerValue"]
-        #             aryShGroupsData[aoresponsereportdata[j]['projectUser']['shGroup']['SHGroupName']]['compCnt'] += 1
-        #             aryShGroupsData[aoresponsereportdata[j]['projectUser']['shGroup']['SHGroupName']]['compScore'] = round(aryShGroupsData[aoresponsereportdata[j]['projectUser']['shGroup']['SHGroupName']]['compTotalScore'] / 10 / aryShGroupsData[aoresponsereportdata[j]['projectUser']['shGroup']['SHGroupName']]['compCnt'], 2)
-
-        #     if (aoresponsereportdata[j]['projectUser']['user']['organization'] is not None):
-        #         aryOrganizationsData[aoresponsereportdata[j]['projectUser']['user']['organization']['name']]['totalScore'] += aoresponsereportdata[j]["integerValue"]
-        #         aryOrganizationsData[aoresponsereportdata[j]['projectUser']['user']['organization']['name']]['cnt'] += 1
-        #         aryOrganizationsData[aoresponsereportdata[j]['projectUser']['user']['organization']['name']]['score'] = round(aryOrganizationsData[aoresponsereportdata[j]['projectUser']['user']['organization']['name']]['totalScore'] / 10 / aryOrganizationsData[aoresponsereportdata[j]['projectUser']['user']['organization']['name']]['cnt'], 2)
-
-        #         if (aoresponsereportdata[j]["controlType"] == "TEXT") | (aoresponsereportdata[j]["controlType"] == "MULTI_TOPICS"):
-        #             aryOrganizationsData[aoresponsereportdata[j]['projectUser']['user']['organization']['name']]['compTotalScore'] += aoresponsereportdata[j]["integerValue"]
-        #             aryOrganizationsData[aoresponsereportdata[j]['projectUser']['user']['organization']['name']]['compCnt'] += 1
-        #             aryOrganizationsData[aoresponsereportdata[j]['projectUser']['user']['organization']['name']]['compScore'] = round(aryOrganizationsData[aoresponsereportdata[j]['projectUser']['user']['organization']['name']]['compTotalScore'] / 10 / aryOrganizationsData[aoresponsereportdata[j]['projectUser']['user']['organization']['name']]['compCnt'], 2)
-
+            if leastSafeQuestionId == amresponsereportdata[i]['amQuestion']:
+                aryLeastSafeTeamsData[amresponsereportdata[i]['projectUser']["team"]["name"]]["totalScore"] += amresponsereportdata[i]["integerValue"]
+                aryLeastSafeTeamsData[amresponsereportdata[i]['projectUser']["team"]["name"]]["cnt"] += 1
+                aryLeastSafeTeamsData[amresponsereportdata[i]['projectUser']["team"]["name"]]["score"] = round(aryLeastSafeTeamsData[amresponsereportdata[i]['projectUser']["team"]["name"]]["totalScore"] / 10 / aryLeastSafeTeamsData[amresponsereportdata[i]['projectUser']["team"]["name"]]["cnt"], 2)
+                if (amresponsereportdata[i]['projectUser']['shGroup'] is not None):
+                    aryLeastSafeShGroupsData[i]['projectUser']['shGroup']['SHGroupName']]['totalScore'] += amresponsereportdata[i]["integerValue"]
+                    aryLeastSafeShGroupsData[i]['projectUser']['shGroup']['SHGroupName']]['cnt'] += 1
+                    aryLeastSafeShGroupsData[i]['projectUser']['shGroup']['SHGroupName']]['score'] = round(aryLeastSafeShGroupsData[amresponsereportdata[i]['projectUser']['shGroup']['SHGroupName']]['totalScore'] / 10 / aryLeastSafeShGroupsData[amresponsereportdata[i]['projectUser']['shGroup']['SHGroupName']]['cnt'], 2)
+                if amresponsereportdata[i]['projectUser']['projectOrganization'] is not None:
+                    aryLeastSafeOrganizationsData[i]['projectUser']['projectOrganization']]['totalScore'] += amresponsereportdata[i]["integerValue"]
+                    aryLeastSafeOrganizationsData[i]['projectUser']['projectOrganization']]['cnt'] += 1
+                    aryLeastSafeOrganizationsData[i]['projectUser']['projectOrganization']]['score'] = round(aryLeastSafeOrganizationsData[amresponsereportdata[i]['projectUser']['projectOrganization']]['totalScore'] / 10 / aryLeastSafeOrganizationsData[amresponsereportdata[i]['projectUser']['projectOrganization']]['cnt'], 2)s
+            
         aryFilteredProjectUsers = aryProjectUsers[:3]
         recommendedProjectUsersQuerySet = ProjectUser.objects.filter(survey=survey, pk__in=aryFilteredProjectUsers)
         recommendedProjectUserSerializer = ProjectUserForReportSerializer(
@@ -3630,9 +3514,6 @@ class AdvisorInsightsView(APIView):
         recommendedCatchupProjectUsersQuerySet = ProjectUser.objects.filter(survey=survey, pk__in=aryFilteredCatchupProjectUsers)
         recommendedCatchupProjectUserSerializer = ProjectUserForReportSerializer(recommendedCatchupProjectUsersQuerySet, many=True)
 
-        # project = Survey.objects.get(pk=survey).project
-        # totalTeamMembersCnt = Team.objects.filter(project=project).count()
-        # totalStakeHoldersCnt = ProjectUser.objects.filter(survey=survey).count()
         responsedTeamMembers = 0
         responsedStakeholders = 0
         invitedTeamMembers = ProjectUser.objects.filter(survey__id=survey, sendInvite=True, shType__shTypeName="Team Member").values()
@@ -3705,67 +3586,85 @@ class AdvisorInsightsView(APIView):
         summary = {
             "responseRateFromInvitedTeamMembers": responseRateFromInvitedTeamMembers,
             "responseRateFromInvitedStakeholders": responseRateFromInvitedStakeholders,
-            "positiveNegativeQuestionId": positiveNegativeQuestionId,
-            "optimisticPessimisticQuestionId": optimisticPessimisticQuestionId,
-            "leastSafeQuestionId": leastSafeQuestionId
+            # "positiveNegativeQuestionId": positiveNegativeQuestionId,
+            # "optimisticPessimisticQuestionId": optimisticPessimisticQuestionId,
+            # "leastSafeQuestionId": leastSafeQuestionId
             # "invitedTeamMembers": invitedTeamMembers
             # "totalDepartments": totalDepartments
         }
 
-        positivelyTeamScore = max(aryTeamsData[key]['score'] for key in aryTeamsData) if len(aryTeamsData) > 0 else 0
-        negativelyTeamScore = min(aryTeamsData[key]['score'] for key in aryTeamsData) if len(aryTeamsData) > 0 else 0
-        optimisticTeamScore = max(aryTeamsData[key]['compScore'] for key in aryTeamsData) if len(aryTeamsData) > 0 else 0
-        pessimisticTeamScore = min(
-            aryTeamsData[key]['compScore'] for key in aryTeamsData) if len(aryTeamsData) > 0 else 0
+        positivelyTeamScore = max(aryPositiveNegativeTeamsData[key]['score'] for key in aryPositiveNegativeTeamsData) if len(aryPositiveNegativeTeamsData) > 0 else 0
+        negativelyTeamScore = min(aryPositiveNegativeTeamsData[key]['score'] for key in aryPositiveNegativeTeamsData) if len(aryPositiveNegativeTeamsData) > 0 else 0
+        optimisticTeamScore = max(aryOptimisticPessimisticTeamsData[key]['score'] for key in aryOptimisticPessimisticTeamsData) if len(aryOptimisticPessimisticTeamsData) > 0 else 0
+        pessimisticTeamScore = min(aryOptimisticPessimisticTeamsData[key]['score'] for key in aryOptimisticPessimisticTeamsData) if len(aryOptimisticPessimisticTeamsData) > 0 else 0
+        leastSafeTeamScore = min(aryLeastSafeTeamsData[key]['score'] for key in aryLeastSafeTeamsData) if len(aryLeastSafeTeamsData) > 0 else 0
         positivelyTeamName = ""
         negativelyTeamName = ""
         optimisticTeamName = ""
         pessimisticTeamName = ""
-        for key in aryTeamsData:
-            if aryTeamsData[key]['score'] == positivelyTeamScore:
+        leastSafeTeamName = ""
+        for key in aryPositiveNegativeTeamsData:
+            if aryPositiveNegativeTeamsData[key]['score'] == positivelyTeamScore:
                 positivelyTeamName = key
-            if aryTeamsData[key]['score'] == negativelyTeamScore:
+            if aryPositiveNegativeTeamsData[key]['score'] == negativelyTeamScore:
                 negativelyTeamName = key
-            if aryTeamsData[key]['compScore'] == optimisticTeamScore:
+        for key in aryOptimisticPessimisticTeamsData:
+            if aryOptimisticPessimisticTeamsData[key]['score'] == optimisticTeamScore:
                 optimisticTeamName = key
-            if aryTeamsData[key]['compScore'] == pessimisticTeamScore:
+            if aryOptimisticPessimisticTeamsData[key]['score'] == pessimisticTeamScore:
                 pessimisticTeamName = key
+        for key in aryLeastSafeTeamsData:
+            if aryLeastSafeTeamsData[key]['score'] == leastSafeTeamScore:
+                leastSafeTeamName = key
 
-        positivelyShGroupScore = max(aryShGroupsData[key]['score'] for key in aryShGroupsData) if len(aryShGroupsData) > 0 else 0
-        negativelyShGroupScore = min(aryShGroupsData[key]['score'] for key in aryShGroupsData) if len(aryShGroupsData) > 0 else 0
-        optimisticShGroupScore = max(aryShGroupsData[key]['compScore'] for key in aryShGroupsData) if len(aryShGroupsData) > 0 else 0
-        pessimisticShGroupScore = min(aryShGroupsData[key]['compScore'] for key in aryShGroupsData) if len(aryShGroupsData) > 0 else 0
+        positivelyShGroupScore = max(aryPositiveNegativeShGroupsData[key]['score'] for key in aryPositiveNegativeShGroupsData) if len(aryPositiveNegativeShGroupsData) > 0 else 0
+        negativelyShGroupScore = min(aryPositiveNegativeShGroupsData[key]['score'] for key in aryPositiveNegativeShGroupsData) if len(aryPositiveNegativeShGroupsData) > 0 else 0
+        optimisticShGroupScore = max(aryOptimisticPessimisticShGroupsData[key]['score'] for key in aryOptimisticPessimisticShGroupsData) if len(aryOptimisticPessimisticShGroupsData) > 0 else 0
+        pessimisticShGroupScore = min(aryOptimisticPessimisticShGroupsData[key]['score'] for key in aryOptimisticPessimisticShGroupsData) if len(aryOptimisticPessimisticShGroupsData) > 0 else 0
+        leastSafeShGroupScore = min(aryLeastSafeShGroupsData[key]['score'] for key in aryLeastSafeShGroupsData) if len(aryLeastSafeShGroupsData) > 0 else 0
         positivelyShGroupName = ""
         negativelyShGroupName = ""
         optimisticShGroupName = ""
         pessimisticShGroupName = ""
-        for key in aryShGroupsData:
-            if aryShGroupsData[key]['score'] == positivelyShGroupScore:
+        leastSafeShGroupName = ""
+        for key in aryPositiveNegativeShGroupsData:
+            if aryPositiveNegativeShGroupsData[key]['score'] == positivelyShGroupScore:
                 positivelyShGroupName = key
-            if aryShGroupsData[key]['score'] == negativelyShGroupScore:
+            if aryPositiveNegativeShGroupsData[key]['score'] == negativelyShGroupScore:
                 negativelyShGroupName = key
-            if aryShGroupsData[key]['compScore'] == optimisticShGroupScore:
+        for key in aryOptimisticPessimisticShGroupsData:
+            if aryOptimisticPessimisticShGroupsData[key]['score'] == optimisticShGroupScore:
                 optimisticShGroupName = key
-            if aryShGroupsData[key]['compScore'] == pessimisticShGroupScore:
+            if aryOptimisticPessimisticShGroupsData[key]['score'] == pessimisticShGroupScore:
                 pessimisticShGroupName = key
+        for key in aryLeastSafeShGroupsData:
+            if aryLeastSafeShGroupsData[key]['score'] == leastSafeShGroupScore:
+                leastSafeShGroupName = key
 
-        positivelyOrgScore = max(aryOrganizationsData[key]['score'] for key in aryOrganizationsData) if len(aryOrganizationsData) > 0 else 0
-        negativelyOrgScore = min(aryOrganizationsData[key]['score'] for key in aryOrganizationsData) if len(aryOrganizationsData) > 0 else 0
-        optimisticOrgScore = max(aryOrganizationsData[key]['score'] for key in aryOrganizationsData) if len(aryOrganizationsData) > 0 else 0
-        pessimisticOrgScore = min(aryOrganizationsData[key]['score'] for key in aryOrganizationsData) if len(aryOrganizationsData) > 0 else 0
+        positivelyOrgScore = max(aryPositiveNegativeOrganizationsData[key]['score'] for key in aryPositiveNegativeOrganizationsData) if len(aryPositiveNegativeOrganizationsData) > 0 else 0
+        negativelyOrgScore = min(aryPositiveNegativeOrganizationsData[key]['score'] for key in aryPositiveNegativeOrganizationsData) if len(aryPositiveNegativeOrganizationsData) > 0 else 0
+        optimisticOrgScore = max(aryOptimisticPessimisticOrganizationsData[key]['score'] for key in aryOptimisticPessimisticOrganizationsData) if len(aryOptimisticPessimisticOrganizationsData) > 0 else 0
+        pessimisticOrgScore = min(aryOptimisticPessimisticOrganizationsData[key]['score'] for key in aryOptimisticPessimisticOrganizationsData) if len(aryOptimisticPessimisticOrganizationsData) > 0 else 0
+        leastSafeOrgScore = min(aryLeastSafeOrganizationsData[key]['score'] for key in aryLeastSafeOrganizationsData) if len(aryLeastSafeOrganizationsData) > 0 else 0
+
         positivelyOrgName = ""
         negativelyOrgName = ""
         optimisticOrgName = ""
         pessimisticOrgName = ""
-        for key in aryOrganizationsData:
-            if aryOrganizationsData[key]['score'] == positivelyOrgScore:
+        leastSafeOrgName = ""
+        for key in aryPositiveNegativeOrganizationsData:
+            if aryPositiveNegativeOrganizationsData[key]['score'] == positivelyOrgScore:
                 positivelyOrgName = key
-            if aryOrganizationsData[key]['score'] == negativelyOrgScore:
+            if aryPositiveNegativeOrganizationsData[key]['score'] == negativelyOrgScore:
                 negativelyOrgName = key
-            if aryOrganizationsData[key]['score'] == optimisticOrgScore:
+        for key in aryOptimisticPessimisticOrganizationsData:
+            if aryOptimisticPessimisticOrganizationsData[key]['score'] == optimisticOrgScore:
                 optimisticOrgName = key
-            if aryOrganizationsData[key]['score'] == pessimisticOrgScore:
+            if aryOptimisticPessimisticOrganizationsData[key]['score'] == pessimisticOrgScore:
                 pessimisticOrgName = key
+        for key in aryLeastSafeOrganizationsData:
+            if aryLeastSafeOrganizationsData[key]['score'] == leastSafeOrgScore:
+                leastSafeOrgName = key
 
         detailedData = {
             "positively": {

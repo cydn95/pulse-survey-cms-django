@@ -83,7 +83,7 @@ urlpatterns += format_suffix_patterns([
     url(r'wordcloud', views.WordCloudView.as_view()),
     # WIP
     url(r'advisorinsights', views.AdvisorInsightsView.as_view()),
-    url(r'test', views.NewAdvisorInsightsView.as_view()),
+    # url(r'test', views.NewAdvisorInsightsView.as_view()),
     url(r'driveranalysis', views.DriverAnalysisView.as_view()),
     url(r'totalshcnt', views.TotalStakeHolderView.as_view()),
     url(r'checkdashboardstatus', views.CheckDashboardStatusView.as_view()),
