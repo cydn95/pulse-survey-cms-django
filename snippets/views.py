@@ -3431,7 +3431,7 @@ class AdvisorInsightsView(APIView):
             #     if amresponsereportdata[i]['projectUser']['shGroup']['SHGroupName'] not in aryShGroups:
             #         aryShGroups.append(
             #             amresponsereportdata[i]['projectUser']['shGroup']['SHGroupName'])
-            if ((amresponsereportdata[i]['projectUser']["id"] not in aryProjectUsers) & (amresponsereportdata[i]['projectUser']["survey"] == survey)):
+            if ((amresponsereportdata[i]['projectUser']["id"] not in aryProjectUsers) and (amresponsereportdata[i]['projectUser']["survey_id"] == survey)):
                 aryProjectUsers.append(
                     amresponsereportdata[i]['projectUser']["id"])
             # if (amresponsereportdata[i]['projectUser']['user']['userteam'] is not None):
