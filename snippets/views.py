@@ -3594,10 +3594,10 @@ class AdvisorInsightsView(APIView):
         summary = {
             "responseRateFromInvitedTeamMembers": responseRateFromInvitedTeamMembers,
             "responseRateFromInvitedStakeholders": responseRateFromInvitedStakeholders,
-            "positiveNegativeQuestionId": positiveNegativeQuestionId,
-            "optimisticPessimisticQuestionId": optimisticPessimisticQuestionId,
-            "leastSafeQuestionId": leastSafeQuestionId,
-            "amresponsereportdata": amresponsereportdata
+            # "positiveNegativeQuestionId": positiveNegativeQuestionId,
+            # "optimisticPessimisticQuestionId": optimisticPessimisticQuestionId,
+            # "leastSafeQuestionId": leastSafeQuestionId,
+            # "amresponsereportdata": amresponsereportdata
             # "invitedTeamMembers": invitedTeamMembers
             # "totalDepartments": totalDepartments
         }
@@ -3753,7 +3753,8 @@ class AdvisorInsightsView(APIView):
             "catchupProjectUsers": recommendedCatchupProjectUserSerializer.data, 
             "recommendedProjectUsers": recommendedProjectUserSerializer.data[:3], 
             "detailedData": detailedData,
-            "amresponsereportdata": amresponsereportdata
+            "aryProjectUsers": aryProjectUsers
+            # "amresponsereportdata": amresponsereportdata
         }, status=status.HTTP_200_OK)
 
 # new advisorinsights api
