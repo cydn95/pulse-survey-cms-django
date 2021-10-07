@@ -3753,8 +3753,8 @@ class AdvisorInsightsView(APIView):
             "catchupProjectUsers": recommendedCatchupProjectUserSerializer.data, 
             "recommendedProjectUsers": recommendedProjectUserSerializer.data[:3], 
             "detailedData": detailedData,
-            "aryProjectUsers": aryProjectUsers,
-            "amresponsereportdata": amresponsereportdata
+            # "aryProjectUsers": aryProjectUsers,
+            # "amresponsereportdata": amresponsereportdata
         }, status=status.HTTP_200_OK)
 
 # new advisorinsights api
