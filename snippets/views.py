@@ -3594,56 +3594,56 @@ class AdvisorInsightsView(APIView):
         aryPositiveNegativeData = []
         for key in aryPositiveNegativeTeamsData:
             item = aryPositiveNegativeTeamsData[key]
-            item[key] = key
+            item["key"] = key
             aryPositiveNegativeData.append(item)
         for key in aryPositiveNegativeOrganizationsData:
             item = aryPositiveNegativeOrganizationsData[key]
-            item[key] = key
+            item["key"] = key
             aryPositiveNegativeData.append(item)
         for key in aryPositiveNegativeShGroupsData:
             item = aryPositiveNegativeShGroupsData[key]
-            item[key] = key
+            item["key"] = key
             aryPositiveNegativeData.append(item)
         # aryPositiveNegativeData.update(aryPositiveNegativeTeamsData)
         # aryPositiveNegativeData.update(aryPositiveNegativeOrganizationsData)
         # aryPositiveNegativeData.update(aryPositiveNegativeShGroupsData)
 
-        # aryPositiveNegativeData.sort(key=lambda x: x.score, reverse=True)
+        aryPositiveNegativeData.sort(key=lambda x: x["score"], reverse=True)
 
         aryOptimisticPessimisticData = []
         for key in aryOptimisticPessimisticTeamsData:
             item = aryOptimisticPessimisticTeamsData[key]
-            item[key] = key
+            item["key"] = key
             aryOptimisticPessimisticData.append(item)
         for key in aryOptimisticPessimisticOrganizationsData:
             item = aryOptimisticPessimisticOrganizationsData[key]
-            item[key] = key
+            item["key"] = key
             aryOptimisticPessimisticData.append(item)
         for key in aryOptimisticPessimisticShGroupsData:
             item = aryOptimisticPessimisticShGroupsData[key]
-            item[key] = key
+            item["key"] = key
             aryOptimisticPessimisticData.append(item)
         # aryOptimisticPessimisticData.update(aryOptimisticPessimisticTeamsData)
         # aryOptimisticPessimisticData.update(aryOptimisticPessimisticOrganizationsData)
         # aryOptimisticPessimisticData.update(aryOptimisticPessimisticShGroupsData)
 
-        # aryOptimisticPessimisticData.sort(key=lambda x: x.score, reverse=True)
+        aryOptimisticPessimisticData.sort(key=lambda x: x["score"], reverse=True)
 
         aryLeastSafeData = []
         for key in aryLeastSafeTeamsData:
             item = aryLeastSafeTeamsData[key]
-            item[key] = key
+            item["key"] = key
             aryLeastSafeData.append(item)
         for key in aryLeastSafeShGroupsData:
             item = aryLeastSafeShGroupsData[key]
-            item[key] = key
+            item["key"] = key
             aryLeastSafeData.append(item)
         for key in aryLeastSafeOrganizationsData:
             item = aryLeastSafeOrganizationsData[key]
-            item[key] = key
+            item["key"] = key
             aryLeastSafeData.append(item)
 
-        # aryLeastSafeData.sort(key=lambda x: x.score, reverse=True)
+        aryLeastSafeData.sort(key=lambda x: x["score"], reverse=True)
         # aryLeastSafeData.update(aryLeastSafeTeamsData)
         # aryLeastSafeData.update(aryLeastSafeShGroupsData)
         # aryLeastSafeData.update(aryLeastSafeOrganizationsData)
