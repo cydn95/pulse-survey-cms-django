@@ -3800,14 +3800,14 @@ class AdvisorInsightsView(APIView):
         pessimisticOrgName = ""
         pessimisticOrgScore = ""
         if len(aryOptimisticPessimisticData) > 0:
-            optimisticTeamName = aryOptimisticPessimisticData[-1]["key"]
-            optimisticTeamScore = aryOptimisticPessimisticData[-1]["score"]
+            pessimisticTeamName = aryOptimisticPessimisticData[-1]["key"]
+            pessimisticTeamScore = aryOptimisticPessimisticData[-1]["score"]
         if len(aryOptimisticPessimisticData) > 1:
-            optimisticShGroupName = aryOptimisticPessimisticData[-2]["key"]
-            optimisticShGroupScore = aryOptimisticPessimisticData[-2]["score"]
+            pessimisticShGroupName = aryOptimisticPessimisticData[-2]["key"]
+            pessimisticShGroupScore = aryOptimisticPessimisticData[-2]["score"]
         if len(aryOptimisticPessimisticData) > 2:
-            optimisticOrgName = aryOptimisticPessimisticData[-3]["key"]
-            optimisticOrgScore = aryOptimisticPessimisticData[-3]["score"]
+            pessimisticOrgName = aryOptimisticPessimisticData[-3]["key"]
+            pessimisticOrgScore = aryOptimisticPessimisticData[-3]["score"]
 
         leastSafeTeamName = ""
         leastSafeTeamScore = ""
