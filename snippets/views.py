@@ -2848,10 +2848,8 @@ class KeyThemesView(APIView):
 
             ret = ktamresponseserializer.data
             for i in range(len(ret)):
-                tmpQuerySet = AMResponseAcknowledgement.objects.all().filter(
-                    amResponse__id=ret[i]['id'])
-                amResponseAcknowledgementSerializer = AMResponseAcknowledgementSerializer(
-                    tmpQuerySet, many=True)
+                tmpQuerySet = AMResponseAcknowledgement.objects.all().filter(amResponse__id=ret[i]['id'])
+                amResponseAcknowledgementSerializer = AMResponseAcknowledgementSerializer(tmpQuerySet, many=True)
                 ret[i]['acknowledgementData'] = amResponseAcknowledgementSerializer.data
                 ret[i]['likeCount'] = AMResponseAcknowledgement.objects.all().filter(amResponse__id=ret[i]['id'], likeStatus=1).count()
                 ret[i]['dislikeCount'] = AMResponseAcknowledgement.objects.all().filter(amResponse__id=ret[i]['id'], likeStatus=2).count()
@@ -2867,8 +2865,7 @@ class KeyThemesView(APIView):
                 ret[i]['outOfPolicyCount'] = AMResponseAcknowledgement.objects.all().filter(amResponse__id=ret[i]['id'], flagStatus=4).count()
                 ret[i]['aggressiveCount'] = AMResponseAcknowledgement.objects.all().filter(amResponse__id=ret[i]['id'], flagStatus=5).count()
                 myQuerySet = AMResponseAcknowledgement.objects.all().filter(amResponse__id=ret[i]['id'], projectUser__id=projectUser)
-                myAmResponseAcknowledgementSerializer = AMResponseAcknowledgementSerializer(
-                    myQuerySet, many=True)
+                myAmResponseAcknowledgementSerializer = AMResponseAcknowledgementSerializer(myQuerySet, many=True)
                 ret[i]['myStatus'] = myAmResponseAcknowledgementSerializer.data
             
             return Response(ret, status=status.HTTP_200_OK)
@@ -3604,9 +3601,6 @@ class AdvisorInsightsView(APIView):
             item = aryPositiveNegativeShGroupsData[key]
             item["key"] = key
             aryPositiveNegativeData.append(item)
-        # aryPositiveNegativeData.update(aryPositiveNegativeTeamsData)
-        # aryPositiveNegativeData.update(aryPositiveNegativeOrganizationsData)
-        # aryPositiveNegativeData.update(aryPositiveNegativeShGroupsData)
 
         aryPositiveNegativeData.sort(key=lambda x: x["score"], reverse=True)
 
@@ -3623,9 +3617,6 @@ class AdvisorInsightsView(APIView):
             item = aryOptimisticPessimisticShGroupsData[key]
             item["key"] = key
             aryOptimisticPessimisticData.append(item)
-        # aryOptimisticPessimisticData.update(aryOptimisticPessimisticTeamsData)
-        # aryOptimisticPessimisticData.update(aryOptimisticPessimisticOrganizationsData)
-        # aryOptimisticPessimisticData.update(aryOptimisticPessimisticShGroupsData)
 
         aryOptimisticPessimisticData.sort(key=lambda x: x["score"], reverse=True)
 
@@ -3644,32 +3635,10 @@ class AdvisorInsightsView(APIView):
             aryLeastSafeData.append(item)
 
         aryLeastSafeData.sort(key=lambda x: x["score"], reverse=True)
-        # aryLeastSafeData.update(aryLeastSafeTeamsData)
-        # aryLeastSafeData.update(aryLeastSafeShGroupsData)
-        # aryLeastSafeData.update(aryLeastSafeOrganizationsData)
-
 
         summary = {
             "responseRateFromInvitedTeamMembers": responseRateFromInvitedTeamMembers,
             "responseRateFromInvitedStakeholders": responseRateFromInvitedStakeholders,
-            # "aryPositiveNegativeTeamsData": aryPositiveNegativeTeamsData,
-            # "aryLeastSafeTeamsData": aryLeastSafeTeamsData,
-            # "aryOptimisticPessimisticTeamsData": aryOptimisticPessimisticTeamsData,
-            # "aryPositiveNegativeShGroupsData": aryPositiveNegativeShGroupsData,
-            # "aryOptimisticPessimisticShGroupsData": aryOptimisticPessimisticShGroupsData,
-            # "aryLeastSafeShGroupsData": aryLeastSafeShGroupsData,
-            # "aryPositiveNegativeOrganizationsData": aryPositiveNegativeOrganizationsData,
-            # "aryOptimisticPessimisticOrganizationsData": aryOptimisticPessimisticOrganizationsData,
-            # "aryLeastSafeOrganizationsData": aryLeastSafeOrganizationsData,
-            # "aryPositiveNegativeData": aryPositiveNegativeData,
-            # "aryOptimisticPessimisticData": aryOptimisticPessimisticData,
-            # "aryLeastSafeData": aryLeastSafeData
-            # "positiveNegativeQuestionId": positiveNegativeQuestionId,
-            # "optimisticPessimisticQuestionId": optimisticPessimisticQuestionId,
-            # "leastSafeQuestionId": leastSafeQuestionId,
-            # "amresponsereportdata": amresponsereportdata
-            # "invitedTeamMembers": invitedTeamMembers
-            # "totalDepartments": totalDepartments
         }
 
         # positivelyTeamScore = max(aryPositiveNegativeTeamsData[key]['score'] for key in aryPositiveNegativeTeamsData) if len(aryPositiveNegativeTeamsData) > 0 else 0
