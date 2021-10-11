@@ -3594,6 +3594,15 @@ class AdvisorInsightsView(APIView):
         summary = {
             "responseRateFromInvitedTeamMembers": responseRateFromInvitedTeamMembers,
             "responseRateFromInvitedStakeholders": responseRateFromInvitedStakeholders,
+            "aryPositiveNegativeTeamsData": aryPositiveNegativeTeamsData,
+            "aryLeastSafeTeamsData": aryLeastSafeTeamsData,
+            "aryOptimisticPessimisticTeamsData": aryOptimisticPessimisticTeamsData,
+            "aryPositiveNegativeShGroupsData": aryPositiveNegativeShGroupsData,
+            "aryOptimisticPessimisticShGroupsData": aryOptimisticPessimisticShGroupsData,
+            "aryLeastSafeShGroupsData": aryLeastSafeShGroupsData,
+            "aryPositiveNegativeOrganizationsData": aryPositiveNegativeOrganizationsData,
+            "aryOptimisticPessimisticOrganizationsData": aryOptimisticPessimisticOrganizationsData,
+            "aryLeastSafeOrganizationsData": aryLeastSafeOrganizationsData
             # "positiveNegativeQuestionId": positiveNegativeQuestionId,
             # "optimisticPessimisticQuestionId": optimisticPessimisticQuestionId,
             # "leastSafeQuestionId": leastSafeQuestionId,
