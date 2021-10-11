@@ -3661,9 +3661,9 @@ class AdvisorInsightsView(APIView):
             # "aryPositiveNegativeOrganizationsData": aryPositiveNegativeOrganizationsData,
             # "aryOptimisticPessimisticOrganizationsData": aryOptimisticPessimisticOrganizationsData,
             # "aryLeastSafeOrganizationsData": aryLeastSafeOrganizationsData,
-            "aryPositiveNegativeData": aryPositiveNegativeData,
-            "aryOptimisticPessimisticData": aryOptimisticPessimisticData,
-            "aryLeastSafeData": aryLeastSafeData
+            # "aryPositiveNegativeData": aryPositiveNegativeData,
+            # "aryOptimisticPessimisticData": aryOptimisticPessimisticData,
+            # "aryLeastSafeData": aryLeastSafeData
             # "positiveNegativeQuestionId": positiveNegativeQuestionId,
             # "optimisticPessimisticQuestionId": optimisticPessimisticQuestionId,
             # "leastSafeQuestionId": leastSafeQuestionId,
