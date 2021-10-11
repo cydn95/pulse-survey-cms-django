@@ -3596,19 +3596,31 @@ class AdvisorInsightsView(APIView):
         aryPositiveNegativeData.update(aryPositiveNegativeOrganizationsData)
         aryPositiveNegativeData.update(aryPositiveNegativeShGroupsData)
 
+        aryOptimisticPessimisticData = dict()
+        aryOptimisticPessimisticData.update(aryOptimisticPessimisticTeamsData)
+        aryOptimisticPessimisticData.update(aryOptimisticPessimisticOrganizationsData)
+        aryOptimisticPessimisticData.update(aryOptimisticPessimisticShGroupsData)
+
+        aryLeastSafeData = dict()
+        aryLeastSafeData.update(aryLeastSafeTeamsData)
+        aryLeastSafeData.update(aryLeastSafeShGroupsData)
+        aryLeastSafeData.update(aryLeastSafeOrganizationsData)
+
         summary = {
             "responseRateFromInvitedTeamMembers": responseRateFromInvitedTeamMembers,
             "responseRateFromInvitedStakeholders": responseRateFromInvitedStakeholders,
-            "aryPositiveNegativeTeamsData": aryPositiveNegativeTeamsData,
-            "aryLeastSafeTeamsData": aryLeastSafeTeamsData,
-            "aryOptimisticPessimisticTeamsData": aryOptimisticPessimisticTeamsData,
-            "aryPositiveNegativeShGroupsData": aryPositiveNegativeShGroupsData,
-            "aryOptimisticPessimisticShGroupsData": aryOptimisticPessimisticShGroupsData,
-            "aryLeastSafeShGroupsData": aryLeastSafeShGroupsData,
-            "aryPositiveNegativeOrganizationsData": aryPositiveNegativeOrganizationsData,
-            "aryOptimisticPessimisticOrganizationsData": aryOptimisticPessimisticOrganizationsData,
-            "aryLeastSafeOrganizationsData": aryLeastSafeOrganizationsData,
-            "aryPositiveNegativeData": aryPositiveNegativeData
+            # "aryPositiveNegativeTeamsData": aryPositiveNegativeTeamsData,
+            # "aryLeastSafeTeamsData": aryLeastSafeTeamsData,
+            # "aryOptimisticPessimisticTeamsData": aryOptimisticPessimisticTeamsData,
+            # "aryPositiveNegativeShGroupsData": aryPositiveNegativeShGroupsData,
+            # "aryOptimisticPessimisticShGroupsData": aryOptimisticPessimisticShGroupsData,
+            # "aryLeastSafeShGroupsData": aryLeastSafeShGroupsData,
+            # "aryPositiveNegativeOrganizationsData": aryPositiveNegativeOrganizationsData,
+            # "aryOptimisticPessimisticOrganizationsData": aryOptimisticPessimisticOrganizationsData,
+            # "aryLeastSafeOrganizationsData": aryLeastSafeOrganizationsData,
+            "aryPositiveNegativeData": aryPositiveNegativeData,
+            "aryOptimisticPessimisticData": aryOptimisticPessimisticData,
+            "aryLeastSafeData": aryLeastSafeData
             # "positiveNegativeQuestionId": positiveNegativeQuestionId,
             # "optimisticPessimisticQuestionId": optimisticPessimisticQuestionId,
             # "leastSafeQuestionId": leastSafeQuestionId,
