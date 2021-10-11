@@ -3591,6 +3591,11 @@ class AdvisorInsightsView(APIView):
         if len(invitedStakeholders) > 0:
             responseRateFromInvitedStakeholders = responsedStakeholders * 100 / len(invitedStakeholders)
         
+        aryPositiveNegativeData = dict()
+        aryPositiveNegativeData.update(aryPositiveNegativeTeamsData)
+        aryPositiveNegativeData.update(aryPositiveNegativeOrganizationsData)
+        aryPositiveNegativeData.update(aryPositiveNegativeShGroupsData)
+
         summary = {
             "responseRateFromInvitedTeamMembers": responseRateFromInvitedTeamMembers,
             "responseRateFromInvitedStakeholders": responseRateFromInvitedStakeholders,
@@ -3602,7 +3607,8 @@ class AdvisorInsightsView(APIView):
             "aryLeastSafeShGroupsData": aryLeastSafeShGroupsData,
             "aryPositiveNegativeOrganizationsData": aryPositiveNegativeOrganizationsData,
             "aryOptimisticPessimisticOrganizationsData": aryOptimisticPessimisticOrganizationsData,
-            "aryLeastSafeOrganizationsData": aryLeastSafeOrganizationsData
+            "aryLeastSafeOrganizationsData": aryLeastSafeOrganizationsData,
+            "aryPositiveNegativeData": aryPositiveNegativeData
             # "positiveNegativeQuestionId": positiveNegativeQuestionId,
             # "optimisticPessimisticQuestionId": optimisticPessimisticQuestionId,
             # "leastSafeQuestionId": leastSafeQuestionId,
