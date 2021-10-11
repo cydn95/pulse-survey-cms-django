@@ -3595,15 +3595,9 @@ class AdvisorInsightsView(APIView):
         aryPositiveNegativeData.update(aryPositiveNegativeTeamsData)
         aryPositiveNegativeData.update(aryPositiveNegativeOrganizationsData)
         aryPositiveNegativeData.update(aryPositiveNegativeShGroupsData)
-        test = {
-            "Project Controls": {
-                "totalScore": 1,
-                "cnt": 1,
-                "score": 1
-            }
-        }
-        aryPositiveNegativeData.update(test)
-        
+
+        aryPositiveNegativeData.sort(key=lambda x: x.score, reverse=True)
+
         aryOptimisticPessimisticData = dict()
         aryOptimisticPessimisticData.update(aryOptimisticPessimisticTeamsData)
         aryOptimisticPessimisticData.update(aryOptimisticPessimisticOrganizationsData)
@@ -3613,6 +3607,7 @@ class AdvisorInsightsView(APIView):
         aryLeastSafeData.update(aryLeastSafeTeamsData)
         aryLeastSafeData.update(aryLeastSafeShGroupsData)
         aryLeastSafeData.update(aryLeastSafeOrganizationsData)
+
 
         summary = {
             "responseRateFromInvitedTeamMembers": responseRateFromInvitedTeamMembers,
