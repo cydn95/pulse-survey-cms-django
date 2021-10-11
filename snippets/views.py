@@ -3595,7 +3595,15 @@ class AdvisorInsightsView(APIView):
         aryPositiveNegativeData.update(aryPositiveNegativeTeamsData)
         aryPositiveNegativeData.update(aryPositiveNegativeOrganizationsData)
         aryPositiveNegativeData.update(aryPositiveNegativeShGroupsData)
-
+        test = {
+            "Project Controls": {
+                "totalScore": 1,
+                "cnt": 1,
+                "score": 1
+            }
+        }
+        aryPositiveNegativeData.update(test)
+        
         aryOptimisticPessimisticData = dict()
         aryOptimisticPessimisticData.update(aryOptimisticPessimisticTeamsData)
         aryOptimisticPessimisticData.update(aryOptimisticPessimisticOrganizationsData)
