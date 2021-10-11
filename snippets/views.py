@@ -3608,7 +3608,7 @@ class AdvisorInsightsView(APIView):
         # aryPositiveNegativeData.update(aryPositiveNegativeOrganizationsData)
         # aryPositiveNegativeData.update(aryPositiveNegativeShGroupsData)
 
-        aryPositiveNegativeData.sort(key=lambda x: x.score, reverse=True)
+        # aryPositiveNegativeData.sort(key=lambda x: x.score, reverse=True)
 
         aryOptimisticPessimisticData = []
         for key in aryOptimisticPessimisticTeamsData:
@@ -3627,7 +3627,7 @@ class AdvisorInsightsView(APIView):
         # aryOptimisticPessimisticData.update(aryOptimisticPessimisticOrganizationsData)
         # aryOptimisticPessimisticData.update(aryOptimisticPessimisticShGroupsData)
 
-        aryOptimisticPessimisticData.sort(key=lambda x: x.score, reverse=True)
+        # aryOptimisticPessimisticData.sort(key=lambda x: x.score, reverse=True)
 
         aryLeastSafeData = []
         for key in aryLeastSafeTeamsData:
@@ -3643,7 +3643,7 @@ class AdvisorInsightsView(APIView):
             item[key] = key
             aryLeastSafeData.append(item)
 
-        aryLeastSafeData.sort(key=lambda x: x.score, reverse=True)
+        # aryLeastSafeData.sort(key=lambda x: x.score, reverse=True)
         # aryLeastSafeData.update(aryLeastSafeTeamsData)
         # aryLeastSafeData.update(aryLeastSafeShGroupsData)
         # aryLeastSafeData.update(aryLeastSafeOrganizationsData)
