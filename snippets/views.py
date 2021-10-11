@@ -3751,13 +3751,13 @@ class AdvisorInsightsView(APIView):
         positivelyShGroupScore = ""
         positivelyOrgName = ""
         positivelyOrgScore = ""
-        if count(aryPositiveNegativeData) > 0:
+        if len(aryPositiveNegativeData) > 0:
             positivelyTeamName = aryPositiveNegativeData[0]["key"]
             positivelyTeamScore = aryPositiveNegativeData[0]["score"]
-        if count(aryPositiveNegativeData) > 1:
+        if len(aryPositiveNegativeData) > 1:
             positivelyShGroupName = aryPositiveNegativeData[1]["key"]
             positivelyShGroupScore = aryPositiveNegativeData[1]["score"]
-        if count(aryPositiveNegativeData) > 2:
+        if len(aryPositiveNegativeData) > 2:
             positivelyOrgName = aryPositiveNegativeData[2]["key"]
             positivelyOrgScore = aryPositiveNegativeData[2]["score"]
 
@@ -3767,13 +3767,13 @@ class AdvisorInsightsView(APIView):
         negativelyShGroupScore = ""
         negativelyOrgName = ""
         negativelyOrgScore = ""
-        if count(aryPositiveNegativeData) > 0:
+        if len(aryPositiveNegativeData) > 0:
             negativelyTeamName = aryPositiveNegativeData[-1]["key"]
             negativelyTeamScore = aryPositiveNegativeData[-1]["score"]
-        if count(aryPositiveNegativeData) > 1:
+        if len(aryPositiveNegativeData) > 1:
             negativelyShGroupName = aryPositiveNegativeData[-2]["key"]
             negativelyShGroupScore = aryPositiveNegativeData[-2]["score"]
-        if count(aryPositiveNegativeData) > 2:
+        if len(aryPositiveNegativeData) > 2:
             negativelyOrgName = aryPositiveNegativeData[-3]["key"]
             negativelyOrgScore = aryPositiveNegativeData[-3]["score"]
 
@@ -3783,13 +3783,13 @@ class AdvisorInsightsView(APIView):
         optimisticShGroupScore = ""
         optimisticOrgName = ""
         optimisticOrgScore = ""
-        if count(aryOptimisticPessimisticData) > 0:
+        if len(aryOptimisticPessimisticData) > 0:
             optimisticTeamName = aryOptimisticPessimisticData[0]["key"]
             optimisticTeamScore = aryOptimisticPessimisticData[0]["score"]
-        if count(aryOptimisticPessimisticData) > 1:
+        if len(aryOptimisticPessimisticData) > 1:
             optimisticShGroupName = aryOptimisticPessimisticData[1]["key"]
             optimisticShGroupScore = aryOptimisticPessimisticData[1]["score"]
-        if count(aryOptimisticPessimisticData) > 2:
+        if len(aryOptimisticPessimisticData) > 2:
             optimisticOrgName = aryOptimisticPessimisticData[2]["key"]
             optimisticOrgScore = aryOptimisticPessimisticData[2]["score"]
 
@@ -3799,13 +3799,13 @@ class AdvisorInsightsView(APIView):
         pessimisticShGroupScore = ""
         pessimisticOrgName = ""
         pessimisticOrgScore = ""
-        if count(aryOptimisticPessimisticData) > 0:
+        if len(aryOptimisticPessimisticData) > 0:
             optimisticTeamName = aryOptimisticPessimisticData[-1]["key"]
             optimisticTeamScore = aryOptimisticPessimisticData[-1]["score"]
-        if count(aryOptimisticPessimisticData) > 1:
+        if len(aryOptimisticPessimisticData) > 1:
             optimisticShGroupName = aryOptimisticPessimisticData[-2]["key"]
             optimisticShGroupScore = aryOptimisticPessimisticData[-2]["score"]
-        if count(aryOptimisticPessimisticData) > 2:
+        if len(aryOptimisticPessimisticData) > 2:
             optimisticOrgName = aryOptimisticPessimisticData[-3]["key"]
             optimisticOrgScore = aryOptimisticPessimisticData[-3]["score"]
 
@@ -3815,13 +3815,13 @@ class AdvisorInsightsView(APIView):
         leastSafeShGroupScore = ""
         leastSafeOrgName = ""
         leastSafeOrgScore = ""
-        if count(aryLeastSafeData) > 0:
+        if len(aryLeastSafeData) > 0:
             leastSafeTeamName = aryLeastSafeData[-1]["key"]
             leastSafeTeamScore = aryLeastSafeData[-1]["score"]
-        if count(aryLeastSafeData) > 1:
+        if len(aryLeastSafeData) > 1:
             leastSafeShGroupName = aryLeastSafeData[-2]["key"]
             leastSafeShGroupScore = aryLeastSafeData[-2]["score"]
-        if count(aryLeastSafeData) > 2:
+        if len(aryLeastSafeData) > 2:
             leastSafeOrgName = aryLeastSafeData[-3]["key"]
             leastSafeOrgScore = aryLeastSafeData[-3]["score"]
 
