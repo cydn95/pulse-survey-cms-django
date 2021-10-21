@@ -2159,40 +2159,28 @@ class AdminUserBySurveyViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
 
-        # myProjectUser_id = self.request.GET.get('projectuser')
         survey = self.request.GET.get('survey')
 
-        # startDate = self.request.GET.get('stdt', None)
-        # endDate = self.request.GET.get('eddt', None)
+        identifiedTeamMemberCnt = 0
+        identifiedStakeholderCnt = 0
+        invitedTeamMemberCnt = 0
+        invitedStakeholderCnt = 0
+        totalIdentifiedCnt = len(response.data)
+        totalInvitedCnt = 0
 
-        # if (startDate is not None) & (endDate is not None):
-        #     for i in range(len(response.data)):
-        #         filters = ~Q(shGroup=None)
-        #         if response.data[i]['user']['last_login'] is not None:
-        #             response.data[i]['accept_status'] = True
-        #         else:
-        #             response.data[i]['accept_status'] = False
-
-        #         response.data[i]['am_total'] = AMQuestion.objects.filter(filters).filter(survey__id=survey).count()
-        #         response.data[i]['am_response'] = []
-
-        #         for item1 in AMResponse.objects.filter(projectUser_id=response.data[i]['id'], latestResponse=True, created_at__range=[startDate, endDate]).values('amQuestion'):
-        #             response.data[i]['am_response'].append(item1['amQuestion']) 
-        #         response.data[i]['am_answered'] = AMResponse.objects.filter(
-        #             projectUser_id=response.data[i]['id'], latestResponse=True, created_at__range=[startDate, endDate]).count()
-        #         response.data[i]['ao_total'] = AOQuestion.objects.filter(filters).filter(survey__id=survey).count()
-        #         response.data[i]['ao_response'] = []
-        #         for item2 in AOResponse.objects.filter(subProjectUser_id=response.data[i]['id'], latestResponse=True, created_at__range=[startDate, endDate]).values('aoQuestion'):
-        #             response.data[i]['ao_response'].append(item2['aoQuestion']) 
-        #         response.data[i]['ao_answered'] = AOResponse.objects.filter(
-        #             subProjectUser_id=response.data[i]['id'], latestResponse=True, created_at__range=[startDate, endDate]).count()
-
-        #         response.data[i]['shCategory'] = []
-                
-        #         for item3 in SHMapping.objects.filter(projectUser_id=myProjectUser_id, subProjectUser_id=response.data[i]['id']).values('shCategory'):
-        #             response.data[i]['shCategory'].append(item3['shCategory'])
-        # else:
         for i in range(len(response.data)):
+            if response.data[i]['sendInvite'] == True:
+                totalInvitedCnt = totalInvitedCnt + 1
+            if response.data[i]['shType'] is not None:
+                if response.data[i]['shType']['shTypeName'] == 'Team Member':
+                    identifiedTeamMemberCnt = identifiedTeamMemberCnt + 1
+                    if response.data[i]['sendInvite'] == True:
+                        invitedTeamMemberCnt = invitedTeamMemberCnt + 1
+                if response.data[i]['shType']['shTypeName'] == 'Stakeholder':
+                    identifiedStakeholderCnt = identifiedStakeholderCnt + 1
+                    if response.data[i]['sendInvite'] == True:
+                        invitedStakeholderCnt = invitedStakeholderCnt + 1
+
             filters = ~Q(shGroup=None)
             if response.data[i]['user']['last_login'] is not None:
                 response.data[i]['accept_status'] = True
@@ -2214,27 +2202,31 @@ class AdminUserBySurveyViewSet(viewsets.ModelViewSet):
                 response.data[i]['ao_response'].append(item2['aoQuestion'])
             response.data[i]['ao_answered'] = AOResponse.objects.filter(
                 subProjectUser_id=response.data[i]['id'], latestResponse=True).count()
+        
+        ret = {
+            "projectUser": response.data,
+            "identifiedTeamMemberCnt": identifiedTeamMemberCnt,
+            "identifiedStakeholderCnt": identifiedStakeholderCnt,
+            "invitedTeamMemberCnt": invitedTeamMemberCnt,
+            "invitedStakeholderCnt": invitedStakeholderCnt,
+            "totalIdentifiedCnt": totalIdentifiedCnt,
+            "totalInvitedCnt": totalInvitedCnt
+        }
 
-            # response.data[i]['shCategory'] = []
-
-            # for item3 in SHMapping.objects.filter(projectUser_id=myProjectUser_id, subProjectUser_id=response.data[i]['id']).values('shCategory'):
-            #     response.data[i]['shCategory'].append(item3['shCategory'])
-
-        # return response
-        return Response(response.data, status=status.HTTP_200_OK)
+        return Response(ret, status=status.HTTP_200_OK)
 
     def get_queryset(self):
         queryset = ProjectUser.objects.all()
 
         survey = self.request.query_params.get('survey', None)
-        user = self.request.query_params.get('user', None)
+        # user = self.request.query_params.get('user', None)
 
-        if (survey is not None) & (user is not None):
-            queryset = queryset.filter(survey__id=survey, user__id=user)
-        elif survey is not None:
+        # if (survey is not None) & (user is not None):
+        #     queryset = queryset.filter(survey__id=survey, user__id=user)
+        if survey is not None:
             queryset = queryset.filter(survey__id=survey)   
-        elif user is not None:
-            queryset = queryset.filter(user__id=user)
+        # elif user is not None:
+        #     queryset = queryset.filter(user__id=user)
 
         return queryset
 
