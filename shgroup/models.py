@@ -93,6 +93,11 @@ class ProjectUser(models.Model):
     sendInvite = models.BooleanField(default=False)
     sendEmail = models.BooleanField(default=False)
 
+    # updated filed v2
+    projectAdmin = models.NullBooleanField(null=True, blank=True, default=None, verbose_name='Project Admin')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
     class Meta:
         unique_together = ['survey', 'user']
 
