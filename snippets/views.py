@@ -2159,8 +2159,9 @@ class AdminUserBySurveyViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
 
-        myProjectUser_id = self.request.GET.get('projectuser')
+        # myProjectUser_id = self.request.GET.get('projectuser')
         survey = self.request.GET.get('survey')
+
         # startDate = self.request.GET.get('stdt', None)
         # endDate = self.request.GET.get('eddt', None)
 
@@ -2214,12 +2215,13 @@ class AdminUserBySurveyViewSet(viewsets.ModelViewSet):
             response.data[i]['ao_answered'] = AOResponse.objects.filter(
                 subProjectUser_id=response.data[i]['id'], latestResponse=True).count()
 
-            response.data[i]['shCategory'] = []
+            # response.data[i]['shCategory'] = []
 
-            for item3 in SHMapping.objects.filter(projectUser_id=myProjectUser_id, subProjectUser_id=response.data[i]['id']).values('shCategory'):
-                response.data[i]['shCategory'].append(item3['shCategory'])
+            # for item3 in SHMapping.objects.filter(projectUser_id=myProjectUser_id, subProjectUser_id=response.data[i]['id']).values('shCategory'):
+            #     response.data[i]['shCategory'].append(item3['shCategory'])
 
-        return response
+        # return response
+        return Response(response.data, status=status.HTTP_200_OK)
 
     def get_queryset(self):
         queryset = ProjectUser.objects.all()
