@@ -97,7 +97,9 @@ class ProjectUser(models.Model):
     projectAdmin = models.NullBooleanField(null=True, blank=True, default=None, verbose_name='Project Admin')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
+    addByProjectUser = models.ForeignKey(
+        "ProjectUser", null=True, blank=True, on_delete=models.SET_NULL, verbose_name="Added By")
+        
     class Meta:
         unique_together = ['survey', 'user']
 
