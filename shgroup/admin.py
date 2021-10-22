@@ -108,6 +108,7 @@ class ProjectUserAdmin(admin.ModelAdmin):
         user = form.base_fields['user']
         survey = form.base_fields['survey']
         shGroup = form.base_fields['shGroup']
+        addByProjectUser = form.base_fields['addByProjectUser']
 
         survey.widget.can_add_related = False
         survey.widget.can_change_related = False
@@ -125,11 +126,16 @@ class ProjectUserAdmin(admin.ModelAdmin):
         shGroup.widget.can_change_related = False
         shGroup.widget.can_delete_related = False
 
+        addByProjectUser.widget.can_add_related = False
+        addByProjectUser.widget.can_change_related = False
+        addByProjectUser.widget.can_delete_related = False
+
         return form
 
 
     def save_model(self, request, obj, form, change):
         super(ProjectUserAdmin, self).save_model(request, obj, form, change)
+        
         messages.info(request, 'Email invitation has been sent.')
 
 class SHMappingAdmin(admin.ModelAdmin):
