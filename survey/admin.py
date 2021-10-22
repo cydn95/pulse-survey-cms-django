@@ -68,7 +68,7 @@ class ProjectUserInline(InlineActionsMixin, admin.TabularInline):
         
         self_pub_id = request.resolver_match.args[0]
         self_proj_pub_id = Survey.objects.get(id=self_pub_id)
-        if db_field.name in ['user', 'team', 'shGroup', 'shType']:
+        if db_field.name in ['user', 'team', 'shGroup', 'shType', 'addByProjectUser']:
             formfield.widget.can_add_related = False
             formfield.widget.can_change_related = False
             formfield.widget.can_delete_related = False
@@ -88,6 +88,12 @@ class ProjectUserInline(InlineActionsMixin, admin.TabularInline):
         if db_field.name == 'team':
             if self_proj_pub_id is not None:
                 formfield.queryset = formfield.queryset.filter(project_id=self_proj_pub_id.project_id)
+            else:
+                formfield.queryset = formfield.queryset.none()
+
+        if db_field.name == 'addByProjectUser':
+            if self_pub_id is not None:
+                formfield.queryset = formfield.queryset.filter(survey_id=self_pub_id)
             else:
                 formfield.queryset = formfield.queryset.none()
 
