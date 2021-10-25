@@ -235,13 +235,21 @@ class ProjectUserSerializer(serializers.ModelSerializer):
         model = ProjectUser
         fields = '__all__'
 
+class ProjectUserForUserAdminSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
+
+    class Meta:
+        model = ProjectUser
+
+        fields = ['id', 'user']
+
 class UserBySurveySerializer(serializers.ModelSerializer):
     survey = SurveySerializer()
     user = UserSerializer()
     team = TeamSerializer()
     shGroup = SHGroupSerializer()
     shType = SHTypeSerializer()
-    addByProjectUser = ProjectUserSerializer()
+    addByProjectUser = ProjectUserForUserAdminSerializer()
 
     class Meta:
         model = ProjectUser
