@@ -230,12 +230,18 @@ class SHCategorySerializer(serializers.ModelSerializer):
         model = SHCategory
         fields = '__all__'
 
+class ProjectUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProjectUser
+        fields = '__all__'
+
 class UserBySurveySerializer(serializers.ModelSerializer):
     survey = SurveySerializer()
     user = UserSerializer()
     team = TeamSerializer()
     shGroup = SHGroupSerializer()
     shType = SHTypeSerializer()
+    addByProjectUser = ProjectUserSerializer()
 
     class Meta:
         model = ProjectUser
@@ -243,12 +249,7 @@ class UserBySurveySerializer(serializers.ModelSerializer):
         # commented for isteammember
         # fields = ['id', 'survey', 'projectUserTitle', 'user', 'team', 'shGroup', 'sendInvite', 'isSuperUser', 'isTeamMember', 'isCGroup1', 'isCGroup2', 'isCGroup3']
         fields = ['id', 'survey', 'projectUserTitle', 'user', 'team', 'shGroup',
-                  'sendInvite', 'sendEmail', 'isSuperUser', 'isCGroup1', 'isCGroup2', 'isCGroup3', 'projectOrganization', 'shType']
-
-class ProjectUserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ProjectUser
-        fields = '__all__'
+                  'sendInvite', 'sendEmail', 'isSuperUser', 'isCGroup1', 'isCGroup2', 'isCGroup3', 'projectOrganization', 'shType', 'projectAdmin', 'addByProjectUser', 'created_at', 'updated_at']
 
 class MyMapLayoutStoreSerializer(serializers.ModelSerializer):
     class Meta:
