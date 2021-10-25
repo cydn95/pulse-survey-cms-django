@@ -2202,6 +2202,8 @@ class AdminUserBySurveyViewSet(viewsets.ModelViewSet):
                 response.data[i]['ao_response'].append(item2['aoQuestion'])
             response.data[i]['ao_answered'] = AOResponse.objects.filter(
                 subProjectUser_id=response.data[i]['id'], latestResponse=True).count()
+
+            response.data[i]['mappedByOthers'] = SHMapping.objects.filter(subProjectUser_id=response.data[i]['id']).count()
         
         # return value for user administration
         ret = {
