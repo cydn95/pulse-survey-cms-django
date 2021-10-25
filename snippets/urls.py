@@ -50,6 +50,7 @@ router.register(r'useravatar', views.UserAvatarViewSet)
 # router.register(r'adminprojectuser', views.ProjectUserViewSet)
 # router.register(r'adminuser', views.UserViewSet)
 router.register(r'adminuserbysurvey', views.AdminUserBySurveyViewSet)
+router.register(r'adminproject', views.AdminProjectViewSet)
 # router.register(r'adminprojectuserdetail', views.ProjectUserDetailViewSet)
 # router.register(r'adminprojectuserconfig', views.ProjectUserConfigViewSet)
 
