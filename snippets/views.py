@@ -1835,6 +1835,7 @@ class ProjectByUserViewSet(viewsets.ModelViewSet):
         response.data = []
         for i in range(len(project_ids)):
             item = model_to_dict(Project.objects.get(id=project_ids[i]['projectId']))
+            item["projectAdmin"] = project_ids[i]["projectAdmin"]
             response.data.append(item)
 
         return response
