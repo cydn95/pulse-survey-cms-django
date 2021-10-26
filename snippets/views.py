@@ -1826,11 +1826,15 @@ class ProjectByUserViewSet(viewsets.ModelViewSet):
         project_ids = []
         for i in range(len(response.data)):
             if response.data[i]['survey']['project'] not in project_ids:
-                project_ids.append(response.data[i]['survey']['project'])
+                item = {
+                    projectAdmin: response.data[i]['projectAdmin'],
+                    projectId: response.data[i]['survey']['project']
+                }
+                project_ids.append(item)
 
         response.data = []
         for i in range(len(project_ids)):
-            item = model_to_dict(Project.objects.get(id=project_ids[i]))
+            item = model_to_dict(Project.objects.get(id=project_ids[i]['projectId']))
             response.data.append(item)
 
         return response
