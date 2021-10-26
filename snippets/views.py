@@ -1827,8 +1827,8 @@ class ProjectByUserViewSet(viewsets.ModelViewSet):
         for i in range(len(response.data)):
             if response.data[i]['survey']['project'] not in project_ids:
                 item = {
-                    projectAdmin: response.data[i]['projectAdmin'],
-                    projectId: response.data[i]['survey']['project']
+                    "projectAdmin": response.data[i]['projectAdmin'],
+                    "projectId": response.data[i]['survey']['project']
                 }
                 project_ids.append(item)
 
