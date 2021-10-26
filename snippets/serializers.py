@@ -223,7 +223,7 @@ class SurveyByUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProjectUser
         fields = ['id', 'user', 'survey', 'shGroup',
-                  'projectOrganization', 'shType']
+                  'projectOrganization', 'shType', 'projectAdmin']
 
 class SHCategorySerializer(serializers.ModelSerializer):
     class Meta:
