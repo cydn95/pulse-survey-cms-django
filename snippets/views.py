@@ -2245,6 +2245,13 @@ class AdminProjectViewSet(viewsets.ModelViewSet):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
 
+# wip
+# adminsurveylist api
+class AdminSurveyByUserViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+    queryset = Survey.objects.all()
+    serializer_class = SurveySerializer
+
 # useravatar api
 class UserAvatarViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
