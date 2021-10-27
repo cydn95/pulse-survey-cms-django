@@ -27,6 +27,9 @@ class Survey(models.Model):
 
     anonymityThreshold = models.PositiveIntegerField(default=3)         # newly added
 
+    # newly added field
+    seatsPurchased = models.PositiveIntegerField(default=100)
+    
     def __str__(self):
         return self.surveyTitle
 
