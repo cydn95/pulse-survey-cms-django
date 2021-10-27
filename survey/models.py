@@ -34,11 +34,11 @@ class Survey(models.Model):
     def __str__(self):
         return self.surveyTitle
 
-    def save(self, *args, **kwargs):
-        current_survey = Survey.objects.filter(project_id=self.project_id, isActive=True)
-        if current_survey.count() == 0:
-            self.isActive = True
-        super(Survey, self).save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     current_survey = Survey.objects.filter(project_id=self.project_id, isActive=True)
+    #     if current_survey.count() == 0:
+    #         self.isActive = True
+    #     super(Survey, self).save(*args, **kwargs)
 
 class ConfigPage(models.Model):
     survey = models.ForeignKey(Survey, on_delete=models.CASCADE)
