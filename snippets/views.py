@@ -2246,7 +2246,7 @@ class AdminProjectViewSet(viewsets.ModelViewSet):
     serializer_class = ProjectSerializer
 
 # wip
-# adminsurveylist api
+# adminsurveybyuser api
 class AdminSurveyByUserViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
     queryset = Survey.objects.all()
