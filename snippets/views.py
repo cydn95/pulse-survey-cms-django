@@ -2252,6 +2252,22 @@ class AdminSurveyByUserViewSet(viewsets.ModelViewSet):
     queryset = Survey.objects.all()
     serializer_class = SurveySerializer
 
+    def get_queryset(self):
+        queryset = Survey.objects.all()
+
+        # user = self.request.query_params.get('user', None)
+
+        # if user is not None:
+        #     queryset = queryset.filter()
+        return queryset
+
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+
+        user = self.request.GET.get('user')
+
+        return Response(response.data, status=status.HTTP_200_OK)
+
 # useravatar api
 class UserAvatarViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
