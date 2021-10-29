@@ -30,6 +30,7 @@ class Survey(models.Model):
 
     # newly added field
     seatsPurchased = models.PositiveIntegerField(default=100)
+    projectManager = models.CharField(max_length=100, blank=True, default="")
 
     def __str__(self):
         return self.surveyTitle
