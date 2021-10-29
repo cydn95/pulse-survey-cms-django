@@ -2287,6 +2287,7 @@ class AdminSurveyByUserViewSet(viewsets.ModelViewSet):
                     overallSentiment = round(overallSentimentObj["integerValue__avg"] / 10, 2)
 
                 item = {
+                    "id": response.data[i]['id'],
                     "surveyTitle": response.data[i]['surveyTitle'],
                     "projectManager": response.data[i]['projectManager'],
                     "totalIdentified": totalIdentified,
