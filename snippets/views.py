@@ -2255,18 +2255,22 @@ class AdminSurveyByUserViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = Survey.objects.all()
 
-        # user = self.request.query_params.get('user', None)
+        user = self.request.query_params.get('user', None)
+        if user is not None:
+            projectAdminList = ProjectUser.objects.filter(user__id=user, projectAdmin=True).values_list('survey', flat=True)
+            projectAdminList = list(projectAdminList)
+            queryset = queryset.filter(id__in=projectAdminList)
 
-        # if user is not None:
-        #     queryset = queryset.filter()
         return queryset
 
     def list(self, request, *args, **kwargs):
         try:
             response = super().list(request, *args, **kwargs)
 
-            user = self.request.GET.get('user', None)
+            # user = self.request.GET.get('user', None)
 
+            # projectAdminList = ProjectUser.objects.filter(user__id=user, projectAdmin=True).values_list('survey', flat=True)
+            # projectAdminList = list(projectAdminList)
             ret = []
 
             for i in range(len(response.data)):
