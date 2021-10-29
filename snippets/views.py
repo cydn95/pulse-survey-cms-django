@@ -2270,15 +2270,21 @@ class AdminSurveyByUserViewSet(viewsets.ModelViewSet):
             ret = []
 
             for i in range(len(response.data)):
+                seatsPurchased = response.data[i]['seatsPurchased']
+                totalIdentified = ProjectUser.objects.filter(survey__id=response.data[i]['id']).count()
+                teamMembers = ProjectUser.objects.filter(survey__id=response.data[i]['id'], shType__shTypeName='Team Member').count()
+                stakeholders = ProjectUser.objects.filter(survey__id=response.data[i]['id'], shType__shTypeName='Stakeholder').count()
+                totalInvited = ProjectUser.objects.filter(survey__id=response.data[i]['id'], sendInvite=True).count()
+                seatsAvailable = seatsPurchased - totalInvited
                 item = {
                     "surveyTitle": response.data[i]['surveyTitle'],
                     "projectManager": response.data[i]['projectManager'],
-                    "totalIdentified": 0,
+                    "totalIdentified": totalIdentified,
                     "createdAt": response.data[i]['created_at'],
-                    "teamMembers": 0,
-                    "stakeholders": 0,
-                    "totalInvited": 0,
-                    "seatsAvailable": 0,
+                    "teamMembers": teamMembers,
+                    "stakeholders": stakeholders,
+                    "totalInvited": totalInvited,
+                    "seatsAvailable": seatsAvailable,
                     "overallSentiment": 0,
                     "isActive": response.data[i]['isActive'],
                 }
