@@ -2287,7 +2287,7 @@ class AdminSurveyByUserViewSet(viewsets.ModelViewSet):
                     "stakeholders": stakeholders,
                     "totalInvited": totalInvited,
                     "seatsAvailable": seatsAvailable,
-                    "overallSentiment": overallSentiment,
+                    "overallSentiment": overallSentiment["integerValue__avg"],
                     "isActive": response.data[i]['isActive'],
                 }
 
