@@ -2276,8 +2276,12 @@ class AdminSurveyByUserViewSet(viewsets.ModelViewSet):
                 stakeholders = ProjectUser.objects.filter(survey__id=response.data[i]['id'], shType__shTypeName='Stakeholder').count()
                 totalInvited = ProjectUser.objects.filter(survey__id=response.data[i]['id'], sendInvite=True).count()
                 seatsAvailable = seatsPurchased - totalInvited
-                overallSentiment = AMResponse.objects.filter(
+                overallSentimentObj = AMResponse.objects.filter(
                     survey__id=response.data[i]['id'], amQuestion__subdriver="Overall Sentiment", latestResponse=True, controlType="SLIDER").aggregate(Avg('integerValue'))
+                overallSentiment = 0
+                if overallSentimentObj["integerValue__avg"] is not None:
+                    overallSentiment = overallSentimentObj["integerValue__avg"] / 10
+
                 item = {
                     "surveyTitle": response.data[i]['surveyTitle'],
                     "projectManager": response.data[i]['projectManager'],
@@ -2287,7 +2291,7 @@ class AdminSurveyByUserViewSet(viewsets.ModelViewSet):
                     "stakeholders": stakeholders,
                     "totalInvited": totalInvited,
                     "seatsAvailable": seatsAvailable,
-                    "overallSentiment": overallSentiment["integerValue__avg"],
+                    "overallSentiment": overallSentiment,
                     "isActive": response.data[i]['isActive'],
                 }
 
