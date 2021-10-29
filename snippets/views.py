@@ -2280,7 +2280,7 @@ class AdminSurveyByUserViewSet(viewsets.ModelViewSet):
                     survey__id=response.data[i]['id'], amQuestion__subdriver="Overall Sentiment", latestResponse=True, controlType="SLIDER").aggregate(Avg('integerValue'))
                 overallSentiment = 0
                 if overallSentimentObj["integerValue__avg"] is not None:
-                    overallSentiment = overallSentimentObj["integerValue__avg"] / 10
+                    overallSentiment = round(overallSentimentObj["integerValue__avg"] / 10, 2)
 
                 item = {
                     "surveyTitle": response.data[i]['surveyTitle'],
