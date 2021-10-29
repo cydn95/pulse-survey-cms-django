@@ -2267,7 +2267,7 @@ class AdminSurveyByUserViewSet(viewsets.ModelViewSet):
 
             user = self.request.GET.get('user', None)
 
-            ret = response.data
+            ret = []
 
             for i in range(len(response.data)):
                 item = {
@@ -2282,6 +2282,8 @@ class AdminSurveyByUserViewSet(viewsets.ModelViewSet):
                     "overallSentiment": 0,
                     "isActive": response.data[i]['isActive'],
                 }
+
+                ret.append(item)
 
             return Response(response.data, status=status.HTTP_200_OK)
 
