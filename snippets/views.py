@@ -2285,7 +2285,7 @@ class AdminSurveyByUserViewSet(viewsets.ModelViewSet):
 
                 ret.append(item)
 
-            return Response(response.data, status=status.HTTP_200_OK)
+            return Response(ret, status=status.HTTP_200_OK)
 
         except Exception as error:
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
