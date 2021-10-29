@@ -19,6 +19,7 @@ class Project(models.Model):
 class Survey(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     surveyTitle = models.CharField(max_length=200)
+    projectManager = models.CharField(max_length=100, blank=True, default="")
     isStandard = models.BooleanField(default=False)
     isActive = models.BooleanField(default=False)
     customGroup1 = models.CharField(max_length=100, blank=True, default="")
@@ -30,7 +31,7 @@ class Survey(models.Model):
 
     # newly added field
     seatsPurchased = models.PositiveIntegerField(default=100)
-    projectManager = models.CharField(max_length=100, blank=True, default="")
+    
 
     def __str__(self):
         return self.surveyTitle
