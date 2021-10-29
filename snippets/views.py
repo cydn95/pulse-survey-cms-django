@@ -2262,11 +2262,31 @@ class AdminSurveyByUserViewSet(viewsets.ModelViewSet):
         return queryset
 
     def list(self, request, *args, **kwargs):
-        response = super().list(request, *args, **kwargs)
+        try:
+            response = super().list(request, *args, **kwargs)
 
-        user = self.request.GET.get('user')
+            user = self.request.GET.get('user', None)
 
-        return Response(response.data, status=status.HTTP_200_OK)
+            ret = response.data
+
+            for i in range(len(response.data)):
+                item = {
+                    "surveyTitle": response.data[i]['surveyTitle'],
+                    "projectManager": response.data[i]['projectManager'],
+                    "totalIdentified": 0,
+                    "createdAt": response.data[i]['created_at'],
+                    "teamMembers": 0,
+                    "stakeholders": 0,
+                    "totalInvited": 0,
+                    "seatsAvailable": 0,
+                    "overallSentiment": 0,
+                    "isActive": response.data[i]['isActive'],
+                }
+
+            return Response(response.data, status=status.HTTP_200_OK)
+
+        except Exception as error:
+            return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
 
 # useravatar api
 class UserAvatarViewSet(viewsets.ModelViewSet):
