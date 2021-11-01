@@ -2307,6 +2307,11 @@ class AdminSurveyByUserViewSet(viewsets.ModelViewSet):
         except Exception as error:
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
 
+    def partial_update(self, request, *args, **kwargs):
+        # ret = super(AdminSurveyByUserViewSet, self).partial_update(request, *args, **kwargs)
+
+        return self.partial_update(request, *args, **kwargs)
+
 # useravatar api
 class UserAvatarViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
