@@ -256,7 +256,7 @@ class UserBySurveySerializer(serializers.ModelSerializer):
 
         # commented for isteammember
         # fields = ['id', 'survey', 'projectUserTitle', 'user', 'team', 'shGroup', 'sendInvite', 'isSuperUser', 'isTeamMember', 'isCGroup1', 'isCGroup2', 'isCGroup3']
-        fields = ['id', 'survey', 'projectUserTitle', 'user', 'team', 'shGroup',
+        fields = ['id', 'survey', 'projectUserTitle', 'projectUserRoleDesc', 'user', 'team', 'shGroup',
                   'sendInvite', 'sendEmail', 'isSuperUser', 'isCGroup1', 'isCGroup2', 'isCGroup3', 'projectOrganization', 'shType', 'projectAdmin', 'addByProjectUser', 'created_at', 'updated_at']
 
 class MyMapLayoutStoreSerializer(serializers.ModelSerializer):

@@ -72,7 +72,7 @@ class SHCategoryAdmin(admin.ModelAdmin):
         return form
 
 class ProjectUserAdmin(admin.ModelAdmin):
-    list_display = ('user', 'projectUserTitle', 'survey', 'shType', 'team', 'shGroup')
+    list_display = ('user', 'projectUserTitle', 'survey', 'shType', 'team', 'shGroup', 'projectUserRoleDesc')
     model = ProjectUser
 
     search_fields = ['user__email', 'projectUserTitle', 'survey__surveyTitle', 'team__name', 'shGroup__SHGroupName']
