@@ -2326,6 +2326,8 @@ class AdminSurveyAMQuestionViewSet(viewsets.ModelViewSet):
         if survey is not None:
             queryset = queryset.filter(survey__id=survey)
 
+        return queryset
+
 # adminaoquestion api
 class AdminSurveyAOQuestionViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
@@ -2338,6 +2340,8 @@ class AdminSurveyAOQuestionViewSet(viewsets.ModelViewSet):
         survey = self.request.query_params.get('survey', None)
         if survey is not None:
             queryset = queryset.filter(survey__id=survey)
+
+        return queryset
 
 # useravatar api
 class UserAvatarViewSet(viewsets.ModelViewSet):
