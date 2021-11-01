@@ -2309,8 +2309,10 @@ class AdminSurveyByUserViewSet(viewsets.ModelViewSet):
 
     def update(self, request, *args, **kwargs):
         # ret = super(AdminSurveyByUserViewSet, self).partial_update(request, *args, **kwargs)
+        kwargs['partial'] = True
 
-        return self.partial_update(request, *args, **kwargs)
+        return super().update(request, *args, **kwargs)
+        
 
 # useravatar api
 class UserAvatarViewSet(viewsets.ModelViewSet):
