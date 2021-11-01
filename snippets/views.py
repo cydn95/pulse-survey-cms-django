@@ -2312,7 +2312,32 @@ class AdminSurveyByUserViewSet(viewsets.ModelViewSet):
         kwargs['partial'] = True
 
         return super().update(request, *args, **kwargs)
-        
+
+# adminamquestion api    
+class AdminSurveyAMQuestionViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+    queryset = AMQuestion.objects.all()
+    serializer_class = AMQuestionSerializer
+
+    def get_queryset(self):
+        queryset = AMQuestion.objects.all()
+
+        survey = self.request.query_params.get('survey', None)
+        if survey is not None:
+            queryset = queryset.filter(survey__id=survey)
+
+# adminaoquestion api
+class AdminSurveyAOQuestionViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+    queryset = AOQuestion.objects.all()
+    serializer_class = AOQuestionSerializer
+
+    def get_queryset(self):
+        queryset = AOQuestion.objects.all()
+
+        survey = self.request.query_params.get('survey', None)
+        if survey is not None:
+            queryset = queryset.filter(survey__id=survey)
 
 # useravatar api
 class UserAvatarViewSet(viewsets.ModelViewSet):
