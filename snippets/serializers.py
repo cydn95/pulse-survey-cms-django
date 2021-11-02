@@ -125,7 +125,7 @@ class AMQuestionSerializer(serializers.ModelSerializer):
         fields = ['id', 'subdriver', 'questionText', 'questionSequence', 
         'sliderTextLeft', 'sliderTextRight', 'skipOptionYN',  
         'topicPrompt', 'commentPrompt', 'survey', 'driver', 'controlType', 
-        'shGroup', 'option', 'skipOption']
+        'shGroup', 'option', 'skipOption', 'amqOrder']
                  
 class PageAMQuestionSerializer(serializers.ModelSerializer):
     amQuestion = AMQuestionSerializer()
@@ -151,7 +151,7 @@ class AOQuestionSerializer(serializers.ModelSerializer):
         fields = ['id', 'subdriver', 'questionText', 'questionSequence', 
         'sliderTextLeft', 'sliderTextRight', 'skipOptionYN', 
         'topicPrompt', 'commentPrompt', 'survey', 'driver', 'controlType', 
-        'shGroup', 'option', 'skipOption']
+                  'shGroup', 'option', 'skipOption', 'aoqOrder']
 
 class AOPageSerializer(serializers.ModelSerializer):
     class Meta:

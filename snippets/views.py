@@ -2316,7 +2316,7 @@ class AdminSurveyByUserViewSet(viewsets.ModelViewSet):
 # adminamquestion api    
 class AdminSurveyAMQuestionViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
-    queryset = AMQuestion.objects.all()
+    queryset = AMQuestion.objects.all().order_by('amqOrder')
     serializer_class = AMQuestionSerializer
 
     def get_queryset(self):
@@ -2324,14 +2324,14 @@ class AdminSurveyAMQuestionViewSet(viewsets.ModelViewSet):
 
         survey = self.request.query_params.get('survey', None)
         if survey is not None:
-            queryset = queryset.filter(survey__id=survey)
+            queryset = queryset.filter(survey__id=survey).order_by('amqOrder')
 
         return queryset
 
 # adminaoquestion api
 class AdminSurveyAOQuestionViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
-    queryset = AOQuestion.objects.all()
+    queryset = AOQuestion.objects.all().order_by('aoqOrder')
     serializer_class = AOQuestionSerializer
 
     def get_queryset(self):
@@ -2339,7 +2339,7 @@ class AdminSurveyAOQuestionViewSet(viewsets.ModelViewSet):
 
         survey = self.request.query_params.get('survey', None)
         if survey is not None:
-            queryset = queryset.filter(survey__id=survey)
+            queryset = queryset.filter(survey__id=survey).order_by('aoqOrder')
 
         return queryset
 
