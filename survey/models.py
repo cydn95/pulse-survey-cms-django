@@ -18,6 +18,14 @@ class Project(models.Model):
     
 class Survey(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    
+    # newly added
+    projectCode = models.CharField(max_length=20, blank=True, default="")
+    projectLogo = models.ImageField(upload_to='uploads/logo',
+                                    verbose_name='Project Logo', blank=True)
+    companyLogo = models.ImageField(upload_to='uploads/logo',
+                                    verbose_name='Company Logo', blank=True)
+                                    
     surveyTitle = models.CharField(max_length=200)
     projectManager = models.CharField(max_length=100, blank=True, default="")
     isStandard = models.BooleanField(default=False)
@@ -32,6 +40,8 @@ class Survey(models.Model):
     # newly added field
     seatsPurchased = models.PositiveIntegerField(default=100)
     
+
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
