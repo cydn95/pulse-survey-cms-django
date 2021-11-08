@@ -2271,8 +2271,8 @@ class AdminSurveySetupViewSet(viewsets.ModelViewSet):
             if len(response.data) == 0:
                 return Response([], status=status.HTTP_200_OK)
 
-            tour = ConfigPage.objects.filter(survey_id=survey)
-            moreInfo = NikelMobilePage.objects.filter(survey_id=survey)
+            tour = ConfigPage.objects.filter(survey_id=survey).values()
+            moreInfo = NikelMobilePage.objects.filter(survey_id=survey).values()
 
             ret = response.data[0]
             ret['tour'] = tour
