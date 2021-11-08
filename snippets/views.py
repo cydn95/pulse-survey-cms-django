@@ -2245,6 +2245,33 @@ class AdminProjectViewSet(viewsets.ModelViewSet):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
 
+# adminsureysetup api
+class AdminSurveySetupViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+    queryset = Survey.objects.all()
+    serializer_class = SurveySerializer
+
+    def get_queryset(self):
+        queryset = Survey.objects.all()
+
+        survey = self.request.query_params.get('survey', None)
+        if survey is not None:
+            queryset = queryset.filter(id=survey)
+
+        return queryset
+
+    def list(self, request, *args, **kwargs):
+        try:
+            response = super().list(request, *args, **kwargs)
+
+            survey = self.request.GET.get('survey', None)
+            if survey is None:
+                return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
+                
+            return Response(response.data, status=status.HTTP_200_OK)
+        except Exception as error:
+            return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
+
 # wip
 # adminsurveybyuser api
 class AdminSurveyByUserViewSet(viewsets.ModelViewSet):
