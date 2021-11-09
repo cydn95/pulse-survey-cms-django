@@ -2282,6 +2282,49 @@ class AdminSurveySetupViewSet(viewsets.ModelViewSet):
         except Exception as error:
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
 
+# adminsurveyconfiguration api
+class AdminSurveyConfigurationViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+    queryset = Survey.objects.all()
+    serializer_class = SurveySerializer
+
+    def get_queryset(self):
+        queryset = Survey.objects.all()
+
+        survey = self.request.query_params.get('survey', None)
+        if survey is not None:
+            queryset = queryset.filter(id=survey)
+
+        return queryset
+
+    def list(self, request, *args, **kwargs):
+        try:
+            response = super().list(request, *args, **kwargs)
+
+            survey = self.request.GET.get('survey', None)
+            if survey is None:
+                return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
+
+            if len(response.data) == 0:
+                return Response([], status=status.HTTP_200_OK)
+
+            shGroups = SHGroup.objects.filter(survey_id=survey).values()
+            projectTeams = Team.objects.filter(project_id=response.data[0]['project']).values()
+
+            drivers = Driver.objects.filter(survey_id=survey).values()
+            myMaps = SHCategory.objects.filter(survey_id=survey, mapType__name="MyMap").values()
+            projectMaps = SHCategory.objects.filter(survey_id=survey, mapType__name="ProjectMap").values()
+
+            ret = response.data[0]
+            ret['shGroup'] = shGroups
+            ret['projectTeam'] = projectTeams
+            ret['myMap'] = myMaps
+            ret['projectMap'] = projectMaps
+            
+            return Response(ret, status=status.HTTP_200_OK)
+        except Exception as error:
+            return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
+
 # wip
 # adminsurveybyuser api
 class AdminSurveyByUserViewSet(viewsets.ModelViewSet):

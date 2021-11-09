@@ -53,6 +53,8 @@ router.register(r'adminuserbysurvey', views.AdminUserBySurveyViewSet)
 router.register(r'adminproject', views.AdminProjectViewSet)
 router.register(r'adminsurveybyuser', views.AdminSurveyByUserViewSet)
 router.register(r'adminsurveysetup', views.AdminSurveySetupViewSet)
+router.register(r'adminsurveyconfiguration',
+                views.AdminSurveyConfigurationViewSet)
 router.register(r'adminamquestion', views.AdminSurveyAMQuestionViewSet)
 router.register(r'adminaoquestion', views.AdminSurveyAOQuestionViewSet)
 # router.register(r'adminprojectuserdetail', views.ProjectUserDetailViewSet)
