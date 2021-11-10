@@ -96,7 +96,8 @@ urlpatterns += format_suffix_patterns([
     url(r'totalshcnt', views.TotalStakeHolderView.as_view()),
     url(r'checkdashboardstatus', views.CheckDashboardStatusView.as_view()),
     url(r'danalysiscnt', views.DriverAnalysisCntView.as_view()),
-    url(r'checkuserpasswordstatus', views.CheckUserPasswordStatusView.as_view())
+    url(r'checkuserpasswordstatus', views.CheckUserPasswordStatusView.as_view()),
+    url(r'adminsurveyadd', views.AdminSurveyAddView.as_view()),
 ])
 
 # router.register(r'interestreport', views.AMResponseFeedbackSummaryForInterestViewset)     # deprecated

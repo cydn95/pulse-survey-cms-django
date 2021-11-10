@@ -2326,6 +2326,17 @@ class AdminSurveyConfigurationViewSet(viewsets.ModelViewSet):
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
 
 # wip
+# adminsurveyadd api
+class AdminSurveyAddView(APIView):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+    
+    @classmethod
+    def get_extra_actions(cls):
+        return []
+
+    def post(self, reuqest):
+        return []
+
 # adminsurveybyuser api
 class AdminSurveyByUserViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
