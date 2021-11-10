@@ -2337,6 +2337,18 @@ class AdminSurveyAddView(APIView):
     def post(self, reuqest):
         return []
 
+# wip
+# adminsurveyedit api
+class AdminSurveyEditView(APIView):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+
+    @classmethod
+    def get_extra_actions(cls):
+        return []
+
+    def post(self, request):
+        return []
+
 # adminsurveybyuser api
 class AdminSurveyByUserViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
