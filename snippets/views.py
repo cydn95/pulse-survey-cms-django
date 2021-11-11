@@ -2335,6 +2335,8 @@ class AdminSurveyAddView(APIView):
         return []
 
     def post(self, reuqest):
+
+
         return []
 
 # wip
@@ -2347,7 +2349,15 @@ class AdminSurveyEditView(APIView):
         return []
 
     def post(self, request):
-        return []
+        survey = self.request.query_params.get('survey', None)
+
+        if survey is None:
+            return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
+
+        # try:
+        #     project = Survey.objects.get(id=survey)
+
+        return Response(survey, status=status.HTTP_200_OK)
 
 # adminsurveybyuser api
 class AdminSurveyByUserViewSet(viewsets.ModelViewSet):
