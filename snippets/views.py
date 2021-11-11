@@ -2349,7 +2349,7 @@ class AdminSurveyEditView(APIView):
         return []
 
     def post(self, request):
-        survey = self.request.query_params.get('survey', None)
+        survey = request.data['survey']
 
         if survey is None:
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
