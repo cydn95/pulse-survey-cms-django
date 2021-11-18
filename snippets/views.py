@@ -4709,4 +4709,14 @@ class AdminBulkInvitationSendView(APIView):
         projectUserRequestData = request.data['ids']
         projectUserIds = json.loads(projectUserRequestData)
 
-        return Response(projectUserIds, status=status.HTTP_201_CREATED)
+        for projectUserId in projectUserIds:
+            try:
+                obj = ProjectUser.objects.get(id=projectUserId)
+                obj.sendInvite = True
+                obj.old_sendEmail = False
+                obj.sendEmail = True
+                obj.save()
+            except ProjectUser.DoesNotExist:
+                pass
+
+        return Response("success", status=status.HTTP_201_CREATED)
