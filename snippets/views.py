@@ -4697,3 +4697,16 @@ class CheckDashboardStatusView(APIView):
 
         return Response({"text": "pass", "code": 200, "data": shgroupserializer.data, "thresholdCnt": thresholdCnt, "precode": prefCode}, status=status.HTTP_200_OK)
 
+# adminbulkinvitationsend api
+class AdminBulkInvitationSendView(APIView):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+
+    @classmethod
+    def get_extra_actions(cls):
+        return []
+
+    def post(self, request):
+        projectUserRequestData = request.data['ids']
+        projectUserIds = json.loads(projectUserRequestData)
+
+        return Response(projectUserIds, status=status.HTTP_201_CREATED)
