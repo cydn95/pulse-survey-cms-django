@@ -152,7 +152,7 @@ INSTALLED_APPS = [
     'djangocms_snippet',
     'djangocms_googlemap',
     'djangocms_video',
-    'django_crontab',
+    'django_cron',
     'tinymce',
     'colorfield',
     'filebrowser',
@@ -209,6 +209,10 @@ LANGUAGES = (
     ('en', gettext('en')),
 )
 
+CRON_CLASSES = [
+    'mysite.cron.MyCronJob',
+]
+
 CMS_LANGUAGES = {
     ## Customize this
     1: [
@@ -251,10 +255,6 @@ DATABASES = {
 MIGRATION_MODULES = {
     
 }
-
-CRONJOBS = [
-    ('* * * * *', 'python mysite/cron.py')
-]
 
 TABBED_ADMIN_USE_JQUERY_UI = True
 
