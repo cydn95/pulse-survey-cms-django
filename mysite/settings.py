@@ -152,6 +152,7 @@ INSTALLED_APPS = [
     'djangocms_snippet',
     'djangocms_googlemap',
     'djangocms_video',
+    'django_crontab',
     'tinymce',
     'colorfield',
     'filebrowser',
@@ -250,6 +251,10 @@ DATABASES = {
 MIGRATION_MODULES = {
     
 }
+
+CRONJOBS = [
+    ('* * * * *', 'python mysite/cron.py')
+]
 
 TABBED_ADMIN_USE_JQUERY_UI = True
 
