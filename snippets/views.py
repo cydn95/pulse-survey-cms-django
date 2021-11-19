@@ -4720,3 +4720,25 @@ class AdminBulkInvitationSendView(APIView):
                 pass
 
         return Response("success", status=status.HTTP_201_CREATED)
+
+# adminbulkarchive api
+class AdminBulkArchiveView(APIView):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+
+    @classmethod
+    def get_extra_actions(cls):
+        return []
+
+    def post(self, request):
+        projectUserRequestData = request.data['ids']
+        projectUserIds = json.loads(projectUserRequestData)
+
+        for projectUserId in projectUserIds:
+            try:
+                obj = ProjectUser.objects.get(id=projectUserId)
+                obj.isArchived = True
+                obj.save()
+            except ProjectUser.DoesNotExist:
+                pass
+        
+        return Response("success", status=status.HTTP_201_CREATED)
