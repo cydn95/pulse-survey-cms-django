@@ -2158,7 +2158,7 @@ class UserBySurveyViewSet(viewsets.ModelViewSet):
 # adminuserbysurvey api
 class AdminUserBySurveyViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
-    queryset = ProjectUser.objects.all()
+    queryset = ProjectUser.objects.all().filter(isArchived=False)
     serializer_class = UserBySurveySerializer
 
     def list(self, request, *args, **kwargs):
