@@ -94,14 +94,15 @@ class ProjectUser(models.Model):
     isCGroup3 = models.BooleanField(default=False)
     sendInvite = models.BooleanField(default=False)
     sendEmail = models.BooleanField(default=False)
-
+    
     # updated filed v2
     projectAdmin = models.NullBooleanField(null=True, blank=True, default=None, verbose_name='Project Admin')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     addByProjectUser = models.ForeignKey(
         "ProjectUser", null=True, blank=True, on_delete=models.SET_NULL, verbose_name="Added By")
-        
+    isArchived = models.BooleanField(default=False)
+
     class Meta:
         unique_together = ['survey', 'user']
 
