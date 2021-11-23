@@ -86,6 +86,68 @@ class AMResponseAcknowledgement(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def save(self, *args, **kwargs):
+        super(AMResponseAcknowledgement, self).save(*args, **kwargs)
+
+        image_path_logo = os.path.join(
+            settings.STATIC_ROOT, 'email', 'img', 'logo-2.png')
+        image_name_logo = Path(image_path_logo).name
+        image_path_container = os.path.join(
+            settings.STATIC_ROOT, 'email', 'img', 'container.png')
+        image_name_container = Path(image_path_container).name
+        image_path_connect = os.path.join(
+            settings.STATIC_ROOT, 'email', 'img', 'connect.png')
+        image_name_connect = Path(image_path_connect).name
+        image_path_top = os.path.join(
+            settings.STATIC_ROOT, 'email', 'img', 'email-3-top.png')
+        image_name_top = Path(image_path_top).name
+        image_path_middle = os.path.join(
+            settings.STATIC_ROOT, 'email', 'img', 'email-3-middle.png')
+        image_name_middle = Path(image_path_middle).name
+
+        subject = "Test"
+        message = get_template('emailv2.html').render(
+            {
+                "project_name": "test project",
+                "survey_name": "test survey",
+                "image_name_logo": image_name_logo,
+                "image_name_container": image_name_container,
+                "image_name_connect": image_name_connect,
+                "image_name_top": image_name_top,
+                "image_name_middle": image_name_middle,
+                "token": "test_token",
+                "email": "test@test.com",
+                "first_name": "first name",
+                "last_name": "last name",
+                "site_url": settings.SITE_URL
+            }
+        )
+        email_from = settings.DEFAULT_FROM_EMAIL
+        recipient_list = ['dt897867@gmail.com',]
+
+        email = EmailMultiAlternatives(subject=subject, body=message, from_email=email_from, to=recipient_list)
+        email.attach_alternative(message, "text/html")
+        email.content_subtype = "html"
+        email.mixed_subtype = "related"
+
+        with open(image_path_logo, mode='rb') as f_logo:
+            image_logo = MIMEImage(f_logo.read())
+            email.attach(image_logo)
+            image_logo.add_header('Content-ID', f"<{image_name_logo}>")
+        with open(image_path_top, mode='rb') as f_top:
+            image_top = MIMEImage(f_top.read())
+            email.attach(image_top)
+            image_top.add_header('Content-ID', f"<{image_name_top}>")
+        with open(image_path_middle, mode='rb') as f_middle:
+            image_middle = MIMEImage(f_middle.read())
+            email.attach(image_middle)
+            image_middle.add_header('Content-ID', f"<{image_name_middle}>")
+
+        try:
+            email.send()
+        except SMTPException as e:
+            print('There was an error sending an email: ', e)
+                
 class AMResponseTopic(models.Model):
     amQuestion = models.ForeignKey(AMQuestion, on_delete=models.CASCADE)
     responseUser = models.ForeignKey(ProjectUser, on_delete=models.CASCADE)

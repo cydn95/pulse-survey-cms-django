@@ -320,29 +320,30 @@ def preApiCheck(survey, projectUser):
 
     return 200
 
-# acknowledgement api
-class AOResponseAcknowledgementViewSet(viewsets.ModelViewSet):
-    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
-    queryset = AOResponseAcknowledgement.objects.all()
-    serializer_class = AOResponseAcknowledgementSerializer
 
-    def get_queryset(self):
-        queryset = AMResponseAcknowledgement.objects.all()
+# class AOResponseAcknowledgementViewSet(viewsets.ModelViewSet):
+#     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+#     queryset = AOResponseAcknowledgement.objects.all()
+#     serializer_class = AOResponseAcknowledgementSerializer
 
-        amresponse = self.request.query_params.get('response', None)
-        projectUser = self.request.query_params.get('projectuser', None)
+#     def get_queryset(self):
+#         queryset = AMResponseAcknowledgement.objects.all()
 
-        if (amresponse is not None) & (projectUser is not None):
-            queryset = queryset.filter(amResponse__id=amresponse, projectUser__id=projectUser)
+#         amresponse = self.request.query_params.get('response', None)
+#         projectUser = self.request.query_params.get('projectuser', None)
+
+#         if (amresponse is not None) & (projectUser is not None):
+#             queryset = queryset.filter(amResponse__id=amresponse, projectUser__id=projectUser)
         
-        if amresponse is not None:
-            queryset = queryset.filter(amResponse__id=amresponse)
+#         if amresponse is not None:
+#             queryset = queryset.filter(amResponse__id=amresponse)
 
-        if projectUser is not None:
-            queryset = queryset.filter(projectUser__id=projectUser)
+#         if projectUser is not None:
+#             queryset = queryset.filter(projectUser__id=projectUser)
             
-        return queryset
+#         return queryset
 
+# acknowledgement api
 class AMResponseAcknowledgementViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
     queryset = AMResponseAcknowledgement.objects.all()
