@@ -92,6 +92,19 @@ body {
     padding: 22px;
 }
 
+.p-title {
+    font-size: large;
+    color: black;
+}
+
+.p-content {
+    color: black;
+}
+
+.p-footer {
+    color: black;
+}
+
 .action-button {
     display: inline-block;
     padding-top: 10px;
