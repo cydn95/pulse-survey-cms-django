@@ -1,3 +1,10 @@
+import os
+from pathlib import Path
+from email.mime.image import MIMEImage
+from django.core.mail import send_mail, EmailMultiAlternatives
+from django.template.loader import get_template, render_to_string
+from django.conf import settings
+from django.contrib import messages
 from django.db import models
 from survey.models import Survey, Driver, Project
 from setting.models import ControlType
@@ -9,6 +16,7 @@ from django.forms.models import ModelForm
 from django.forms.widgets import CheckboxSelectMultiple
 from django import forms
 from django.utils import timezone
+from smtplib import SMTPException
 
 class AMQuestion(models.Model):
     survey = models.ForeignKey(Survey, on_delete=models.CASCADE)
