@@ -100,18 +100,18 @@ class AMResponseAcknowledgement(models.Model):
         image_path_logo = os.path.join(
             settings.STATIC_ROOT, 'email', 'img', 'logo-2.png')
         image_name_logo = Path(image_path_logo).name
-        image_path_container = os.path.join(
-            settings.STATIC_ROOT, 'email', 'img', 'container.png')
-        image_name_container = Path(image_path_container).name
-        image_path_connect = os.path.join(
-            settings.STATIC_ROOT, 'email', 'img', 'connect.png')
-        image_name_connect = Path(image_path_connect).name
-        image_path_top = os.path.join(
-            settings.STATIC_ROOT, 'email', 'img', 'email-3-top.png')
-        image_name_top = Path(image_path_top).name
-        image_path_middle = os.path.join(
-            settings.STATIC_ROOT, 'email', 'img', 'email-3-middle.png')
-        image_name_middle = Path(image_path_middle).name
+        # image_path_container = os.path.join(
+        #     settings.STATIC_ROOT, 'email', 'img', 'container.png')
+        # image_name_container = Path(image_path_container).name
+        # image_path_connect = os.path.join(
+        #     settings.STATIC_ROOT, 'email', 'img', 'connect.png')
+        # image_name_connect = Path(image_path_connect).name
+        # image_path_top = os.path.join(
+        #     settings.STATIC_ROOT, 'email', 'img', 'email-3-top.png')
+        # image_name_top = Path(image_path_top).name
+        # image_path_middle = os.path.join(
+        #     settings.STATIC_ROOT, 'email', 'img', 'email-3-middle.png')
+        # image_name_middle = Path(image_path_middle).name
         image_path_star = os.path.join(
             settings.STATIC_ROOT, 'email', 'img', 'star.png')
         image_name_star = Path(image_path_star).name
