@@ -95,14 +95,18 @@ body {
 .p-title {
     font-size: large;
     color: black;
+    margin-bottom: 40px;
 }
 
 .p-content {
     color: black;
+    margin-bottom: 30px;
 }
 
 .p-footer {
+    font-size: large;
     color: black;
+    margin-bottom: 40px;
 }
 
 .action-button {
