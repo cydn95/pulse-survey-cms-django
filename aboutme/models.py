@@ -114,7 +114,7 @@ class AMResponseAcknowledgement(models.Model):
         image_name_middle = Path(image_path_middle).name
 
         subject = "Test"
-        message = get_template('emailv2.html').render(
+        message = get_template('ackform2.html').render(
             {
                 "project_name": "test project",
                 "survey_name": "test survey",
