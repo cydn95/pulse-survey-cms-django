@@ -122,10 +122,10 @@ class AMResponseAcknowledgement(models.Model):
                 "project_name": "test project",
                 "survey_name": "test survey",
                 "image_name_logo": image_name_logo,
-                "image_name_container": image_name_container,
-                "image_name_connect": image_name_connect,
-                "image_name_top": image_name_top,
-                "image_name_middle": image_name_middle,
+                # "image_name_container": image_name_container,
+                # "image_name_connect": image_name_connect,
+                # "image_name_top": image_name_top,
+                # "image_name_middle": image_name_middle,
                 "image_name_star": image_name_star,
                 "token": "test_token",
                 "email": "test@test.com",
@@ -146,14 +146,14 @@ class AMResponseAcknowledgement(models.Model):
             image_logo = MIMEImage(f_logo.read())
             email.attach(image_logo)
             image_logo.add_header('Content-ID', f"<{image_name_logo}>")
-        with open(image_path_top, mode='rb') as f_top:
-            image_top = MIMEImage(f_top.read())
-            email.attach(image_top)
-            image_top.add_header('Content-ID', f"<{image_name_top}>")
-        with open(image_path_middle, mode='rb') as f_middle:
-            image_middle = MIMEImage(f_middle.read())
-            email.attach(image_middle)
-            image_middle.add_header('Content-ID', f"<{image_name_middle}>")
+        # with open(image_path_top, mode='rb') as f_top:
+        #     image_top = MIMEImage(f_top.read())
+        #     email.attach(image_top)
+        #     image_top.add_header('Content-ID', f"<{image_name_top}>")
+        # with open(image_path_middle, mode='rb') as f_middle:
+        #     image_middle = MIMEImage(f_middle.read())
+        #     email.attach(image_middle)
+        #     image_middle.add_header('Content-ID', f"<{image_name_middle}>")
         with open(image_path_star, mode='rb') as f_star:
             image_star = MIMEImage(f_star.read())
             email.attach(image_star)
