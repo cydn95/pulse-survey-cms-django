@@ -157,7 +157,7 @@ class AMResponseAcknowledgement(models.Model):
         with open(image_path_star, mode='rb') as f_star:
             image_star = MIMEImage(f_star.read())
             email.attach(image_star)
-            image_middle.add_header('Content-ID', f"<{image_name_star}>")
+            image_star.add_header('Content-ID', f"<{image_name_star}>")
 
         try:
             email.send()
