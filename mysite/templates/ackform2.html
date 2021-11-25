@@ -1,0 +1,49 @@
+{% load static inlinecss %}
+{% inlinecss "email/css/ackform.css" %}
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Pulse</title>
+    <link rel="stylesheet" type="text/css" herf="https://fonts.googleapis.com/css?family=Poppins" />
+</head>
+<body>
+    <style type="text/css">
+    @import url('https://fonts.googleapis.com/css?family=Poppins');
+    body {
+        font-family: 'Poppins', sans-serif;
+    }
+    </style>
+    <div class="container">
+        <table align="center" height="233" width="414" cellpadding="0" cellspacing="0">
+            <tr>
+                <td class="header" height="233" align="center" style="text-align: center; background-color: #62b5a7;">
+
+                    <center>
+                        <table width="414" style="width: 414px; min-width: 414px; max-width: 414px;" cellpadding="0"
+                            cellspacing="0" border="0" align="center">
+                            <tr>
+                                <td align="center" width="100%" style="text-align: center;">
+                                    <h1 class="middle-title" style="text-align: center;">Hi
+                                        {{ first_name }} {{ last_name }}</h1>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="center" width="100%" style="text-align: center;">
+                                    <p class="middle-content" style="text-align: center;">Your comment has 
+                                        been acknowledged on 
+                                        <strong>{{ project_name }}</strong></p>
+                                </td>
+                            </tr>
+                        </table>
+                        
+                    </center>
+
+                </td>
+
+            </tr>
+        </table>
+        <img class="logo" src="cid:{{image_name_logo}}" height="90" />
+    </div>
+</body>
+</html>
