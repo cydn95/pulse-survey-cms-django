@@ -112,6 +112,9 @@ class AMResponseAcknowledgement(models.Model):
         image_path_middle = os.path.join(
             settings.STATIC_ROOT, 'email', 'img', 'email-3-middle.png')
         image_name_middle = Path(image_path_middle).name
+        image_path_star = os.path.join(
+            settings.STATIC_ROOT, 'email', 'img', 'star.png')
+        image_name_star = Path(image_path_star).name
 
         subject = "Test"
         message = get_template('ackform2.html').render(
@@ -123,6 +126,7 @@ class AMResponseAcknowledgement(models.Model):
                 "image_name_connect": image_name_connect,
                 "image_name_top": image_name_top,
                 "image_name_middle": image_name_middle,
+                "image_name_star": image_name_star,
                 "token": "test_token",
                 "email": "test@test.com",
                 "first_name": "first name",
