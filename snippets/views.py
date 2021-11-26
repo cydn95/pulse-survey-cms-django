@@ -21,6 +21,7 @@ from snippets.serializers import AMResponseForMatrixSerializer, AMResponseForDri
 
 from rest_framework import generics, permissions, renderers, viewsets, status, filters
 from rest_framework.decorators import action
+from rest_framework.parsers import FileUploadParser
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.views import APIView
@@ -2328,17 +2329,20 @@ class AdminSurveyConfigurationViewSet(viewsets.ModelViewSet):
 
 # wip
 # adminsurveyadd api
-class AdminSurveyAddView(APIView):
+class AdminSurveyAddViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
-    
-    @classmethod
-    def get_extra_actions(cls):
-        return []
+    queryset = Survey.objects.all()
+    serializer_class = SurveySerializer
 
-    def post(self, reuqest):
+    def create(self, request, *args, **kwargs):
+        data = request.data.get("items") if "items" in request.data else request.data
+        many = isinstance(data, list)
+        serializer = self.get_serializer(data=data, many=many)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
 
-
-        return []
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 # wip
 # adminsurveyedit api

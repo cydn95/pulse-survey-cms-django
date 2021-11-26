@@ -57,6 +57,7 @@ router.register(r'adminsurveyconfiguration',
                 views.AdminSurveyConfigurationViewSet)
 router.register(r'adminamquestion', views.AdminSurveyAMQuestionViewSet)
 router.register(r'adminaoquestion', views.AdminSurveyAOQuestionViewSet)
+router.register(r'adminsurveyadd', views.AdminSurveyAddViewSet)
 # router.register(r'adminprojectuserdetail', views.ProjectUserDetailViewSet)
 # router.register(r'adminprojectuserconfig', views.ProjectUserConfigViewSet)
 
@@ -97,7 +98,7 @@ urlpatterns += format_suffix_patterns([
     url(r'checkdashboardstatus', views.CheckDashboardStatusView.as_view()),
     url(r'danalysiscnt', views.DriverAnalysisCntView.as_view()),
     url(r'checkuserpasswordstatus', views.CheckUserPasswordStatusView.as_view()),
-    url(r'adminsurveyadd', views.AdminSurveyAddView.as_view()),
+    # url(r'adminsurveyadd', views.AdminSurveyAddView.as_view()),
     url(r'adminsurveyedit', views.AdminSurveyEditView.as_view()),
     url(r'adminbulkinvitationsend', views.AdminBulkInvitationSendView.as_view()),
     url(r'adminbulkarchive', views.AdminBulkArchiveView.as_view()),
