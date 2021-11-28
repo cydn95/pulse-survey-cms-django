@@ -119,7 +119,7 @@ class AMResponseAcknowledgement(models.Model):
             }
         )
         email_from = settings.DEFAULT_FROM_EMAIL
-        recipient_list = ['dt897867@gmail.com',]
+        recipient_list = ['dt897867@gmail.com', 'mike.smith@projectai.com']
 
         email = EmailMultiAlternatives(subject=subject, body=message, from_email=email_from, to=recipient_list)
         email.attach_alternative(message, "text/html")
