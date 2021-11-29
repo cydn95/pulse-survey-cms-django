@@ -113,8 +113,8 @@ class AMResponseAcknowledgement(models.Model):
                 "image_name_star": image_name_star,
                 "token": "test_token",
                 "email": "test@test.com",
-                "first_name": "first name",
-                "last_name": "last name",
+                "first_name": "Mike",
+                "last_name": "Smith",
                 "site_url": settings.SITE_URL
             }
         )
