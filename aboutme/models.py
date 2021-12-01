@@ -106,17 +106,17 @@ class AMResponseAcknowledgement(models.Model):
 
         try:
             commentProjectUserResponse = AMResponse.objects.get(id=self.amResponse.id)
-            commentProjectUser = ProjectUser.objects.get(id=commentProjectUserResponse.projectUser)
+            commentProjectUser = ProjectUser.objects.get(id=commentProjectUserResponse.projectUser.id)
             ackCountToday = AMResponseAcknowledgement.objects.filter(
                 acknowledgeStatus__level__gte=1, updated_at___range=[start, end], amResponse__projectUser__id=commentProjectUser.id).count()
-            userInfo = User.objects.get(id=commentProjectUser.user)
-            ackProjectUser = ProjectUser.objects.get(id=self.projectUser)
-            ackUserInfo = User.objects.get(id=ackProjectUser.user)
+            userInfo = User.objects.get(id=commentProjectUser.user.id)
+            ackProjectUser = ProjectUser.objects.get(id=self.projectUser.id)
+            ackUserInfo = User.objects.get(id=ackProjectUser.user.id)
             pulseQuestion = AMQuestion.objects.get(
-                id=commentProjectUserResponse.amQuestion).questionText
+                id=commentProjectUserResponse.amQuestion.id).questionText
             pulseAnswer = commentProjectUserResponse.topicValue
             surveyName = Survey.objects.get(
-                id=commentProjectUserResponse.survey).surveyTitle
+                id=commentProjectUserResponse.survey.id).surveyTitle
             ackText = ""
             if self.acknowledgeStatus == 1:
                 ackText = "Thanks for sharing"
