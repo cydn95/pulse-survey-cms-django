@@ -108,7 +108,7 @@ class AMResponseAcknowledgement(models.Model):
             commentProjectUserResponse = AMResponse.objects.get(id=self.amResponse.id)
             commentProjectUser = ProjectUser.objects.get(id=commentProjectUserResponse.projectUser.id)
             ackCountToday = AMResponseAcknowledgement.objects.filter(
-                acknowledgeStatus__range=[1, 6], updated_at___range=[start, end], amResponse__projectUser__id=commentProjectUser.id).count()
+                acknowledgeStatus__range=[1, 6], updated_at__range=[start, end], amResponse__projectUser__id=commentProjectUser.id).count()
             userInfo = User.objects.get(id=commentProjectUser.user.id)
             ackProjectUser = ProjectUser.objects.get(id=self.projectUser.id)
             ackUserInfo = User.objects.get(id=ackProjectUser.user.id)
