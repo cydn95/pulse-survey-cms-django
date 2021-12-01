@@ -105,7 +105,7 @@ class AMResponseAcknowledgement(models.Model):
         end = now().date()
 
         try:
-            commentProjectUserResponse = AMResponse.objects.get(id=self.amResponse)
+            commentProjectUserResponse = AMResponse.objects.get(id=self.amResponse.id)
             commentProjectUser = ProjectUser.objects.get(id=commentProjectUserResponse.projectUser)
             ackCountToday = AMResponseAcknowledgement.objects.filter(
                 acknowledgeStatus__level__gte=1, updated_at___range=[start, end], amResponse__projectUser__id=commentProjectUser.id).count()
