@@ -178,10 +178,10 @@ class AMResponseAcknowledgement(models.Model):
                     email.attach(image_star)
                     image_star.add_header('Content-ID', f"<{image_name_star}>")
 
-                try:
+                # try:
                     email.send()
-                except SMTPException as e:
-                    print('There was an error sending an email: ', e)
+                # except SMTPException as e:
+                    # print('There was an error sending an email: ', e)
         except AMResponse.DoesNotExist:
             print('Incorrect response id')
             return
