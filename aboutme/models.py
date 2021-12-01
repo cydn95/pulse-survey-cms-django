@@ -17,6 +17,8 @@ from django.forms.widgets import CheckboxSelectMultiple
 from django import forms
 from django.utils import timezone
 from smtplib import SMTPException
+from django.utils.timezone import now, timedelta
+from django.contrib.auth.models import User
 
 class AMQuestion(models.Model):
     survey = models.ForeignKey(Survey, on_delete=models.CASCADE)
@@ -95,50 +97,94 @@ class AMResponseAcknowledgement(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def save(self, *args, **kwargs):
+        # old = AMResponseAcknowledgement.objects.get(pk=self.id)
         super(AMResponseAcknowledgement, self).save(*args, **kwargs)
 
-        image_path_logo = os.path.join(
-            settings.STATIC_ROOT, 'email', 'img', 'logo-2.png')
-        image_name_logo = Path(image_path_logo).name
-        image_path_star = os.path.join(
-            settings.STATIC_ROOT, 'email', 'img', 'star.png')
-        image_name_star = Path(image_path_star).name
-
-        subject = "Test"
-        message = get_template('ackform2.html').render(
-            {
-                "project_name": "test project",
-                "survey_name": "test survey",
-                "image_name_logo": image_name_logo,
-                "image_name_star": image_name_star,
-                "token": "test_token",
-                "email": "test@test.com",
-                "first_name": "Mike",
-                "last_name": "Smith",
-                "site_url": settings.SITE_URL
-            }
-        )
-        email_from = settings.DEFAULT_FROM_EMAIL
-        recipient_list = ['dt897867@gmail.com', 'mike.smith@projectai.com']
-
-        email = EmailMultiAlternatives(subject=subject, body=message, from_email=email_from, to=recipient_list)
-        email.attach_alternative(message, "text/html")
-        email.content_subtype = "html"
-        email.mixed_subtype = "related"
-
-        with open(image_path_logo, mode='rb') as f_logo:
-            image_logo = MIMEImage(f_logo.read())
-            email.attach(image_logo)
-            image_logo.add_header('Content-ID', f"<{image_name_logo}>")
-        with open(image_path_star, mode='rb') as f_star:
-            image_star = MIMEImage(f_star.read())
-            email.attach(image_star)
-            image_star.add_header('Content-ID', f"<{image_name_star}>")
+        # check if this user receive email today
+        start = now().date() - timedelta(days=1)
+        end = now().date()
 
         try:
-            email.send()
-        except SMTPException as e:
-            print('There was an error sending an email: ', e)
+            commentProjectUserResponse = AMResponse.objects.get(id=self.amResponse)
+            commentProjectUser = ProjectUser.objects.get(id=commentProjectUserResponse.projectUser)
+            ackCountToday = AMResponseAcknowledgement.objects.filter(
+                acknowledgeStatus__level__gte=1, updated_at___range=[start, end], amResponse__projectUser__id=commentProjectUser.id).count()
+            userInfo = User.objects.get(id=commentProjectUser.user)
+            ackProjectUser = ProjectUser.objects.get(id=self.projectUser)
+            ackUserInfo = User.objects.get(id=ackProjectUser.user)
+            pulseQuestion = AMQuestion.objects.get(
+                id=commentProjectUserResponse.amQuestion).questionText
+            pulseAnswer = commentProjectUserResponse.topicValue
+            surveyName = Survey.objects.get(
+                id=commentProjectUserResponse.survey).surveyTitle
+            ackText = ""
+            if self.acknowledgeStatus == 1:
+                ackText = "Thanks for sharing"
+            elif self.acknowledgeStatus == 2:
+                ackText = "Great idea"
+            elif self.acknowledgeStatus == 3:
+                ackText = "Working on it"
+            elif self.acknowledgeStatus == 4:
+                ackText = "Let's talk about it"
+            elif self.acknowledgeStatus == 5:
+                ackText = "I agree"
+            elif self.acknowledgeStatus == 6:
+                ackText = "Tell us more"
+            # if yes, form2
+            # if no,
+            # if you receive 1 more after the last email today,
+            # form1
+            # if no,
+            # form3
+            if ackCountToday == 1:
+                image_path_logo = os.path.join(
+                    settings.STATIC_ROOT, 'email', 'img', 'logo-2.png')
+                image_name_logo = Path(image_path_logo).name
+                image_path_star = os.path.join(
+                    settings.STATIC_ROOT, 'email', 'img', 'star.png')
+                image_name_star = Path(image_path_star).name
+
+                subject = "Pulse"
+                message = get_template('ackform2.html').render(
+                    {
+                        "project_name": "Pulse",
+                        "survey_name": surveyName,
+                        "image_name_logo": image_name_logo,
+                        "image_name_star": image_name_star,
+                        "first_name": userInfo.first_name,
+                        "last_name": userInfo.last_name,
+                        "site_url": settings.SITE_URL,
+                        "pulse_question": pulseQuestion,
+                        "pulse_answer": pulseAnswer,
+                        "ack_first_name": ackUserInfo.first_name,
+                        "ack_last_name": ackUserInfo.last_name,
+                        "ack_text": ackText
+                    }
+                )
+                email_from = settings.DEFAULT_FROM_EMAIL
+                recipient_list = ['dt897867@gmail.com', userInfo.email]
+
+                email = EmailMultiAlternatives(subject=subject, body=message, from_email=email_from, to=recipient_list)
+                email.attach_alternative(message, "text/html")
+                email.content_subtype = "html"
+                email.mixed_subtype = "related"
+
+                with open(image_path_logo, mode='rb') as f_logo:
+                    image_logo = MIMEImage(f_logo.read())
+                    email.attach(image_logo)
+                    image_logo.add_header('Content-ID', f"<{image_name_logo}>")
+                with open(image_path_star, mode='rb') as f_star:
+                    image_star = MIMEImage(f_star.read())
+                    email.attach(image_star)
+                    image_star.add_header('Content-ID', f"<{image_name_star}>")
+
+                try:
+                    email.send()
+                except SMTPException as e:
+                    print('There was an error sending an email: ', e)
+        except AMResponse.DoesNotExist:
+            print('Incorrect response id')
+            return
                 
 class AMResponseTopic(models.Model):
     amQuestion = models.ForeignKey(AMQuestion, on_delete=models.CASCADE)
