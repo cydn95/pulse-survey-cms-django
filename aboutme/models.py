@@ -139,7 +139,7 @@ class AMResponseAcknowledgement(models.Model):
             # form1
             # if no,
             # form3
-            if ackCountToday == 1:
+            if ackCountToday >= 1:
                 image_path_logo = os.path.join(
                     settings.STATIC_ROOT, 'email', 'img', 'logo-2.png')
                 image_name_logo = Path(image_path_logo).name
@@ -185,6 +185,55 @@ class AMResponseAcknowledgement(models.Model):
                     email.send()
                 except SMTPException as e:
                     print('There was an error sending an email: ', e)
+
+            if flagCountToday >= 1:
+                image_path_logo = os.path.join(
+                    settings.STATIC_ROOT, 'email', 'img', 'logo-2.png')
+                image_name_logo = Path(image_path_logo).name
+                image_path_star = os.path.join(
+                    settings.STATIC_ROOT, 'email', 'img', 'star.png')
+                image_name_star = Path(image_path_star).name
+
+                subject = "Pulse"
+                message = get_template('ackform2.html').render(
+                    {
+                        "project_name": "Pulse",
+                        "survey_name": surveyName,
+                        "image_name_logo": image_name_logo,
+                        "image_name_star": image_name_star,
+                        "first_name": userInfo.first_name,
+                        "last_name": userInfo.last_name,
+                        "site_url": settings.SITE_URL,
+                        "pulse_question": pulseQuestion,
+                        "pulse_answer": pulseAnswer,
+                        "ack_first_name": ackUserInfo.first_name,
+                        "ack_last_name": ackUserInfo.last_name,
+                        "ack_text": ackText
+                    }
+                )
+                email_from = settings.DEFAULT_FROM_EMAIL
+                recipient_list = [userInfo.email]
+
+                email = EmailMultiAlternatives(
+                    subject=subject, body=message, from_email=email_from, to=recipient_list)
+                email.attach_alternative(message, "text/html")
+                email.content_subtype = "html"
+                email.mixed_subtype = "related"
+
+                with open(image_path_logo, mode='rb') as f_logo:
+                    image_logo = MIMEImage(f_logo.read())
+                    email.attach(image_logo)
+                    image_logo.add_header('Content-ID', f"<{image_name_logo}>")
+                with open(image_path_star, mode='rb') as f_star:
+                    image_star = MIMEImage(f_star.read())
+                    email.attach(image_star)
+                    image_star.add_header('Content-ID', f"<{image_name_star}>")
+
+                try:
+                    email.send()
+                except SMTPException as e:
+                    print('There was an error sending an email: ', e)
+                    
         except AMResponse.DoesNotExist:
             print('Incorrect response id')
             return
