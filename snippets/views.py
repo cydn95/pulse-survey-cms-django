@@ -3079,6 +3079,74 @@ class KeyThemesMenuCntView(APIView):
 
         return Response(finalResult, status=status.HTTP_200_OK)
 
+# class MyMatrixView(APIView):
+#     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+
+#     @classmethod
+#     def get_extra_actions(cls):
+#         return []
+
+#     def get(self, format=None):
+#         # params
+#         # 1: group by "person"
+#         # 2: group by "group"
+#         # 3: group by "team"
+#         # 4: group by "organisation"
+#         projectUser = self.request.query_params.get('projectuser', None)
+#         survey = self.request.query_params.get('survey', None)
+
+#         if survey is None:
+#             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
+#         if projectUser is None:
+#             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
+
+#         driverqueryset = Driver.objects.all().filter(survey__id=survey, isStandard=True).order_by('driveOrder')
+#         driverserializer = DriverSerializer(driverqueryset, many=True)
+        
+#         for i in range(len(driverserializer.data)):
+#             aoresponsequeryset = AOResponse.objects.all().filter(aoQuestion__driver__id=driverserializer.data[i]['id'], survey__id=survey, subProjectUser__id=projectUser).order_by('projectUser')
+#             aoresponseserializer = AOResponseForMatrixSerializer(aoresponsequeryset, many=True)
+#             driverserializer.data[i]['aoResponseData'] = aoresponseserializer.data
+        
+#         paQuestionList = (
+#             "How do you think {{{FULLNAME}}} feels the {{{PROJECTNAME}}} project is going?",
+#             "How engaged do you think {{{FULLNAME}}} should be on this project?",
+#             "How engaged / involved do you think {{{FULLNAME}}} actually is on this project?",
+#             "How influential do you think {{{FULLNAME}}} is on this project?",
+#             "Do you think {{{FULLNAME}}} thinks this project will meet its objectives?",
+#             "How do you think {{{FULLNAME}}} views the overall culture on the project?",
+#             "How would you describe your working relationship with {{{FULLNAME}}} at present?",
+#             "How important do you think this project is to {{{FULLNAME}}}?"
+#         )
+
+#         paaoresponsequeryset = AOResponse.objects.all().filter(
+#             Q(aoQuestion__questionText="How do you think {{{FULLNAME}}} feels the {{{PROJECTNAME}}} project is going?") |
+#             Q(aoQuestion__questionText="How engaged do you think {{{FULLNAME}}} should be on this project?") |
+#             Q(aoQuestion__questionText="How engaged / involved do you think {{{FULLNAME}}} actually is on this project?") |
+#             Q(aoQuestion__questionText="How influential do you think {{{FULLNAME}}} is on this project?") |
+#             Q(aoQuestion__questionText="Do you think {{{FULLNAME}}} thinks this project will meet its objectives?") |
+#             Q(aoQuestion__questionText="How do you think {{{FULLNAME}}} views the overall culture on the project?") |
+#             Q(aoQuestion__questionText="How would you describe your working relationship with {{{FULLNAME}}} at present?") |
+#             Q(aoQuestion__questionText="How important do you think this project is to {{{FULLNAME}}}?"),
+#             survey__id=survey, subProjectUser__id=projectUser).order_by('projectUser')
+#         paaoresponseserializer = AOResponseForMatrixSerializer(paaoresponsequeryset, many=True)
+        
+#         perceptionAccuracyDriverItem = {
+#             "id": 9999999,
+#             "driverName": "Perception Accuracy",
+#             "iconPath": "",
+#             "driveOrder": 999999,
+#             "isStandard": True,
+#             "survey": survey,
+#             "aoResponseData": paaoresponseserializer.data
+#         }
+
+#         retList = list(driverserializer.data)
+#         retList.append(perceptionAccuracyDriverItem)
+
+#         return Response(retList, status=status.HTTP_200_OK)
+
+
 # keytheme api
 # AM - Confidence - Risk: What do you see as the biggest risks to the project?
 # AM - Sentiment - Own Words: How do you feel about this project in your own words?
@@ -3957,79 +4025,6 @@ class AdvisorInsightsView(APIView):
             "responseRateFromInvitedTeamMembers": responseRateFromInvitedTeamMembers,
             "responseRateFromInvitedStakeholders": responseRateFromInvitedStakeholders,
         }
-
-        # positivelyTeamScore = max(aryPositiveNegativeTeamsData[key]['score'] for key in aryPositiveNegativeTeamsData) if len(aryPositiveNegativeTeamsData) > 0 else 0
-        # negativelyTeamScore = min(aryPositiveNegativeTeamsData[key]['score'] for key in aryPositiveNegativeTeamsData) if len(aryPositiveNegativeTeamsData) > 0 else 0
-        # optimisticTeamScore = max(aryOptimisticPessimisticTeamsData[key]['score'] for key in aryOptimisticPessimisticTeamsData) if len(aryOptimisticPessimisticTeamsData) > 0 else 0
-        # pessimisticTeamScore = min(aryOptimisticPessimisticTeamsData[key]['score'] for key in aryOptimisticPessimisticTeamsData) if len(aryOptimisticPessimisticTeamsData) > 0 else 0
-        # leastSafeTeamScore = min(aryLeastSafeTeamsData[key]['score'] for key in aryLeastSafeTeamsData) if len(aryLeastSafeTeamsData) > 0 else 0
-        # positivelyTeamName = ""
-        # negativelyTeamName = ""
-        # optimisticTeamName = ""
-        # pessimisticTeamName = ""
-        # leastSafeTeamName = ""
-        # for key in aryPositiveNegativeTeamsData:
-        #     if aryPositiveNegativeTeamsData[key]['score'] == positivelyTeamScore:
-        #         positivelyTeamName = key
-        #     if aryPositiveNegativeTeamsData[key]['score'] == negativelyTeamScore:
-        #         negativelyTeamName = key
-        # for key in aryOptimisticPessimisticTeamsData:
-        #     if aryOptimisticPessimisticTeamsData[key]['score'] == optimisticTeamScore:
-        #         optimisticTeamName = key
-        #     if aryOptimisticPessimisticTeamsData[key]['score'] == pessimisticTeamScore:
-        #         pessimisticTeamName = key
-        # for key in aryLeastSafeTeamsData:
-        #     if aryLeastSafeTeamsData[key]['score'] == leastSafeTeamScore:
-        #         leastSafeTeamName = key
-
-        # positivelyShGroupScore = max(aryPositiveNegativeShGroupsData[key]['score'] for key in aryPositiveNegativeShGroupsData) if len(aryPositiveNegativeShGroupsData) > 0 else 0
-        # negativelyShGroupScore = min(aryPositiveNegativeShGroupsData[key]['score'] for key in aryPositiveNegativeShGroupsData) if len(aryPositiveNegativeShGroupsData) > 0 else 0
-        # optimisticShGroupScore = max(aryOptimisticPessimisticShGroupsData[key]['score'] for key in aryOptimisticPessimisticShGroupsData) if len(aryOptimisticPessimisticShGroupsData) > 0 else 0
-        # pessimisticShGroupScore = min(aryOptimisticPessimisticShGroupsData[key]['score'] for key in aryOptimisticPessimisticShGroupsData) if len(aryOptimisticPessimisticShGroupsData) > 0 else 0
-        # leastSafeShGroupScore = min(aryLeastSafeShGroupsData[key]['score'] for key in aryLeastSafeShGroupsData) if len(aryLeastSafeShGroupsData) > 0 else 0
-        # positivelyShGroupName = ""
-        # negativelyShGroupName = ""
-        # optimisticShGroupName = ""
-        # pessimisticShGroupName = ""
-        # leastSafeShGroupName = ""
-        # for key in aryPositiveNegativeShGroupsData:
-        #     if aryPositiveNegativeShGroupsData[key]['score'] == positivelyShGroupScore:
-        #         positivelyShGroupName = key
-        #     if aryPositiveNegativeShGroupsData[key]['score'] == negativelyShGroupScore:
-        #         negativelyShGroupName = key
-        # for key in aryOptimisticPessimisticShGroupsData:
-        #     if aryOptimisticPessimisticShGroupsData[key]['score'] == optimisticShGroupScore:
-        #         optimisticShGroupName = key
-        #     if aryOptimisticPessimisticShGroupsData[key]['score'] == pessimisticShGroupScore:
-        #         pessimisticShGroupName = key
-        # for key in aryLeastSafeShGroupsData:
-        #     if aryLeastSafeShGroupsData[key]['score'] == leastSafeShGroupScore:
-        #         leastSafeShGroupName = key
-
-        # positivelyOrgScore = max(aryPositiveNegativeOrganizationsData[key]['score'] for key in aryPositiveNegativeOrganizationsData) if len(aryPositiveNegativeOrganizationsData) > 0 else 0
-        # negativelyOrgScore = min(aryPositiveNegativeOrganizationsData[key]['score'] for key in aryPositiveNegativeOrganizationsData) if len(aryPositiveNegativeOrganizationsData) > 0 else 0
-        # optimisticOrgScore = max(aryOptimisticPessimisticOrganizationsData[key]['score'] for key in aryOptimisticPessimisticOrganizationsData) if len(aryOptimisticPessimisticOrganizationsData) > 0 else 0
-        # pessimisticOrgScore = min(aryOptimisticPessimisticOrganizationsData[key]['score'] for key in aryOptimisticPessimisticOrganizationsData) if len(aryOptimisticPessimisticOrganizationsData) > 0 else 0
-        # leastSafeOrgScore = min(aryLeastSafeOrganizationsData[key]['score'] for key in aryLeastSafeOrganizationsData) if len(aryLeastSafeOrganizationsData) > 0 else 0
-
-        # positivelyOrgName = ""
-        # negativelyOrgName = ""
-        # optimisticOrgName = ""
-        # pessimisticOrgName = ""
-        # leastSafeOrgName = ""
-        # for key in aryPositiveNegativeOrganizationsData:
-        #     if aryPositiveNegativeOrganizationsData[key]['score'] == positivelyOrgScore:
-        #         positivelyOrgName = key
-        #     if aryPositiveNegativeOrganizationsData[key]['score'] == negativelyOrgScore:
-        #         negativelyOrgName = key
-        # for key in aryOptimisticPessimisticOrganizationsData:
-        #     if aryOptimisticPessimisticOrganizationsData[key]['score'] == optimisticOrgScore:
-        #         optimisticOrgName = key
-        #     if aryOptimisticPessimisticOrganizationsData[key]['score'] == pessimisticOrgScore:
-        #         pessimisticOrgName = key
-        # for key in aryLeastSafeOrganizationsData:
-        #     if aryLeastSafeOrganizationsData[key]['score'] == leastSafeOrgScore:
-        #         leastSafeOrgName = key
 
         positivelyTeamName = ""
         positivelyTeamScore = ""
