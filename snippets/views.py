@@ -1177,12 +1177,12 @@ class AOResponseFeedbackSummaryViewset(viewsets.ModelViewSet):
             startDate = self.request.GET.get('stdt', None)
             endDate = self.request.GET.get('eddt', None)
 
-            for i in range(len(response.data)):
-                amquestion_queryset = AMQuestion.objects.filter(
-                    id=response.data[i]['amQuestion'])
-                am_serializer = AMQuestionSerializer(
-                    amquestion_queryset, many=True)
-                response.data[i]['amQuestionData'] = am_serializer.data
+            # for i in range(len(response.data)):
+            #     amquestion_queryset = AMQuestion.objects.filter(
+            #         id=response.data[i]['amQuestion'])
+            #     am_serializer = AMQuestionSerializer(
+            #         amquestion_queryset, many=True)
+            #     response.data[i]['amQuestionData'] = am_serializer.data
 
             return response
         except Exception as error:

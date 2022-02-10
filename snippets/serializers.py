@@ -364,7 +364,7 @@ class AOResponseTopPositiveNegativeSerializer(serializers.ModelSerializer):
 class AMResponseForMatrixSerializer(serializers.ModelSerializer):
     # projectUser = ProjectUserForReportSerializer()
     subProjectUser = ProjectUserForReportSerializer()
-    # amQuestion = AMQuestionSerializer()
+    amQuestion = AMQuestionSerializer()
 
     class Meta:
         model = AMResponse
