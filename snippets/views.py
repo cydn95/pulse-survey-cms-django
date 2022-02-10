@@ -2328,7 +2328,6 @@ class AdminSurveySetupViewSet(viewsets.ModelViewSet):
 
             if len(response.data) == 0:
                 return Response([], status=status.HTTP_200_OK)
-
             tour = ConfigPage.objects.filter(survey_id=survey).values()
             moreInfo = NikelMobilePage.objects.filter(survey_id=survey).values()
 
@@ -2410,7 +2409,6 @@ class AdminSurveyEditView(APIView):
         return []
 
     def post(self, request):
-        print('dat', request.data)
         survey = request.data['survey']
         newSurvey = Survey.objects.get(id=survey)
         newSurvey.surveyTitle = request.data['projectSetup']['surveyTitle']
@@ -2422,7 +2420,13 @@ class AdminSurveyEditView(APIView):
         newSurvey.anonymityThreshold = request.data['projectConfiguration']['anonymityThreshold']
         newSurvey.projectManager = request.data['projectSetup']['projectManager']
         newSurvey.save()
-        print('data', newSurvey)
+
+        tour = ConfigPage.objects.get(survey_id=survey)
+        tour.pageName = request.data['projectSetup']['tour'][0]["pageName"]
+        tour.tabName = request.data['projectSetup']['tour'][0]["tabName"]
+        tour.pageContent = request.data['projectSetup']['tour'][0]["pageContent"]
+        tour.save()
+
         # if survey is None:
         #     return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
 
