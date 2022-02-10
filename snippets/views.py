@@ -1152,17 +1152,17 @@ class AOResponseFeedbackSummaryViewset(viewsets.ModelViewSet):
 
             if (survey is not None) & (subProjectUser is not None) & (startDate is not None) & (endDate is not None):
                 queryset = queryset.filter(
-                    survey_id=survey, subProjectUser_id=subProjectUser, created_at__range=[startDate, endDate])
+                    survey_id=survey, subProjectUser_id=subProjectUser, created_at__range=[startDate, endDate], controlType="SLIDER")
             elif (survey is not None) & (subProjectUser is not None):
                 queryset = queryset.filter(
-                    survey_id=survey, subProjectUser_id=subProjectUser)
+                    survey_id=survey, subProjectUser_id=subProjectUser, controlType="SLIDER")
             elif (survey is not None) & (startDate is not None) & (endDate is not None):
-                queryset = queryset.filter(survey_id=survey, created_at__range=[startDate, endDate])
+                queryset = queryset.filter(survey_id=survey, created_at__range=[startDate, endDate], controlType="SLIDER")
             elif (survey is not None):
-                queryset = queryset.filter(survey_id=survey)
+                queryset = queryset.filter(survey_id=survey, controlType="SLIDER")
 
             if (trend == "1"):
-                queryset = queryset.filter(amQuestion__subdriver="Overall Sentiment", controlType="SLIDER")
+                queryset = queryset.filter(amQuestion__subdriver="Overall Sentiment")
 
             return queryset
         except:
@@ -2399,7 +2399,7 @@ class AdminSurveyAddViewSet(viewsets.ModelViewSet):
         headers = self.get_success_headers(serializer.data)
 
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-
+        
 # wip
 # adminsurveyedit api
 class AdminSurveyEditView(APIView):
@@ -2410,8 +2410,19 @@ class AdminSurveyEditView(APIView):
         return []
 
     def post(self, request):
-        # survey = request.data['survey']
-
+        print('dat', request.data)
+        survey = request.data['survey']
+        newSurvey = Survey.objects.get(id=survey)
+        newSurvey.surveyTitle = request.data['projectSetup']['surveyTitle']
+        newSurvey.projectLogo = request.data['projectSetup']['projectLogo']
+        newSurvey.companyLogo = request.data['projectSetup']['companyLogo']
+        newSurvey.customGroup1 = request.data['projectConfiguration']['customGroup1']
+        newSurvey.customGroup2 = request.data['projectConfiguration']['customGroup2']
+        newSurvey.customGroup3 = request.data['projectConfiguration']['customGroup3']
+        newSurvey.anonymityThreshold = request.data['projectConfiguration']['anonymityThreshold']
+        newSurvey.projectManager = request.data['projectSetup']['projectManager']
+        newSurvey.save()
+        print('data', newSurvey)
         # if survey is None:
         #     return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
 
@@ -2422,7 +2433,7 @@ class AdminSurveyEditView(APIView):
             "self": self,
             "request": request
         }
-        return Response(res, status=status.HTTP_200_OK)
+        return Response(request.data, status=status.HTTP_200_OK)
 
 # adminsurveybyuser api
 class AdminSurveyByUserViewSet(viewsets.ModelViewSet):

@@ -81,6 +81,11 @@ class AMResponse(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    class Meta:
+         indexes = [
+             models.Index(fields=['created_at']),
+         ]
+
 class AMResponseAcknowledgement(models.Model):
     amResponse = models.ForeignKey(AMResponse, on_delete=models.CASCADE)
     projectUser = models.ForeignKey(

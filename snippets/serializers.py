@@ -119,7 +119,7 @@ class SurveySerializer(serializers.ModelSerializer):
 
 class AMQuestionSerializer(serializers.ModelSerializer):
     driver = DriverSerializer()
-    survey = SurveySerializer()
+    # survey = SurveySerializer()
     class Meta:
         model = AMQuestion
         fields = ['id', 'subdriver', 'questionText', 'questionSequence', 
@@ -362,8 +362,9 @@ class AOResponseTopPositiveNegativeSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class AMResponseForMatrixSerializer(serializers.ModelSerializer):
-    projectUser = ProjectUserForReportSerializer()
+    # projectUser = ProjectUserForReportSerializer()
     subProjectUser = ProjectUserForReportSerializer()
+    # amQuestion = AMQuestionSerializer()
 
     class Meta:
         model = AMResponse
