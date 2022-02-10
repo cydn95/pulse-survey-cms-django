@@ -320,6 +320,20 @@ class ProjectUserForReportSerializer(serializers.ModelSerializer):
         fields = ['id', 'user', 'team', 'shGroup',
                   'projectOrganization', 'isCGroup1', 'isCGroup2', 'isCGroup3', 'shType']
 
+class ProjectUserForReportForSummarySerializer(serializers.ModelSerializer):
+    team = TeamSerializer()
+    shGroup = SHGroupSerializer()
+    shType = SHTypeSerializer()
+
+    class Meta:
+        model = ProjectUser
+
+        # commented for isteammember
+        # fields = ['id', 'user', 'team', 'shGroup', 'isTeamMember', 'isCGroup1', 'isCGroup2', 'isCGroup3']
+        fields = ['id', 'user', 'team', 'shGroup',
+                  'projectOrganization', 'isCGroup1', 'isCGroup2', 'isCGroup3', 'shType']
+
+
 class AMResponseForDriverAnalysisSerializer(serializers.ModelSerializer):
     projectUser = ProjectUserForReportSerializer()
     subProjectUser = ProjectUserForReportSerializer()
@@ -363,7 +377,7 @@ class AOResponseTopPositiveNegativeSerializer(serializers.ModelSerializer):
 
 class AMResponseForMatrixSerializer(serializers.ModelSerializer):
     # projectUser = ProjectUserForReportSerializer()
-    subProjectUser = ProjectUserForReportSerializer()
+    subProjectUser = ProjectUserForReportForSummarySerializer()
     amQuestion = AMQuestionSerializer()
 
     class Meta:
