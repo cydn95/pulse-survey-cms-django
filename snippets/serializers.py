@@ -119,6 +119,16 @@ class SurveySerializer(serializers.ModelSerializer):
 
 class AMQuestionSerializer(serializers.ModelSerializer):
     driver = DriverSerializer()
+    survey = SurveySerializer()
+    class Meta:
+        model = AMQuestion
+        fields = ['id', 'subdriver', 'questionText', 'questionSequence', 
+        'sliderTextLeft', 'sliderTextRight', 'skipOptionYN',  
+        'topicPrompt', 'commentPrompt', 'survey', 'driver', 'controlType', 
+        'shGroup', 'option', 'skipOption', 'amqOrder']
+
+class AMQuestionSerializerForReport(serializers.ModelSerializer):
+    driver = DriverSerializer()
     # survey = SurveySerializer()
     class Meta:
         model = AMQuestion
@@ -383,7 +393,7 @@ class AOResponseTopPositiveNegativeSerializer(serializers.ModelSerializer):
 class AMResponseForMatrixSerializer(serializers.ModelSerializer):
     # projectUser = ProjectUserForReportSerializer()
     subProjectUser = ProjectUserForReportForSummarySerializer()
-    amQuestion = AMQuestionSerializer()
+    amQuestion = AMQuestionSerializerForReport()
 
     class Meta:
         model = AMResponse
