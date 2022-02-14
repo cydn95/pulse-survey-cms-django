@@ -102,6 +102,7 @@ urlpatterns += format_suffix_patterns([
     url(r'adminsurveyedit', views.AdminSurveyEditView.as_view()),
     url(r'adminbulkinvitationsend', views.AdminBulkInvitationSendView.as_view()),
     url(r'adminbulkarchive', views.AdminBulkArchiveView.as_view()),
+    url(r'admindelmorepage/(?P<pk>\d+)', views.AdminDelMoreInfoPageView.as_view())
 ])
 
 # router.register(r'interestreport', views.AMResponseFeedbackSummaryForInterestViewset)     # deprecated

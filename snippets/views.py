@@ -1152,17 +1152,17 @@ class AOResponseFeedbackSummaryViewset(viewsets.ModelViewSet):
 
             if (survey is not None) & (subProjectUser is not None) & (startDate is not None) & (endDate is not None):
                 queryset = queryset.filter(
-                    survey_id=survey, subProjectUser_id=subProjectUser, created_at__range=[startDate, endDate])
+                    survey_id=survey, subProjectUser_id=subProjectUser, created_at__range=[startDate, endDate], controlType="SLIDER")
             elif (survey is not None) & (subProjectUser is not None):
                 queryset = queryset.filter(
-                    survey_id=survey, subProjectUser_id=subProjectUser)
+                    survey_id=survey, subProjectUser_id=subProjectUser, controlType="SLIDER")
             elif (survey is not None) & (startDate is not None) & (endDate is not None):
-                queryset = queryset.filter(survey_id=survey, created_at__range=[startDate, endDate])
+                queryset = queryset.filter(survey_id=survey, created_at__range=[startDate, endDate], controlType="SLIDER")
             elif (survey is not None):
-                queryset = queryset.filter(survey_id=survey)
+                queryset = queryset.filter(survey_id=survey, controlType="SLIDER")
 
             if (trend == "1"):
-                queryset = queryset.filter(amQuestion__subdriver="Overall Sentiment", controlType="SLIDER")
+                queryset = queryset.filter(amQuestion__subdriver="Overall Sentiment")
 
             return queryset
         except:
@@ -1177,12 +1177,12 @@ class AOResponseFeedbackSummaryViewset(viewsets.ModelViewSet):
             startDate = self.request.GET.get('stdt', None)
             endDate = self.request.GET.get('eddt', None)
 
-            for i in range(len(response.data)):
-                amquestion_queryset = AMQuestion.objects.filter(
-                    id=response.data[i]['amQuestion'])
-                am_serializer = AMQuestionSerializer(
-                    amquestion_queryset, many=True)
-                response.data[i]['amQuestionData'] = am_serializer.data
+            # for i in range(len(response.data)):
+            #     amquestion_queryset = AMQuestion.objects.filter(
+            #         id=response.data[i]['amQuestion'])
+            #     am_serializer = AMQuestionSerializer(
+            #         amquestion_queryset, many=True)
+            #     response.data[i]['amQuestionData'] = am_serializer.data
 
             return response
         except Exception as error:
@@ -2328,7 +2328,6 @@ class AdminSurveySetupViewSet(viewsets.ModelViewSet):
 
             if len(response.data) == 0:
                 return Response([], status=status.HTTP_200_OK)
-
             tour = ConfigPage.objects.filter(survey_id=survey).values()
             moreInfo = NikelMobilePage.objects.filter(survey_id=survey).values()
 
@@ -2399,7 +2398,7 @@ class AdminSurveyAddViewSet(viewsets.ModelViewSet):
         headers = self.get_success_headers(serializer.data)
 
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-
+        
 # wip
 # adminsurveyedit api
 class AdminSurveyEditView(APIView):
@@ -2410,7 +2409,43 @@ class AdminSurveyEditView(APIView):
         return []
 
     def post(self, request):
-        # survey = request.data['survey']
+        survey = request.data['survey']
+
+        # saving survey
+        newSurvey = Survey.objects.get(id=survey)
+        newSurvey.surveyTitle = request.data['projectSetup']['surveyTitle']
+        newSurvey.projectLogo = request.data['projectSetup']['projectLogo']
+        newSurvey.companyLogo = request.data['projectSetup']['companyLogo']
+        newSurvey.customGroup1 = request.data['projectConfiguration']['customGroup1']
+        newSurvey.customGroup2 = request.data['projectConfiguration']['customGroup2']
+        newSurvey.customGroup3 = request.data['projectConfiguration']['customGroup3']
+        newSurvey.anonymityThreshold = request.data['projectConfiguration']['anonymityThreshold']
+        newSurvey.projectManager = request.data['projectSetup']['projectManager']
+        newSurvey.save()
+
+        # saving tour
+        tour = ConfigPage.objects.get(survey_id=survey)
+        tour.pageName = request.data['projectSetup']['tour'][0]["pageName"]
+        tour.tabName = request.data['projectSetup']['tour'][0]["tabName"]
+        tour.pageContent = request.data['projectSetup']['tour'][0]["pageContent"]
+        tour.save()
+
+        # saving more info
+        moreInfo = request.data['projectSetup']['moreInfo']
+        for i in range(len(moreInfo)):
+            print('instance', moreInfo[i])
+            if 'id' in moreInfo[i]:
+                instance = NikelMobilePage.objects.get(id=moreInfo[i]['id'])
+                for key in moreInfo[i]:
+                    setattr(instance, key, moreInfo[i][key])
+                print('instance', instance)
+                instance.save()
+            else:
+                moreInfo[i]['survey'] = survey
+                serializer = NikelMobilePageSerializer(data=moreInfo[i])
+                serializer.is_valid(raise_exception=True)
+                serializer.save()
+
 
         # if survey is None:
         #     return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
@@ -2422,7 +2457,7 @@ class AdminSurveyEditView(APIView):
             "self": self,
             "request": request
         }
-        return Response(res, status=status.HTTP_200_OK)
+        return Response(request.data, status=status.HTTP_200_OK)
 
 # adminsurveybyuser api
 class AdminSurveyByUserViewSet(viewsets.ModelViewSet):
@@ -4776,6 +4811,17 @@ class AdminBulkInvitationSendView(APIView):
                 pass
 
         return Response("success", status=status.HTTP_201_CREATED)
+
+class AdminDelMoreInfoPageView(APIView):
+    def get_object(self, pk):
+        try:
+            return NikelMobilePage.objects.get(id=pk)
+        except NikelMobilePage.DoesNotExist:
+            raise status.HTTP_404_NOT_FOUND
+    def delete(self, request, pk, format=None):
+        moreInfoPage = self.get_object(pk)
+        moreInfoPage.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 # adminbulkarchive api
 class AdminBulkArchiveView(APIView):

@@ -119,7 +119,7 @@ class SurveySerializer(serializers.ModelSerializer):
 
 class AMQuestionSerializer(serializers.ModelSerializer):
     driver = DriverSerializer()
-    survey = SurveySerializer()
+    # survey = SurveySerializer()
     class Meta:
         model = AMQuestion
         fields = ['id', 'subdriver', 'questionText', 'questionSequence', 
@@ -300,6 +300,11 @@ class NikelMobilePageSerializer(serializers.ModelSerializer):
         model = NikelMobilePage
         fields = '__all__'
 
+# class NikelMobilePageCustomSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = NikelMobilePage
+#         fields = ['id', 'pageName', 'pageText', 'backgroundColor', 'pageContent', 'pageOrder', 'survey_id', 'img']
+
 class ToolTipGuideSerializer(serializers.ModelSerializer):
     class Meta:
         model = ToolTipGuide
@@ -319,6 +324,20 @@ class ProjectUserForReportSerializer(serializers.ModelSerializer):
         # fields = ['id', 'user', 'team', 'shGroup', 'isTeamMember', 'isCGroup1', 'isCGroup2', 'isCGroup3']
         fields = ['id', 'user', 'team', 'shGroup',
                   'projectOrganization', 'isCGroup1', 'isCGroup2', 'isCGroup3', 'shType']
+
+class ProjectUserForReportForSummarySerializer(serializers.ModelSerializer):
+    team = TeamSerializer()
+    shGroup = SHGroupSerializer()
+    shType = SHTypeSerializer()
+
+    class Meta:
+        model = ProjectUser
+
+        # commented for isteammember
+        # fields = ['id', 'user', 'team', 'shGroup', 'isTeamMember', 'isCGroup1', 'isCGroup2', 'isCGroup3']
+        fields = ['id', 'user', 'team', 'shGroup',
+                  'projectOrganization', 'isCGroup1', 'isCGroup2', 'isCGroup3', 'shType']
+
 
 class AMResponseForDriverAnalysisSerializer(serializers.ModelSerializer):
     projectUser = ProjectUserForReportSerializer()
@@ -362,8 +381,9 @@ class AOResponseTopPositiveNegativeSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class AMResponseForMatrixSerializer(serializers.ModelSerializer):
-    projectUser = ProjectUserForReportSerializer()
-    subProjectUser = ProjectUserForReportSerializer()
+    # projectUser = ProjectUserForReportSerializer()
+    subProjectUser = ProjectUserForReportForSummarySerializer()
+    amQuestion = AMQuestionSerializer()
 
     class Meta:
         model = AMResponse
