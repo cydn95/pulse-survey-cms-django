@@ -300,6 +300,11 @@ class NikelMobilePageSerializer(serializers.ModelSerializer):
         model = NikelMobilePage
         fields = '__all__'
 
+# class NikelMobilePageCustomSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = NikelMobilePage
+#         fields = ['id', 'pageName', 'pageText', 'backgroundColor', 'pageContent', 'pageOrder', 'survey_id', 'img']
+
 class ToolTipGuideSerializer(serializers.ModelSerializer):
     class Meta:
         model = ToolTipGuide

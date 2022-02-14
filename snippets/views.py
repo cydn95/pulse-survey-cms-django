@@ -2410,6 +2410,8 @@ class AdminSurveyEditView(APIView):
 
     def post(self, request):
         survey = request.data['survey']
+
+        # saving survey
         newSurvey = Survey.objects.get(id=survey)
         newSurvey.surveyTitle = request.data['projectSetup']['surveyTitle']
         newSurvey.projectLogo = request.data['projectSetup']['projectLogo']
@@ -2421,11 +2423,29 @@ class AdminSurveyEditView(APIView):
         newSurvey.projectManager = request.data['projectSetup']['projectManager']
         newSurvey.save()
 
+        # saving tour
         tour = ConfigPage.objects.get(survey_id=survey)
         tour.pageName = request.data['projectSetup']['tour'][0]["pageName"]
         tour.tabName = request.data['projectSetup']['tour'][0]["tabName"]
         tour.pageContent = request.data['projectSetup']['tour'][0]["pageContent"]
         tour.save()
+
+        # saving more info
+        moreInfo = request.data['projectSetup']['moreInfo']
+        for i in range(len(moreInfo)):
+            print('instance', moreInfo[i])
+            if 'id' in moreInfo[i]:
+                instance = NikelMobilePage.objects.get(id=moreInfo[i]['id'])
+                for key in moreInfo[i]:
+                    setattr(instance, key, moreInfo[i][key])
+                print('instance', instance)
+                instance.save()
+            else:
+                moreInfo[i]['survey'] = survey
+                serializer = NikelMobilePageSerializer(data=moreInfo[i])
+                serializer.is_valid(raise_exception=True)
+                serializer.save()
+
 
         # if survey is None:
         #     return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
@@ -4791,6 +4811,17 @@ class AdminBulkInvitationSendView(APIView):
                 pass
 
         return Response("success", status=status.HTTP_201_CREATED)
+
+class AdminDelMoreInfoPageView(APIView):
+    def get_object(self, pk):
+        try:
+            return NikelMobilePage.objects.get(id=pk)
+        except NikelMobilePage.DoesNotExist:
+            raise status.HTTP_404_NOT_FOUND
+    def delete(self, request, pk, format=None):
+        moreInfoPage = self.get_object(pk)
+        moreInfoPage.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 # adminbulkarchive api
 class AdminBulkArchiveView(APIView):
