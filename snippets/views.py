@@ -17,7 +17,7 @@ from django.conf import settings
 from pathlib import Path
 from email.mime.image import MIMEImage
 
-from snippets.serializers import AMResponseForAdvisorSerializer, AMResponseForDriverAnalysisSerializer, AOResponseForDriverAnalysisSerializer, AOResponseTopPositiveNegativeSerializer, KeyThemeUpDownVoteSerializer, AMResponseAcknowledgementSerializer, AOResponseForMatrixSerializer, AOResponseAcknowledgementSerializer, AMResponseForReportSerializer, AOResponseForReportSerializer, ProjectUserForReportSerializer, ProjectUserForAdvisorSerializer, AMQuestionSubDriverSerializer, AOQuestionSubDriverSerializer, DriverSubDriverSerializer, ProjectSerializer, ToolTipGuideSerializer, SurveySerializer, NikelMobilePageSerializer, ConfigPageSerializer, UserAvatarSerializer, SHMappingSerializer, ProjectVideoUploadSerializer, AMQuestionSerializer, AOQuestionSerializer, StakeHolderSerializer, SHCategorySerializer, MyMapLayoutStoreSerializer, ProjectMapLayoutStoreSerializer, UserBySurveySerializer, SurveyByUserSerializer, SkipOptionSerializer, DriverSerializer, AOQuestionSerializer, OrganizationSerializer, OptionSerializer, ProjectUserSerializer, SHGroupSerializer, UserSerializer, PageSettingSerializer, PageSerializer, AMResponseSerializer, AMResponseTopicSerializer, AOResponseSerializer, AOResponseTopicSerializer, AOPageSerializer, TeamSerializer
+from snippets.serializers import AMResponseForSummarySerializer, AMResponseForAdvisorSerializer, AMResponseForDriverAnalysisSerializer, AOResponseForDriverAnalysisSerializer, AOResponseTopPositiveNegativeSerializer, KeyThemeUpDownVoteSerializer, AMResponseAcknowledgementSerializer, AOResponseForMatrixSerializer, AOResponseAcknowledgementSerializer, AMResponseForReportSerializer, AOResponseForReportSerializer, ProjectUserForReportSerializer, ProjectUserForAdvisorSerializer, AMQuestionSubDriverSerializer, AOQuestionSubDriverSerializer, DriverSubDriverSerializer, ProjectSerializer, ToolTipGuideSerializer, SurveySerializer, NikelMobilePageSerializer, ConfigPageSerializer, UserAvatarSerializer, SHMappingSerializer, ProjectVideoUploadSerializer, AMQuestionSerializer, AOQuestionSerializer, StakeHolderSerializer, SHCategorySerializer, MyMapLayoutStoreSerializer, ProjectMapLayoutStoreSerializer, UserBySurveySerializer, SurveyByUserSerializer, SkipOptionSerializer, DriverSerializer, AOQuestionSerializer, OrganizationSerializer, OptionSerializer, ProjectUserSerializer, SHGroupSerializer, UserSerializer, PageSettingSerializer, PageSerializer, AMResponseSerializer, AMResponseTopicSerializer, AOResponseSerializer, AOResponseTopicSerializer, AOPageSerializer, TeamSerializer
 
 from rest_framework import generics, permissions, renderers, viewsets, status, filters
 from rest_framework.decorators import action
@@ -1138,7 +1138,7 @@ class AOResponseFeedbackSummaryViewset(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated,
                           permissions.IsAuthenticatedOrReadOnly]
     queryset = AMResponse.objects.all()
-    serializer_class = AMResponseForDriverAnalysisSerializer
+    serializer_class = AMResponseForSummarySerializer
 
     def get_queryset(self):
         try:
@@ -2433,12 +2433,10 @@ class AdminSurveyEditView(APIView):
         # saving more info
         moreInfo = request.data['projectSetup']['moreInfo']
         for i in range(len(moreInfo)):
-            print('instance', moreInfo[i])
             if 'id' in moreInfo[i]:
                 instance = NikelMobilePage.objects.get(id=moreInfo[i]['id'])
                 for key in moreInfo[i]:
                     setattr(instance, key, moreInfo[i][key])
-                print('instance', instance)
                 instance.save()
             else:
                 moreInfo[i]['survey'] = survey
@@ -2446,6 +2444,73 @@ class AdminSurveyEditView(APIView):
                 serializer.is_valid(raise_exception=True)
                 serializer.save()
 
+        # saving drivers
+        driverList = request.data['projectConfiguration']['driverList']
+        for i in range(len(driverList)):
+            if 'id' in driverList[i]:
+                instance = NikelMobilePage.objects.get(id=driverList[i]['id'])
+                for key in driverList[i]:
+                    setattr(instance, key, driverList[i][key])
+                instance.save()
+            else:
+                driverList[i]['survey'] = survey
+                serializer = NikelMobilePageSerializer(data=driverList[i])
+                serializer.is_valid(raise_exception=True)
+                serializer.save()
+
+        # saving my maps and project maps
+        myMaps = request.data['projectConfiguration']['myMap']
+        for i in range(len(myMaps)):
+            if 'id' in myMaps[i]:
+                instance = NikelMobilePage.objects.get(id=myMaps[i]['id'])
+                for key in myMaps[i]:
+                    setattr(instance, key, myMaps[i][key])
+                instance.save()
+            else:
+                myMaps[i]['survey_id'] = survey
+                serializer = NikelMobilePageSerializer(data=myMaps[i])
+                serializer.is_valid(raise_exception=True)
+                serializer.save()
+
+        projectMaps = request.data['projectConfiguration']['projectMap']
+        for i in range(len(projectMaps)):
+            if 'id' in projectMaps[i]:
+                instance = NikelMobilePage.objects.get(id=projectMaps[i]['id'])
+                for key in projectMaps[i]:
+                    setattr(instance, key, projectMaps[i][key])
+                instance.save()
+            else:
+                projectMaps[i]['survey_id'] = survey
+                serializer = NikelMobilePageSerializer(data=projectMaps[i])
+                serializer.is_valid(raise_exception=True)
+                serializer.save()
+
+        # saving shGroups
+        shGroups = request.data['projectConfiguration']['shGroup']
+        for i in range(len(shGroups)):
+            if 'id' in shGroups[i]:
+                instance = NikelMobilePage.objects.get(id=shGroups[i]['id'])
+                for key in shGroups[i]:
+                    setattr(instance, key, shGroups[i][key])
+                instance.save()
+            else:
+                shGroups[i]['survey'] = survey
+                serializer = NikelMobilePageSerializer(data=shGroups[i])
+                serializer.is_valid(raise_exception=True)
+                serializer.save()
+
+        # saving project teams
+        projectTeams = request.data['projectConfiguration']['projectTeam']
+        for i in range(len(projectTeams)):
+            if 'id' in projectTeams[i]:
+                instance = NikelMobilePage.objects.get(id=projectTeams[i]['id'])
+                for key in projectTeams[i]:
+                    setattr(instance, key, projectTeams[i][key])
+                instance.save()
+            else:
+                serializer = NikelMobilePageSerializer(data=projectTeams[i])
+                serializer.is_valid(raise_exception=True)
+                serializer.save()
 
         # if survey is None:
         #     return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)

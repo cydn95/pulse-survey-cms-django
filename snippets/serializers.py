@@ -359,6 +359,15 @@ class AMResponseForDriverAnalysisSerializer(serializers.ModelSerializer):
         fields = ['id', 'controlType', 'integerValue', 'topicValue', 'commentValue', 'created_at', 'updated_at',
                   'projectUser', 'subProjectUser', 'survey', 'project', 'amQuestion', 'latestResponse']
 
+class AMResponseForSummarySerializer(serializers.ModelSerializer):
+    subProjectUser = ProjectUserForReportSerializer()
+    amQuestion = AMQuestionSerializerForReport()
+
+    class Meta:
+        model = AMResponse
+        fields = ['id', 'controlType', 'integerValue', 'topicValue', 'commentValue', 'created_at', 'updated_at',
+                  'projectUser', 'subProjectUser', 'survey', 'project', 'amQuestion', 'latestResponse']
+    
 class AOResponseForDriverAnalysisSerializer(serializers.ModelSerializer):
     # projectUser = ProjectUserForReportSerializer()
     subProjectUser = ProjectUserForReportSerializer()
