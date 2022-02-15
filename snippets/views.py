@@ -17,7 +17,7 @@ from django.conf import settings
 from pathlib import Path
 from email.mime.image import MIMEImage
 
-from snippets.serializers import AMResponseForMatrixSerializer, AMResponseForDriverAnalysisSerializer, AOResponseForDriverAnalysisSerializer, AOResponseTopPositiveNegativeSerializer, KeyThemeUpDownVoteSerializer, AMResponseAcknowledgementSerializer, AOResponseForMatrixSerializer, AOResponseAcknowledgementSerializer, AMResponseForReportSerializer, AOResponseForReportSerializer, ProjectUserForReportSerializer, AMQuestionSubDriverSerializer, AOQuestionSubDriverSerializer, DriverSubDriverSerializer, ProjectSerializer, ToolTipGuideSerializer, SurveySerializer, NikelMobilePageSerializer, ConfigPageSerializer, UserAvatarSerializer, SHMappingSerializer, ProjectVideoUploadSerializer, AMQuestionSerializer, AOQuestionSerializer, StakeHolderSerializer, SHCategorySerializer, MyMapLayoutStoreSerializer, ProjectMapLayoutStoreSerializer, UserBySurveySerializer, SurveyByUserSerializer, SkipOptionSerializer, DriverSerializer, AOQuestionSerializer, OrganizationSerializer, OptionSerializer, ProjectUserSerializer, SHGroupSerializer, UserSerializer, PageSettingSerializer, PageSerializer, AMResponseSerializer, AMResponseTopicSerializer, AOResponseSerializer, AOResponseTopicSerializer, AOPageSerializer, TeamSerializer
+from snippets.serializers import AMResponseForAdvisorSerializer, AMResponseForDriverAnalysisSerializer, AOResponseForDriverAnalysisSerializer, AOResponseTopPositiveNegativeSerializer, KeyThemeUpDownVoteSerializer, AMResponseAcknowledgementSerializer, AOResponseForMatrixSerializer, AOResponseAcknowledgementSerializer, AMResponseForReportSerializer, AOResponseForReportSerializer, ProjectUserForReportSerializer, ProjectUserForAdvisorSerializer, AMQuestionSubDriverSerializer, AOQuestionSubDriverSerializer, DriverSubDriverSerializer, ProjectSerializer, ToolTipGuideSerializer, SurveySerializer, NikelMobilePageSerializer, ConfigPageSerializer, UserAvatarSerializer, SHMappingSerializer, ProjectVideoUploadSerializer, AMQuestionSerializer, AOQuestionSerializer, StakeHolderSerializer, SHCategorySerializer, MyMapLayoutStoreSerializer, ProjectMapLayoutStoreSerializer, UserBySurveySerializer, SurveyByUserSerializer, SkipOptionSerializer, DriverSerializer, AOQuestionSerializer, OrganizationSerializer, OptionSerializer, ProjectUserSerializer, SHGroupSerializer, UserSerializer, PageSettingSerializer, PageSerializer, AMResponseSerializer, AMResponseTopicSerializer, AOResponseSerializer, AOResponseTopicSerializer, AOPageSerializer, TeamSerializer
 
 from rest_framework import generics, permissions, renderers, viewsets, status, filters
 from rest_framework.decorators import action
@@ -1138,7 +1138,7 @@ class AOResponseFeedbackSummaryViewset(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated,
                           permissions.IsAuthenticatedOrReadOnly]
     queryset = AMResponse.objects.all()
-    serializer_class = AMResponseForMatrixSerializer
+    serializer_class = AMResponseForDriverAnalysisSerializer
 
     def get_queryset(self):
         try:
@@ -3828,7 +3828,7 @@ class AdvisorInsightsView(APIView):
 
         # amresponsereportqueryset = AMResponse.objects.all().filter(survey__id=survey, controlType="SLIDER", amQuestion__subdriver__in=["Optimism", "Overall Sentiment", "Safety"])
         amresponsereportqueryset = AMResponse.objects.all().filter(survey__id=survey, controlType="SLIDER", amQuestion__subdriver__in=["Optimism", "Overall Sentiment", "Safety"], latestResponse=True)
-        amresponsereportserializer = AMResponseForDriverAnalysisSerializer(amresponsereportqueryset, many=True)
+        amresponsereportserializer = AMResponseForAdvisorSerializer(amresponsereportqueryset, many=True)
         amresponsereportdata = amresponsereportserializer.data
 
         # aryTeams = []
@@ -3981,13 +3981,13 @@ class AdvisorInsightsView(APIView):
             
         aryFilteredProjectUsers = aryProjectUsers[:3]
         recommendedProjectUsersQuerySet = ProjectUser.objects.filter(survey=survey, pk__in=aryFilteredProjectUsers)
-        recommendedProjectUserSerializer = ProjectUserForReportSerializer(
+        recommendedProjectUserSerializer = ProjectUserForAdvisorSerializer(
             recommendedProjectUsersQuerySet, many=True)
         
         # test data for catchup
         aryFilteredCatchupProjectUsers = aryProjectUsers
         recommendedCatchupProjectUsersQuerySet = ProjectUser.objects.filter(survey=survey, pk__in=aryFilteredCatchupProjectUsers)
-        recommendedCatchupProjectUserSerializer = ProjectUserForReportSerializer(recommendedCatchupProjectUsersQuerySet, many=True)
+        recommendedCatchupProjectUserSerializer = ProjectUserForAdvisorSerializer(recommendedCatchupProjectUsersQuerySet, many=True)
 
         responsedTeamMembers = 0
         responsedStakeholders = 0
@@ -4347,7 +4347,7 @@ class NewAdvisorInsightsView(APIView):
             
             if amresponsereportdata[i]['amQuestion'] == leastSafeQuestionId:
                 leastSafeTeamName = amresponsereportdata[i]['projectUser']['team']['name']
-                leastSafeTeamTotalScore += amresponseresponsedata[i]['integerValue']
+                leastSafeTeamTotalScore += amresponsereportdata[i]['integerValue']
                 leastSafeTeamCnt += 1
                 leastSafeTeamScore = leastSafeTeamTotalScore / 10 / leastSafeTeamCnt
 
@@ -4365,12 +4365,12 @@ class NewAdvisorInsightsView(APIView):
 
         aryFilteredProjectUsers = aryProjectUsers[:3]
         recommendedProjectUsersQuerySet = ProjectUser.objects.filter(survey=survey, pk__in=aryFilteredProjectUsers)
-        recommendedProjectUsersSerializer = ProjectUserForReportSerializer(recommendedProjectUsersQuerySet, many=True)
+        recommendedProjectUsersSerializer = ProjectUserForAdvisorSerializer(recommendedProjectUsersQuerySet, many=True)
 
         # test data for catchup
         aryFilteredCatchupProjectUsers = aryProjectUsers
         recommendedCatchupProjectUsersQuerySet = ProjectUser.objects.filter(survey=survey, pk__in=aryFilteredCatchupProjectUsers)
-        recommendedCatchupProjectUserSerializer = ProjectUserForReportSerializer(recommendedCatchupProjectUsersQuerySet, many=True)
+        recommendedCatchupProjectUserSerializer = ProjectUserForAdvisorSerializer(recommendedCatchupProjectUsersQuerySet, many=True)
 
         # project = Survey.objects.get(pk=survey).project
         totalTeamMembersCnt = ProjectUser.objects.filter(survey=survey, shType__shTypeName="Team Member").count()
@@ -4516,21 +4516,21 @@ class DriverAnalysisView(APIView):
             aoresponsereportdata = aoresponsereportserializer.data
         
 
-        for i in range(len(amresponsereportdata)):
+        # for i in range(len(amresponsereportdata)):
 
-            # amquestionqueryset = AMQuestion.objects.filter(
-            #     id=amresponsereportdata[i]['amQuestion'])
-            # amserializer = AMQuestionSerializer(amquestionqueryset, many=True)
-            amserializerdata = AMQuestion.objects.filter(
-                id=amresponsereportdata[i]['amQuestion']).values()
-            amresponsereportdata[i]['amQuestionData'] = amserializerdata
+        #     # amquestionqueryset = AMQuestion.objects.filter(
+        #     #     id=amresponsereportdata[i]['amQuestion'])
+        #     # amserializer = AMQuestionSerializer(amquestionqueryset, many=True)
+        #     amserializerdata = AMQuestion.objects.filter(
+        #         id=amresponsereportdata[i]['amQuestion']).values()
+        #     amresponsereportdata[i]['amQuestionData'] = amserializerdata
 
-        for j in range(len(aoresponsereportdata)):
+        # for j in range(len(aoresponsereportdata)):
 
-            # aoquestionqueryset = AOQuestion.objects.filter(id=aoresponsereportdata[j]['aoQuestion'])
-            # aoserializer = AOQuestionSerializer(aoquestionqueryset, many=True)
-            aoserializerdata = AOQuestion.objects.filter(id=aoresponsereportdata[j]['aoQuestion']).values()
-            aoresponsereportdata[j]['aoQuestionData'] = aoserializerdata
+        #     # aoquestionqueryset = AOQuestion.objects.filter(id=aoresponsereportdata[j]['aoQuestion'])
+        #     # aoserializer = AOQuestionSerializer(aoquestionqueryset, many=True)
+        #     aoserializerdata = AOQuestion.objects.filter(id=aoresponsereportdata[j]['aoQuestion']).values()
+        #     aoresponsereportdata[j]['aoQuestionData'] = aoserializerdata
 
         res = amresponsereportdata + aoresponsereportdata
 

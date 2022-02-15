@@ -320,8 +320,7 @@ class ToolTipGuideSerializer(serializers.ModelSerializer):
         model = ToolTipGuide
         fields = '__all__'
 
-
-class ProjectUserForReportSerializer(serializers.ModelSerializer):
+class ProjectUserForAdvisorSerializer(serializers.ModelSerializer):
     user = UserSerializer()
     team = TeamSerializer()
     shGroup = SHGroupSerializer()
@@ -335,7 +334,7 @@ class ProjectUserForReportSerializer(serializers.ModelSerializer):
         fields = ['id', 'user', 'team', 'shGroup',
                   'projectOrganization', 'isCGroup1', 'isCGroup2', 'isCGroup3', 'shType']
 
-class ProjectUserForReportForSummarySerializer(serializers.ModelSerializer):
+class ProjectUserForReportSerializer(serializers.ModelSerializer):
     team = TeamSerializer()
     shGroup = SHGroupSerializer()
     shType = SHTypeSerializer()
@@ -350,8 +349,9 @@ class ProjectUserForReportForSummarySerializer(serializers.ModelSerializer):
 
 
 class AMResponseForDriverAnalysisSerializer(serializers.ModelSerializer):
-    projectUser = ProjectUserForReportSerializer()
+    # projectUser = ProjectUserForReportSerializer()
     subProjectUser = ProjectUserForReportSerializer()
+    amQuestion = AMQuestionSerializer()
 
     class Meta:
         model = AMResponse
@@ -360,8 +360,9 @@ class AMResponseForDriverAnalysisSerializer(serializers.ModelSerializer):
                   'projectUser', 'subProjectUser', 'survey', 'project', 'amQuestion', 'latestResponse']
 
 class AOResponseForDriverAnalysisSerializer(serializers.ModelSerializer):
-    projectUser = ProjectUserForReportSerializer()
+    # projectUser = ProjectUserForReportSerializer()
     subProjectUser = ProjectUserForReportSerializer()
+    aoQuestion = AOQuestionSerializer()
 
     class Meta:
         model = AOResponse
@@ -390,10 +391,9 @@ class AOResponseTopPositiveNegativeSerializer(serializers.ModelSerializer):
         model = AOResponse
         fields = '__all__'
 
-class AMResponseForMatrixSerializer(serializers.ModelSerializer):
-    # projectUser = ProjectUserForReportSerializer()
-    subProjectUser = ProjectUserForReportForSummarySerializer()
-    amQuestion = AMQuestionSerializerForReport()
+class AMResponseForAdvisorSerializer(serializers.ModelSerializer):
+    projectUser = ProjectUserForReportSerializer()
+    # subProjectUser = ProjectUserForReportSerializer()
 
     class Meta:
         model = AMResponse
@@ -401,8 +401,8 @@ class AMResponseForMatrixSerializer(serializers.ModelSerializer):
                   'projectUser', 'subProjectUser', 'survey', 'project', 'amQuestion', 'latestResponse']
 
 class AOResponseForMatrixSerializer(serializers.ModelSerializer):
-    projectUser = ProjectUserForReportSerializer()
-    subProjectUser = ProjectUserForReportSerializer()
+    projectUser = ProjectUserForAdvisorSerializer()
+    # subProjectUser = ProjectUserForAdvisorSerializer()
 
     class Meta:
         model = AOResponse
