@@ -2408,6 +2408,47 @@ class AdminSurveyEditView(APIView):
     def get_extra_actions(cls):
         return []
 
+    def save_dict_list(self, data, model, serializer_instance, survey=60):
+        for i in range(len(data)):
+            if 'id' in data[i]:
+                instance = model.objects.get(id=data[i]['id'])
+                for key in data[i]:
+                    if isinstance(data[i][key], dict):
+                        pass
+                    elif data[i][key] is None:
+                        pass
+                    else:
+                        setattr(instance, key, data[i][key])
+                instance.save()
+            else:
+                if model==ProjectUser:
+                    user = User(first_name=data[i]['user']['first_name'], last_name=data[i]['user']['last_name'], email=data[i]['user']['email'], username=data[i]['user']['email'], password="12345678")
+                    user.save()
+                    organization = Organization(name=data[i]['user']['organization']['name'], user_id=user.id)
+                    organization.save()
+                    projectUser = ProjectUser(addByProjectUser_id=data[i]['addByProjectUser']['id'], projectOrganization=data[i]['projectOrganization'], projectUserRoleDesc=data[i]['projectUserRoleDesc'], projectUserTitle=data[i]['projectUserTitle'], shGroup_id=data[i]['shGroup']['id'], shType_id=data[i]['shType']['id'], team_id=data[i]['team']['id'], user_id=user.id, survey_id=survey)
+                    projectUser.save()
+                else:
+                    serializer = serializer_instance(data=data[i])
+                    serializer.is_valid(raise_exception=True)
+                    serializer.save()
+
+    def save_user_list(self, userList):
+        for userData in userList:
+            if 'id' in userData:
+                instance = ProjectUser.objects.get(id=userData['id'])
+                instance.shGroup_id = userData['shGroup']['id']
+                instance.shType_id = userData['shType']['id']
+                instance.team_id = userData['team']['id']
+                instance.save()
+                jsonData = [userData['user']]
+                self.save_dict_list(jsonData, User, UserSerializer)
+                instance = Organization.objects.get(id=userData['user']['organization']['id'])
+                instance.name = userData['user']['organization']['name']
+                instance.save()
+            else:
+                pass
+
     def post(self, request):
         survey = request.data['survey']
 
@@ -2432,85 +2473,31 @@ class AdminSurveyEditView(APIView):
 
         # saving more info
         moreInfo = request.data['projectSetup']['moreInfo']
-        for i in range(len(moreInfo)):
-            if 'id' in moreInfo[i]:
-                instance = NikelMobilePage.objects.get(id=moreInfo[i]['id'])
-                for key in moreInfo[i]:
-                    setattr(instance, key, moreInfo[i][key])
-                instance.save()
-            else:
-                moreInfo[i]['survey'] = survey
-                serializer = NikelMobilePageSerializer(data=moreInfo[i])
-                serializer.is_valid(raise_exception=True)
-                serializer.save()
+        self.save_dict_list(moreInfo, NikelMobilePage, NikelMobilePageSerializer)
 
         # saving drivers
         driverList = request.data['projectConfiguration']['driverList']
-        for i in range(len(driverList)):
-            if 'id' in driverList[i]:
-                instance = NikelMobilePage.objects.get(id=driverList[i]['id'])
-                for key in driverList[i]:
-                    setattr(instance, key, driverList[i][key])
-                instance.save()
-            else:
-                driverList[i]['survey'] = survey
-                serializer = NikelMobilePageSerializer(data=driverList[i])
-                serializer.is_valid(raise_exception=True)
-                serializer.save()
+        self.save_dict_list(driverList, Driver, DriverSerializer)
 
         # saving my maps and project maps
         myMaps = request.data['projectConfiguration']['myMap']
-        for i in range(len(myMaps)):
-            if 'id' in myMaps[i]:
-                instance = NikelMobilePage.objects.get(id=myMaps[i]['id'])
-                for key in myMaps[i]:
-                    setattr(instance, key, myMaps[i][key])
-                instance.save()
-            else:
-                myMaps[i]['survey_id'] = survey
-                serializer = NikelMobilePageSerializer(data=myMaps[i])
-                serializer.is_valid(raise_exception=True)
-                serializer.save()
-
+        self.save_dict_list(myMaps, SHCategory, SHCategorySerializer)
+        
         projectMaps = request.data['projectConfiguration']['projectMap']
-        for i in range(len(projectMaps)):
-            if 'id' in projectMaps[i]:
-                instance = NikelMobilePage.objects.get(id=projectMaps[i]['id'])
-                for key in projectMaps[i]:
-                    setattr(instance, key, projectMaps[i][key])
-                instance.save()
-            else:
-                projectMaps[i]['survey_id'] = survey
-                serializer = NikelMobilePageSerializer(data=projectMaps[i])
-                serializer.is_valid(raise_exception=True)
-                serializer.save()
+        self.save_dict_list(projectMaps, SHCategory, SHCategorySerializer)
 
         # saving shGroups
         shGroups = request.data['projectConfiguration']['shGroup']
-        for i in range(len(shGroups)):
-            if 'id' in shGroups[i]:
-                instance = NikelMobilePage.objects.get(id=shGroups[i]['id'])
-                for key in shGroups[i]:
-                    setattr(instance, key, shGroups[i][key])
-                instance.save()
-            else:
-                shGroups[i]['survey'] = survey
-                serializer = NikelMobilePageSerializer(data=shGroups[i])
-                serializer.is_valid(raise_exception=True)
-                serializer.save()
+        self.save_dict_list(shGroups, SHGroup, SHGroupSerializer)
 
         # saving project teams
         projectTeams = request.data['projectConfiguration']['projectTeam']
-        for i in range(len(projectTeams)):
-            if 'id' in projectTeams[i]:
-                instance = NikelMobilePage.objects.get(id=projectTeams[i]['id'])
-                for key in projectTeams[i]:
-                    setattr(instance, key, projectTeams[i][key])
-                instance.save()
-            else:
-                serializer = NikelMobilePageSerializer(data=projectTeams[i])
-                serializer.is_valid(raise_exception=True)
-                serializer.save()
+        self.save_dict_list(projectTeams, Team, TeamSerializer)
+
+        #saving project users
+        projectUsers = request.data['userAdministration']['projectUser']
+        self.save_dict_list(projectUsers, ProjectUser, ProjectUserSerializer, survey)
+        self.save_user_list(projectUsers)
 
         # if survey is None:
         #     return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
