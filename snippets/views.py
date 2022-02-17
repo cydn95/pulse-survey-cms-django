@@ -17,7 +17,7 @@ from django.conf import settings
 from pathlib import Path
 from email.mime.image import MIMEImage
 
-from snippets.serializers import AMResponseForAdvisorSerializer, AMResponseForDriverAnalysisSerializer, AOResponseForDriverAnalysisSerializer, AOResponseTopPositiveNegativeSerializer, KeyThemeUpDownVoteSerializer, AMResponseAcknowledgementSerializer, AOResponseForMatrixSerializer, AOResponseAcknowledgementSerializer, AMResponseForReportSerializer, AOResponseForReportSerializer, ProjectUserForReportSerializer, ProjectUserForAdvisorSerializer, AMQuestionSubDriverSerializer, AOQuestionSubDriverSerializer, DriverSubDriverSerializer, ProjectSerializer, ToolTipGuideSerializer, SurveySerializer, NikelMobilePageSerializer, ConfigPageSerializer, UserAvatarSerializer, SHMappingSerializer, ProjectVideoUploadSerializer, AMQuestionSerializer, AOQuestionSerializer, StakeHolderSerializer, SHCategorySerializer, MyMapLayoutStoreSerializer, ProjectMapLayoutStoreSerializer, UserBySurveySerializer, SurveyByUserSerializer, SkipOptionSerializer, DriverSerializer, AOQuestionSerializer, OrganizationSerializer, OptionSerializer, ProjectUserSerializer, SHGroupSerializer, UserSerializer, PageSettingSerializer, PageSerializer, AMResponseSerializer, AMResponseTopicSerializer, AOResponseSerializer, AOResponseTopicSerializer, AOPageSerializer, TeamSerializer
+from snippets.serializers import AMResponseForSummarySerializer, AMResponseForAdvisorSerializer, AMResponseForDriverAnalysisSerializer, AOResponseForDriverAnalysisSerializer, AOResponseTopPositiveNegativeSerializer, KeyThemeUpDownVoteSerializer, AMResponseAcknowledgementSerializer, AOResponseForMatrixSerializer, AOResponseAcknowledgementSerializer, AMResponseForReportSerializer, AOResponseForReportSerializer, ProjectUserForReportSerializer, ProjectUserForAdvisorSerializer, AMQuestionSubDriverSerializer, AOQuestionSubDriverSerializer, DriverSubDriverSerializer, ProjectSerializer, ToolTipGuideSerializer, SurveySerializer, NikelMobilePageSerializer, ConfigPageSerializer, UserAvatarSerializer, SHMappingSerializer, ProjectVideoUploadSerializer, AMQuestionSerializer, AOQuestionSerializer, StakeHolderSerializer, SHCategorySerializer, MyMapLayoutStoreSerializer, ProjectMapLayoutStoreSerializer, UserBySurveySerializer, SurveyByUserSerializer, SkipOptionSerializer, DriverSerializer, AOQuestionSerializer, OrganizationSerializer, OptionSerializer, ProjectUserSerializer, SHGroupSerializer, UserSerializer, PageSettingSerializer, PageSerializer, AMResponseSerializer, AMResponseTopicSerializer, AOResponseSerializer, AOResponseTopicSerializer, AOPageSerializer, TeamSerializer
 
 from rest_framework import generics, permissions, renderers, viewsets, status, filters
 from rest_framework.decorators import action
@@ -1138,7 +1138,7 @@ class AOResponseFeedbackSummaryViewset(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated,
                           permissions.IsAuthenticatedOrReadOnly]
     queryset = AMResponse.objects.all()
-    serializer_class = AMResponseForDriverAnalysisSerializer
+    serializer_class = AMResponseForSummarySerializer
 
     def get_queryset(self):
         try:
@@ -2408,6 +2408,47 @@ class AdminSurveyEditView(APIView):
     def get_extra_actions(cls):
         return []
 
+    def save_dict_list(self, data, model, serializer_instance, survey=60):
+        for i in range(len(data)):
+            if 'id' in data[i]:
+                instance = model.objects.get(id=data[i]['id'])
+                for key in data[i]:
+                    if isinstance(data[i][key], dict):
+                        pass
+                    elif data[i][key] is None:
+                        pass
+                    else:
+                        setattr(instance, key, data[i][key])
+                instance.save()
+            else:
+                if model==ProjectUser:
+                    user = User(first_name=data[i]['user']['first_name'], last_name=data[i]['user']['last_name'], email=data[i]['user']['email'], username=data[i]['user']['email'], password="12345678")
+                    user.save()
+                    organization = Organization(name=data[i]['user']['organization']['name'], user_id=user.id)
+                    organization.save()
+                    projectUser = ProjectUser(addByProjectUser_id=data[i]['addByProjectUser']['id'], projectOrganization=data[i]['projectOrganization'], projectUserRoleDesc=data[i]['projectUserRoleDesc'], projectUserTitle=data[i]['projectUserTitle'], shGroup_id=data[i]['shGroup']['id'], shType_id=data[i]['shType']['id'], team_id=data[i]['team']['id'], user_id=user.id, survey_id=survey)
+                    projectUser.save()
+                else:
+                    serializer = serializer_instance(data=data[i])
+                    serializer.is_valid(raise_exception=True)
+                    serializer.save()
+
+    def save_user_list(self, userList):
+        for userData in userList:
+            if 'id' in userData:
+                instance = ProjectUser.objects.get(id=userData['id'])
+                instance.shGroup_id = userData['shGroup']['id']
+                instance.shType_id = userData['shType']['id']
+                instance.team_id = userData['team']['id']
+                instance.save()
+                jsonData = [userData['user']]
+                self.save_dict_list(jsonData, User, UserSerializer)
+                instance = Organization.objects.get(id=userData['user']['organization']['id'])
+                instance.name = userData['user']['organization']['name']
+                instance.save()
+            else:
+                pass
+
     def post(self, request):
         survey = request.data['survey']
 
@@ -2432,20 +2473,31 @@ class AdminSurveyEditView(APIView):
 
         # saving more info
         moreInfo = request.data['projectSetup']['moreInfo']
-        for i in range(len(moreInfo)):
-            print('instance', moreInfo[i])
-            if 'id' in moreInfo[i]:
-                instance = NikelMobilePage.objects.get(id=moreInfo[i]['id'])
-                for key in moreInfo[i]:
-                    setattr(instance, key, moreInfo[i][key])
-                print('instance', instance)
-                instance.save()
-            else:
-                moreInfo[i]['survey'] = survey
-                serializer = NikelMobilePageSerializer(data=moreInfo[i])
-                serializer.is_valid(raise_exception=True)
-                serializer.save()
+        self.save_dict_list(moreInfo, NikelMobilePage, NikelMobilePageSerializer)
 
+        # saving drivers
+        # driverList = request.data['projectConfiguration']['driverList']
+        # self.save_dict_list(driverList, Driver, DriverSerializer)
+
+        # saving my maps and project maps
+        # myMaps = request.data['projectConfiguration']['myMap']
+        # self.save_dict_list(myMaps, SHCategory, SHCategorySerializer)
+        
+        # projectMaps = request.data['projectConfiguration']['projectMap']
+        # self.save_dict_list(projectMaps, SHCategory, SHCategorySerializer)
+
+        # saving shGroups
+        shGroups = request.data['projectConfiguration']['shGroup']
+        self.save_dict_list(shGroups, SHGroup, SHGroupSerializer)
+
+        # saving project teams
+        projectTeams = request.data['projectConfiguration']['projectTeam']
+        self.save_dict_list(projectTeams, Team, TeamSerializer)
+
+        #saving project users
+        projectUsers = request.data['userAdministration']['projectUser']
+        self.save_dict_list(projectUsers, ProjectUser, ProjectUserSerializer, survey)
+        self.save_user_list(projectUsers)
 
         # if survey is None:
         #     return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
