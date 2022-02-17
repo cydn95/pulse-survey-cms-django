@@ -2476,15 +2476,15 @@ class AdminSurveyEditView(APIView):
         self.save_dict_list(moreInfo, NikelMobilePage, NikelMobilePageSerializer)
 
         # saving drivers
-        driverList = request.data['projectConfiguration']['driverList']
-        self.save_dict_list(driverList, Driver, DriverSerializer)
+        # driverList = request.data['projectConfiguration']['driverList']
+        # self.save_dict_list(driverList, Driver, DriverSerializer)
 
         # saving my maps and project maps
-        myMaps = request.data['projectConfiguration']['myMap']
-        self.save_dict_list(myMaps, SHCategory, SHCategorySerializer)
+        # myMaps = request.data['projectConfiguration']['myMap']
+        # self.save_dict_list(myMaps, SHCategory, SHCategorySerializer)
         
-        projectMaps = request.data['projectConfiguration']['projectMap']
-        self.save_dict_list(projectMaps, SHCategory, SHCategorySerializer)
+        # projectMaps = request.data['projectConfiguration']['projectMap']
+        # self.save_dict_list(projectMaps, SHCategory, SHCategorySerializer)
 
         # saving shGroups
         shGroups = request.data['projectConfiguration']['shGroup']
