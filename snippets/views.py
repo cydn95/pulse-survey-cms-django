@@ -2413,9 +2413,9 @@ class AdminSurveyEditView(APIView):
             if 'id' in data[i]:
                 instance = model.objects.get(id=data[i]['id'])
                 for key in data[i]:
-                    if isinstance(data[i][key], dict):
+                    if data[i][key] is None:
                         pass
-                    elif data[i][key] is None:
+                    elif isinstance(data[i][key], dict):
                         pass
                     else:
                         setattr(instance, key, data[i][key])
@@ -2428,6 +2428,9 @@ class AdminSurveyEditView(APIView):
                     organization.save()
                     projectUser = ProjectUser(addByProjectUser_id=data[i]['addByProjectUser']['id'], projectOrganization=data[i]['projectOrganization'], projectUserRoleDesc=data[i]['projectUserRoleDesc'], projectUserTitle=data[i]['projectUserTitle'], shGroup_id=data[i]['shGroup']['id'], shType_id=data[i]['shType']['id'], team_id=data[i]['team']['id'], user_id=user.id, survey_id=survey)
                     projectUser.save()
+                elif model==Driver:
+                    driver = Driver(survey_id=data[i]['survey_id'], driverName=data[i]['driverName'], driveOrder=data[i]['driveOrder'], iconPath=data[i]['iconPath'])
+                    driver.save()
                 else:
                     serializer = serializer_instance(data=data[i])
                     serializer.is_valid(raise_exception=True)
@@ -2437,15 +2440,19 @@ class AdminSurveyEditView(APIView):
         for userData in userList:
             if 'id' in userData:
                 instance = ProjectUser.objects.get(id=userData['id'])
-                instance.shGroup_id = userData['shGroup']['id']
-                instance.shType_id = userData['shType']['id']
-                instance.team_id = userData['team']['id']
+                if userData['shGroup'] is not None:
+                    instance.shGroup_id = userData['shGroup']['id']
+                if userData['shType'] is not None:
+                    instance.shType_id = userData['shType']['id']
+                if userData['team'] is not None:
+                    instance.team_id = userData['team']['id']
                 instance.save()
                 jsonData = [userData['user']]
                 self.save_dict_list(jsonData, User, UserSerializer)
-                instance = Organization.objects.get(id=userData['user']['organization']['id'])
-                instance.name = userData['user']['organization']['name']
-                instance.save()
+                if userData['user']['organization'] is not None:
+                    instance = Organization.objects.get(id=userData['user']['organization']['id'])
+                    instance.name = userData['user']['organization']['name']
+                    instance.save()
             else:
                 pass
 
@@ -2476,8 +2483,8 @@ class AdminSurveyEditView(APIView):
         self.save_dict_list(moreInfo, NikelMobilePage, NikelMobilePageSerializer)
 
         # saving drivers
-        # driverList = request.data['projectConfiguration']['driverList']
-        # self.save_dict_list(driverList, Driver, DriverSerializer)
+        driverList = request.data['projectConfiguration']['driverList']
+        self.save_dict_list(driverList, Driver, DriverSerializer)
 
         # saving my maps and project maps
         # myMaps = request.data['projectConfiguration']['myMap']
@@ -2498,6 +2505,10 @@ class AdminSurveyEditView(APIView):
         projectUsers = request.data['userAdministration']['projectUser']
         self.save_dict_list(projectUsers, ProjectUser, ProjectUserSerializer, survey)
         self.save_user_list(projectUsers)
+
+        #saving amQuestions
+        amQuestions = request.data['surveyConfiguration']['amQuestionList']
+        self.save_dict_list(amQuestions, AMQuestion, AMQuestionSerializer)
 
         # if survey is None:
         #     return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
