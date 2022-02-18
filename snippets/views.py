@@ -2431,6 +2431,18 @@ class AdminSurveyEditView(APIView):
                 elif model==Driver:
                     driver = Driver(survey_id=data[i]['survey_id'], driverName=data[i]['driverName'], driveOrder=data[i]['driveOrder'], iconPath=data[i]['iconPath'])
                     driver.save()
+                elif model==AMQuestion:
+                    amQuestion = AMQuestion(survey_id=data[i]['survey_id'], controlType_id=data[i]['controlType_id'], amqOrder=data[i]['amqOrder'], driver_id=data[i]['driver_id'], subdriver=data[i]['subdriver'], questionText=data[i]['questionText'], sliderTextLeft=data[i]['sliderTextLeft'], sliderTextRight=data[i]['sliderTextRight'], topicPrompt=data[i]['topicPrompt'], skipOptionYN=True, commentPrompt=data[i]['commentPrompt'])
+                    amQuestion.save()
+                    amQuestion.shGroup = data[i]['shGroup']
+                    amQuestion.skipOption=data[i]['skipOption']
+                    amQuestion.save()
+                elif model==AOQuestion:
+                    aoQuestion = AOQuestion(survey_id=data[i]['survey_id'], controlType_id=data[i]['controlType_id'], amqOrder=data[i]['amqOrder'], driver_id=data[i]['driver_id'], subdriver=data[i]['subdriver'], questionText=data[i]['questionText'], sliderTextLeft=data[i]['sliderTextLeft'], sliderTextRight=data[i]['sliderTextRight'], topicPrompt=data[i]['topicPrompt'], skipOptionYN=True, commentPrompt=data[i]['commentPrompt'])
+                    aoQuestion.save()
+                    aoQuestion.shGroup = data[i]['shGroup']
+                    aoQuestion.skipOption=data[i]['skipOption']
+                    aoQuestion.save()
                 else:
                     serializer = serializer_instance(data=data[i])
                     serializer.is_valid(raise_exception=True)
@@ -2473,10 +2485,16 @@ class AdminSurveyEditView(APIView):
 
         # saving tour
         tour = ConfigPage.objects.get(survey_id=survey)
-        tour.pageName = request.data['projectSetup']['tour'][0]["pageName"]
-        tour.tabName = request.data['projectSetup']['tour'][0]["tabName"]
-        tour.pageContent = request.data['projectSetup']['tour'][0]["pageContent"]
-        tour.save()
+        if len(request.data['projectSetup']['tour']) > 0:
+            if 'id' in tour[0]:
+                tour.pageName = request.data['projectSetup']['tour'][0]["pageName"]
+                tour.tabName = request.data['projectSetup']['tour'][0]["tabName"]
+                tour.pageContent = request.data['projectSetup']['tour'][0]["pageContent"]
+                tour.save()
+            else:
+                tour = ConfigPage(pageName=request.data['projectSetup']['tour'][0]["pageName"], tabName=request.data['projectSetup']['tour'][0]["tabName"], pageContent=request.data['projectSetup']['tour'][0]["pageContent"])
+        else:
+            pass
 
         # saving more info
         moreInfo = request.data['projectSetup']['moreInfo']
@@ -2506,9 +2524,12 @@ class AdminSurveyEditView(APIView):
         self.save_dict_list(projectUsers, ProjectUser, ProjectUserSerializer, survey)
         self.save_user_list(projectUsers)
 
-        #saving amQuestions
+        #saving amQuestions and aoQuestions
         amQuestions = request.data['surveyConfiguration']['amQuestionList']
         self.save_dict_list(amQuestions, AMQuestion, AMQuestionSerializer)
+        
+        aoQuestions = request.data['surveyConfiguration']['aoQuestionList']
+        self.save_dict_list(aoQuestions, AOQuestion, AOQuestionSerializer)
 
         # if survey is None:
         #     return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
@@ -2520,6 +2541,13 @@ class AdminSurveyEditView(APIView):
             "self": self,
             "request": request
         }
+        return Response(request.data, status=status.HTTP_200_OK)
+
+#adminuploadimages api
+class AdminUploadImagesView(APIView):
+    def post(self, request):
+        data = request.data.get("items") if "items" in request.data else request.data
+        print('data', data['survey'])
         return Response(request.data, status=status.HTTP_200_OK)
 
 # adminsurveybyuser api
@@ -4884,6 +4912,28 @@ class AdminDelMoreInfoPageView(APIView):
     def delete(self, request, pk, format=None):
         moreInfoPage = self.get_object(pk)
         moreInfoPage.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+class AdminDelAMQuestionView(APIView):
+    def get_object(self, pk):
+        try:
+            return AMQuestion.objects.get(id=pk)
+        except AMQuestion.DoesNotExist:
+            raise status.HTTP_404_NOT_FOUND
+    def delete(self, request, pk, format=None):
+        question = self.get_object(pk)
+        question.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+class AdminDelAOQuestionView(APIView):
+    def get_object(self, pk):
+        try:
+            return AOQuestion.objects.get(id=pk)
+        except AOQuestion.DoesNotExist:
+            raise status.HTTP_404_NOT_FOUND
+    def delete(self, request, pk, format=None):
+        question = self.get_object(pk)
+        question.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 # adminbulkarchive api
