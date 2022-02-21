@@ -17,6 +17,8 @@ from django.conf import settings
 from pathlib import Path
 from email.mime.image import MIMEImage
 
+from jinja2 import Undefined
+
 from snippets.serializers import AMResponseForSummarySerializer, AMResponseForAdvisorSerializer, AMResponseForDriverAnalysisSerializer, AOResponseForDriverAnalysisSerializer, AOResponseTopPositiveNegativeSerializer, KeyThemeUpDownVoteSerializer, AMResponseAcknowledgementSerializer, AOResponseForMatrixSerializer, AOResponseAcknowledgementSerializer, AMResponseForReportSerializer, AOResponseForReportSerializer, ProjectUserForReportSerializer, ProjectUserForAdvisorSerializer, AMQuestionSubDriverSerializer, AOQuestionSubDriverSerializer, DriverSubDriverSerializer, ProjectSerializer, ToolTipGuideSerializer, SurveySerializer, NikelMobilePageSerializer, ConfigPageSerializer, UserAvatarSerializer, SHMappingSerializer, ProjectVideoUploadSerializer, AMQuestionSerializer, AOQuestionSerializer, StakeHolderSerializer, SHCategorySerializer, MyMapLayoutStoreSerializer, ProjectMapLayoutStoreSerializer, UserBySurveySerializer, SurveyByUserSerializer, SkipOptionSerializer, DriverSerializer, AOQuestionSerializer, OrganizationSerializer, OptionSerializer, ProjectUserSerializer, SHGroupSerializer, UserSerializer, PageSettingSerializer, PageSerializer, AMResponseSerializer, AMResponseTopicSerializer, AOResponseSerializer, AOResponseTopicSerializer, AOPageSerializer, TeamSerializer
 
 from rest_framework import generics, permissions, renderers, viewsets, status, filters
@@ -2474,8 +2476,6 @@ class AdminSurveyEditView(APIView):
         # saving survey
         newSurvey = Survey.objects.get(id=survey)
         newSurvey.surveyTitle = request.data['projectSetup']['surveyTitle']
-        newSurvey.projectLogo = request.data['projectSetup']['projectLogo']
-        newSurvey.companyLogo = request.data['projectSetup']['companyLogo']
         newSurvey.customGroup1 = request.data['projectConfiguration']['customGroup1']
         newSurvey.customGroup2 = request.data['projectConfiguration']['customGroup2']
         newSurvey.customGroup3 = request.data['projectConfiguration']['customGroup3']
@@ -2484,9 +2484,9 @@ class AdminSurveyEditView(APIView):
         newSurvey.save()
 
         # saving tour
-        tour = ConfigPage.objects.get(survey_id=survey)
         if len(request.data['projectSetup']['tour']) > 0:
-            if 'id' in tour[0]:
+            if 'id' in request.data['projectSetup']['tour'][0]:
+                tour = ConfigPage.objects.get(survey_id=survey)
                 tour.pageName = request.data['projectSetup']['tour'][0]["pageName"]
                 tour.tabName = request.data['projectSetup']['tour'][0]["tabName"]
                 tour.pageContent = request.data['projectSetup']['tour'][0]["pageContent"]
@@ -2546,9 +2546,24 @@ class AdminSurveyEditView(APIView):
 #adminuploadimages api
 class AdminUploadImagesView(APIView):
     def post(self, request):
-        data = request.data.get("items") if "items" in request.data else request.data
-        print('data', data['survey'])
-        return Response(request.data, status=status.HTTP_200_OK)
+        data = request.data
+        survey = Survey.objects.get(id=data['survey'])
+        if 'projectLogo' in data:
+            survey.projectLogo = data['projectLogo']
+            # del data['projectLogo']
+        else:
+            survey.projectLogo = ''
+        if 'companyLogo' in data:
+            survey.companyLogo = data['companyLogo']
+            # del data['companyLogo']
+        else:
+            survey.companyLogo = ''
+        # if data['video'] is not None:
+        #     configpage = ConfigPage
+        #     survey.companyLogo = data['companyLogo']
+        #     del data['companyLogo']
+        survey.save()
+        return Response({'data': 'hello'}, status=status.HTTP_200_OK)
 
 # adminsurveybyuser api
 class AdminSurveyByUserViewSet(viewsets.ModelViewSet):
