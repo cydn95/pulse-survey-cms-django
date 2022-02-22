@@ -2424,7 +2424,7 @@ class AdminSurveyEditView(APIView):
                 instance.save()
             else:
                 if model==ProjectUser:
-                    user = User(first_name=data[i]['user']['first_name'], last_name=data[i]['user']['last_name'], email=data[i]['user']['email'], username=data[i]['user']['email'], password="12345678")
+                    user = User(first_name=data[i]['user']['first_name'], last_name=data[i]['user']['last_name'], email=data[i]['user']['email'], username=data[i]['user']['email'], password="p#vh#@3jkda3$")
                     user.save()
                     organization = Organization(name=data[i]['user']['organization']['name'], user_id=user.id)
                     organization.save()
