@@ -2038,6 +2038,30 @@ class TeamViewSet(viewsets.ModelViewSet):
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
+# organization api
+class OrganizationViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+    queryset = ProjectUser.objects.all()
+    serializer_class = ProjectUserSerializer
+
+    def get_queryset(self):
+        queryset = ProjectUser.objects.all()
+
+        survey = self.request.query_params.get('survey', None)
+        if survey is not None:
+            queryset = queryset.filter(survey__id=survey)
+        
+        return queryset
+
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+        survey = self.request.GET.get('survey')
+        list = []
+        for projectUser in response.data:
+            organization = Organization.objects.filter(user_id=projectUser['user']).values()
+            list.append(organization[0])
+        return Response(list, status=status.HTTP_200_OK)
+
 # tooltipguide api
 class ToolTipGuideViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
