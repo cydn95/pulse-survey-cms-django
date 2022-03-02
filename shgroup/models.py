@@ -1,8 +1,10 @@
+from email.policy import default
 import os
 from pathlib import Path
 from email.mime.image import MIMEImage
 from django.contrib.postgres.fields import JSONField
 from django.db import models
+from organization.models import Organization
 from survey.models import Project, Survey
 from django.contrib.auth.models import User
 from django.contrib.auth.models import Permission
@@ -227,3 +229,9 @@ class ProjectMapLayout(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE, blank=False)
     projectUser = models.ManyToManyField(ProjectUser, blank=True)
     layout_json = JSONField(default=dict, blank=True)
+
+class Segment(models.Model):
+    shgroups = JSONField(default=dict, blank=True)
+    teams = JSONField(default=dict, blank=True)
+    organizations = JSONField(default=dict, blank=True)
+    survey = models.ForeignKey(Survey, on_delete=models.CASCADE, blank=False)
