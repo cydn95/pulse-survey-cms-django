@@ -19,7 +19,7 @@ from email.mime.image import MIMEImage
 
 from jinja2 import Undefined
 
-from snippets.serializers import AMResponseForSummarySerializer, AMResponseForAdvisorSerializer, AMResponseForDriverAnalysisSerializer, AOResponseForDriverAnalysisSerializer, AOResponseTopPositiveNegativeSerializer, KeyThemeUpDownVoteSerializer, AMResponseAcknowledgementSerializer, AOResponseForMatrixSerializer, AOResponseAcknowledgementSerializer, AMResponseForReportSerializer, AOResponseForReportSerializer, ProjectUserForReportSerializer, ProjectUserForAdvisorSerializer, AMQuestionSubDriverSerializer, AOQuestionSubDriverSerializer, DriverSubDriverSerializer, ProjectSerializer, ToolTipGuideSerializer, SurveySerializer, NikelMobilePageSerializer, ConfigPageSerializer, UserAvatarSerializer, SHMappingSerializer, ProjectVideoUploadSerializer, AMQuestionSerializer, AOQuestionSerializer, StakeHolderSerializer, SHCategorySerializer, MyMapLayoutStoreSerializer, ProjectMapLayoutStoreSerializer, UserBySurveySerializer, SurveyByUserSerializer, SkipOptionSerializer, DriverSerializer, AOQuestionSerializer, OrganizationSerializer, OptionSerializer, ProjectUserSerializer, SHGroupSerializer, UserSerializer, PageSettingSerializer, PageSerializer, AMResponseSerializer, AMResponseTopicSerializer, AOResponseSerializer, AOResponseTopicSerializer, AOPageSerializer, TeamSerializer
+from snippets.serializers import AMResponseForSummarySerializer, AMResponseForAdvisorSerializer, AMResponseForDriverAnalysisSerializer, AOResponseForDriverAnalysisSerializer, AOResponseTopPositiveNegativeSerializer, KeyThemeUpDownVoteSerializer, AMResponseAcknowledgementSerializer, AOResponseForMatrixSerializer, AOResponseAcknowledgementSerializer, AMResponseForReportSerializer, AOResponseForReportSerializer, ProjectUserForReportSerializer, ProjectUserForAdvisorSerializer, AMQuestionSubDriverSerializer, AOQuestionSubDriverSerializer, DriverSubDriverSerializer, ProjectSerializer, ToolTipGuideSerializer, SurveySerializer, NikelMobilePageSerializer, ConfigPageSerializer, UserAvatarSerializer, SHMappingSerializer, ProjectVideoUploadSerializer, AMQuestionSerializer, AOQuestionSerializer, StakeHolderSerializer, SHCategorySerializer, MyMapLayoutStoreSerializer, ProjectMapLayoutStoreSerializer, UserBySurveySerializer, SurveyByUserSerializer, SkipOptionSerializer, DriverSerializer, AOQuestionSerializer, OrganizationSerializer, OptionSerializer, ProjectUserSerializer, SHGroupSerializer, UserSerializer, PageSettingSerializer, PageSerializer, AMResponseSerializer, AMResponseTopicSerializer, AOResponseSerializer, AOResponseTopicSerializer, AOPageSerializer, TeamSerializer, SegmentSerializer
 
 from rest_framework import generics, permissions, renderers, viewsets, status, filters
 from rest_framework.decorators import action
@@ -36,7 +36,7 @@ from cms.models import Page
 from aboutme.models import AMResponseAcknowledgement, AMQuestion, AMResponse, AMResponseTopic, AMQuestionSHGroup
 from aboutothers.models import AOResponseAcknowledgement, AOResponse, AOResponseTopic, AOPage
 from team.models import Team
-from shgroup.models import KeyThemeUpDownVote, SHGroup, ProjectUser, MyMapLayout, ProjectMapLayout, SHCategory, SHMapping
+from shgroup.models import KeyThemeUpDownVote, SHGroup, ProjectUser, MyMapLayout, ProjectMapLayout, SHCategory, SHMapping, Segment
 from option.models import Option, SkipOption
 from organization.models import Organization, UserAvatar, UserTeam, UserGuideMode
 from aboutothers.models import AOQuestion
@@ -2424,6 +2424,17 @@ class AdminSurveyAddViewSet(viewsets.ModelViewSet):
         headers = self.get_success_headers(serializer.data)
 
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+# wip
+# adminsurveyadd api
+class AdminReportConfigurationViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+    queryset = Segment.objects.all()
+    serializer_class = SegmentSerializer
+
+    def get_queryset(self):
+        queryset = Segment.objects.all()
+        return queryset
         
 # wip
 # adminsurveyedit api
@@ -2443,6 +2454,8 @@ class AdminSurveyEditView(APIView):
                         pass
                     elif isinstance(data[i][key], dict):
                         pass
+                    elif key == 'survey':
+                        setattr(instance, 'survey_id', data[i][key])
                     else:
                         setattr(instance, key, data[i][key])
                 instance.save()
@@ -2469,6 +2482,21 @@ class AdminSurveyEditView(APIView):
                     aoQuestion.shGroup = data[i]['shGroup']
                     aoQuestion.skipOption=data[i]['skipOption']
                     aoQuestion.save()
+                elif model==Segment:
+                    if 'shgroups' in data[i]:
+                        shgroups = data[i]['shgroups']
+                    else:
+                        shgroups = []
+                    if 'teams' in data[i]:
+                        teams = data[i]['teams']
+                    else:
+                        teams = []
+                    if 'organizations' in data[i]:
+                        organizations = data[i]['organizations']
+                    else:
+                        organizations = []
+                    segment_data = Segment(shgroups=shgroups, teams=teams, organizations=organizations, survey_id=survey)
+                    segment_data.save()
                 else:
                     serializer = serializer_instance(data=data[i])
                     serializer.is_valid(raise_exception=True)
@@ -2555,6 +2583,8 @@ class AdminSurveyEditView(APIView):
         aoQuestions = request.data['surveyConfiguration']['aoQuestionList']
         self.save_dict_list(aoQuestions, AOQuestion, AOQuestionSerializer)
 
+        segment = request.data['segments']
+        self.save_dict_list([segment], Segment, SegmentSerializer)
         # if survey is None:
         #     return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
 
@@ -2655,6 +2685,21 @@ class AdminSurveyByUserViewSet(viewsets.ModelViewSet):
         kwargs['partial'] = True
 
         return super().update(request, *args, **kwargs)
+
+#adminreportaccess api
+class AdminSurveyReportAccessViewSet(viewsets.ModelViewSet):
+    permisson_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+    queryset = Segment.objects.all()
+    serializer_class = SegmentSerializer
+
+    def get_queryset(self):
+        queryset = Segment.objects.all()
+
+        survey = self.request.query_params.get('survey', None)
+        if survey is not None:
+            queryset = queryset.filter(survey__id=survey)
+
+        return queryset
 
 # adminamquestion api    
 class AdminSurveyAMQuestionViewSet(viewsets.ModelViewSet):
