@@ -7,7 +7,7 @@ from aboutme.models import AMResponseAcknowledgement, PageAMQuestion, AMQuestion
 from aboutothers.models import AOResponseAcknowledgement, PageAOQuestion, AOQuestion, AOResponse, AOResponseTopic, AOPage
 from page_nav.models import PageNav
 from team.models import Team
-from shgroup.models import KeyThemeUpDownVote, SHGroup, SHType, ProjectUser, MyMapLayout, ProjectMapLayout, SHCategory, SHMapping
+from shgroup.models import KeyThemeUpDownVote, SHGroup, SHType, ProjectUser, MyMapLayout, ProjectMapLayout, SHCategory, SHMapping, Segment
 from option.models import Option, SkipOption
 from organization.models import Organization, UserAvatar, UserTeam, UserTitle, UserGuideMode
 from survey.models import ToolTipGuide, Driver, Project, Survey, ProjectVideoUpload, Client, ConfigPage, NikelMobilePage
@@ -216,10 +216,15 @@ class ConfigPageSerializer(serializers.ModelSerializer):
         model = ConfigPage
         fields = '__all__'
 
+class SegmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Segment
+        fields = '__all__'
+
 class SurveySerializer(serializers.ModelSerializer):
     class Meta:
         model = Survey
-        fields = '__all__'
+        fields = '__all__'   
 
 class SHTypeSerializer(serializers.ModelSerializer):
     class Meta:
