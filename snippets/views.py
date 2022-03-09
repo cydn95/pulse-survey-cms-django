@@ -2446,6 +2446,7 @@ class AdminSurveyEditView(APIView):
         return []
 
     def save_dict_list(self, data, model, serializer_instance, survey=60):
+        print(data)
         for i in range(len(data)):
             if 'id' in data[i]:
                 instance = model.objects.get(id=data[i]['id'])
@@ -2583,8 +2584,9 @@ class AdminSurveyEditView(APIView):
         aoQuestions = request.data['surveyConfiguration']['aoQuestionList']
         self.save_dict_list(aoQuestions, AOQuestion, AOQuestionSerializer)
 
-        segment = request.data['segments']
-        self.save_dict_list([segment], Segment, SegmentSerializer)
+        if 'segments' in request.data:
+            segment = request.data['segments']
+            self.save_dict_list([segment], Segment, SegmentSerializer)
         # if survey is None:
         #     return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
 
