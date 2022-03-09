@@ -2584,8 +2584,9 @@ class AdminSurveyEditView(APIView):
         aoQuestions = request.data['surveyConfiguration']['aoQuestionList']
         self.save_dict_list(aoQuestions, AOQuestion, AOQuestionSerializer)
 
-        segment = request.data['segments']
-        self.save_dict_list([segment], Segment, SegmentSerializer)
+        if 'segments' in request.data:
+            segment = request.data['segments']
+            self.save_dict_list([segment], Segment, SegmentSerializer)
         # if survey is None:
         #     return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
 
