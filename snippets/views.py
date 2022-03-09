@@ -2446,6 +2446,7 @@ class AdminSurveyEditView(APIView):
         return []
 
     def save_dict_list(self, data, model, serializer_instance, survey=60):
+        print(data)
         for i in range(len(data)):
             if 'id' in data[i]:
                 instance = model.objects.get(id=data[i]['id'])
