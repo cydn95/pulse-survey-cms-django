@@ -2468,6 +2468,12 @@ class AdminSurveyEditView(APIView):
                     organization.save()
                     projectUser = ProjectUser(addByProjectUser_id=data[i]['addByProjectUser']['id'], projectOrganization=data[i]['projectOrganization'], projectUserRoleDesc=data[i]['projectUserRoleDesc'], projectUserTitle=data[i]['projectUserTitle'], shGroup_id=data[i]['shGroup']['id'], shType_id=data[i]['shType']['id'], team_id=data[i]['team']['id'], user_id=user.id, survey_id=survey)
                     projectUser.save()
+                    if data[i]['sendInvite'] == True:
+                        obj = ProjectUser.objects.get(user_id=user.id)
+                        obj.sendInvite = True
+                        obj.old_sendEmail = False
+                        obj.sendEmail = True
+                        obj.save()
                 elif model==Driver:
                     driver = Driver(survey_id=data[i]['survey_id'], driverName=data[i]['driverName'], driveOrder=data[i]['driveOrder'], iconPath=data[i]['iconPath'])
                     driver.save()
