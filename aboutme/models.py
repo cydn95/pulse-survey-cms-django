@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 from email.mime.image import MIMEImage
+from xmlrpc.client import Boolean
 from django.core.mail import send_mail, EmailMultiAlternatives
 from django.template.loader import get_template, render_to_string
 from django.conf import settings
@@ -95,8 +96,10 @@ class AMResponseAcknowledgement(models.Model):
     # 0: no answer, 1: thanks for sharing, 2: Great idea, 3: Working on it, 4: Let's talk about it, 5: I agree, 6: Tell us more
     acknowledgeStatus = models.PositiveIntegerField(
         default=0, blank=False, null=False)
+    ackEmailSent = models.BooleanField(blank=False, default=False)
     flagStatus = models.PositiveIntegerField(
         default=0, blank=False, null=False)     # 0: no answer, 1: Individual can be identified, 2: Commenter can be identified, 3: Non-Constructive Feedback, 4: Out of Policy, 5: Aggressive or Hostile
+    flagEmailSent = models.BooleanField(blank=False, default=False)
     
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -106,147 +109,158 @@ class AMResponseAcknowledgement(models.Model):
         super(AMResponseAcknowledgement, self).save(*args, **kwargs)
 
         # check if this user receive email today
-        start = now().date() - timedelta(days=1)
-        end = now().date()
+        start = now() - timedelta(days=1)
+        end = now()
 
         try:
-            commentProjectUserResponse = AMResponse.objects.get(id=self.amResponse.id)
-            commentProjectUser = ProjectUser.objects.get(id=commentProjectUserResponse.projectUser.id)
-            ackCountToday = AMResponseAcknowledgement.objects.filter(
-                acknowledgeStatus__range=[1, 6], updated_at__range=[start, end], amResponse__projectUser__id=commentProjectUser.id).count()
-            print('actcount', ackCountToday)
-            print('start', start)
-            print('end', end)
-            print('commentProjectUser.id', commentProjectUser.id)
-            flagCountToday = AMResponseAcknowledgement.objects.filter(
-                flagStatus__range=[1, 5], updated_at__range=[start, end], amResponse__projectUser__id=commentProjectUser.id).count()
-
-            userInfo = User.objects.get(id=commentProjectUser.user.id)
-            ackProjectUser = ProjectUser.objects.get(id=self.projectUser.id)
-            ackUserInfo = User.objects.get(id=ackProjectUser.user.id)
-            pulseQuestion = AMQuestion.objects.get(
-                id=commentProjectUserResponse.amQuestion.id).questionText
-            pulseAnswer = commentProjectUserResponse.topicValue
-            surveyName = Survey.objects.get(
-                id=commentProjectUserResponse.survey.id).surveyTitle
-            ackText = ""
-            if self.acknowledgeStatus == 1:
-                ackText = "Thanks for sharing"
-            elif self.acknowledgeStatus == 2:
-                ackText = "Great idea"
-            elif self.acknowledgeStatus == 3:
-                ackText = "Working on it"
-            elif self.acknowledgeStatus == 4:
-                ackText = "Let's talk about it"
-            elif self.acknowledgeStatus == 5:
-                ackText = "I agree"
-            elif self.acknowledgeStatus == 6:
-                ackText = "Tell us more"
             # if yes, form2
             # if no,
             # if you receive 1 more after the last email today,
             # form1
             # if no,
             # form3
-            if ackCountToday >= 1:
-                image_path_logo = os.path.join(
-                    settings.STATIC_ROOT, 'email', 'img', 'logo-2.png')
-                image_name_logo = Path(image_path_logo).name
-                image_path_star = os.path.join(
-                    settings.STATIC_ROOT, 'email', 'img', 'star.png')
-                image_name_star = Path(image_path_star).name
+            commentProjectUserResponse = AMResponse.objects.get(id=self.amResponse.id)
+            commentProjectUser = ProjectUser.objects.get(id=commentProjectUserResponse.projectUser.id)
+            ackCountToday = AMResponseAcknowledgement.objects.filter(
+                acknowledgeStatus__range=[1, 6], updated_at__range=[start, end], amResponse__projectUser__id=commentProjectUser.id, ackEmailSent=True).count()
+            flagCountToday = AMResponseAcknowledgement.objects.filter(
+                flagStatus__range=[1, 5], updated_at__range=[start, end], amResponse__projectUser__id=commentProjectUser.id).count()
+            
+            if ackCountToday == 0:
+                self.send_email(self)
+                # image_path_logo = os.path.join(
+                #     settings.STATIC_ROOT, 'email', 'img', 'logo-2.png')
+                # image_name_logo = Path(image_path_logo).name
+                # image_path_star = os.path.join(
+                #     settings.STATIC_ROOT, 'email', 'img', 'star.png')
+                # image_name_star = Path(image_path_star).name
+            else:
+                print('got acknowledged last 24 hours')
 
-                subject = "Pulse"
-                message = get_template('ackform2.html').render(
-                    {
-                        "project_name": "Pulse",
-                        "survey_name": surveyName,
-                        "image_name_logo": image_name_logo,
-                        "image_name_star": image_name_star,
-                        "first_name": userInfo.first_name,
-                        "last_name": userInfo.last_name,
-                        "site_url": settings.SITE_URL,
-                        "pulse_question": pulseQuestion,
-                        "pulse_answer": pulseAnswer,
-                        "ack_first_name": ackUserInfo.first_name,
-                        "ack_last_name": ackUserInfo.last_name,
-                        "ack_text": ackText
-                    }
-                )
-                email_from = settings.DEFAULT_FROM_EMAIL
-                recipient_list = [userInfo.email]
+            # if flagCountToday >= 1:
+            #     image_path_logo = os.path.join(
+            #         settings.STATIC_ROOT, 'email', 'img', 'logo-2.png')
+            #     image_name_logo = Path(image_path_logo).name
+            #     image_path_star = os.path.join(
+            #         settings.STATIC_ROOT, 'email', 'img', 'star.png')
+            #     image_name_star = Path(image_path_star).name
 
-                email = EmailMultiAlternatives(subject=subject, body=message, from_email=email_from, to=recipient_list)
-                email.attach_alternative(message, "text/html")
-                email.content_subtype = "html"
-                email.mixed_subtype = "related"
+            #     subject = "Pulse"
+            #     message = get_template('ackform2.html').render(
+            #         {
+            #             "project_name": "Pulse",
+            #             "survey_name": surveyName,
+            #             "image_name_logo": image_name_logo,
+            #             "image_name_star": image_name_star,
+            #             "first_name": userInfo.first_name,
+            #             "last_name": userInfo.last_name,
+            #             "site_url": settings.SITE_URL,
+            #             "pulse_question": pulseQuestion,
+            #             "pulse_answer": pulseAnswer,
+            #             "ack_first_name": ackUserInfo.first_name,
+            #             "ack_last_name": ackUserInfo.last_name,
+            #             "ack_text": ackText
+            #         }
+            #     )
+            #     email_from = settings.DEFAULT_FROM_EMAIL
+            #     recipient_list = [userInfo.email]
 
-                with open(image_path_logo, mode='rb') as f_logo:
-                    image_logo = MIMEImage(f_logo.read())
-                    email.attach(image_logo)
-                    image_logo.add_header('Content-ID', f"<{image_name_logo}>")
-                with open(image_path_star, mode='rb') as f_star:
-                    image_star = MIMEImage(f_star.read())
-                    email.attach(image_star)
-                    image_star.add_header('Content-ID', f"<{image_name_star}>")
+            #     email = EmailMultiAlternatives(
+            #         subject=subject, body=message, from_email=email_from, to=recipient_list)
+            #     email.attach_alternative(message, "text/html")
+            #     email.content_subtype = "html"
+            #     email.mixed_subtype = "related"
 
-                try:
-                    email.send()
-                except SMTPException as e:
-                    print('There was an error sending an email: ', e)
+            #     with open(image_path_logo, mode='rb') as f_logo:
+            #         image_logo = MIMEImage(f_logo.read())
+            #         email.attach(image_logo)
+            #         image_logo.add_header('Content-ID', f"<{image_name_logo}>")
+            #     with open(image_path_star, mode='rb') as f_star:
+            #         image_star = MIMEImage(f_star.read())
+            #         email.attach(image_star)
+            #         image_star.add_header('Content-ID', f"<{image_name_star}>")
 
-            if flagCountToday >= 1:
-                image_path_logo = os.path.join(
-                    settings.STATIC_ROOT, 'email', 'img', 'logo-2.png')
-                image_name_logo = Path(image_path_logo).name
-                image_path_star = os.path.join(
-                    settings.STATIC_ROOT, 'email', 'img', 'star.png')
-                image_name_star = Path(image_path_star).name
-
-                subject = "Pulse"
-                message = get_template('ackform2.html').render(
-                    {
-                        "project_name": "Pulse",
-                        "survey_name": surveyName,
-                        "image_name_logo": image_name_logo,
-                        "image_name_star": image_name_star,
-                        "first_name": userInfo.first_name,
-                        "last_name": userInfo.last_name,
-                        "site_url": settings.SITE_URL,
-                        "pulse_question": pulseQuestion,
-                        "pulse_answer": pulseAnswer,
-                        "ack_first_name": ackUserInfo.first_name,
-                        "ack_last_name": ackUserInfo.last_name,
-                        "ack_text": ackText
-                    }
-                )
-                email_from = settings.DEFAULT_FROM_EMAIL
-                recipient_list = [userInfo.email]
-
-                email = EmailMultiAlternatives(
-                    subject=subject, body=message, from_email=email_from, to=recipient_list)
-                email.attach_alternative(message, "text/html")
-                email.content_subtype = "html"
-                email.mixed_subtype = "related"
-
-                with open(image_path_logo, mode='rb') as f_logo:
-                    image_logo = MIMEImage(f_logo.read())
-                    email.attach(image_logo)
-                    image_logo.add_header('Content-ID', f"<{image_name_logo}>")
-                with open(image_path_star, mode='rb') as f_star:
-                    image_star = MIMEImage(f_star.read())
-                    email.attach(image_star)
-                    image_star.add_header('Content-ID', f"<{image_name_star}>")
-
-                try:
-                    email.send()
-                except SMTPException as e:
-                    print('There was an error sending an email: ', e)
+                # try:
+                #     email.send()
+                # except SMTPException as e:
+                #     print('There was an error sending an email: ', e)
                     
         except AMResponse.DoesNotExist:
             print('Incorrect response id')
             return
-                
+
+    def send_email(ack):
+        commentProjectUser = ack.commentProjectUser
+        commentProjectUserResponse= ack.amResponse
+        userInfo = User.objects.get(id=commentProjectUser.user.id)
+        ackProjectUser = ProjectUser.objects.get(id=ack.projectUser.id)
+        ackUserInfo = User.objects.get(id=ackProjectUser.user.id)
+        pulseQuestion = AMQuestion.objects.get(
+            id=commentProjectUserResponse.amQuestion.id).questionText
+        pulseAnswer = commentProjectUserResponse.topicValue
+        surveyName = Survey.objects.get(
+            id=commentProjectUserResponse.survey.id).surveyTitle
+        ackText = ""
+        if ack.acknowledgeStatus == 1:
+            ackText = "Thanks for sharing"
+        elif ack.acknowledgeStatus == 2:
+            ackText = "Great idea"
+        elif ack.acknowledgeStatus == 3:
+            ackText = "Working on it"
+        elif ack.acknowledgeStatus == 4:
+            ackText = "Let's talk about it"
+        elif ack.acknowledgeStatus == 5:
+            ackText = "I agree"
+        elif ack.acknowledgeStatus == 6:
+            ackText = "Tell us more"
+        image_path_logo = os.path.join(
+            settings.STATIC_ROOT, 'email', 'img', 'logo-2.png')
+        image_name_logo = Path(image_path_logo).name
+        image_path_star = os.path.join(
+            settings.STATIC_ROOT, 'email', 'img', 'star.png')
+        image_name_star = Path(image_path_star).name
+
+        subject = "Pulse"
+        message = get_template('ackform2.html').render(
+            {
+                "project_name": "Pulse",
+                "survey_name": surveyName,
+                "image_name_logo": image_name_logo,
+                "image_name_star": image_name_star,
+                "first_name": userInfo.first_name,
+                "last_name": userInfo.last_name,
+                "site_url": settings.SITE_URL,
+                "pulse_question": pulseQuestion,
+                "pulse_answer": pulseAnswer,
+                "ack_first_name": ackUserInfo.first_name,
+                "ack_last_name": ackUserInfo.last_name,
+                "ack_text": ackText
+            }
+        )
+        email_from = settings.DEFAULT_FROM_EMAIL
+        recipient_list = [userInfo.email]
+
+        email = EmailMultiAlternatives(subject=subject, body=message, from_email=email_from, to=recipient_list)
+        email.attach_alternative(message, "text/html")
+        email.content_subtype = "html"
+        email.mixed_subtype = "related"
+
+        with open(image_path_logo, mode='rb') as f_logo:
+            image_logo = MIMEImage(f_logo.read())
+            email.attach(image_logo)
+            image_logo.add_header('Content-ID', f"<{image_name_logo}>")
+        with open(image_path_star, mode='rb') as f_star:
+            image_star = MIMEImage(f_star.read())
+            email.attach(image_star)
+            image_star.add_header('Content-ID', f"<{image_name_star}>")
+
+        try:
+            email.send()
+            ack.ackEmailSent = True
+            ack.save()
+        except SMTPException as e:
+            print('There was an error sending an email: ', e)
+                            
 class AMResponseTopic(models.Model):
     amQuestion = models.ForeignKey(AMQuestion, on_delete=models.CASCADE)
     responseUser = models.ForeignKey(ProjectUser, on_delete=models.CASCADE)
