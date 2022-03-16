@@ -2446,7 +2446,6 @@ class AdminSurveyEditView(APIView):
         return []
 
     def save_dict_list(self, data, model, serializer_instance, survey=60):
-        print(data)
         for i in range(len(data)):
             if 'id' in data[i]:
                 instance = model.objects.get(id=data[i]['id'])
@@ -2557,11 +2556,11 @@ class AdminSurveyEditView(APIView):
 
         # saving more info
         moreInfo = request.data['projectSetup']['moreInfo']
-        self.save_dict_list(moreInfo, NikelMobilePage, NikelMobilePageSerializer)
+        self.save_dict_list(moreInfo, NikelMobilePage, NikelMobilePageSerializer, survey)
 
         # saving drivers
         driverList = request.data['projectConfiguration']['driverList']
-        self.save_dict_list(driverList, Driver, DriverSerializer)
+        self.save_dict_list(driverList, Driver, DriverSerializer, survey)
 
         # saving my maps and project maps
         # myMaps = request.data['projectConfiguration']['myMap']
@@ -2572,11 +2571,11 @@ class AdminSurveyEditView(APIView):
 
         # saving shGroups
         shGroups = request.data['projectConfiguration']['shGroup']
-        self.save_dict_list(shGroups, SHGroup, SHGroupSerializer)
+        self.save_dict_list(shGroups, SHGroup, SHGroupSerializer, survey)
 
         # saving project teams
         projectTeams = request.data['projectConfiguration']['projectTeam']
-        self.save_dict_list(projectTeams, Team, TeamSerializer)
+        self.save_dict_list(projectTeams, Team, TeamSerializer, survey)
 
         #saving project users
         projectUsers = request.data['userAdministration']['projectUser']
@@ -2585,14 +2584,14 @@ class AdminSurveyEditView(APIView):
 
         #saving amQuestions and aoQuestions
         amQuestions = request.data['surveyConfiguration']['amQuestionList']
-        self.save_dict_list(amQuestions, AMQuestion, AMQuestionSerializer)
+        self.save_dict_list(amQuestions, AMQuestion, AMQuestionSerializer, survey)
         
         aoQuestions = request.data['surveyConfiguration']['aoQuestionList']
-        self.save_dict_list(aoQuestions, AOQuestion, AOQuestionSerializer)
+        self.save_dict_list(aoQuestions, AOQuestion, AOQuestionSerializer, survey)
 
         if 'segments' in request.data:
             segment = request.data['segments']
-            self.save_dict_list([segment], Segment, SegmentSerializer)
+            self.save_dict_list([segment], Segment, SegmentSerializer, survey)
         # if survey is None:
         #     return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
 
