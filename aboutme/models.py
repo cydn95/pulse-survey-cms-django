@@ -127,7 +127,7 @@ class AMResponseAcknowledgement(models.Model):
                 flagStatus__range=[1, 5], updated_at__range=[start, end], amResponse__projectUser__id=commentProjectUser.id).count()
             
             if ackCountToday == 0:
-                self.send_email(self)
+                self.send_email()
                 # image_path_logo = os.path.join(
                 #     settings.STATIC_ROOT, 'email', 'img', 'logo-2.png')
                 # image_name_logo = Path(image_path_logo).name
@@ -190,7 +190,7 @@ class AMResponseAcknowledgement(models.Model):
             return
 
     def send_email(ack):
-        commentProjectUser = ack.commentProjectUser
+        commentProjectUser = ack.amResponse.projectUser
         commentProjectUserResponse= ack.amResponse
         userInfo = User.objects.get(id=commentProjectUser.user.id)
         ackProjectUser = ProjectUser.objects.get(id=ack.projectUser.id)
