@@ -74,7 +74,6 @@ def thread_function(dur):
             start = end - timedelta(days=1)
             ackedUsers = AMResponseAcknowledgement.objects.filter(
                 acknowledgeStatus__range=[1, 6], updated_at__range=[start, end], ackEmailSent=False).values('amResponse__projectUser__user__id').annotate(total=Count('amResponse__projectUser__user__id'))
-            print('dddd', ackedUsers)
             
             for i in range(len(ackedUsers)):
                 acksBySurvey = AMResponseAcknowledgement.objects.filter(
