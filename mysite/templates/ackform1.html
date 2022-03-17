@@ -48,26 +48,28 @@
         </table>
         <img class="star" src="cid:{{image_name_star}}" height="70" />
         <p class="p-title">
-            <strong>4 people</strong>
+            <strong>{{ ackedCount }} people</strong>
             <br />
             acknowledged your comments on
             <br />
-            the Liberty Mine Construction Project.
+            the {{ survey_name }}.
         </p>
         <p class="p-content">
             <strong>Pulse Question:</strong>
             <br />
-            "Is there a problem that people aren't discussing openly?"
+            "{{ pulse_question }}"
         </p>
         <p class="p-content">
             <strong>Your Comment:</strong>
             <br />
-            "I think we can do better."
+            "{{ pulse_answer }}"
         </p>
         <p class="p-content">
             <strong>Acknowledged by:</strong>
             <br />
-            <strong>Joe Boggs:</strong> "Let's talk about it."
+            {% for user in ackUsers %}
+                <strong>{{ user.ack_first_name }} {{ user.ack_last_name }}:</strong> "{{ user.ack_text }}"
+            {% endfor %}
         </p>
         <p class="p-footer">
             Pulse has not revealed<br />
