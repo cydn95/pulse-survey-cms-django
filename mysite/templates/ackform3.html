@@ -48,27 +48,39 @@
         </table>
         <img class="star" src="cid:{{image_name_star}}" height="70" />
         <p class="p-title">
-            <strong>4 people</strong>
+            {% if acked_count > 1 %}
+                <strong>
+                    {{ acked_count }} people
+                </strong>
+            {% endif %} 
             <br />
             acknowledged your comments on
             <br />
-            the Liberty Mine Construction Project.
+            the {{ survey_name }}.
         </p>
-        <p class="p-content">
-            <strong>Pulse Question:</strong>
-            <br />
-            "Is there a problem that people aren't discussing openly?"
-        </p>
-        <p class="p-content">
-            <strong>Your Comment:</strong>
-            <br />
-            "I think we can do better."
-        </p>
-        <p class="p-content">
-            <strong>Acknowledged by:</strong>
-            <br />
-            <strong>Joe Boggs:</strong> "Let's talk about it."
-        </p>
+        {% for ackQ in ackByQuestions %}
+            {% if forloop.counter0 > 0 %}
+                <div style="height: 1px; width: 100%; background: #62b5a7; margin: 20px 0px;"></div>
+            {% endif %}    
+            <p class="p-content">
+                <strong>Pulse Question:</strong>
+                <br />
+                "{{ ackQ.pulse_question }}"
+            </p>
+            <p class="p-content">
+                <strong>Your Comment:</strong>
+                <br />
+                "{{ ackQ.pulse_answer }}"
+            </p>
+            <p class="p-content">
+                <strong>Acknowledged by:</strong>
+                <br />
+                {% for user in ackQ.ackUsers %}
+                    <strong>{{ user.ack_first_name }} {{ user.ack_last_name }}:</strong> "{{ user.ack_text }}"
+                {% endfor %}
+            </p>
+        {% endfor %}
+        
         <p class="p-footer">
             Pulse has not revealed<br />
             that you wrote the comments.
