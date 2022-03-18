@@ -4992,7 +4992,7 @@ class AdminBulkInvitationSendView(APIView):
             except ProjectUser.DoesNotExist:
                 pass
 
-        return Response("success11", status=status.HTTP_201_CREATED)
+        return Response("success", status=status.HTTP_201_CREATED)
 
 class AdminDelMoreInfoPageView(APIView):
     def get_object(self, pk):
