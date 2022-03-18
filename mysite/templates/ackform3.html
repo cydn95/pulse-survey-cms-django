@@ -53,6 +53,11 @@
                     {{ acked_count }} people
                 </strong>
             {% endif %} 
+            {% if acked_count == 1 %}
+                <strong>
+                    {{ ackByQuestions[0].ackUsers[0].first_name }} {{ ackByQuestions[0].ackUsers[0].last_name }}
+                </strong>
+            {% endif %} 
             <br />
             acknowledged your comments on
             <br />
@@ -70,13 +75,13 @@
             <p class="p-content">
                 <strong>Your Comment:</strong>
                 <br />
-                "{{ ackQ.pulse_answer }}"
+                "{{ ackQ.pulseAnswer }}"
             </p>
             <p class="p-content">
                 <strong>Acknowledged by:</strong>
                 <br />
                 {% for user in ackQ.ackUsers %}
-                    <strong>{{ user.ack_first_name }} {{ user.ack_last_name }}:</strong> "{{ user.ack_text }}"
+                    <strong>{{ user.first_name }} {{ user.last_name }}:</strong> "{{ user.ack_text }}"
                 {% endfor %}
             </p>
         {% endfor %}

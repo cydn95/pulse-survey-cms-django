@@ -126,6 +126,7 @@ class AMResponseAcknowledgement(models.Model):
             commentProjectUser = ProjectUser.objects.get(id=commentProjectUserResponse.projectUser.id)
             ackCountToday = AMResponseAcknowledgement.objects.filter(
                 acknowledgeStatus__range=[1, 6], updated_at__range=[start, end], amResponse__projectUser__id=commentProjectUser.id, ackEmailSent=True).count()
+            print(ackCountToday)
             flagCountToday = AMResponseAcknowledgement.objects.filter(
                 flagStatus__range=[1, 5], updated_at__range=[start, end], amResponse__projectUser__id=commentProjectUser.id).count()
             
@@ -192,11 +193,11 @@ class AMResponseAcknowledgement(models.Model):
             print('Incorrect response id')
             return
 
-    def send_email(ack):
-        commentProjectUser = ack.amResponse.projectUser
-        commentProjectUserResponse= ack.amResponse
+    def send_email(self):
+        commentProjectUser = self.amResponse.projectUser
+        commentProjectUserResponse= self.amResponse
         userInfo = User.objects.get(id=commentProjectUser.user.id)
-        ackProjectUser = ProjectUser.objects.get(id=ack.projectUser.id)
+        ackProjectUser = ProjectUser.objects.get(id=self.projectUser.id)
         ackUserInfo = User.objects.get(id=ackProjectUser.user.id)
         pulseQuestion = AMQuestion.objects.get(
             id=commentProjectUserResponse.amQuestion.id).questionText
@@ -204,17 +205,17 @@ class AMResponseAcknowledgement(models.Model):
         surveyName = Survey.objects.get(
             id=commentProjectUserResponse.survey.id).surveyTitle
         ackText = ""
-        if ack.acknowledgeStatus == 1:
+        if self.acknowledgeStatus == 1:
             ackText = "Thanks for sharing"
-        elif ack.acknowledgeStatus == 2:
+        elif self.acknowledgeStatus == 2:
             ackText = "Great idea"
-        elif ack.acknowledgeStatus == 3:
+        elif self.acknowledgeStatus == 3:
             ackText = "Working on it"
-        elif ack.acknowledgeStatus == 4:
+        elif self.acknowledgeStatus == 4:
             ackText = "Let's talk about it"
-        elif ack.acknowledgeStatus == 5:
+        elif self.acknowledgeStatus == 5:
             ackText = "I agree"
-        elif ack.acknowledgeStatus == 6:
+        elif self.acknowledgeStatus == 6:
             ackText = "Tell us more"
         image_path_logo = os.path.join(
             settings.STATIC_ROOT, 'email', 'img', 'logo-2.png')
@@ -259,8 +260,8 @@ class AMResponseAcknowledgement(models.Model):
 
         try:
             email.send()
-            ack.ackEmailSent = True
-            ack.save()
+            self.ackEmailSent = True
+            self.save()
         except SMTPException as e:
             print('There was an error sending an email: ', e)
                             
