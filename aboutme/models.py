@@ -20,6 +20,7 @@ from django.utils import timezone
 from smtplib import SMTPException
 from django.utils.timezone import now, timedelta
 from django.contrib.auth.models import User
+from django.db.models import F
 
 class AMQuestion(models.Model):
     survey = models.ForeignKey(Survey, on_delete=models.CASCADE)
@@ -106,7 +107,9 @@ class AMResponseAcknowledgement(models.Model):
 
     def save(self, *args, **kwargs):
         # old = AMResponseAcknowledgement.objects.get(pk=self.id)
-        super(AMResponseAcknowledgement, self).save(*args, **kwargs)
+        if self.created_at != self.updated_at:
+            self.ackEmailSent = False
+            super(AMResponseAcknowledgement, self).save(*args, **kwargs)
 
         # check if this user receive email today
         start = now() - timedelta(days=1)
