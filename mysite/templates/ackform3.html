@@ -1,5 +1,5 @@
 {% load static inlinecss %}
-{% inlinecss "email/css/ackform.css" %}
+{% inlinecss "/mysite/email/css/ackform.css" %}
 <html>
 
 <head>
@@ -55,7 +55,7 @@
             {% endif %} 
             {% if acked_count == 1 %}
                 <strong>
-                    {{ ackByQuestions[0].ackUsers[0].first_name }} {{ ackByQuestions[0].ackUsers[0].last_name }}
+                    {{ ackByQuestions.0.ackUsers.0.first_name }} {{ ackByQuestions.0.ackUsers.0.last_name }}
                 </strong>
             {% endif %} 
             <br />
