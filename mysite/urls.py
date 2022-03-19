@@ -70,11 +70,18 @@ def thread_function(dur):
     while True:
 
         if datetime.datetime.now(tz).hour == 17 and datetime.datetime.now(tz).minute==0 and datetime.datetime.now(tz).second==0:
+        # if datetime.datetime.now(tz).second==0:
             end = now() + timedelta(hours=17-now().hour, minutes=-now().minute, seconds=-now().second)
             start = end - timedelta(days=1)
             ackedUsers = AMResponseAcknowledgement.objects.filter(
-                acknowledgeStatus__range=[1, 6], updated_at__range=[start, end]).values('amResponse__projectUser__user__id').annotate(total=Count('amResponse__projectUser__user__id'))
-            print('ackedusers', ackedUsers)
+                acknowledgeStatus__range=[1, 6], 
+                updated_at__range=[start, end],
+                ackEmailSent=False
+            ).values('amResponse__projectUser__user__id').annotate(total=Count('amResponse__projectUser__user__id'))
+            ackedUserds = AMResponseAcknowledgement.objects.filter(
+                acknowledgeStatus__range=[1, 6], 
+                updated_at__range=[start, end]
+            )
             for i in range(len(ackedUsers)):
                 acksBySurvey = AMResponseAcknowledgement.objects.filter(
                     acknowledgeStatus__range=[1, 6], 
@@ -82,7 +89,12 @@ def thread_function(dur):
                     ackEmailSent=False, 
                     amResponse__projectUser__user__id=ackedUsers[i]['amResponse__projectUser__user__id']
                 ).values('amResponse__survey').annotate(total=Count('amResponse__survey'))
-                print('acks', acksBySurvey)
+                acksBySurveyd = AMResponseAcknowledgement.objects.filter(
+                    acknowledgeStatus__range=[1, 6], 
+                    updated_at__range=[start, end], 
+                    ackEmailSent=False, 
+                    amResponse__projectUser__user__id=ackedUsers[i]['amResponse__projectUser__user__id']
+                )
                 for j in range(len(acksBySurvey)):
                     acksByQuestion = AMResponseAcknowledgement.objects.filter(
                         acknowledgeStatus__range=[1, 6], 
@@ -180,7 +192,7 @@ def thread_function(dur):
                     except SMTPException as e:
                         print('There was an error sending an email: ', e)
             print('Time is out')
-        time.sleep(1)
+            time.sleep(1)
 x = threading.Thread(target=thread_function, args=(1,))
 x.start()
 

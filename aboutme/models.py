@@ -106,10 +106,14 @@ class AMResponseAcknowledgement(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def save(self, *args, **kwargs):
-        # old = AMResponseAcknowledgement.objects.get(pk=self.id)
-        if self.created_at != self.updated_at:
-            self.ackEmailSent = False
-            super(AMResponseAcknowledgement, self).save(*args, **kwargs)
+        if self.id is not None:
+            old = AMResponseAcknowledgement.objects.get(pk=self.id)
+            if old.acknowledgeStatus != self.acknowledgeStatus:
+                self.ackEmailSent = False
+                super(AMResponseAcknowledgement, self).save(*args, **kwargs)
+            else:
+                super(AMResponseAcknowledgement, self).save(*args, **kwargs)
+                return
 
         # check if this user receive email today
         start = now() - timedelta(days=1)
@@ -127,6 +131,7 @@ class AMResponseAcknowledgement(models.Model):
             ackCountToday = AMResponseAcknowledgement.objects.filter(
                 acknowledgeStatus__range=[1, 6], updated_at__range=[start, end], amResponse__projectUser__id=commentProjectUser.id, ackEmailSent=True).count()
             print(ackCountToday)
+            print(commentProjectUser.id)
             flagCountToday = AMResponseAcknowledgement.objects.filter(
                 flagStatus__range=[1, 5], updated_at__range=[start, end], amResponse__projectUser__id=commentProjectUser.id).count()
             
