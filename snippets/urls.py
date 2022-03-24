@@ -92,6 +92,7 @@ urlpatterns += format_suffix_patterns([
     url(r'setpassword', views.SetPasswordView.as_view()),
     url(r'userprofile', views.UserProfileView.as_view()),
     url(r'userguidemode', views.UserGuideModeView.as_view()),
+    url(r'isFlagged/(?P<pk>\d+)', views.IsFlaggedView.as_view()),
     url(r'wordcloud', views.WordCloudView.as_view()),
     # WIP
     url(r'advisorinsights', views.AdvisorInsightsView.as_view()),

@@ -453,12 +453,15 @@ class AMResponseViewSet(viewsets.ModelViewSet):
                         if obj.topicValue != data[i]['topicValue'] or obj.commentValue != data[i]['commentValue'] or obj.integerValue != data[i]['integerValue'] or obj.skipValue != data[i]['skipValue'] or obj.topicTags != data[i]['topicTags'] or obj.commentTags != data[i]['commentTags']:
                             obj.latestResponse = False
                             obj.save()
+                            response = AMResponseAcknowledgement.objects.filter(amResponse_id=obj.id)
 
                             if saveStatus == False:
                                 obj1 = AMResponse(amQuestion_id=data[i]['amQuestion'], projectUser_id=data[i]['projectUser'], subProjectUser_id=data[i]['subProjectUser'], survey_id=data[i]['survey'], project_id=data[i]['project'],
                                 controlType=data[i]['controlType'], integerValue=data[i]['integerValue'], topicValue=data[i]['topicValue'], commentValue=data[i]['commentValue'], skipValue=data[i]['skipValue'], topicTags=data[i]['topicTags'], commentTags=data[i]['commentTags'], latestResponse=True)
                                 obj1.save()
-
+                                if len(response) > 0:
+                                    response[0].amResponse_id = obj1.id
+                                    response[0].save()
                                 saveStatus = True
                     # obj = tempItem[0]
                     # if obj.topicValue != data[i]['topicValue'] or obj.commentValue != data[i]['commentValue'] or obj.integerValue != data[i]['integerValue'] or obj.skipValue != data[i]['skipValue'] or obj.topicTags != data[i]['topicTags'] or obj.commentTags != data[i]['commentTags']:
@@ -2743,6 +2746,26 @@ class UserAvatarViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
     queryset = UserAvatar.objects.all()
     serializer_class = UserAvatarSerializer
+
+# get comment is flagged
+class IsFlaggedView(APIView):
+    def get_object(self, pk, request):
+        userId = request.GET.get('user')
+        print('userId', userId)
+        return AMResponseAcknowledgement.objects.filter(amResponse__amQuestion__id=pk, amResponse__projectUser__user_id=userId).values()
+    def get(self, request, *args, **kwargs):
+        temp = self.get_object(kwargs['pk'], request)
+        if len(temp) > 0:
+            temp = temp[len(temp) - 1]
+            # return Response(temp, status=status.HTTP_200_OK)
+            print(temp)
+            if temp is not None:
+                if temp['flagStatus'] > 0:
+                    return Response(True, status=status.HTTP_200_OK)
+                else:
+                    return Response(False, status=status.HTTP_200_OK)
+        else:
+            return Response(False, status=status.HTTP_200_OK)
 
 # api-token-auth api
 class CustomAuthToken(ObtainAuthToken):
