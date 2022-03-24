@@ -2749,12 +2749,14 @@ class UserAvatarViewSet(viewsets.ModelViewSet):
 
 # get comment is flagged
 class IsFlaggedView(APIView):
-    def get_object(self, pk):
-        return AMResponseAcknowledgement.objects.filter(amResponse_id=pk).values()
+    def get_object(self, pk, request):
+        userId = request.GET.get('user')
+        print('userId', userId)
+        return AMResponseAcknowledgement.objects.filter(amResponse__amQuestion__id=pk, amResponse__projectUser__user_id=userId).values()
     def get(self, request, *args, **kwargs):
-        temp = self.get_object(kwargs['pk'])
+        temp = self.get_object(kwargs['pk'], request)
         if len(temp) > 0:
-            temp = temp[0]
+            temp = temp[len(temp) - 1]
             # return Response(temp, status=status.HTTP_200_OK)
             print(temp)
             if temp is not None:
