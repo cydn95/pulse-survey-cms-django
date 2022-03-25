@@ -271,17 +271,18 @@ class AMResponseAcknowledgement(models.Model):
 
         try:
             email.send()
-            # EmailDB
+            emailRecord = EmailRecord(recipient=userInfo.email, message=message)
+            emailRecord.save()
             self.ackEmailSent = True
             self.save()
         except SMTPException as e:
             print('There was an error sending an email: ', e)
 
-# class EmailRecord(models.Model):
-#     recipient = models.CharField(max_length=255, blank=True)
-#     message = 
+class EmailRecord(models.Model):
+    recipient = models.EmailField()
+    message = models.TextField(blank=True)
 
-#     created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
 class AMResponseTopic(models.Model):
     amQuestion = models.ForeignKey(AMQuestion, on_delete=models.CASCADE)
