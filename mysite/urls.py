@@ -70,7 +70,7 @@ def thread_function(dur):
     while True:
         try:
             if datetime.datetime.now(tz).second==0:
-                end = now()
+                end = datetime.datetime.now(tz)
                 start = end - timedelta(days=1)
                 ackedUsers = AMResponseAcknowledgement.objects.filter(
                     acknowledgeStatus__range=[1, 6], 
