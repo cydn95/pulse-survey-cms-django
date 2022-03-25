@@ -1,4 +1,5 @@
-
+{% load static inlinecss %}
+{% inlinecss "email/css/ackform.css" %}
 <html>
 
 <head>
@@ -13,134 +14,7 @@
         @import url('https://fonts.googleapis.com/css?family=Poppins');
 
         body {
-            margin: 0px;
-            padding: 0px;
-            overflow-x: hidden;
-            overflow-y: auto;
             font-family: 'Poppins', sans-serif;
-            background-color: #FFFFFF;
-        }
-
-        .container {
-            width: 414px;
-            margin: 0px auto;
-            text-align: center;
-            box-sizing: border-box;
-            padding-top: 20px;
-        }
-
-        .header {
-            width: 100%;
-            height: 233px;
-            color: #FFFFFF;
-            margin-bottom: 20px;
-            background-image: url('https://pulse.projectai.com/static/email/img/email-3-top.png');
-            background-size: cover;
-            background-repeat: no-repeat;
-            background-position: center center;
-        }
-
-        .header img {
-            width: 100%;
-            height: 233px;
-        }
-
-        .header h1 {
-            text-align: center;
-            width: 414px;
-            font-size: 30px;
-            line-height: 21px;
-            padding-top: 130px;
-            margin-left: 0px;
-            margin-right: 0px;
-            margin-bottom: 0px;
-        }
-
-        .middle-title {
-            text-align: center;
-            width: 414px;
-            font-size: 30px;
-            line-height: 21px;
-            padding-top: 130px;
-            margin-left: 0px;
-            margin-right: 0px;
-            margin-bottom: 0px;
-            color: #FFFFFF;
-        }
-
-        .middle-content {
-            width: 414px;
-            text-align: center;
-            font-size: 13px;
-            line-height: 15px;
-            color: #FFFFFF;
-        }
-
-        .header p {
-            width: 414px;
-            text-align: center;
-            font-size: 13px;
-            line-height: 15px;
-        }
-
-        .description {
-            font-size: 13px;
-            line-height: 22px;
-            margin-top: 30px;
-        }
-
-        .description1 {
-            font-size: 18px;
-            line-height: 22px;
-            margin-top: 30px;
-        }
-
-        .green {
-            color: #38929E;
-        }
-
-        .star {
-            width: 70px;
-            padding: 22px;
-        }
-
-        .p-title {
-            font-size: large;
-            color: black;
-            margin-bottom: 40px;
-        }
-
-        .p-content {
-            color: black;
-            margin-bottom: 30px;
-        }
-
-        .p-footer {
-            font-size: large;
-            color: black;
-            margin-top: 20px;
-            margin-bottom: 40px;
-        }
-
-        .action-button {
-            display: inline-block;
-            padding-top: 10px;
-            padding-bottom: 10px;
-            text-decoration: none;
-            background: #62B6A8;
-            font-size: 18px;
-            width: 80%;
-            border-radius: 14px;
-            border: none;
-            outline: none;
-            color: #FFFFFF;
-            /* height: 61px; */
-            margin-top: 28px;
-            margin-bottom: 31px;
-        }
-
-        .logo {
-            margin-bottom: 30px;
         }
     </style>
     <div class="container">
@@ -207,7 +81,7 @@
                 <strong>Acknowledged by:</strong>
                 <br />
                 {% for user in ackQ.ackUsers %}
-                    <strong>{{ user.first_name }} {{ user.last_name }}:</strong> "{{ user.ack_text }}"
+                    <strong>{{ user.first_name }} {{ user.last_name }}:</strong> "{{ user.ackText }}"
                 {% endfor %}
             </p>
         {% endfor %}
@@ -221,3 +95,4 @@
 </body>
 
 </html>
+{% endinlinecss %}

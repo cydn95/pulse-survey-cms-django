@@ -133,6 +133,7 @@ def thread_function(dur):
                                     ackText = "I agree"
                                 elif acks[l].acknowledgeStatus == 6:
                                     ackText = "Tell us more"
+                                print('ackText', ackText)
                                 ackUser.ackText = ackText
                                 ackUsers.append(ackUser)
                             ackByQuestion.ackUsers = ackUsers
