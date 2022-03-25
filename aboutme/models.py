@@ -113,6 +113,7 @@ class AMResponseAcknowledgement(models.Model):
                 super(AMResponseAcknowledgement, self).save(*args, **kwargs)
             else:
                 super(AMResponseAcknowledgement, self).save(*args, **kwargs)
+                print('here')
                 return
         else:
             super(AMResponseAcknowledgement, self).save(*args, **kwargs)
@@ -138,6 +139,7 @@ class AMResponseAcknowledgement(models.Model):
                 flagStatus__range=[1, 5], updated_at__range=[start, end], amResponse__projectUser__id=commentProjectUser.id).count()
             
             if ackCountToday == 0:
+                print('here123')
                 self.send_email()
                 # image_path_logo = os.path.join(
                 #     settings.STATIC_ROOT, 'email', 'img', 'logo-2.png')
