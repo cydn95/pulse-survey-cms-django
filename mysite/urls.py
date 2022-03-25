@@ -160,7 +160,6 @@ def thread_function(dur):
                                 "acked_count": ackedCount
                             }
                         )
-                        message = ""
                         email_from = settings.DEFAULT_FROM_EMAIL
                         recipient_list = [userInfo.email]
 
@@ -189,7 +188,7 @@ def thread_function(dur):
         except:
             print('There was an error sending an email')
             pass
-        print(datetime.datetime.now(tz))
+        # print(datetime.datetime.now(tz))
         time.sleep(1)
 x = threading.Thread(target=thread_function, args=(1,))
 x.start()
