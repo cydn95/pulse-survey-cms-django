@@ -77,10 +77,6 @@ def thread_function(dur):
                     updated_at__range=[start, end],
                     ackEmailSent=False
                 ).values('amResponse__projectUser__user__id').annotate(total=Count('amResponse__projectUser__user__id'))
-                ackedUserds = AMResponseAcknowledgement.objects.filter(
-                    acknowledgeStatus__range=[1, 6], 
-                    updated_at__range=[start, end]
-                )
                 for i in range(len(ackedUsers)):
                     acksBySurvey = AMResponseAcknowledgement.objects.filter(
                         acknowledgeStatus__range=[1, 6], 
@@ -88,12 +84,6 @@ def thread_function(dur):
                         ackEmailSent=False, 
                         amResponse__projectUser__user__id=ackedUsers[i]['amResponse__projectUser__user__id']
                     ).values('amResponse__survey').annotate(total=Count('amResponse__survey'))
-                    acksBySurveyd = AMResponseAcknowledgement.objects.filter(
-                        acknowledgeStatus__range=[1, 6], 
-                        updated_at__range=[start, end], 
-                        ackEmailSent=False, 
-                        amResponse__projectUser__user__id=ackedUsers[i]['amResponse__projectUser__user__id']
-                    )
                     for j in range(len(acksBySurvey)):
                         acksByQuestion = AMResponseAcknowledgement.objects.filter(
                             acknowledgeStatus__range=[1, 6], 
