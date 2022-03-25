@@ -18,7 +18,7 @@ import datetime
 import time
 import pytz
 from django.utils.timezone import now, timedelta
-from aboutme.models import AMResponseAcknowledgement, User, ProjectUser, AMQuestion, Survey, Project
+from aboutme.models import AMResponseAcknowledgement, User, ProjectUser, AMQuestion, Survey, Project, EmailRecord
 from django.db.models import Count
 import os
 from pathlib import Path
@@ -179,6 +179,8 @@ def thread_function(dur):
 
                         try:
                             email.send()
+                            emailRecord = EmailRecord(recipient=userInfo.email, message=message)
+                            emailRecord.save()
                             for ack in acks:
                                 ack.ackEmailSent = True
                                 ack.save()
