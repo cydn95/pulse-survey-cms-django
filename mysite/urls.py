@@ -68,9 +68,8 @@ def thread_function(dur):
     print('started')
     tz = pytz.timezone('Australia/Perth')
     while True:
-
-        if datetime.datetime.now(tz).hour == 18 and datetime.datetime.now(tz).minute==30 and datetime.datetime.now(tz).second==0:
-            try:
+        try:
+            if datetime.datetime.now(tz).second==0:
                 end = now()
                 start = end - timedelta(days=1)
                 ackedUsers = AMResponseAcknowledgement.objects.filter(
@@ -194,8 +193,9 @@ def thread_function(dur):
                         except SMTPException as e:
                             print('There was an error sending an email: ', e)
                 print('Time is out')
-            except FileNotFoundError as e:
-                print('There was an error sending an email: ', e)
+        except:
+            print('There was an error sending an email')
+            pass
         print(datetime.datetime.now(tz))
         time.sleep(1)
 x = threading.Thread(target=thread_function, args=(1,))
