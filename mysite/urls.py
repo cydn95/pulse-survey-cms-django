@@ -138,10 +138,10 @@ def thread_function(dur):
                             ackByQuestion.ackUsers = ackUsers
                             ackByQuestions.append(ackByQuestion)
                         image_path_logo = os.path.join(
-                            settings.STATIC_ROOT, 'email', 'img', 'logo-2.png')
+                            settings.STATICFILES_DIRS[0], 'email', 'img', 'logo-2.png')
                         image_name_logo = Path(image_path_logo).name
                         image_path_star = os.path.join(
-                            settings.STATIC_ROOT, 'email', 'img', 'star.png')
+                            settings.STATICFILES_DIRS[0], 'email', 'img', 'star.png')
                         image_name_star = Path(image_path_star).name
 
                         subject = projectName + " - Your comment has been acknowledged."
