@@ -33,7 +33,7 @@ from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User
 from page_setting.models import PageSetting
 from cms.models import Page
-from aboutme.models import AMResponseAcknowledgement, AMQuestion, AMResponse, AMResponseTopic, AMQuestionSHGroup
+from aboutme.models import AMResponseAcknowledgement, AMQuestion, AMResponse, AMResponseTopic, AMQuestionSHGroup, EmailRecord
 from aboutothers.models import AOResponseAcknowledgement, AOResponse, AOResponseTopic, AOPage
 from team.models import Team
 from shgroup.models import KeyThemeUpDownVote, SHGroup, ProjectUser, MyMapLayout, ProjectMapLayout, SHCategory, SHMapping, Segment
@@ -209,6 +209,8 @@ def password_reset_token_created(sender, instance, reset_password_token, *args, 
 
     try:
         email.send()
+        emailRecord = EmailRecord(recipient=reset_password_token.user.email, message=message)
+        emailRecord.save()
     except SMTPException as e:
         print('There was an error sending an email: ', e)
 
