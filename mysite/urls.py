@@ -69,9 +69,9 @@ def thread_function(dur):
     tz = pytz.timezone('Australia/Perth')
     while True:
 
-        if datetime.datetime.now(tz).hour == 17 and datetime.datetime.now(tz).minute==45 and datetime.datetime.now(tz).second==0:
+        if datetime.datetime.now(tz).hour == 18 and datetime.datetime.now(tz).minute==0 and datetime.datetime.now(tz).second==0:
         # if datetime.datetime.now(tz).second==0:
-            end = now() + timedelta(hours=17-now().hour, minutes=-now().minute, seconds=-now().second)
+            end = now() + timedelta(hours=18-now().hour, minutes=-now().minute, seconds=-now().second)
             start = end - timedelta(days=1)
             ackedUsers = AMResponseAcknowledgement.objects.filter(
                 acknowledgeStatus__range=[1, 6], 
