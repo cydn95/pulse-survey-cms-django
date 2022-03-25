@@ -18,7 +18,7 @@ import datetime
 import time
 import pytz
 from django.utils.timezone import now, timedelta
-from aboutme.models import AMResponseAcknowledgement, User, ProjectUser, AMQuestion, Survey
+from aboutme.models import AMResponseAcknowledgement, User, ProjectUser, AMQuestion, Survey, Project
 from django.db.models import Count
 import os
 from pathlib import Path
@@ -109,6 +109,8 @@ def thread_function(dur):
                     ackedCount = acksBySurvey[j]['total']
                     surveyName = Survey.objects.get(
                         id=acksBySurvey[j]['amResponse__survey']).surveyTitle
+                    surveyTemp = Survey.objects.get(id=acksBySurvey[j]['amResponse__survey'])
+                    projectName = Project.objects.get(id=surveyTemp.project_id).projectName
                     ackByQuestions = []
                     for k in range(len(acksByQuestion)):
                         acks = AMResponseAcknowledgement.objects.filter(
@@ -153,7 +155,7 @@ def thread_function(dur):
                         settings.STATIC_ROOT, 'email', 'img', 'star.png')
                     image_name_star = Path(image_path_star).name
 
-                    subject = "Pulse"
+                    subject = projectName + " - Your comment has been acknowledged."
                     message = get_template('ackform3.html').render(
                         {
                             "project_name": "Pulse",

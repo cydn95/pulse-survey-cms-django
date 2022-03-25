@@ -114,6 +114,8 @@ class AMResponseAcknowledgement(models.Model):
             else:
                 super(AMResponseAcknowledgement, self).save(*args, **kwargs)
                 return
+        else:
+            super(AMResponseAcknowledgement, self).save(*args, **kwargs)
 
         # check if this user receive email today
         start = now() - timedelta(days=1)
@@ -209,6 +211,8 @@ class AMResponseAcknowledgement(models.Model):
         pulseAnswer = commentProjectUserResponse.topicValue
         surveyName = Survey.objects.get(
             id=commentProjectUserResponse.survey.id).surveyTitle
+        surveyTemp = Survey.objects.get(id=commentProjectUserResponse.survey.id)
+        projectName = Project.objects.get(id=surveyTemp.project_id).projectName
         ackText = ""
         if self.acknowledgeStatus == 1:
             ackText = "Thanks for sharing"
@@ -229,7 +233,7 @@ class AMResponseAcknowledgement(models.Model):
             settings.STATIC_ROOT, 'email', 'img', 'star.png')
         image_name_star = Path(image_path_star).name
 
-        subject = "Pulse"
+        subject = projectName + " - Your comment has been acknowledged."
         message = get_template('ackform2.html').render(
             {
                 "project_name": "Pulse",
