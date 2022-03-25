@@ -113,7 +113,6 @@ class AMResponseAcknowledgement(models.Model):
                 super(AMResponseAcknowledgement, self).save(*args, **kwargs)
             else:
                 super(AMResponseAcknowledgement, self).save(*args, **kwargs)
-                print('here')
                 return
         else:
             super(AMResponseAcknowledgement, self).save(*args, **kwargs)
@@ -252,6 +251,7 @@ class AMResponseAcknowledgement(models.Model):
                 "ack_text": ackText
             }
         )
+        print(message)
         email_from = settings.DEFAULT_FROM_EMAIL
         recipient_list = [userInfo.email]
 
@@ -271,11 +271,18 @@ class AMResponseAcknowledgement(models.Model):
 
         try:
             email.send()
+            # EmailDB
             self.ackEmailSent = True
             self.save()
         except SMTPException as e:
             print('There was an error sending an email: ', e)
-                            
+
+# class EmailRecord(models.Model):
+#     recipient = models.CharField(max_length=255, blank=True)
+#     message = 
+
+#     created_at = models.DateTimeField(auto_now_add=True)
+
 class AMResponseTopic(models.Model):
     amQuestion = models.ForeignKey(AMQuestion, on_delete=models.CASCADE)
     responseUser = models.ForeignKey(ProjectUser, on_delete=models.CASCADE)
