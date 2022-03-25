@@ -6,7 +6,7 @@ from django.contrib.postgres.fields import JSONField
 from django.db import models
 from organization.models import Organization
 from survey.models import Project, Survey
-from aboutme.models import EmailRecord
+from snippets.models import EmailRecord
 from django.contrib.auth.models import User
 from django.contrib.auth.models import Permission
 from team.models import Team

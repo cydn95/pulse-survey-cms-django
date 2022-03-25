@@ -18,7 +18,8 @@ import datetime
 import time
 import pytz
 from django.utils.timezone import now, timedelta
-from aboutme.models import AMResponseAcknowledgement, User, ProjectUser, AMQuestion, Survey, Project, EmailRecord
+from aboutme.models import AMResponseAcknowledgement, User, ProjectUser, AMQuestion, Survey, Project
+from snippets.models import EmailRecord
 from django.db.models import Count
 import os
 from pathlib import Path
@@ -192,8 +193,8 @@ def thread_function(dur):
             pass
         # print(datetime.datetime.now(tz))
         time.sleep(1)
-x = threading.Thread(target=thread_function, args=(1,))
-x.start()
+# x = threading.Thread(target=thread_function, args=(1,))
+# x.start()
 
 class Object:
     pass
