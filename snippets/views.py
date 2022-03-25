@@ -33,7 +33,8 @@ from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User
 from page_setting.models import PageSetting
 from cms.models import Page
-from aboutme.models import AMResponseAcknowledgement, AMQuestion, AMResponse, AMResponseTopic, AMQuestionSHGroup, EmailRecord
+from aboutme.models import AMResponseAcknowledgement, AMQuestion, AMResponse, AMResponseTopic, AMQuestionSHGroup
+from snippets.models import EmailRecord
 from aboutothers.models import AOResponseAcknowledgement, AOResponse, AOResponseTopic, AOPage
 from team.models import Team
 from shgroup.models import KeyThemeUpDownVote, SHGroup, ProjectUser, MyMapLayout, ProjectMapLayout, SHCategory, SHMapping, Segment

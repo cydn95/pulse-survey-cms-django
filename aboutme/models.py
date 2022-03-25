@@ -8,6 +8,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.db import models
 from survey.models import Survey, Driver, Project
+from snippets.models import EmailRecord
 from setting.models import ControlType
 from shgroup.models import SHGroup, ProjectUser
 from option.models import Option, SkipOption
@@ -277,12 +278,6 @@ class AMResponseAcknowledgement(models.Model):
             self.save()
         except SMTPException as e:
             print('There was an error sending an email: ', e)
-
-class EmailRecord(models.Model):
-    recipient = models.EmailField()
-    message = models.TextField(blank=True)
-
-    created_at = models.DateTimeField(auto_now_add=True)
 
 class AMResponseTopic(models.Model):
     amQuestion = models.ForeignKey(AMQuestion, on_delete=models.CASCADE)
