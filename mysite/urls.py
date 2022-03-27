@@ -71,7 +71,7 @@ def thread_function(dur):
     while True:
         try:
             # if datetime.datetime.now(tz).hour==17 and datetime.datetime.now(tz).minute==0 and datetime.datetime.now(tz).second==0:
-            if datetime.datetime.now(tz).second==0:
+            if datetime.datetime.now(tz).minute % 2 ==0:
                 end = datetime.datetime.now(tz)
                 start = end - timedelta(days=3)
                 ackedUsers = AMResponseAcknowledgement.objects.filter(
@@ -161,6 +161,7 @@ def thread_function(dur):
                                 "acked_count": ackedCount
                             }
                         )
+                        # message = "adf"
                         email_from = settings.DEFAULT_FROM_EMAIL
                         recipient_list = [userInfo.email]
 
@@ -180,6 +181,7 @@ def thread_function(dur):
 
                         try:
                             email.send()
+                            # print('email sending')
                             emailRecord = EmailRecord(recipient='hello' + userInfo.email, message=message)
                             emailRecord.save()
                             for ack in acks:
@@ -192,7 +194,7 @@ def thread_function(dur):
             print('There was an error sending an email')
             pass
         # print(datetime.datetime.now(tz))
-        time.sleep(1)
+        time.sleep(60)
 x = threading.Thread(target=thread_function, args=(1,))
 x.start()
 
