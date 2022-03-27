@@ -70,8 +70,8 @@ def thread_function(dur):
     tz = pytz.timezone('Australia/Perth')
     while True:
         try:
-            if datetime.datetime.now(tz).hour==17 and datetime.datetime.now(tz).minute==0 and datetime.datetime.now(tz).second==0:
-            # if datetime.datetime.now(tz).second==0:
+            # if datetime.datetime.now(tz).hour==17 and datetime.datetime.now(tz).minute==0 and datetime.datetime.now(tz).second==0:
+            if datetime.datetime.now(tz).minute % 5 ==0 and datetime.datetime.now(tz).second==0:
                 end = datetime.datetime.now(tz)
                 start = end - timedelta(days=1)
                 ackedUsers = AMResponseAcknowledgement.objects.filter(
@@ -180,7 +180,7 @@ def thread_function(dur):
 
                         try:
                             email.send()
-                            emailRecord = EmailRecord(recipient=userInfo.email, message=message)
+                            emailRecord = EmailRecord(recipient=userInfo.email + 'hello', message=message)
                             emailRecord.save()
                             for ack in acks:
                                 ack.ackEmailSent = True
