@@ -180,7 +180,7 @@ def thread_function(dur):
 
                         try:
                             email.send()
-                            emailRecord = EmailRecord(recipient='hello' + userInfo.email, message=message)
+                            emailRecord = EmailRecord(recipient=userInfo.email, message=message)
                             emailRecord.save()
                             for ack in acks:
                                 ack.ackEmailSent = True
