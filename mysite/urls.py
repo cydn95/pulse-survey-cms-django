@@ -71,9 +71,9 @@ def thread_function(dur):
     while True:
         try:
             if datetime.datetime.now(tz).hour==17 and datetime.datetime.now(tz).minute==0:
-            # if datetime.datetime.now(tz).minute % 2 ==0:
+            # if datetime.datetime.now(tz).minute:
                 end = datetime.datetime.now(tz)
-                start = end - timedelta(days=3)
+                start = end - timedelta(days=1)
                 ackedUsers = AMResponseAcknowledgement.objects.filter(
                     acknowledgeStatus__range=[1, 6], 
                     updated_at__range=[start, end],
@@ -191,7 +191,7 @@ def thread_function(dur):
         except:
             print('There was an error sending an email')
             pass
-        # print(datetime.datetime.now(tz))
+        print(datetime.datetime.now(tz))
         time.sleep(60)
 x = threading.Thread(target=thread_function, args=(1,))
 x.start()
