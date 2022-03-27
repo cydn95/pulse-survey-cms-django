@@ -73,7 +73,7 @@ def thread_function(dur):
             if datetime.datetime.now(tz).hour==17 and datetime.datetime.now(tz).minute==0:
             # if datetime.datetime.now(tz).minute % 2 ==0:
                 end = datetime.datetime.now(tz)
-                start = end - timedelta(days=3)
+                start = end - timedelta(days=1)
                 ackedUsers = AMResponseAcknowledgement.objects.filter(
                     acknowledgeStatus__range=[1, 6], 
                     updated_at__range=[start, end],
