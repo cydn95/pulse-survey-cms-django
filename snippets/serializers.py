@@ -250,6 +250,13 @@ class ProjectUserSerializer(serializers.ModelSerializer):
         model = ProjectUser
         fields = '__all__'
 
+class ProjectUserSerializerForFlag(serializers.ModelSerializer):
+    user = UserSerializer()
+
+    class Meta:
+        model = ProjectUser
+        fields = ['user', 'id']
+
 class ProjectUserForUserAdminSerializer(serializers.ModelSerializer):
     user = UserSerializer()
 
@@ -452,6 +459,13 @@ class AMResponseAcknowledgementSerializer(serializers.ModelSerializer):
         model = AMResponseAcknowledgement
         fields = '__all__'
 
+class AMResponseAcknowledgementSerializerForFlag(serializers.ModelSerializer):
+    amResponse = AMResponseSerializer()
+    projectUser = ProjectUserSerializerForFlag()
+
+    class Meta:
+        model = AMResponseAcknowledgement
+        fields = ['id', 'flagStatus', 'amResponse', 'updated_at', 'projectUser']
 
 class KeyThemeUpDownVoteSerializer(serializers.ModelSerializer):
     class Meta:
