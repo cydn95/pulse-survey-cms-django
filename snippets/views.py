@@ -2467,10 +2467,12 @@ class AdminSurveyEditView(APIView):
                 instance.save()
             else:
                 if model==ProjectUser:
-                    user = User(first_name=data[i]['user']['first_name'], last_name=data[i]['user']['last_name'], email=data[i]['user']['email'], username=data[i]['user']['email'], password="p#vh#@3jkda3$")
-                    user.save()
-                    organization = Organization(name=data[i]['user']['organization']['name'], user_id=user.id)
-                    organization.save()
+                    user = User.objects.filter(email=data[i]['user']['email'])[0]
+                    if user is None:
+                        user = User(first_name=data[i]['user']['first_name'], last_name=data[i]['user']['last_name'], email=data[i]['user']['email'], username=data[i]['user']['email'], password="p#vh#@3jkda3$")
+                        user.save()
+                        organization = Organization(name=data[i]['user']['organization']['name'], user_id=user.id)
+                        organization.save()
                     projectUser = ProjectUser(addByProjectUser_id=data[i]['addByProjectUser']['id'], projectOrganization=data[i]['projectOrganization'], projectUserRoleDesc=data[i]['projectUserRoleDesc'], projectUserTitle=data[i]['projectUserTitle'], shGroup_id=data[i]['shGroup']['id'], shType_id=data[i]['shType']['id'], team_id=data[i]['team']['id'], user_id=user.id, survey_id=survey)
                     projectUser.save()
                     if data[i]['sendInvite'] == True:

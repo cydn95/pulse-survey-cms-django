@@ -148,22 +148,7 @@ class ProjectUser(models.Model):
             image_name_middle = Path(image_path_middle).name
 
             subject = 'Welcome to Pulse'
-            message = get_template('emailv2.html').render(
-                {
-                    'project_name': project,
-                    'survey_name': survey,
-                    'image_name_logo': image_name_logo,
-                    'image_name_container': image_name_container,
-                    'image_name_connect': image_name_connect,
-                    'image_name_top': image_name_top,           # image top
-                    'image_name_middle': image_name_middle,     # image middle
-                    'token': token.key,
-                    'email': user.email,
-                    'first_name': user.first_name,
-                    'last_name': user.last_name,
-                    'site_url': settings.SITE_URL
-                }
-            )
+            message = 'Test'
             email_from = settings.DEFAULT_FROM_EMAIL
             recipient_list = [user.email,]
 
@@ -173,29 +158,29 @@ class ProjectUser(models.Model):
             email.content_subtype = 'html'
             email.mixed_subtype = 'related'
 
-            with open(image_path_logo, mode='rb') as f_logo:
-                image_logo = MIMEImage(f_logo.read())
-                email.attach(image_logo)
-                image_logo.add_header('Content-ID', f"<{image_name_logo}>")
+            # with open(image_path_logo, mode='rb') as f_logo:
+            #     image_logo = MIMEImage(f_logo.read())
+            #     email.attach(image_logo)
+            #     image_logo.add_header('Content-ID', f"<{image_name_logo}>")
 
-            # with open(image_path_connect, mode='rb') as f_connect:
-            #     image_connect = MIMEImage(f_connect.read())
-            #     email.attach(image_connect)
-            #     image_connect.add_header('Content-ID', f"<{image_name_connect}>")
+            # # with open(image_path_connect, mode='rb') as f_connect:
+            # #     image_connect = MIMEImage(f_connect.read())
+            # #     email.attach(image_connect)
+            # #     image_connect.add_header('Content-ID', f"<{image_name_connect}>")
 
-            with open(image_path_top, mode='rb') as f_top:
-                image_top = MIMEImage(f_top.read())
-                email.attach(image_top)
-                image_top.add_header('Content-ID', f"<{image_name_top}>")
-            with open(image_path_middle, mode='rb') as f_middle:
-                image_middle = MIMEImage(f_middle.read())
-                email.attach(image_middle)
-                image_middle.add_header('Content-ID', f"<{image_name_middle}>")
+            # with open(image_path_top, mode='rb') as f_top:
+            #     image_top = MIMEImage(f_top.read())
+            #     email.attach(image_top)
+            #     image_top.add_header('Content-ID', f"<{image_name_top}>")
+            # with open(image_path_middle, mode='rb') as f_middle:
+            #     image_middle = MIMEImage(f_middle.read())
+            #     email.attach(image_middle)
+            #     image_middle.add_header('Content-ID', f"<{image_name_middle}>")
 
             try:
                 email.send()
-                emailRecord = EmailRecord(recipient=user.email, message=message)
-                emailRecord.save()
+                # emailRecord = EmailRecord(recipient=user.email, message=message)
+                # emailRecord.save()
             except SMTPException as e:
                 print('There was an error sending an email: ', e)
 
