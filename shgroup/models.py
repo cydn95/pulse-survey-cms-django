@@ -147,7 +147,7 @@ class ProjectUser(models.Model):
             image_path_middle = os.path.join(settings.STATIC_ROOT, 'email', 'img', 'email-3-middle.png')
             image_name_middle = Path(image_path_middle).name
 
-            subject = 'Welcome to Pulse' + project
+            subject = 'Welcome to Pulse' + project.projectName
             message = get_template('emailv2.html').render(
                 {
                     'project_name': project,
