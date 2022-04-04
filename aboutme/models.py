@@ -1,7 +1,6 @@
 import os
 from pathlib import Path
 from email.mime.image import MIMEImage
-from tokenize import Number
 from xmlrpc.client import Boolean
 from django.core.mail import send_mail, EmailMultiAlternatives
 from django.template.loader import get_template, render_to_string
@@ -92,7 +91,7 @@ class AMResponse(models.Model):
 
 class AMResponseAcknowledgement(models.Model):
     amResponse = models.ForeignKey(AMResponse, on_delete=models.CASCADE)
-    orgAmResponse = models.IntegerField(blank=True, null=True)
+    orgAmResponse = models.ForeignKey(AMResponse, blank=True, null=True, on_delete=models.CASCADE, related_name='org_am_response')
     projectUser = models.ForeignKey(
         ProjectUser, on_delete=models.CASCADE, related_name="amCommentProjectUser")
     likeStatus = models.PositiveIntegerField(default=0, blank=False, null=False)    # 0: no answer, 1: like, 2: dislike
