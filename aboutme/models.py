@@ -91,6 +91,7 @@ class AMResponse(models.Model):
 
 class AMResponseAcknowledgement(models.Model):
     amResponse = models.ForeignKey(AMResponse, on_delete=models.CASCADE)
+    orgAmResponse = models.ForeignKey(AMResponse, blank=True, null=True, on_delete=models.CASCADE, related_name='org_am_response')
     projectUser = models.ForeignKey(
         ProjectUser, on_delete=models.CASCADE, related_name="amCommentProjectUser")
     likeStatus = models.PositiveIntegerField(default=0, blank=False, null=False)    # 0: no answer, 1: like, 2: dislike
