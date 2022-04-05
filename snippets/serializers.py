@@ -72,6 +72,11 @@ class AMResponseSerializer(serializers.ModelSerializer):
         model = AMResponse
         fields = '__all__'
 
+class AMResponseForFlagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AMResponse
+        fields = ['id', 'topicValue']
+
 class AMResponseTopicSerializer(serializers.ModelSerializer):
     class Meta:
         model = AMResponseTopic
@@ -460,12 +465,13 @@ class AMResponseAcknowledgementSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class AMResponseAcknowledgementSerializerForFlag(serializers.ModelSerializer):
-    amResponse = AMResponseSerializer()
+    amResponse = AMResponseForFlagSerializer()
+    orgAmResponse = AMResponseForFlagSerializer()
     projectUser = ProjectUserSerializerForFlag()
 
     class Meta:
         model = AMResponseAcknowledgement
-        fields = ['id', 'flagStatus', 'amResponse', 'updated_at', 'projectUser']
+        fields = ['id', 'flagStatus', 'amResponse', 'updated_at', 'projectUser', 'orgAmResponse']
 
 class KeyThemeUpDownVoteSerializer(serializers.ModelSerializer):
     class Meta:
