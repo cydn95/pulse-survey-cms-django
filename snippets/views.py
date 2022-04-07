@@ -2428,11 +2428,12 @@ class AdminSurveyAddViewSet(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
-
+        projectUser = ProjectUser(survey_id=serializer.data['id'], user_id=177, projectUserTitle="Consultant", projectOrganization="Other", projectAdmin=True, addByProjectUser_id=703)
+        projectUser.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 # wip
-# adminsurveyadd api
+# flagged response api
 class AdminReportConfigurationViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
     queryset = Segment.objects.all()
@@ -2467,12 +2468,14 @@ class AdminSurveyEditView(APIView):
                 instance.save()
             else:
                 if model==ProjectUser:
-                    user = User.objects.filter(email=data[i]['user']['email'])[0]
-                    if user is None:
+                    users = User.objects.filter(email=data[i]['user']['email'])
+                    if len(users) == 0:
                         user = User(first_name=data[i]['user']['first_name'], last_name=data[i]['user']['last_name'], email=data[i]['user']['email'], username=data[i]['user']['email'], password="p#vh#@3jkda3$")
                         user.save()
                         organization = Organization(name=data[i]['user']['organization']['name'], user_id=user.id)
                         organization.save()
+                    else:
+                        user = users[0]
                     projectUser = ProjectUser(addByProjectUser_id=data[i]['addByProjectUser']['id'], projectOrganization=data[i]['projectOrganization'], projectUserRoleDesc=data[i]['projectUserRoleDesc'], projectUserTitle=data[i]['projectUserTitle'], shGroup_id=data[i]['shGroup']['id'], shType_id=data[i]['shType']['id'], team_id=data[i]['team']['id'], user_id=user.id, survey_id=survey)
                     projectUser.save()
                     if data[i]['sendInvite'] == True:
@@ -2511,6 +2514,9 @@ class AdminSurveyEditView(APIView):
                         organizations = []
                     segment_data = Segment(shgroups=shgroups, teams=teams, organizations=organizations, survey_id=survey)
                     segment_data.save()
+                elif model==SHGroup:
+                    shGroup = SHGroup(survey_id=data[i]['survey_id'], SHGroupName=data[i]['SHGroupName'], responsePercent=data[i]['responsePercent'])
+                    shGroup.save()
                 else:
                     serializer = serializer_instance(data=data[i])
                     serializer.is_valid(raise_exception=True)

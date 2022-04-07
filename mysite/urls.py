@@ -63,8 +63,6 @@ if settings.DEBUG:
             {'document_root': settings.MEDIA_ROOT, 'show_indexes': True}),
         ] + staticfiles_urlpatterns() + urlpatterns
 
-
-
 def thread_function(dur):
     print('started')
     tz = pytz.timezone('Australia/Perth')
