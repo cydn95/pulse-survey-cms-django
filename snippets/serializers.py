@@ -137,10 +137,7 @@ class AMQuestionSerializerForReport(serializers.ModelSerializer):
     # survey = SurveySerializer()
     class Meta:
         model = AMQuestion
-        fields = ['id', 'subdriver', 'questionText', 'questionSequence', 
-        'sliderTextLeft', 'sliderTextRight', 'skipOptionYN',  
-        'topicPrompt', 'commentPrompt', 'survey', 'driver', 'controlType', 
-        'shGroup', 'option', 'skipOption', 'amqOrder']
+        fields = ['subdriver', 'driver', 'controlType', 'shGroup']
                  
 class PageAMQuestionSerializer(serializers.ModelSerializer):
     amQuestion = AMQuestionSerializer()
