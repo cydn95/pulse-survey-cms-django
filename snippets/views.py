@@ -1832,20 +1832,25 @@ class ProjectByUserViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
 
-        new_data = []
-        project_ids = []
-        for i in range(len(response.data)):
-            if response.data[i]['survey']['project'] not in project_ids:
-                item = {
-                    "projectAdmin": response.data[i]['projectAdmin'],
-                    "projectId": response.data[i]['survey']['project']
-                }
-                project_ids.append(item)
+        # new_data = []
+        # project_ids = []
+        queryset = ProjectUser.objects.all()
+        user = self.request.query_params.get('user', None)
+        if user is not None:
+            queryset = queryset.filter(user__id=user, survey__isActive=True)
+        queryset = queryset.values_list('survey__project', 'projectAdmin')
+        # for i in range(len(response.data)):
+        #     if response.data[i]['survey']['project'] not in project_ids:
+        #         item = {
+        #             "projectAdmin": response.data[i]['projectAdmin'],
+        #             "projectId": response.data[i]['survey']['project']
+        #         }
+        #         project_ids.append(item)
 
         response.data = []
-        for i in range(len(project_ids)):
-            item = model_to_dict(Project.objects.get(id=project_ids[i]['projectId']))
-            item["projectAdmin"] = project_ids[i]["projectAdmin"]
+        for i in range(len(queryset)):
+            item = model_to_dict(Project.objects.get(id=queryset[i][0]))
+            item["projectAdmin"] = queryset[i][1]
             response.data.append(item)
 
         return response
