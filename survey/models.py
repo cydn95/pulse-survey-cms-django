@@ -39,6 +39,7 @@ class Survey(models.Model):
 
     # newly added field
     seatsPurchased = models.PositiveIntegerField(default=100)
+    puchasePrice = models.FloatField(default=14.99)
     
 
 
