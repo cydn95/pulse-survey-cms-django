@@ -1837,7 +1837,7 @@ class ProjectByUserViewSet(viewsets.ModelViewSet):
         queryset = ProjectUser.objects.all()
         user = self.request.query_params.get('user', None)
         if user is not None:
-            queryset = queryset.filter(user__id=user, survey__isActive=True)
+            queryset = queryset.filter(user__id=user, survey__isActive=True, sendInvite=True)
         queryset = queryset.values_list('survey__project', 'projectAdmin')
         # for i in range(len(response.data)):
         #     if response.data[i]['survey']['project'] not in project_ids:
