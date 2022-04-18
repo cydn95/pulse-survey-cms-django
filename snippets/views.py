@@ -1824,9 +1824,9 @@ class ProjectByUserViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = ProjectUser.objects.all()
-        user = self.request.query_params.get('user', None)
+        user = self.request.user
         if user is not None:
-            queryset = queryset.filter(user__id=user, survey__isActive=True)
+            queryset = queryset.filter(user=user, survey__isActive=True)
         return queryset
 
     def list(self, request, *args, **kwargs):
@@ -1835,9 +1835,9 @@ class ProjectByUserViewSet(viewsets.ModelViewSet):
         # new_data = []
         # project_ids = []
         queryset = ProjectUser.objects.all()
-        user = self.request.query_params.get('user', None)
+        user = self.request.user
         if user is not None:
-            queryset = queryset.filter(user__id=user, survey__isActive=True, sendInvite=True)
+            queryset = queryset.filter(user=user, survey__isActive=True, sendInvite=True)
         queryset = queryset.values_list('survey__project', 'projectAdmin')
         # for i in range(len(response.data)):
         #     if response.data[i]['survey']['project'] not in project_ids:
@@ -2661,9 +2661,9 @@ class AdminSurveyByUserViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = Survey.objects.all()
 
-        user = self.request.query_params.get('user', None)
+        user = self.request.user
         if user is not None:
-            projectAdminList = ProjectUser.objects.filter(user__id=user, projectAdmin=True).values_list('survey', flat=True)
+            projectAdminList = ProjectUser.objects.filter(user=user, projectAdmin=True).values_list('survey', flat=True)
             projectAdminList = list(projectAdminList)
             queryset = queryset.filter(id__in=projectAdminList)
 
@@ -2824,11 +2824,10 @@ class AMQuestionCountBySHGroup(APIView):
 
     def get(self, format=None):
         queryset = AMQuestion.objects.all()
-
         survey = self.request.query_params.get('survey', None)
         driver = self.request.query_params.get('driver', None)
         project = self.request.query_params.get('project', None)
-        user = self.request.query_params.get('user', None)
+        user = self.request.user
 
         if survey is None:
             return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
@@ -2858,7 +2857,7 @@ class AMQuestionCountBySHGroup(APIView):
                 survey__project__id=teamserializer.data[i]['project']).count()
 
         organization = Organization.objects.all()
-        organization = organization.filter(user__id=user)
+        organization = organization.filter(user=user)
 
         organizationserializer = OrganizationSerializer(organization, many=True)
         for i in range(len(organizationserializer.data)):
