@@ -1550,6 +1550,8 @@ class ProjectUserViewSet(viewsets.ModelViewSet):
 
         shMyCategories = request.data['shMyCategory']
         myProjectUser_id = request.data['myProjectUser']
+        if (ProjectUser.objects.get(id=myProjectUser_id).user != request.user):
+            return Response("Malicious Request", status=status.HTTP_400_BAD_REQUEST)
 
         try:
             obj = MyMapLayout.objects.get(
@@ -1650,7 +1652,8 @@ class ProjectUserViewSet(viewsets.ModelViewSet):
 
         shMyCategories = request.data['shMyCategory']
         myProjectUser_id = request.data['myProjectUser']
-
+        if (ProjectUser.objects.get(id=myProjectUser_id).user != request.user):
+            return Response("Malicious Request", status=status.HTTP_400_BAD_REQUEST)
         try:
             obj = MyMapLayout.objects.get(
                 user_id=request.user.id, project_id=data['project'])
@@ -2138,6 +2141,8 @@ class UpdateStakeHolderViewSet(viewsets.ModelViewSet):
         # obj = MyMapLayout.objects.get(user_id=request.user.id, project_id=request.data['project'])
 
         myProjectUser_id = request.data['myProjectUser']
+        if (ProjectUser.objects.get(id=myProjectUser_id).user != request.user):
+            return Response("Malicious Request", status=status.HTTP_400_BAD_REQUEST)
         SHMapping.objects.filter(projectUser_id=myProjectUser_id, subProjectUser_id=projectUser_id).delete()
 
         for i in range(len(shMyCategories)):
