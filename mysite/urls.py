@@ -189,7 +189,6 @@ def thread_function(dur):
         except:
             print('There was an error sending an email')
             pass
-        print(datetime.datetime.now(tz))
         time.sleep(60)
 x = threading.Thread(target=thread_function, args=(1,))
 x.start()
