@@ -3936,13 +3936,15 @@ class KeyThemesView(APIView):
                     keyTheme=aux[j][1], survey__id=survey, tab=9, voteValue=1).count()
                 downvoteCnt = KeyThemeUpDownVote.objects.all().filter(
                     keyTheme=aux[j][1], survey__id=survey, tab=9, voteValue=-1).count()
+                tags = KeyThemeUpDownVote.objects.all().filter(
+                    keyTheme=aux[j][1], survey__id=survey, tab=9)[0].tags
                 tempQueryset = KeyThemeUpDownVote.objects.filter(
                     keyTheme=aux[j][1], survey__id=survey, tab=9, projectUser=projectUser)
                 myStatus = KeyThemeUpDownVoteSerializer(
                     tempQueryset, many=True)
 
                 ret.append({"key": aux[j][1], "freq": aux[j][0],
-                            "upvoteCount": upvoteCnt, "downvoteCount": downvoteCnt, "myStatus": myStatus.data})
+                            "upvoteCount": upvoteCnt, "downvoteCount": downvoteCnt, "myStatus": myStatus.data, "tags": tags})
 
             if limit is not None:
                 return Response(ret[:int(limit)], status=status.HTTP_200_OK)
