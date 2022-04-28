@@ -2522,6 +2522,9 @@ class AdminSurveyEditView(APIView):
                 elif model==SHGroup:
                     shGroup = SHGroup(survey_id=data[i]['survey_id'], SHGroupName=data[i]['SHGroupName'], responsePercent=data[i]['responsePercent'])
                     shGroup.save()
+                elif model==Team:
+                    team = Team(project_id=data[i]['project_id'], name=data[i]['name'])
+                    team.save()
                 else:
                     serializer = serializer_instance(data=data[i])
                     serializer.is_valid(raise_exception=True)
@@ -3565,7 +3568,6 @@ class KeyThemesView(APIView):
             dictionary = dict(list(zip(wordlist, wordfreq)))
 
             aux = [(dictionary[key], key) for key in dictionary]
-            print('aux', aux)
             aux.sort()
 
             aux.reverse()
@@ -3994,7 +3996,7 @@ class KeyThemeTagsView(APIView):
 
     def get(self, format=None):
         survey = self.request.query_params.get('survey', None)
-        data = AMResponseTopic.objects.filter(survey_id=survey).values_list('tags', flat=True).distinct()
+        data = AMResponseTopic.objects.filter(amQuestion__survey__id=survey).values_list('tags', flat=True).distinct()
         ret = []
         for d in data:
             if d == None:
