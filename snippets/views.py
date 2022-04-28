@@ -1,3 +1,4 @@
+from cmath import e
 import os
 import re
 import boto3
@@ -3564,7 +3565,9 @@ class KeyThemesView(APIView):
             dictionary = dict(list(zip(wordlist, wordfreq)))
 
             aux = [(dictionary[key], key) for key in dictionary]
+            print('aux', aux)
             aux.sort()
+
             aux.reverse()
 
             ret = []
@@ -3577,8 +3580,14 @@ class KeyThemesView(APIView):
                     keyTheme=aux[j][1], survey__id=survey, tab=1, projectUser=projectUser)
                 myStatus = KeyThemeUpDownVoteSerializer(tempQueryset, many=True)
 
+                tagsData = AMResponseTopic.objects.all().filter(
+                    topicName=aux[j][1]).values()
+                tags = []
+                if (len(tagsData) > 0):
+                    tags = tagsData[0]['tags']
+                
                 ret.append({"key": aux[j][1], "freq": aux[j][0],
-                            "upvoteCount": upvoteCnt, "downvoteCount": downvoteCnt, "myStatus": myStatus.data})
+                            "upvoteCount": upvoteCnt, "downvoteCount": downvoteCnt, "myStatus": myStatus.data, "tags": tags})
 
             if limit is not None:
                 return Response(ret[:int(limit)], status=status.HTTP_200_OK)
@@ -3701,8 +3710,14 @@ class KeyThemesView(APIView):
                     keyTheme=aux[j][1], survey__id=survey, tab=4, projectUser=projectUser)
                 myStatus = KeyThemeUpDownVoteSerializer(tempQueryset, many=True)
 
+                tagsData = AMResponseTopic.objects.all().filter(
+                    topicName=aux[j][1]).values()
+                tags = []
+                if (len(tagsData) > 0):
+                    tags = tagsData[0]['tags']
+                
                 ret.append({"key": aux[j][1], "freq": aux[j][0],
-                            "upvoteCount": upvoteCnt, "downvoteCount": downvoteCnt, "myStatus": myStatus.data})
+                            "upvoteCount": upvoteCnt, "downvoteCount": downvoteCnt, "myStatus": myStatus.data, "tags": tags})
 
             if limit is not None:
                 return Response(ret[:int(limit)], status=status.HTTP_200_OK)
@@ -3749,9 +3764,14 @@ class KeyThemesView(APIView):
                     keyTheme=aux[j][1], survey__id=survey, tab=5, projectUser=projectUser)
                 myStatus = KeyThemeUpDownVoteSerializer(
                     tempQueryset, many=True)
-
+                tagsData = AMResponseTopic.objects.all().filter(
+                    topicName=aux[j][1]).values()
+                tags = []
+                if (len(tagsData) > 0):
+                    tags = tagsData[0]['tags']
+                
                 ret.append({"key": aux[j][1], "freq": aux[j][0],
-                            "upvoteCount": upvoteCnt, "downvoteCount": downvoteCnt, "myStatus": myStatus.data})
+                            "upvoteCount": upvoteCnt, "downvoteCount": downvoteCnt, "myStatus": myStatus.data, "tags": tags})
 
             if limit is not None:
                 return Response(ret[:int(limit)], status=status.HTTP_200_OK)
@@ -3795,11 +3815,16 @@ class KeyThemesView(APIView):
                     keyTheme=aux[j][1], survey__id=survey, tab=6, voteValue=-1).count()
                 tempQueryset = KeyThemeUpDownVote.objects.filter(
                     keyTheme=aux[j][1], survey__id=survey, tab=6, projectUser=projectUser)
+                tagsData = AMResponseTopic.objects.all().filter(
+                    topicName=aux[j][1]).values()
+                tags = []
+                if (len(tagsData) > 0):
+                    tags = tagsData[0]['tags']
                 myStatus = KeyThemeUpDownVoteSerializer(
                     tempQueryset, many=True)
 
                 ret.append({"key": aux[j][1], "freq": aux[j][0],
-                            "upvoteCount": upvoteCnt, "downvoteCount": downvoteCnt, "myStatus": myStatus.data})
+                            "upvoteCount": upvoteCnt, "downvoteCount": downvoteCnt, "myStatus": myStatus.data, "tags": tags})
 
             if limit is not None:
                 return Response(ret[:int(limit)], status=status.HTTP_200_OK)
@@ -3843,11 +3868,16 @@ class KeyThemesView(APIView):
                     keyTheme=aux[j][1], survey__id=survey, tab=7, voteValue=-1).count()
                 tempQueryset = KeyThemeUpDownVote.objects.filter(
                     keyTheme=aux[j][1], survey__id=survey, tab=7, projectUser=projectUser)
+                tagsData = AMResponseTopic.objects.all().filter(
+                    topicName=aux[j][1]).values()
+                tags = []
+                if (len(tagsData) > 0):
+                    tags = tagsData[0]['tags']
                 myStatus = KeyThemeUpDownVoteSerializer(
                     tempQueryset, many=True)
 
                 ret.append({"key": aux[j][1], "freq": aux[j][0],
-                            "upvoteCount": upvoteCnt, "downvoteCount": downvoteCnt, "myStatus": myStatus.data})
+                            "upvoteCount": upvoteCnt, "downvoteCount": downvoteCnt, "myStatus": myStatus.data, "tags": tags})
 
             if limit is not None:
                 return Response(ret[:int(limit)], status=status.HTTP_200_OK)
@@ -3890,11 +3920,16 @@ class KeyThemesView(APIView):
                     keyTheme=aux[j][1], survey__id=survey, tab=8, voteValue=-1).count()
                 tempQueryset = KeyThemeUpDownVote.objects.filter(
                     keyTheme=aux[j][1], survey__id=survey, tab=8, projectUser=projectUser)
+                tagsData = AMResponseTopic.objects.all().filter(
+                    topicName=aux[j][1]).values()
+                tags = []
+                if (len(tagsData) > 0):
+                    tags = tagsData[0]['tags']
                 myStatus = KeyThemeUpDownVoteSerializer(
                     tempQueryset, many=True)
 
                 ret.append({"key": aux[j][1], "freq": aux[j][0],
-                            "upvoteCount": upvoteCnt, "downvoteCount": downvoteCnt, "myStatus": myStatus.data})
+                            "upvoteCount": upvoteCnt, "downvoteCount": downvoteCnt, "myStatus": myStatus.data, "tags": tags})
 
             if limit is not None:
                 return Response(ret[:int(limit)], status=status.HTTP_200_OK)
@@ -3936,8 +3971,11 @@ class KeyThemesView(APIView):
                     keyTheme=aux[j][1], survey__id=survey, tab=9, voteValue=1).count()
                 downvoteCnt = KeyThemeUpDownVote.objects.all().filter(
                     keyTheme=aux[j][1], survey__id=survey, tab=9, voteValue=-1).count()
-                tags = KeyThemeUpDownVote.objects.all().filter(
-                    keyTheme=aux[j][1], survey__id=survey, tab=9)[0].tags
+                tagsData = AMResponseTopic.objects.all().filter(
+                    topicName=aux[j][1]).values()
+                tags = []
+                if (len(tagsData) > 0):
+                    tags = tagsData[0]['tags']
                 tempQueryset = KeyThemeUpDownVote.objects.filter(
                     keyTheme=aux[j][1], survey__id=survey, tab=9, projectUser=projectUser)
                 myStatus = KeyThemeUpDownVoteSerializer(
@@ -3951,6 +3989,31 @@ class KeyThemesView(APIView):
             else:
                 return Response(ret, status=status.HTTP_200_OK)
 
+class KeyThemeTagsView(APIView):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
+
+    def get(self, format=None):
+        survey = self.request.query_params.get('survey', None)
+        data = AMResponseTopic.objects.filter(survey_id=survey).values_list('tags', flat=True).distinct()
+        ret = []
+        for d in data:
+            if d == None:
+                print('none')
+            else:
+                for key in d:
+                    ret.append(key)
+        return Response(ret, status=status.HTTP_200_OK)
+
+    def post(self, request):
+        themeText = request.query_params.get('key', None)
+        # tagsData = request.data['tags']
+        keythemes = AMResponseTopic.objects.filter(topicName=themeText)
+
+        for keytheme in keythemes:
+            print(keytheme)
+            keytheme.tags = request.data
+            keytheme.save()
+        return Response(status=status.HTTP_200_OK)
 # mymatrix api
 class MyMatrixView(APIView):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]

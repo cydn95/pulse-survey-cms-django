@@ -8,6 +8,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.db import models
 from survey.models import Survey, Driver, Project
+from django.contrib.postgres.fields import JSONField
 from snippets.models import EmailRecord
 from setting.models import ControlType
 from shgroup.models import SHGroup, ProjectUser
@@ -285,6 +286,7 @@ class AMResponseTopic(models.Model):
     responseUser = models.ForeignKey(ProjectUser, on_delete=models.CASCADE)
     topicName = models.CharField(max_length=255, blank=True)
     topicComment = models.CharField(max_length=255, blank=True)
+    tags = JSONField(blank=True, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

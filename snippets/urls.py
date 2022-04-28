@@ -86,6 +86,7 @@ urlpatterns += format_suffix_patterns([
     url(r'changepassword', views.ChangePasswordView.as_view()),
     url(r'keytheme', views.KeyThemesView.as_view()),
     url(r'keymenucnt', views.KeyThemesMenuCntView.as_view()),
+    url(r'keytags', views.KeyThemeTagsView.as_view()),
     url(r'mymatrix', views.MyMatrixView.as_view()),
     url(r'perceptionreality', views.PerceptionRealityView.as_view()),
     url(r'projectmatrix', views.ProjectMatrixView.as_view()),

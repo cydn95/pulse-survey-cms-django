@@ -204,7 +204,6 @@ class KeyThemeUpDownVote(models.Model):
     survey = models.ForeignKey(Survey, on_delete=models.CASCADE)
     tab = models.PositiveIntegerField(default=0)
     projectUser = models.ForeignKey(ProjectUser, on_delete=models.CASCADE)
-    tags = JSONField(blank=True, null=True)
     voteValue = models.IntegerField(blank=False, null=False)    # 1: upvote, -1: downvote
 
     created_at = models.DateTimeField(auto_now_add=True)
