@@ -2653,8 +2653,7 @@ class AdminUploadImagesView(APIView):
         #     survey.companyLogo = data['companyLogo']
         #     del data['companyLogo']
         survey.save()
-        return Response({'data': 'hello'}, status=status.HTTP_200_OK)
-
+        return Response({'data': 'ok'}, status=status.HTTP_200_OK)
 # adminsurveybyuser api
 class AdminSurveyByUserViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
@@ -5252,3 +5251,4 @@ class AdminBulkArchiveView(APIView):
                 pass
         
         return Response("success", status=status.HTTP_201_CREATED)
+
