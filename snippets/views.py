@@ -2617,7 +2617,7 @@ class AdminSurveyEditView(APIView):
 
         flaggedResponses = request.data['flaggedResponses']
         for fr in flaggedResponses:
-            print(fr)
+            # print(fr)
             response = AMResponseAcknowledgement.objects.get(id=fr)
             response.flagStatus = 0
             response.save()
@@ -3585,7 +3585,8 @@ class KeyThemesView(APIView):
                     topicName=aux[j][1]).values()
                 tags = []
                 if (len(tagsData) > 0):
-                    tags = tagsData[0]['tags']
+                    tags = tagsData
+                    # tags = tagsData[0]['tags']
                 
                 ret.append({"key": aux[j][1], "freq": aux[j][0],
                             "upvoteCount": upvoteCnt, "downvoteCount": downvoteCnt, "myStatus": myStatus.data, "tags": tags})
@@ -3715,7 +3716,8 @@ class KeyThemesView(APIView):
                     topicName=aux[j][1]).values()
                 tags = []
                 if (len(tagsData) > 0):
-                    tags = tagsData[0]['tags']
+                    tags = tagsData
+                    # tags = tagsData[0]['tags']
                 
                 ret.append({"key": aux[j][1], "freq": aux[j][0],
                             "upvoteCount": upvoteCnt, "downvoteCount": downvoteCnt, "myStatus": myStatus.data, "tags": tags})
@@ -3769,7 +3771,8 @@ class KeyThemesView(APIView):
                     topicName=aux[j][1]).values()
                 tags = []
                 if (len(tagsData) > 0):
-                    tags = tagsData[0]['tags']
+                    tags = tagsData
+                    # tags = tagsData[0]['tags']
                 
                 ret.append({"key": aux[j][1], "freq": aux[j][0],
                             "upvoteCount": upvoteCnt, "downvoteCount": downvoteCnt, "myStatus": myStatus.data, "tags": tags})
@@ -3820,7 +3823,8 @@ class KeyThemesView(APIView):
                     topicName=aux[j][1]).values()
                 tags = []
                 if (len(tagsData) > 0):
-                    tags = tagsData[0]['tags']
+                    tags = tagsData
+                    # tags = tagsData[0]['tags']
                 myStatus = KeyThemeUpDownVoteSerializer(
                     tempQueryset, many=True)
 
@@ -3873,7 +3877,8 @@ class KeyThemesView(APIView):
                     topicName=aux[j][1]).values()
                 tags = []
                 if (len(tagsData) > 0):
-                    tags = tagsData[0]['tags']
+                    # tags = tagsData[0]['tags']
+                    tags = tagsData
                 myStatus = KeyThemeUpDownVoteSerializer(
                     tempQueryset, many=True)
 
@@ -3925,7 +3930,8 @@ class KeyThemesView(APIView):
                     topicName=aux[j][1]).values()
                 tags = []
                 if (len(tagsData) > 0):
-                    tags = tagsData[0]['tags']
+                    # tags = tagsData[0]['tags']
+                    tags = tagsData
                 myStatus = KeyThemeUpDownVoteSerializer(
                     tempQueryset, many=True)
 
@@ -3976,7 +3982,8 @@ class KeyThemesView(APIView):
                     topicName=aux[j][1]).values()
                 tags = []
                 if (len(tagsData) > 0):
-                    tags = tagsData[0]['tags']
+                    tags = tagsData
+                    # tags = tagsData[0]['tags']
                 tempQueryset = KeyThemeUpDownVote.objects.filter(
                     keyTheme=aux[j][1], survey__id=survey, tab=9, projectUser=projectUser)
                 myStatus = KeyThemeUpDownVoteSerializer(
@@ -4011,7 +4018,7 @@ class KeyThemeTagsView(APIView):
         keythemes = AMResponseTopic.objects.filter(topicName=themeText)
 
         for keytheme in keythemes:
-            print(keytheme)
+            # print(keytheme)
             keytheme.tags = request.data
             keytheme.save()
         return Response(status=status.HTTP_200_OK)
