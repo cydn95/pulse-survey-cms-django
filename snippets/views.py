@@ -2566,13 +2566,16 @@ class AdminSurveyEditView(APIView):
         # saving tour
         if len(request.data['projectSetup']['tour']) > 0:
             if 'id' in request.data['projectSetup']['tour'][0]:
+                print('here1')
                 tour = ConfigPage.objects.get(survey_id=survey)
                 tour.pageName = request.data['projectSetup']['tour'][0]["pageName"]
                 tour.tabName = request.data['projectSetup']['tour'][0]["tabName"]
                 tour.pageContent = request.data['projectSetup']['tour'][0]["pageContent"]
                 tour.save()
             else:
-                tour = ConfigPage(pageName=request.data['projectSetup']['tour'][0]["pageName"], tabName=request.data['projectSetup']['tour'][0]["tabName"], pageContent=request.data['projectSetup']['tour'][0]["pageContent"])
+                print('here2')
+                tour = ConfigPage(pageName=request.data['projectSetup']['tour'][0]["pageName"], tabName=request.data['projectSetup']['tour'][0]["tabName"], pageContent=request.data['projectSetup']['tour'][0]["pageContent"], survey_id=survey)
+                tour.save()
         else:
             pass
 
