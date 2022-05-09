@@ -2441,6 +2441,8 @@ class AdminSurveyAddViewSet(viewsets.ModelViewSet):
         headers = self.get_success_headers(serializer.data)
         projectUser = ProjectUser(survey_id=serializer.data['id'], user_id=177, projectUserTitle="Consultant", projectOrganization="Other", projectAdmin=True, addByProjectUser_id=703)
         projectUser.save()
+        tour = ConfigPage(pageName="Welcome", tabName="", pageContent="Welcome to the " + request.data['surveyTitle'] + " Project. Find out more.", survey_id=serializer.data['id'])
+        tour.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 # wip
