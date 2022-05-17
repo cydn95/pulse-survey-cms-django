@@ -2814,7 +2814,7 @@ class CustomAuthToken(ObtainAuthToken):
 
     def post(self, request, *args, **kwargs):
         response = super(CustomAuthToken, self).post(request, *args, **kwargs)
-        token = Token.objects.get(key=response.data['token'])
+        token = Token.objects.get(key=response.data['token']) # getting tokens from response
         return Response({'token': token.key, 'id': token.user_id})
 
 # get_csrf api

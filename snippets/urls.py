@@ -75,7 +75,7 @@ urlpatterns = [
     # url(r'^password_reset/done/$', auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'),
     # url(r'^reset/<uidb64>/<token>/$', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
     # url(r'^reset/done/$', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
-    url(r'^api-token-auth/', views.CustomAuthToken.as_view()),
+    url(r'^api-token-auth/', views.CustomAuthToken.as_view()), # login
     url(r'^account/', include('allauth.urls')),
     url(r'^get_csrf/?$', views.get_csrf, name="get_csrf"),
 ]
