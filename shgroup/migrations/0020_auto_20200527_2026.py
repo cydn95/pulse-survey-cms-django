@@ -22,10 +22,6 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.PROTECT, to='survey.Survey'),
             preserve_default=False,
         ),
-        migrations.RemoveField(
-            model_name='projectuser',
-            name='project',
-        ),
         migrations.AlterUniqueTogether(
             name='projectuser',
             unique_together=set([]),

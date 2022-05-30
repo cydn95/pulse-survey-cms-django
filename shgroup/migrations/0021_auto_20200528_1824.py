@@ -14,12 +14,12 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AddField(
-            model_name='projectuser',
-            name='project',
-            field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.PROTECT, to='survey.Project'),
-            preserve_default=False,
-        ),
+        # migrations.AddField(
+        #     model_name='projectuser',
+        #     name='project',
+        #     field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.PROTECT, to='survey.Project'),
+        #     preserve_default=False,
+        # ),
         migrations.AlterUniqueTogether(
             name='projectuser',
             unique_together=set([]),
