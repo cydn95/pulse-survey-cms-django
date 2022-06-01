@@ -14,6 +14,7 @@ from django_rest_passwordreset.signals import reset_password_token_created
 
 from django.template.loader import get_template, render_to_string
 from django.conf import settings
+from django.core import serializers
 
 from pathlib import Path
 from email.mime.image import MIMEImage
@@ -42,7 +43,7 @@ from shgroup.models import KeyThemeUpDownVote, SHGroup, ProjectUser, MyMapLayout
 from option.models import Option, SkipOption
 from organization.models import Organization, UserAvatar, UserTeam, UserGuideMode
 from aboutothers.models import AOQuestion
-from survey.models import ToolTipGuide, Survey, Driver, Project, ProjectVideoUpload, ConfigPage, NikelMobilePage
+from survey.models import ToolTipGuide, Survey, Driver, Project, ProjectVideoUpload, ConfigPage, NikelMobilePage, Client
 from django.forms.models import model_to_dict
 from django.db.models import Q, Count, Avg
 
@@ -2432,6 +2433,18 @@ class AdminSurveyAddViewSet(viewsets.ModelViewSet):
     queryset = Survey.objects.all()
     serializer_class = SurveySerializer
 
+    # def create(self, request, *args, **kwargs):
+    #     data = request.data.get("items") if "items" in request.data else request.data
+    #     many = isinstance(data, list)
+    #     serializer = self.get_serializer(data=data, many=many)
+    #     serializer.is_valid(raise_exception=True)
+    #     self.perform_create(serializer)
+    #     headers = self.get_success_headers(serializer.data)
+    #     projectUser = ProjectUser(survey_id=serializer.data['id'], user_id=177, projectUserTitle="Consultant", projectOrganization="Other", projectAdmin=True, addByProjectUser_id=703)
+    #     projectUser.save()
+    #     tour = ConfigPage(pageName="Welcome", tabName="", pageContent="Welcome to the " + request.data['surveyTitle'] + " Project. Find out more.", survey_id=serializer.data['id'])
+    #     tour.save()
+    #     return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
     def create(self, request, *args, **kwargs):
         data = request.data.get("items") if "items" in request.data else request.data
         many = isinstance(data, list)
@@ -2439,11 +2452,30 @@ class AdminSurveyAddViewSet(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
+        client = Client(clientName=request.data['projectManager'])
+        client.save()
+        project = Project(client=client, projectName=data['surveyTitle'])
+        project.save()
+        survey = Survey(project=project, projectCode=data['projectCode'], surveyTitle=data['surveyTitle'], projectManager=data['projectManager'], isStandard=serializer.data['isStandard'], isActive=serializer.data['isActive'], customGroup1=serializer.data['customGroup1'], customGroup2=serializer.data['customGroup2'], customGroup3=serializer.data['customGroup3'])
+        survey.save()
         projectUser = ProjectUser(survey_id=serializer.data['id'], user_id=177, projectUserTitle="Consultant", projectOrganization="Other", projectAdmin=True, addByProjectUser_id=703)
         projectUser.save()
         tour = ConfigPage(pageName="Welcome", tabName="", pageContent="Welcome to the " + request.data['surveyTitle'] + " Project. Find out more.", survey_id=serializer.data['id'])
         tour.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        surveySerializer = SurveySerializer(survey)
+        return Response(surveySerializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        # project = Project(client=client.id, projectName=request.data['surveyTitle'])
+        # survey = Survey(project=project.id)
+        # many = isinstance(data, list)
+        # serializer = self.get_serializer(data=data, many=many)
+        # serializer.is_valid(raise_exception=True)
+        # self.perform_create(serializer)
+        # headers = self.get_success_headers(serializer.data)
+        # projectUser = ProjectUser(survey_id=serializer.data['id'], user_id=177, projectUserTitle="Consultant", projectOrganization="Other", projectAdmin=True, addByProjectUser_id=703)
+        # projectUser.save()
+        # tour = ConfigPage(pageName="Welcome", tabName="", pageContent="Welcome to the " + request.data['surveyTitle'] + " Project. Find out more.", survey_id=serializer.data['id'])
+        # tour.save()
+        # return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 # wip
 # flagged response api
