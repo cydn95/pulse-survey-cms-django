@@ -2586,9 +2586,9 @@ class AdminSurveyEditView(APIView):
 
     def post(self, request):
         survey = request.data['survey']
-        tab = request.data['tab']
+        step = request.data['step']
         newSurvey = Survey.objects.get(id=survey)
-        if tab == 'projectSetup':
+        if step == 0:
             # saving survey
             newSurvey.surveyTitle = request.data['projectSetup']['surveyTitle']
             newSurvey.projectManager = request.data['projectSetup']['projectManager']
@@ -2613,7 +2613,7 @@ class AdminSurveyEditView(APIView):
             # saving more info
             moreInfo = request.data['projectSetup']['moreInfo']
             self.save_dict_list(moreInfo, NikelMobilePage, NikelMobilePageSerializer, survey)
-        elif tab == 'projectConfiguration':
+        elif step == 1:
             # saving survey
             newSurvey.customGroup1 = request.data['projectConfiguration']['customGroup1']
             newSurvey.customGroup2 = request.data['projectConfiguration']['customGroup2']
@@ -2632,19 +2632,19 @@ class AdminSurveyEditView(APIView):
             # saving project teams
             projectTeams = request.data['projectConfiguration']['projectTeam']
             self.save_dict_list(projectTeams, Team, TeamSerializer, survey)
-        elif tab == 'userAdministration':
+        elif step == 2:
             #saving project users
             projectUsers = request.data['userAdministration']['projectUser']
             self.save_dict_list(projectUsers, ProjectUser, ProjectUserSerializer, survey)
             self.save_user_list(projectUsers)
-        elif tab == 'surveyConfiguration':
+        elif step == 3:
             #saving amQuestions and aoQuestions
             amQuestions = request.data['surveyConfiguration']['amQuestionList']
             self.save_dict_list(amQuestions, AMQuestion, AMQuestionSerializer, survey)
             
             aoQuestions = request.data['surveyConfiguration']['aoQuestionList']
             self.save_dict_list(aoQuestions, AOQuestion, AOQuestionSerializer, survey)
-        elif tab == 'flaggedResponses':
+        elif step == 4:
             flaggedResponses = request.data['flaggedResponses']
             for fr in flaggedResponses:
                 # print(fr)
