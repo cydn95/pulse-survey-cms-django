@@ -2586,78 +2586,80 @@ class AdminSurveyEditView(APIView):
 
     def post(self, request):
         survey = request.data['survey']
-
-        # saving survey
+        tab = request.data['tab']
         newSurvey = Survey.objects.get(id=survey)
-        newSurvey.surveyTitle = request.data['projectSetup']['surveyTitle']
-        newSurvey.customGroup1 = request.data['projectConfiguration']['customGroup1']
-        newSurvey.customGroup2 = request.data['projectConfiguration']['customGroup2']
-        newSurvey.customGroup3 = request.data['projectConfiguration']['customGroup3']
-        newSurvey.anonymityThreshold = request.data['projectConfiguration']['anonymityThreshold']
-        newSurvey.projectManager = request.data['projectSetup']['projectManager']
-        newSurvey.save()
+        if tab == 'projectSetup':
+            # saving survey
+            newSurvey.surveyTitle = request.data['projectSetup']['surveyTitle']
+            newSurvey.projectManager = request.data['projectSetup']['projectManager']
+            newSurvey.save()
 
-        # saving tour
-        if len(request.data['projectSetup']['tour']) > 0:
-            if 'id' in request.data['projectSetup']['tour'][0]:
-                print('here1')
-                tour = ConfigPage.objects.get(survey_id=survey)
-                tour.pageName = request.data['projectSetup']['tour'][0]["pageName"]
-                tour.tabName = request.data['projectSetup']['tour'][0]["tabName"]
-                tour.pageContent = request.data['projectSetup']['tour'][0]["pageContent"]
-                tour.save()
+            # saving tour
+            if len(request.data['projectSetup']['tour']) > 0:
+                if 'id' in request.data['projectSetup']['tour'][0]:
+                    print('here1')
+                    tour = ConfigPage.objects.get(survey_id=survey)
+                    tour.pageName = request.data['projectSetup']['tour'][0]["pageName"]
+                    tour.tabName = request.data['projectSetup']['tour'][0]["tabName"]
+                    tour.pageContent = request.data['projectSetup']['tour'][0]["pageContent"]
+                    tour.save()
+                else:
+                    print('here2')
+                    tour = ConfigPage(pageName=request.data['projectSetup']['tour'][0]["pageName"], tabName=request.data['projectSetup']['tour'][0]["tabName"], pageContent=request.data['projectSetup']['tour'][0]["pageContent"], survey_id=survey)
+                    tour.save()
             else:
-                print('here2')
-                tour = ConfigPage(pageName=request.data['projectSetup']['tour'][0]["pageName"], tabName=request.data['projectSetup']['tour'][0]["tabName"], pageContent=request.data['projectSetup']['tour'][0]["pageContent"], survey_id=survey)
-                tour.save()
-        else:
-            pass
+                pass
 
-        # saving more info
-        moreInfo = request.data['projectSetup']['moreInfo']
-        self.save_dict_list(moreInfo, NikelMobilePage, NikelMobilePageSerializer, survey)
+            # saving more info
+            moreInfo = request.data['projectSetup']['moreInfo']
+            self.save_dict_list(moreInfo, NikelMobilePage, NikelMobilePageSerializer, survey)
+        elif tab == 'projectConfiguration':
+            # saving survey
+            newSurvey.customGroup1 = request.data['projectConfiguration']['customGroup1']
+            newSurvey.customGroup2 = request.data['projectConfiguration']['customGroup2']
+            newSurvey.customGroup3 = request.data['projectConfiguration']['customGroup3']
+            newSurvey.anonymityThreshold = request.data['projectConfiguration']['anonymityThreshold']
+            newSurvey.save()
 
-        # saving drivers
-        driverList = request.data['projectConfiguration']['driverList']
-        self.save_dict_list(driverList, Driver, DriverSerializer, survey)
+            # saving drivers
+            driverList = request.data['projectConfiguration']['driverList']
+            self.save_dict_list(driverList, Driver, DriverSerializer, survey)
 
+            # saving shGroups
+            shGroups = request.data['projectConfiguration']['shGroup']
+            self.save_dict_list(shGroups, SHGroup, SHGroupSerializer, survey)
+
+            # saving project teams
+            projectTeams = request.data['projectConfiguration']['projectTeam']
+            self.save_dict_list(projectTeams, Team, TeamSerializer, survey)
+        elif tab == 'userAdministration':
+            #saving project users
+            projectUsers = request.data['userAdministration']['projectUser']
+            self.save_dict_list(projectUsers, ProjectUser, ProjectUserSerializer, survey)
+            self.save_user_list(projectUsers)
+        elif tab == 'surveyConfiguration':
+            #saving amQuestions and aoQuestions
+            amQuestions = request.data['surveyConfiguration']['amQuestionList']
+            self.save_dict_list(amQuestions, AMQuestion, AMQuestionSerializer, survey)
+            
+            aoQuestions = request.data['surveyConfiguration']['aoQuestionList']
+            self.save_dict_list(aoQuestions, AOQuestion, AOQuestionSerializer, survey)
+        elif tab == 'flaggedResponses':
+            flaggedResponses = request.data['flaggedResponses']
+            for fr in flaggedResponses:
+                # print(fr)
+                response = AMResponseAcknowledgement.objects.get(id=fr)
+                response.flagStatus = 0
+                response.save()
+        if 'segments' in request.data:
+            segment = request.data['segments']
+            self.save_dict_list([segment], Segment, SegmentSerializer, survey)
         # saving my maps and project maps
         # myMaps = request.data['projectConfiguration']['myMap']
         # self.save_dict_list(myMaps, SHCategory, SHCategorySerializer)
         
         # projectMaps = request.data['projectConfiguration']['projectMap']
         # self.save_dict_list(projectMaps, SHCategory, SHCategorySerializer)
-
-        # saving shGroups
-        shGroups = request.data['projectConfiguration']['shGroup']
-        self.save_dict_list(shGroups, SHGroup, SHGroupSerializer, survey)
-
-        # saving project teams
-        projectTeams = request.data['projectConfiguration']['projectTeam']
-        self.save_dict_list(projectTeams, Team, TeamSerializer, survey)
-
-        #saving project users
-        projectUsers = request.data['userAdministration']['projectUser']
-        self.save_dict_list(projectUsers, ProjectUser, ProjectUserSerializer, survey)
-        self.save_user_list(projectUsers)
-
-        #saving amQuestions and aoQuestions
-        amQuestions = request.data['surveyConfiguration']['amQuestionList']
-        self.save_dict_list(amQuestions, AMQuestion, AMQuestionSerializer, survey)
-        
-        aoQuestions = request.data['surveyConfiguration']['aoQuestionList']
-        self.save_dict_list(aoQuestions, AOQuestion, AOQuestionSerializer, survey)
-
-        if 'segments' in request.data:
-            segment = request.data['segments']
-            self.save_dict_list([segment], Segment, SegmentSerializer, survey)
-
-        flaggedResponses = request.data['flaggedResponses']
-        for fr in flaggedResponses:
-            # print(fr)
-            response = AMResponseAcknowledgement.objects.get(id=fr)
-            response.flagStatus = 0
-            response.save()
         # if survey is None:
         #     return Response("Invalid param", status=status.HTTP_400_BAD_REQUEST)
 
