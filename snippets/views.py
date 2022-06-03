@@ -3624,8 +3624,9 @@ class KeyThemesView(APIView):
                 if (len(tagsData) > 0):
                     tags = tagsData
                     # tags = tagsData[0]['tags']
-                
-                ret.append({"key": aux[j][1], "freq": aux[j][0],
+                netCnt = len(tags) + upvoteCnt - downvoteCnt
+                freq = netCnt / (len(res) + upvoteCnt + downvoteCnt)
+                ret.append({"key": aux[j][1], "freq": freq,
                             "upvoteCount": upvoteCnt, "downvoteCount": downvoteCnt, "myStatus": myStatus.data, "tags": tags})
 
             if limit is not None:
@@ -3755,8 +3756,9 @@ class KeyThemesView(APIView):
                 if (len(tagsData) > 0):
                     tags = tagsData
                     # tags = tagsData[0]['tags']
-                
-                ret.append({"key": aux[j][1], "freq": aux[j][0],
+                netCnt = len(tags) + upvoteCnt - downvoteCnt
+                freq = netCnt / (len(res) + upvoteCnt + downvoteCnt)
+                ret.append({"key": aux[j][1], "freq": freq,
                             "upvoteCount": upvoteCnt, "downvoteCount": downvoteCnt, "myStatus": myStatus.data, "tags": tags})
 
             if limit is not None:
@@ -3810,8 +3812,9 @@ class KeyThemesView(APIView):
                 if (len(tagsData) > 0):
                     tags = tagsData
                     # tags = tagsData[0]['tags']
-                
-                ret.append({"key": aux[j][1], "freq": aux[j][0],
+                netCnt = len(tags) + upvoteCnt - downvoteCnt
+                freq = netCnt / (len(res) + upvoteCnt + downvoteCnt)
+                ret.append({"key": aux[j][1], "freq": freq,
                             "upvoteCount": upvoteCnt, "downvoteCount": downvoteCnt, "myStatus": myStatus.data, "tags": tags})
 
             if limit is not None:
@@ -3864,8 +3867,9 @@ class KeyThemesView(APIView):
                     # tags = tagsData[0]['tags']
                 myStatus = KeyThemeUpDownVoteSerializer(
                     tempQueryset, many=True)
-
-                ret.append({"key": aux[j][1], "freq": aux[j][0],
+                netCnt = len(tags) + upvoteCnt - downvoteCnt
+                freq = netCnt / (len(res) + upvoteCnt + downvoteCnt)
+                ret.append({"key": aux[j][1], "freq": freq,
                             "upvoteCount": upvoteCnt, "downvoteCount": downvoteCnt, "myStatus": myStatus.data, "tags": tags})
 
             if limit is not None:
@@ -3918,8 +3922,9 @@ class KeyThemesView(APIView):
                     tags = tagsData
                 myStatus = KeyThemeUpDownVoteSerializer(
                     tempQueryset, many=True)
-
-                ret.append({"key": aux[j][1], "freq": aux[j][0],
+                netCnt = len(tags) + upvoteCnt - downvoteCnt
+                freq = netCnt / (len(res) + upvoteCnt + downvoteCnt)
+                ret.append({"key": aux[j][1], "freq": freq,
                             "upvoteCount": upvoteCnt, "downvoteCount": downvoteCnt, "myStatus": myStatus.data, "tags": tags})
 
             if limit is not None:
@@ -3971,8 +3976,9 @@ class KeyThemesView(APIView):
                     tags = tagsData
                 myStatus = KeyThemeUpDownVoteSerializer(
                     tempQueryset, many=True)
-
-                ret.append({"key": aux[j][1], "freq": aux[j][0],
+                netCnt = len(tags) + upvoteCnt - downvoteCnt
+                freq = netCnt / (len(res) + upvoteCnt + downvoteCnt)
+                ret.append({"key": aux[j][1], "freq": freq,
                             "upvoteCount": upvoteCnt, "downvoteCount": downvoteCnt, "myStatus": myStatus.data, "tags": tags})
 
             if limit is not None:
@@ -4025,8 +4031,9 @@ class KeyThemesView(APIView):
                     keyTheme=aux[j][1], survey__id=survey, tab=9, projectUser=projectUser)
                 myStatus = KeyThemeUpDownVoteSerializer(
                     tempQueryset, many=True)
-
-                ret.append({"key": aux[j][1], "freq": aux[j][0],
+                netCnt = len(tags) + upvoteCnt - downvoteCnt
+                freq = netCnt / (len(res) + upvoteCnt + downvoteCnt)
+                ret.append({"key": aux[j][1], "freq": freq,
                             "upvoteCount": upvoteCnt, "downvoteCount": downvoteCnt, "myStatus": myStatus.data, "tags": tags})
 
             if limit is not None:
