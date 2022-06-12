@@ -3568,6 +3568,42 @@ class KeyThemesView(APIView):
     def get_extra_actions(cls):
         return []
 
+    def get_res_by_tab(self, survey, tab, tabNum, projectUser):
+        queryset = AMResponseTopic.objects.filter(amQuestion__survey__id=survey, amQuestion__questionText=tab)
+        serializer = AMResponseTopicSerializer(queryset, many=True)
+        amresponse_topic_data = serializer.data
+        ret = []
+        for d in amresponse_topic_data:
+            if d["tags"] == None:
+                ret.append(d["topicName"])
+            else:
+                for key in d["tags"]:
+                    ret.append(key["name"])
+        tags=list(dict.fromkeys(ret))
+        res = []
+        for i in range(len(tags)):
+            _tags = []
+            for j in amresponse_topic_data:
+                isIn = False
+                if j["tags"] != None:
+                    for k in j["tags"]:
+                        if tags[i] == k["name"]:
+                            isIn = True
+                            break
+                if isIn or tags[i] == j["topicName"]:
+                    _tags.append(j)
+            upvoteCnt = KeyThemeUpDownVote.objects.all().filter(
+                keyTheme=tags[i], survey__id=survey, tab=tabNum, voteValue=1).count()
+            downvoteCnt = KeyThemeUpDownVote.objects.all().filter(
+                keyTheme=tags[i], survey__id=survey, tab=tabNum, voteValue=-1).count()
+            tempQueryset = KeyThemeUpDownVote.objects.filter(
+                keyTheme=tags[i], survey__id=survey, tab=tabNum, projectUser=projectUser)
+            myStatus = KeyThemeUpDownVoteSerializer(tempQueryset, many=True)
+            answeredUsersCnt = AMResponseTopic.objects.filter(amQuestion__survey__id=survey, amQuestion__questionText=tab).order_by("responseUser").distinct("responseUser").count()
+            netCnt = len(_tags) + upvoteCnt - downvoteCnt
+            freq = netCnt / (answeredUsersCnt + upvoteCnt + downvoteCnt)
+            res.append({"key": tags[i], "tags": _tags, "freq": freq, "upvoteCnt": upvoteCnt, "downvoteCnt": downvoteCnt, "myStatus": myStatus.data})
+        return res
     def get(self, format=None):
         projectUser = self.request.query_params.get('projectuser', None)
         survey = self.request.query_params.get('survey', None)
@@ -3586,55 +3622,11 @@ class KeyThemesView(APIView):
         # Risk
         # AM - Confidence - Risk: What do you see as the biggest risks to the project?
         if tab == "1":
-            ktamresponsequeryset = AMResponse.objects.all().filter(
-                amQuestion__questionText="What do you see as the biggest risks to the project?",
-                survey__id=survey, controlType="MULTI_TOPICS", latestResponse=True).order_by('projectUser')
-            ktamresponseserializer = AMResponseSerializer(ktamresponsequeryset, many=True)
-
-            wordlist = []
-            res = ktamresponseserializer.data
-            for i in range(len(res)):
-                # if res[i]['topicValue'] != "":
-                #     wordlist.append(res[i]['topicValue'])
-                amresponsetopic_queryset = AMResponseTopic.objects.filter(amQuestion_id=res[i]['amQuestion'], responseUser_id=res[i]['subProjectUser'])
-                amresponsetopic_serializer = AMResponseTopicSerializer(amresponsetopic_queryset, many=True)
-                amresponsetopic_data = amresponsetopic_serializer.data
-                for j in range(len(amresponsetopic_data)):
-                    wordlist.append(amresponsetopic_data[j]['topicName'].lower().capitalize())
-
-            wordfreq = [wordlist.count(p) for p in wordlist]
-            dictionary = dict(list(zip(wordlist, wordfreq)))
-
-            aux = [(dictionary[key], key) for key in dictionary]
-            aux.sort()
-
-            aux.reverse()
-
-            ret = []
-            for j in range(len(aux)):
-                upvoteCnt = KeyThemeUpDownVote.objects.all().filter(
-                    keyTheme=aux[j][1], survey__id=survey, tab=1, voteValue=1).count()
-                downvoteCnt = KeyThemeUpDownVote.objects.all().filter(
-                    keyTheme=aux[j][1], survey__id=survey, tab=1, voteValue=-1).count()
-                tempQueryset = KeyThemeUpDownVote.objects.filter(
-                    keyTheme=aux[j][1], survey__id=survey, tab=1, projectUser=projectUser)
-                myStatus = KeyThemeUpDownVoteSerializer(tempQueryset, many=True)
-
-                tagsData = AMResponseTopic.objects.all().filter(
-                    topicName=aux[j][1]).values()
-                tags = []
-                if (len(tagsData) > 0):
-                    tags = tagsData
-                    # tags = tagsData[0]['tags']
-                netCnt = len(tags) + upvoteCnt - downvoteCnt
-                freq = netCnt / (len(res) + upvoteCnt + downvoteCnt)
-                ret.append({"key": aux[j][1], "freq": freq,
-                            "upvoteCount": upvoteCnt, "downvoteCount": downvoteCnt, "myStatus": myStatus.data, "tags": tags})
-
+            res = self.get_res_by_tab(survey, "What do you see as the biggest risks to the project?", 1, projectUser)
             if limit is not None:
-                return Response(ret[:int(limit)], status=status.HTTP_200_OK)
+                return Response(res[:int(limit)], status=status.HTTP_200_OK)
             else:
-                return Response(ret, status=status.HTTP_200_OK)
+                return Response(res, status=status.HTTP_200_OK)
 
         # Overall Sentiment
         # AM - Sentiment - Own Words: How do you feel about this project in your own words?
@@ -3718,345 +3710,73 @@ class KeyThemesView(APIView):
         # Project Interest
         # AM - Interest - Project Interest: What do you care most about on this project?
         elif tab == "4":
-            ktamresponsequeryset = AMResponse.objects.all().filter(
-                amQuestion__questionText="What do you care most about on this project?",
-                survey__id=survey, controlType="MULTI_TOPICS", latestResponse=True).order_by('projectUser')
-            ktamresponseserializer = AMResponseSerializer(
-                ktamresponsequeryset, many=True)
-
-            wordlist = []
-            res = ktamresponseserializer.data
-            for i in range(len(res)):
-                # if res[i]['topicValue'] != "":
-                #     wordlist.append(res[i]['topicValue'])
-                amresponsetopic_queryset = AMResponseTopic.objects.filter(amQuestion_id=res[i]['amQuestion'], responseUser_id=res[i]['subProjectUser'])
-                amresponsetopic_serializer = AMResponseTopicSerializer(amresponsetopic_queryset, many=True)
-                amresponsetopic_data = amresponsetopic_serializer.data
-                for j in range(len(amresponsetopic_data)):
-                    wordlist.append(amresponsetopic_data[j]['topicName'].lower().capitalize())
-
-            wordfreq = [wordlist.count(p) for p in wordlist]
-            dictionary = dict(list(zip(wordlist, wordfreq)))
-
-            aux = [(dictionary[key], key) for key in dictionary]
-            aux.sort()
-            aux.reverse()
-
-            ret = []
-            for j in range(len(aux)):
-                upvoteCnt = KeyThemeUpDownVote.objects.all().filter(
-                    keyTheme=aux[j][1], survey__id=survey, tab=4, voteValue=1).count()
-                downvoteCnt = KeyThemeUpDownVote.objects.all().filter(
-                    keyTheme=aux[j][1], survey__id=survey, tab=4, voteValue=-1).count()
-                tempQueryset = KeyThemeUpDownVote.objects.filter(
-                    keyTheme=aux[j][1], survey__id=survey, tab=4, projectUser=projectUser)
-                myStatus = KeyThemeUpDownVoteSerializer(tempQueryset, many=True)
-
-                tagsData = AMResponseTopic.objects.all().filter(
-                    topicName=aux[j][1]).values()
-                tags = []
-                if (len(tagsData) > 0):
-                    tags = tagsData
-                    # tags = tagsData[0]['tags']
-                netCnt = len(tags) + upvoteCnt - downvoteCnt
-                freq = netCnt / (len(res) + upvoteCnt + downvoteCnt)
-                ret.append({"key": aux[j][1], "freq": freq,
-                            "upvoteCount": upvoteCnt, "downvoteCount": downvoteCnt, "myStatus": myStatus.data, "tags": tags})
-
+            res = self.get_res_by_tab(survey, "What do you care most about on this project?", 4, projectUser)
             if limit is not None:
-                return Response(ret[:int(limit)], status=status.HTTP_200_OK)
+                return Response(res[:int(limit)], status=status.HTTP_200_OK)
             else:
-                return Response(ret, status=status.HTTP_200_OK)
+                return Response(res, status=status.HTTP_200_OK)
 
         # Personal Interest
         # AM - Interest - Personal Interest:What do you personally want to get out of this project?
         elif tab == "5":
-            ktamresponsequeryset = AMResponse.objects.all().filter(
-                amQuestion__questionText="What do you personally want to get out of this project?",
-                survey__id=survey, controlType="MULTI_TOPICS").order_by('projectUser')
-            ktamresponseserializer = AMResponseSerializer(
-                ktamresponsequeryset, many=True)
-
-            
-            wordlist = []
-            res = ktamresponseserializer.data
-            for i in range(len(res)):
-                # if res[i]['topicValue'] != "":
-                #     wordlist.append(res[i]['topicValue'])
-                amresponsetopic_queryset = AMResponseTopic.objects.filter(
-                    amQuestion_id=res[i]['amQuestion'], responseUser_id=res[i]['subProjectUser'])
-                amresponsetopic_serializer = AMResponseTopicSerializer(
-                    amresponsetopic_queryset, many=True)
-                amresponsetopic_data = amresponsetopic_serializer.data
-                for j in range(len(amresponsetopic_data)):
-                    wordlist.append(amresponsetopic_data[j]['topicName'].lower().capitalize())
-
-            wordfreq = [wordlist.count(p) for p in wordlist]
-            dictionary = dict(list(zip(wordlist, wordfreq)))
-
-            aux = [(dictionary[key], key) for key in dictionary]
-            aux.sort()
-            aux.reverse()
-
-            ret = []
-            for j in range(len(aux)):
-                upvoteCnt = KeyThemeUpDownVote.objects.all().filter(
-                    keyTheme=aux[j][1], survey__id=survey, tab=5, voteValue=1).count()
-                downvoteCnt = KeyThemeUpDownVote.objects.all().filter(
-                    keyTheme=aux[j][1], survey__id=survey, tab=5, voteValue=-1).count()
-                tempQueryset = KeyThemeUpDownVote.objects.filter(
-                    keyTheme=aux[j][1], survey__id=survey, tab=5, projectUser=projectUser)
-                myStatus = KeyThemeUpDownVoteSerializer(
-                    tempQueryset, many=True)
-                tagsData = AMResponseTopic.objects.all().filter(
-                    topicName=aux[j][1]).values()
-                tags = []
-                if (len(tagsData) > 0):
-                    tags = tagsData
-                    # tags = tagsData[0]['tags']
-                netCnt = len(tags) + upvoteCnt - downvoteCnt
-                freq = netCnt / (len(res) + upvoteCnt + downvoteCnt)
-                ret.append({"key": aux[j][1], "freq": freq,
-                            "upvoteCount": upvoteCnt, "downvoteCount": downvoteCnt, "myStatus": myStatus.data, "tags": tags})
-
+            res = self.get_res_by_tab(survey, "What do you personally want to get out of this project?", 5, projectUser)
             if limit is not None:
-                return Response(ret[:int(limit)], status=status.HTTP_200_OK)
+                return Response(res[:int(limit)], status=status.HTTP_200_OK)
             else:
-                return Response(ret, status=status.HTTP_200_OK)
+                return Response(res, status=status.HTTP_200_OK)
 
         # Positives
         # AM - Improvement - Positives: In your opinion, what is going well on the project?
         elif tab == "6":
-            ktamresponsequeryset = AMResponse.objects.all().filter(
-                amQuestion__questionText="In your opinion, what is going well on the project?",
-                survey__id=survey, controlType="MULTI_TOPICS", latestResponse=True).order_by('projectUser')
-            ktamresponseserializer = AMResponseSerializer(
-                ktamresponsequeryset, many=True)
-
-            wordlist = []
-            res = ktamresponseserializer.data
-            for i in range(len(res)):
-                # if res[i]['topicValue'] != "":
-                #     wordlist.append(res[i]['topicValue'])
-                amresponsetopic_queryset = AMResponseTopic.objects.filter(
-                    amQuestion_id=res[i]['amQuestion'], responseUser_id=res[i]['subProjectUser'])
-                amresponsetopic_serializer = AMResponseTopicSerializer(
-                    amresponsetopic_queryset, many=True)
-                amresponsetopic_data = amresponsetopic_serializer.data
-                for j in range(len(amresponsetopic_data)):
-                    wordlist.append(amresponsetopic_data[j]['topicName'].lower().capitalize())
-
-            wordfreq = [wordlist.count(p) for p in wordlist]
-            dictionary = dict(list(zip(wordlist, wordfreq)))
-
-            aux = [(dictionary[key], key) for key in dictionary]
-            aux.sort()
-            aux.reverse()
-
-            ret = []
-            for j in range(len(aux)):
-                upvoteCnt = KeyThemeUpDownVote.objects.all().filter(
-                    keyTheme=aux[j][1], survey__id=survey, tab=6, voteValue=1).count()
-                downvoteCnt = KeyThemeUpDownVote.objects.all().filter(
-                    keyTheme=aux[j][1], survey__id=survey, tab=6, voteValue=-1).count()
-                tempQueryset = KeyThemeUpDownVote.objects.filter(
-                    keyTheme=aux[j][1], survey__id=survey, tab=6, projectUser=projectUser)
-                tagsData = AMResponseTopic.objects.all().filter(
-                    topicName=aux[j][1]).values()
-                tags = []
-                if (len(tagsData) > 0):
-                    tags = tagsData
-                    # tags = tagsData[0]['tags']
-                myStatus = KeyThemeUpDownVoteSerializer(
-                    tempQueryset, many=True)
-                netCnt = len(tags) + upvoteCnt - downvoteCnt
-                freq = netCnt / (len(res) + upvoteCnt + downvoteCnt)
-                ret.append({"key": aux[j][1], "freq": freq,
-                            "upvoteCount": upvoteCnt, "downvoteCount": downvoteCnt, "myStatus": myStatus.data, "tags": tags})
-
+            res = self.get_res_by_tab(survey, "In your opinion, what is going well on the project?", 6, projectUser)
             if limit is not None:
-                return Response(ret[:int(limit)], status=status.HTTP_200_OK)
+                return Response(res[:int(limit)], status=status.HTTP_200_OK)
             else:
-                return Response(ret, status=status.HTTP_200_OK)
+                return Response(res, status=status.HTTP_200_OK)
 
         # Start
         # AM - Improvement - Start: What should we start doing?
         elif tab == "7":
-            ktamresponsequeryset = AMResponse.objects.all().filter(
-                amQuestion__questionText="What should we start doing?",
-                survey__id=survey, controlType="MULTI_TOPICS", latestResponse=True).order_by('projectUser')
-            ktamresponseserializer = AMResponseSerializer(
-                ktamresponsequeryset, many=True)
-
-            wordlist = []
-            res = ktamresponseserializer.data
-            for i in range(len(res)):
-                # if res[i]['topicValue'] != "":
-                #     wordlist.append(res[i]['topicValue'])
-                amresponsetopic_queryset = AMResponseTopic.objects.filter(
-                    amQuestion_id=res[i]['amQuestion'], responseUser_id=res[i]['subProjectUser'])
-                amresponsetopic_serializer = AMResponseTopicSerializer(
-                    amresponsetopic_queryset, many=True)
-                amresponsetopic_data = amresponsetopic_serializer.data
-                for j in range(len(amresponsetopic_data)):
-                    wordlist.append(amresponsetopic_data[j]['topicName'].lower().capitalize())
-
-            wordfreq = [wordlist.count(p) for p in wordlist]
-            dictionary = dict(list(zip(wordlist, wordfreq)))
-
-            aux = [(dictionary[key], key) for key in dictionary]
-            aux.sort()
-            aux.reverse()
-
-            ret = []
-            for j in range(len(aux)):
-                upvoteCnt = KeyThemeUpDownVote.objects.all().filter(
-                    keyTheme=aux[j][1], survey__id=survey, tab=7, voteValue=1).count()
-                downvoteCnt = KeyThemeUpDownVote.objects.all().filter(
-                    keyTheme=aux[j][1], survey__id=survey, tab=7, voteValue=-1).count()
-                tempQueryset = KeyThemeUpDownVote.objects.filter(
-                    keyTheme=aux[j][1], survey__id=survey, tab=7, projectUser=projectUser)
-                tagsData = AMResponseTopic.objects.all().filter(
-                    topicName=aux[j][1]).values()
-                tags = []
-                if (len(tagsData) > 0):
-                    # tags = tagsData[0]['tags']
-                    tags = tagsData
-                myStatus = KeyThemeUpDownVoteSerializer(
-                    tempQueryset, many=True)
-                netCnt = len(tags) + upvoteCnt - downvoteCnt
-                freq = netCnt / (len(res) + upvoteCnt + downvoteCnt)
-                ret.append({"key": aux[j][1], "freq": freq,
-                            "upvoteCount": upvoteCnt, "downvoteCount": downvoteCnt, "myStatus": myStatus.data, "tags": tags})
-
+            res = self.get_res_by_tab(survey, "What should we start doing?", 7, projectUser)
             if limit is not None:
-                return Response(ret[:int(limit)], status=status.HTTP_200_OK)
+                return Response(res[:int(limit)], status=status.HTTP_200_OK)
             else:
-                return Response(ret, status=status.HTTP_200_OK)
+                return Response(res, status=status.HTTP_200_OK)
 
         # stop
         # AM - Improvement - Stop: What should we stop doing?
         elif tab == "8":
-            ktamresponsequeryset = AMResponse.objects.all().filter(
-                amQuestion__questionText="What should we stop doing?",
-                survey__id=survey, controlType="MULTI_TOPICS", latestResponse=True).order_by('projectUser')
-            ktamresponseserializer = AMResponseSerializer(ktamresponsequeryset, many=True)
-
-            wordlist = []
-            res = ktamresponseserializer.data
-            for i in range(len(res)):
-                # if res[i]['topicValue'] != "":
-                #     wordlist.append(res[i]['topicValue'])
-                amresponsetopic_queryset = AMResponseTopic.objects.filter(
-                    amQuestion_id=res[i]['amQuestion'], responseUser_id=res[i]['subProjectUser'])
-                amresponsetopic_serializer = AMResponseTopicSerializer(
-                    amresponsetopic_queryset, many=True)
-                amresponsetopic_data = amresponsetopic_serializer.data
-                for j in range(len(amresponsetopic_data)):
-                    wordlist.append(amresponsetopic_data[j]['topicName'].lower().capitalize())
-
-            wordfreq = [wordlist.count(p) for p in wordlist]
-            dictionary = dict(list(zip(wordlist, wordfreq)))
-
-            aux = [(dictionary[key], key) for key in dictionary]
-            aux.sort()
-            aux.reverse()
-
-            ret = []
-            for j in range(len(aux)):
-                upvoteCnt = KeyThemeUpDownVote.objects.all().filter(
-                    keyTheme=aux[j][1], survey__id=survey, tab=8, voteValue=1).count()
-                downvoteCnt = KeyThemeUpDownVote.objects.all().filter(
-                    keyTheme=aux[j][1], survey__id=survey, tab=8, voteValue=-1).count()
-                tempQueryset = KeyThemeUpDownVote.objects.filter(
-                    keyTheme=aux[j][1], survey__id=survey, tab=8, projectUser=projectUser)
-                tagsData = AMResponseTopic.objects.all().filter(
-                    topicName=aux[j][1]).values()
-                tags = []
-                if (len(tagsData) > 0):
-                    # tags = tagsData[0]['tags']
-                    tags = tagsData
-                myStatus = KeyThemeUpDownVoteSerializer(
-                    tempQueryset, many=True)
-                netCnt = len(tags) + upvoteCnt - downvoteCnt
-                freq = netCnt / (len(res) + upvoteCnt + downvoteCnt)
-                ret.append({"key": aux[j][1], "freq": freq,
-                            "upvoteCount": upvoteCnt, "downvoteCount": downvoteCnt, "myStatus": myStatus.data, "tags": tags})
-
+            res = self.get_res_by_tab(survey, "What should we stop doing?", 8, projectUser)
             if limit is not None:
-                return Response(ret[:int(limit)], status=status.HTTP_200_OK)
+                return Response(res[:int(limit)], status=status.HTTP_200_OK)
             else:
-                return Response(ret, status=status.HTTP_200_OK)
+                return Response(res, status=status.HTTP_200_OK)
 
         # change
         # AM - Improvement - Change: What should we do differently?
         elif tab == "9":
-            ktamresponsequeryset = AMResponse.objects.all().filter(
-                amQuestion__questionText="What should we do differently?",
-                survey__id=survey, controlType="MULTI_TOPICS", latestResponse=True).order_by('projectUser')
-            ktamresponseserializer = AMResponseSerializer(
-                ktamresponsequeryset, many=True)
-
-            wordlist = []
-            res = ktamresponseserializer.data
-            for i in range(len(res)):
-                # if res[i]['topicValue'] != "":
-                #     wordlist.append(res[i]['topicValue'])
-                amresponsetopic_queryset = AMResponseTopic.objects.filter(
-                    amQuestion_id=res[i]['amQuestion'], responseUser_id=res[i]['subProjectUser'])
-                amresponsetopic_serializer = AMResponseTopicSerializer(
-                    amresponsetopic_queryset, many=True)
-                amresponsetopic_data = amresponsetopic_serializer.data
-                for j in range(len(amresponsetopic_data)):
-                    wordlist.append(amresponsetopic_data[j]['topicName'].lower().capitalize())
-
-            wordfreq = [wordlist.count(p) for p in wordlist]
-            dictionary = dict(list(zip(wordlist, wordfreq)))
-
-            aux = [(dictionary[key], key) for key in dictionary]
-            aux.sort()
-            aux.reverse()
-
-            ret = []
-            for j in range(len(aux)):
-                upvoteCnt = KeyThemeUpDownVote.objects.all().filter(
-                    keyTheme=aux[j][1], survey__id=survey, tab=9, voteValue=1).count()
-                downvoteCnt = KeyThemeUpDownVote.objects.all().filter(
-                    keyTheme=aux[j][1], survey__id=survey, tab=9, voteValue=-1).count()
-                tagsData = AMResponseTopic.objects.all().filter(
-                    topicName=aux[j][1]).values()
-                tags = []
-                if (len(tagsData) > 0):
-                    tags = tagsData
-                    # tags = tagsData[0]['tags']
-                tempQueryset = KeyThemeUpDownVote.objects.filter(
-                    keyTheme=aux[j][1], survey__id=survey, tab=9, projectUser=projectUser)
-                myStatus = KeyThemeUpDownVoteSerializer(
-                    tempQueryset, many=True)
-                netCnt = len(tags) + upvoteCnt - downvoteCnt
-                freq = netCnt / (len(res) + upvoteCnt + downvoteCnt)
-                ret.append({"key": aux[j][1], "freq": freq,
-                            "upvoteCount": upvoteCnt, "downvoteCount": downvoteCnt, "myStatus": myStatus.data, "tags": tags})
-
+            res = self.get_res_by_tab(survey, "What should we do differently?", 9, projectUser)
             if limit is not None:
-                return Response(ret[:int(limit)], status=status.HTTP_200_OK)
+                return Response(res[:int(limit)], status=status.HTTP_200_OK)
             else:
-                return Response(ret, status=status.HTTP_200_OK)
+                return Response(res, status=status.HTTP_200_OK)
 
 class KeyThemeTagsView(APIView):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAuthenticatedOrReadOnly]
 
     def get(self, format=None):
         survey = self.request.query_params.get('survey', None)
-        data = AMResponseTopic.objects.filter(amQuestion__survey__id=survey).values_list('tags', flat=True).distinct()
+        queryset = AMResponseTopic.objects.filter(amQuestion__survey__id=survey)
+        serializer = AMResponseTopicSerializer(queryset, many=True)
+        amresponse_topic_data = serializer.data
         ret = []
-        for d in data:
-            if d == None:
-                print('none')
+        for d in amresponse_topic_data:
+            if d["tags"] == None:
+                ret.append(d["topicName"])
             else:
-                for key in d:
-                    ret.append(key)
-        return Response(ret, status=status.HTTP_200_OK)
+                for key in d["tags"]:
+                    ret.append(key["name"])
+        return Response(list(dict.fromkeys(ret)), status=status.HTTP_200_OK)
 
     def post(self, request):
         themeText = request.query_params.get('key', None)
