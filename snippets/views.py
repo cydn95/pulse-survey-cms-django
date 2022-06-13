@@ -3575,10 +3575,10 @@ class KeyThemesView(APIView):
         ret = []
         for d in amresponse_topic_data:
             if d["tags"] == None:
-                ret.append(d["topicName"])
+                ret.append(((d["topicName"].lower().capitalize())))
             else:
                 if len(d["tags"])==0:
-                    ret.append(d["topicName"])
+                    ret.append(((d["topicName"].lower().capitalize())))
                 else:
                     for key in d["tags"]:
                         ret.append(key["name"])
@@ -3588,13 +3588,18 @@ class KeyThemesView(APIView):
             _tags = []
             for j in amresponse_topic_data:
                 isIn = False
-                if j["tags"] != None:
-                    for k in j["tags"]:
-                        if tags[i] == k["name"]:
-                            isIn = True
-                            break
-                if isIn or tags[i] == j["topicName"]:
-                    _tags.append(j)
+                if j["tags"] == None:
+                    if tags[i] == j["topicName"].lower().capitalize():
+                        _tags.append(j)
+                else:
+                    if len(j["tags"])==0:
+                        if tags[i] == j["topicName"].lower().capitalize():
+                            _tags.append(j)
+                    else:
+                        for k in j["tags"]:
+                            if tags[i] == k["name"].lower().capitalize():
+                                _tags.append(j)
+                                break
             upvoteCnt = KeyThemeUpDownVote.objects.all().filter(
                 keyTheme=tags[i], survey__id=survey, tab=tabNum, voteValue=1).count()
             downvoteCnt = KeyThemeUpDownVote.objects.all().filter(
@@ -3775,10 +3780,10 @@ class KeyThemeTagsView(APIView):
         ret = []
         for d in amresponse_topic_data:
             if d["tags"] == None:
-                ret.append(d["topicName"])
+                ret.append(((d["topicName"].lower().capitalize())))
             else:
                 if len(d["tags"]) == 0:
-                    ret.append(d["topicName"])
+                    ret.append(((d["topicName"].lower().capitalize())))
                 else:
                     for key in d["tags"]:
                         ret.append(key["name"])
