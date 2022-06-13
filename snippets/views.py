@@ -3577,8 +3577,11 @@ class KeyThemesView(APIView):
             if d["tags"] == None:
                 ret.append(d["topicName"])
             else:
-                for key in d["tags"]:
-                    ret.append(key["name"])
+                if len(d["tags"])==0:
+                    ret.append(d["topicName"])
+                else:
+                    for key in d["tags"]:
+                        ret.append(key["name"])
         tags=list(dict.fromkeys(ret))
         res = []
         for i in range(len(tags)):
@@ -3774,8 +3777,11 @@ class KeyThemeTagsView(APIView):
             if d["tags"] == None:
                 ret.append(d["topicName"])
             else:
-                for key in d["tags"]:
-                    ret.append(key["name"])
+                if len(d["tags"]) == 0:
+                    ret.append(d["topicName"])
+                else:
+                    for key in d["tags"]:
+                        ret.append(key["name"])
         return Response(list(dict.fromkeys(ret)), status=status.HTTP_200_OK)
 
     def post(self, request):
