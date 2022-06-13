@@ -3780,13 +3780,8 @@ class KeyThemeTagsView(APIView):
 
     def post(self, request):
         themeText = request.query_params.get('key', None)
-        # tagsData = request.data['tags']
-        keythemes = AMResponseTopic.objects.filter(topicName=themeText)
-
-        for keytheme in keythemes:
-            # print(keytheme)
-            keytheme.tags = request.data
-            keytheme.save()
+        for e in request.data:
+            AMResponseTopic.objects.filter(id=e['id']).update(**e)
         return Response(status=status.HTTP_200_OK)
 # mymatrix api
 class MyMatrixView(APIView):
