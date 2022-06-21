@@ -1843,7 +1843,7 @@ class ProjectByUserViewSet(viewsets.ModelViewSet):
         user = self.request.user
         if user is not None:
             queryset = queryset.filter(user=user, survey__isActive=True, sendInvite=True)
-        queryset = queryset.values_list('survey__project', 'projectAdmin')
+        queryset = queryset.values_list('survey', 'projectAdmin')
         # for i in range(len(response.data)):
         #     if response.data[i]['survey']['project'] not in project_ids:
         #         item = {
@@ -1854,7 +1854,7 @@ class ProjectByUserViewSet(viewsets.ModelViewSet):
 
         response.data = []
         for i in range(len(queryset)):
-            item = model_to_dict(Project.objects.get(id=queryset[i][0]))
+            item = model_to_dict(Survey.objects.get(id=queryset[i][0]))
             item["projectAdmin"] = queryset[i][1]
             response.data.append(item)
 
