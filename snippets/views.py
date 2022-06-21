@@ -1857,7 +1857,7 @@ class ProjectByUserViewSet(viewsets.ModelViewSet):
             item = model_to_dict(Survey.objects.get(id=queryset[i][0]))
             item["projectAdmin"] = queryset[i][1]
             response.data.append(item)
-
+        response.data.append("sdlfj")
         return response
 
 # shgroup api
