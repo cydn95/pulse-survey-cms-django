@@ -1065,6 +1065,7 @@ class DriverViewSet(viewsets.ModelViewSet):
 
         if survey is not None:
             queryset = queryset.filter(survey__id=survey)
+            queryset = queryset.filter(~Q(driverName='About Others'))
 
         return queryset
 
