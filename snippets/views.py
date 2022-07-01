@@ -1065,7 +1065,6 @@ class DriverViewSet(viewsets.ModelViewSet):
 
         if survey is not None:
             queryset = queryset.filter(survey__id=survey)
-            queryset = queryset.filter(~Q(driverName='About Others'))
 
         return queryset
 
@@ -1438,7 +1437,6 @@ class PageViewSet(viewsets.ReadOnlyModelViewSet):
                 if projectuser_param and isinstance(projectuser_param, int):
                     try:
                         projectuser = ProjectUser.objects.get(id=projectuser_param)
-
                         aoquestion_queryset = AOQuestion.objects.filter(driver_id=list_drivers[i]['id'], survey_id=survey_param, shGroup__in=[projectuser.shGroup_id])
                         ao_serializer = AOQuestionSerializer(aoquestion_queryset, many=True)
                         list_drivers[i]['aoquestion'] = ao_serializer.data
