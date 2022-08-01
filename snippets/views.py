@@ -2642,7 +2642,7 @@ class AdminSurveyEditView(APIView):
             
             aoQuestions = request.data['surveyConfiguration']['aoQuestionList']
             self.save_dict_list(aoQuestions, AOQuestion, AOQuestionSerializer, survey)
-        elif step == 4:
+        elif step == 5:
             flaggedResponses = request.data['flaggedResponses']
             for fr in flaggedResponses:
                 # print(fr)
@@ -4770,10 +4770,10 @@ class DriverAnalysisCntView(APIView):
                                                     aoQuestion__driver__driverName="Influence", created_at__range=[startDate, endDate]).count()
 
         # about others
-        # amAboutOthersCnt = AMResponse.objects.filter(controlType=controlType, survey__id=survey, 
-        #                                             amQuestion__driver__driverName="About Others", created_at__range=[startDate, endDate]).count()
-        # aoAboutOthersCnt = AOResponse.objects.filter(controlType=controlType, survey__id=survey, 
-        #                                             aoQuestion__driver__driverName="About Others", created_at__range=[startDate, endDate]).count()
+        amAboutOthersCnt = AMResponse.objects.filter(controlType=controlType, survey__id=survey, 
+                                                    amQuestion__driver__driverName="About Others", created_at__range=[startDate, endDate]).count()
+        aoAboutOthersCnt = AOResponse.objects.filter(controlType=controlType, survey__id=survey, 
+                                                    aoQuestion__driver__driverName="About Others", created_at__range=[startDate, endDate]).count()
 
         retValue = {
             "Engagement": amEngagementCnt + aoEngagementCnt,
@@ -4784,7 +4784,7 @@ class DriverAnalysisCntView(APIView):
             "Relationships": amRelationshipsCnt + aoRelationshipsCnt,
             "Improvement": amImprovementCnt + aoImprovementCnt,
             "Influence": amInfluenceCnt + aoInfluenceCnt,
-            # "About Others": amAboutOthersCnt + aoAboutOthersCnt
+            "About Others": amAboutOthersCnt + aoAboutOthersCnt
         }
 
         return Response(retValue, status=status.HTTP_200_OK)
