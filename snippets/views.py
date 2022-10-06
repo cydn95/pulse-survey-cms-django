@@ -217,7 +217,7 @@ def password_reset_token_created(sender, instance, reset_password_token, *args, 
     except SMTPException as e:
         print('There was an error sending an email: ', e)
 
-    # # render email text
+    # # render email text, template
     # email_html_message = render_to_string('email/user_reset_password.html', context)
     # email_plaintext_message = render_to_string('email/user_reset_password.txt', context)
 
