@@ -32,7 +32,8 @@ from rest_framework.views import APIView
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, update_last_login
+
 from page_setting.models import PageSetting
 from cms.models import Page
 from aboutme.models import AMResponseAcknowledgement, AMQuestion, AMResponse, AMResponseTopic, AMQuestionSHGroup
@@ -2847,6 +2848,7 @@ class CustomAuthToken(ObtainAuthToken):
     def post(self, request, *args, **kwargs):
         response = super(CustomAuthToken, self).post(request, *args, **kwargs)
         token = Token.objects.get(key=response.data['token']) # getting tokens from response
+        update_last_login(None, token.user)
         return Response({'token': token.key, 'id': token.user_id})
 
 # get_csrf api
@@ -4905,7 +4907,11 @@ class CheckUserPasswordStatusView(APIView):
 
         try:
             user = User.objects.get(email=email)
+            # Check if user has ever logged in or not, If not reset the password so that user is forced to set the password
+            if not user.last_login:
+                user.set_unusable_password()
             ret = user.has_usable_password()
+
             if ret == True:
                 return Response({"text": "password exist", "code": 200, "passwordstatus": ret}, status=status.HTTP_200_OK)
             else:
