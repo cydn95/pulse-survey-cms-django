@@ -83,7 +83,6 @@ future==0.18.2
 gunicorn==19.9.0
 html5lib==1.0.1
 idna==2.8
-importlib==1.0.4
 isort==5.6.4
 itypes==1.1.0
 jdcal==1.4.1
