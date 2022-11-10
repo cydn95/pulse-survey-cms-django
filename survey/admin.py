@@ -229,6 +229,29 @@ class SurveyAdmin(InlineActionsModelAdminMixin, admin.ModelAdmin):
     list_filter = ['project']
     exclude = ['isStandard', 'isActive']
     list_per_page = 10
+
+    def save_model(self, request, obj, form, change):
+        super().save_model(request, obj, form, change)
+        if not change:
+            std_survey = Survey.objects.get(isStandard=True)
+            std_driver = Driver.objects.filter(survey_id=std_survey.id).values()
+            std_shcategory = SHCategory.objects.filter(survey_id=std_survey.id).values()
+            for i in range(len(std_driver)):
+                driver_obj = Driver(driverName=std_driver[i]['driverName'],
+                        iconPath=std_driver[i]['iconPath'],
+                        driveOrder=std_driver[i]['driveOrder'],
+                        survey_id=obj.id,
+                        isStandard=True)
+                driver_obj.save()
+
+            for i in range(len(std_shcategory)):
+                shcategory_obj = SHCategory(survey_id=obj.id,
+                        SHCategoryName=std_shcategory[i]['SHCategoryName'],
+                        SHCategoryDesc=std_shcategory[i]['SHCategoryDesc'],
+                        mapType_id=std_shcategory[i]['mapType_id'],
+                        colour=std_shcategory[i]['colour'],
+                        icon=std_shcategory[i]['icon'])
+                shcategory_obj.save()
     
     def survey_status(self, obj):
         if obj.isActive:
@@ -1023,9 +1046,7 @@ class SurveyAdmin(InlineActionsModelAdminMixin, admin.ModelAdmin):
     def get_client(self, obj):
         return obj.project.client
     get_client.short_description = 'Client'
-    get_client.admin_order_field = 'project__client'
-
-    
+    get_client.admin_order_field = 'project__client'    
 
 class ClientAdmin(admin.ModelAdmin):
     list_display = ['clientName']
