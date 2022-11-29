@@ -23,6 +23,7 @@ from django.core.paginator import EmptyPage, InvalidPage, Paginator
 from django.forms import ModelForm
 from boolean_switch.admin import AdminBooleanMixin
 from django.db.models import Q
+from django.db import transaction
 
 class ProjectAdmin(admin.ModelAdmin):
 
@@ -230,28 +231,149 @@ class SurveyAdmin(InlineActionsModelAdminMixin, admin.ModelAdmin):
     exclude = ['isStandard', 'isActive']
     list_per_page = 10
 
+    @transaction.atomic
     def save_model(self, request, obj, form, change):
         super().save_model(request, obj, form, change)
         if not change:
             std_survey = Survey.objects.get(isStandard=True)
             std_driver = Driver.objects.filter(survey_id=std_survey.id).values()
             std_shcategory = SHCategory.objects.filter(survey_id=std_survey.id).values()
-            for i in range(len(std_driver)):
-                driver_obj = Driver(driverName=std_driver[i]['driverName'],
-                        iconPath=std_driver[i]['iconPath'],
-                        driveOrder=std_driver[i]['driveOrder'],
-                        survey_id=obj.id,
-                        isStandard=True)
-                driver_obj.save()
+            std_nikel = NikelMobilePage.objects.filter(survey_id=std_survey.id).values()
+            if obj.id != std_survey.id:
+                if std_driver.count() != 0:
+                    # Preload default drivers 
+                    for i in range(len(std_driver)):
+                        driver_obj = Driver(driverName=std_driver[i]['driverName'],
+                                iconPath=std_driver[i]['iconPath'],
+                                driveOrder=std_driver[i]['driveOrder'],
+                                survey_id=obj.id,
+                                isStandard=True)
+                        driver_obj.save()
 
-            for i in range(len(std_shcategory)):
-                shcategory_obj = SHCategory(survey_id=obj.id,
-                        SHCategoryName=std_shcategory[i]['SHCategoryName'],
-                        SHCategoryDesc=std_shcategory[i]['SHCategoryDesc'],
-                        mapType_id=std_shcategory[i]['mapType_id'],
-                        colour=std_shcategory[i]['colour'],
-                        icon=std_shcategory[i]['icon'])
-                shcategory_obj.save()
+                        # Preload default About me questions
+                        std_amq = AMQuestion.objects.filter(survey_id=std_survey.id, driver_id=std_driver[i]['id'])
+                        if std_amq.count() != 0:
+                            for j in range(len(std_amq)):
+                                amq_obj = AMQuestion(survey=obj,
+                                    driver=driver_obj, 
+                                    subdriver=std_amq[j].subdriver,
+                                    questionText=std_amq[j].questionText,
+                                    controlType_id=std_amq[j].controlType_id,
+                                    questionSequence=std_amq[j].questionSequence,
+                                    sliderTextLeft=std_amq[j].sliderTextLeft,
+                                    sliderTextRight=std_amq[j].sliderTextRight,
+                                    skipOptionYN=std_amq[j].skipOptionYN,
+                                    topicPrompt=std_amq[j].topicPrompt,
+                                    commentPrompt=std_amq[j].commentPrompt,
+                                    amqOrder=std_amq[j].amqOrder,
+                                    shortForm=std_amq[j].shortForm,
+                                    longForm=std_amq[j].longForm,
+                                    isStandard=True)
+                                amq_obj.save()
+                                stdamq_shgroup = SHGroup.objects.filter(survey_id=obj)
+                                for a in range(len(stdamq_shgroup)):
+                                    tempItem = None
+                                    try:
+                                        tempItem = SHGroup.objects.get(SHGroupName=stdamq_shgroup[a].SHGroupName,
+                                                                    SHGroupAbbrev=stdamq_shgroup[a].SHGroupAbbrev,
+                                                                    responsePercent=stdamq_shgroup[a].responsePercent,
+                                                                    survey=obj)
+                                    except SHGroup.DoesNotExist:
+                                        tempItem = SHGroup(SHGroupName=stdamq_shgroup[a].SHGroupName,
+                                                        SHGroupAbbrev=stdamq_shgroup[a].SHGroupAbbrev,
+                                                        responsePercent=stdamq_shgroup[a].responsePercent,
+                                                        survey=obj)
+                                        tempItem.save()
+                                    amq_obj.shGroup.add(tempItem)
+                                stdamq_option = std_amq[j].option.all()
+                                for b in range(len(stdamq_option)):
+                                    tempOptionItem = None
+                                    try:
+                                        tempOptionItem = Option.objects.get(survey=obj,
+                                                                            optionName=stdamq_option[b].optionName)
+                                    except Option.DoesNotExist:
+                                        tempOptionItem = Option(survey=obj,
+                                                            optionName=stdamq_option[b].optionName)
+                                        tempOptionItem.save()
+                                    amq_obj.option.add(tempOptionItem)
+                                stdamq_skipoption = std_amq[j].skipOption.all()
+                                for c in range(len(stdamq_skipoption)):
+                                    amq_obj.skipOption.add(stdamq_skipoption[c])
+
+                        # Preload default About others questions
+                        std_aoq = AOQuestion.objects.filter(survey_id=std_survey.id, driver_id=std_driver[i]['id'], shortForm=True)
+                        if std_aoq.count() != 0:
+                            for k in range(len(std_aoq)):
+                                aoq_obj = AOQuestion(survey=obj,
+                                    driver=driver_obj,
+                                    subdriver=std_aoq[k].subdriver,
+                                    questionText=std_aoq[k].questionText,
+                                    controlType_id=std_aoq[k].controlType_id,
+                                    questionSequence=std_aoq[k].questionSequence,
+                                    sliderTextLeft=std_aoq[k].sliderTextLeft,
+                                    sliderTextRight=std_aoq[k].sliderTextRight,
+                                    skipOptionYN=std_aoq[k].skipOptionYN,
+                                    topicPrompt=std_aoq[k].topicPrompt,
+                                    commentPrompt=std_aoq[k].commentPrompt,
+                                    aoqOrder=std_aoq[k].aoqOrder,
+                                    shortForm=std_aoq[k].shortForm,
+                                    longForm=std_aoq[k].longForm,
+                                    isStandard=True)
+                                aoq_obj.save()
+                                stdaoq_shgroup = SHGroup.objects.filter(
+                                    survey_id=obj)
+                                for a in range(len(stdaoq_shgroup)):
+                                    tempItem = None
+                                    try:
+                                        tempItem = SHGroup.objects.get(SHGroupName=stdaoq_shgroup[a].SHGroupName,
+                                                                        SHGroupAbbrev=stdaoq_shgroup[a].SHGroupAbbrev,
+                                                                        responsePercent=stdaoq_shgroup[a].responsePercent,
+                                                                        survey=obj)
+                                    except SHGroup.DoesNotExist:
+                                        tempItem = SHGroup(SHGroupName=stdaoq_shgroup[a].SHGroupName,
+                                                            SHGroupAbbrev=stdaoq_shgroup[a].SHGroupAbbrev,
+                                                            responsePercent=stdaoq_shgroup[a].responsePercent,
+                                                            survey=obj)
+                                        tempItem.save()
+                                    aoq_obj.shGroup.add(tempItem)
+                                stdaoq_option = std_aoq[k].option.all()
+                                for b in range(len(stdaoq_option)):
+                                    tempOptionItem = None
+                                    try:
+                                        tempOptionItem = Option.objects.get(survey=obj,
+                                                                            optionName=stdaoq_option[b].optionName)
+                                    except Option.DoesNotExist:
+                                        tempOptionItem = Option(survey=obj,
+                                                                optionName=stdaoq_option[b].optionName)
+                                        tempOptionItem.save()
+                                    aoq_obj.option.add(tempOptionItem)
+                                stdaoq_skipoption = std_aoq[k].skipOption.all()
+                                for c in range(len(stdaoq_skipoption)):
+                                    aoq_obj.skipOption.add(stdaoq_skipoption[c])
+                
+                # Preload default stakeholders categories 
+                if std_shcategory.count() != 0:
+                    for i in range(len(std_shcategory)):
+                        shcategory_obj = SHCategory(survey_id=obj.id,
+                                SHCategoryName=std_shcategory[i]['SHCategoryName'],
+                                SHCategoryDesc=std_shcategory[i]['SHCategoryDesc'],
+                                mapType_id=std_shcategory[i]['mapType_id'],
+                                colour=std_shcategory[i]['colour'],
+                                icon=std_shcategory[i]['icon'])
+                        shcategory_obj.save()
+                
+                # Preload default nikel back page 
+                if std_nikel.count() != 0:
+                    for i in range(len(std_nikel)):
+                        std_nikel_obj = NikelMobilePage(survey_id=obj.id,
+                                pageName=std_nikel[i]['pageName'],
+                                pageText=std_nikel[i]['pageText'],
+                                backgroundColor=std_nikel[i]['backgroundColor'],
+                                pageContent=std_nikel[i]['pageContent'],
+                                pageOrder=std_nikel[i]['pageOrder'],
+                                img=std_nikel[i]['img'])
+                        std_nikel_obj.save()
+                
     
     def survey_status(self, obj):
         if obj.isActive:
